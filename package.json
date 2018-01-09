@@ -20,8 +20,8 @@
     "serverless-offline": "^3.16.0"
   },
   "scripts": {
-    "dev": "node server_dev.js",
-    "build": "next build --inspect",
+    "dev": "node src/server_dev.js",
+    "build": "next build src",
     "deploy": "npm run build && serverless deploy"
   },
   "author": "",

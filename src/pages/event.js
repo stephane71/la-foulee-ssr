@@ -41,7 +41,6 @@ const Event = props => (
 );
 
 Event.getInitialProps = async function({ query }) {
-  // return { event: query };
   if (query.event && query.event.title) {
     return { event: query.event };
   }

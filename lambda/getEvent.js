@@ -5,6 +5,11 @@ const next = require('next');
 const apigClientFactory = require('aws-api-gateway-client').default;
 const getHandlerNextJS = require('./utils/getHandlerNextJS');
 
+const dev = process.env.NODE_ENV !== 'production';
+const app = next({ dev, dir: './src' });
+const handle = app.getRequestHandler();
+const server = express();
+
 const config = {
   invokeUrl: `https://api.la-foulee.com/${process.env.stageAPI}`,
   region: 'eu-west-1',
@@ -12,11 +17,6 @@ const config = {
   secretKey: process.env.SecretAccessKey
 };
 var apigClient = apigClientFactory.newClient(config);
-
-const dev = process.env.NODE_ENV !== 'production';
-const app = next({ dev });
-const handle = app.getRequestHandler();
-const server = express();
 
 server.get('/event/:keyword', (req, res) => {
   let data;

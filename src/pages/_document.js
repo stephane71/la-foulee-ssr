@@ -50,10 +50,9 @@ export default class MyDocument extends Document {
 
           {/* FONTS */}
           <link
-            crossorigin="anonymous"
             rel="preload"
             as="font"
-            type="font/eot"
+            type="font/vnd.ms-fontobject"
             href={`${ASSETS_URL}/fonts/lineto-circular-bold.eot`}
             crossorigin="anonymous"
           />
@@ -72,7 +71,11 @@ export default class MyDocument extends Document {
             crossorigin="anonymous"
           />
 
-          <link rel="stylesheet" type="text/css" href={`${ASSETS_URL}/style/circular-bold.css`} />
+          <link
+            rel="stylesheet"
+            type="text/css"
+            href={`${ASSETS_URL}/style/circular-bold.css`}
+          />
 
           <link rel="manifest" href={`/static/manifest.json?v=yya2lgM4gb`} />
           <meta name="theme-color" content="#ddff31" />

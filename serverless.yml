@@ -3,24 +3,19 @@ plugins:
   - serverless-offline
   # - serverless-domain-manager
 
-# You can pin your service to only deploy with a specific Serverless version
-# Check out our docs for more details
-# frameworkVersion: "=X.X.X"
-
 package:
-  individually: true
+  # individually: true
   exclude:
     - .git/**
     - .gitignore
-    - pages/**
-    - components/**
-    - svgs/**
-  # include:
-  #   - node_modules/react
-  #   - node_modules/react-dom
-  #   - node_modules/next
-  #   - node_modules/aws-api-gateway-client
-  #   - .next/**
+    - ${self:custom.appDir}/pages/**
+    - ${self:custom.appDir}/components/**
+    - ${self:custom.appDir}/svgs/**
+    - package.json
+    - package-lock.json
+    - README.md
+    - ${self:custom.appDir}/server_dev.js
+    - .DS_Store
 
 provider:
   name: aws
@@ -37,23 +32,25 @@ provider:
 
 functions:
   GetEvent:
-    handler: getEvent.handler
+    handler: ${self:custom.functionsDir}/getEvent.handler
     events:
       - http: 'GET /event/{proxy+}'
   Search:
-    handler: searchEvents.handler
+    handler: ${self:custom.functionsDir}/searchEvents.handler
     events:
       - http: GET /search
   NextJSFiles:
-    handler: getNextJSFiles.handler
+    handler: ${self:custom.functionsDir}/getNextJSFiles.handler
     events:
       - http: 'GET /_next/{proxy+}'
   GetStaticFiles:
-    handler: getStaticFiles.handler
+    handler: ${self:custom.functionsDir}/getStaticFiles.handler
     events:
       - http: 'GET /static/{proxy+}'
 
-# custom:
+custom:
+  functionsDir: lambda
+  appDir: src
 #   customDomain:
 #     domainName: dev.la-foulee.com
 #     basePath: ''
