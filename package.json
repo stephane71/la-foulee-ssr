@@ -1,0 +1,29 @@
+{
+  "name": "la-foulee-ssr",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "dependencies": {
+    "aws-api-gateway-client": "^0.2.10",
+    "express": "^4.16.2",
+    "moment": "^2.20.1",
+    "next": "^4.2.1",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "serverless-http": "^1.5.2"
+  },
+  "devDependencies": {
+    "babel-plugin-inline-react-svg": "^0.5.2",
+    "file-loader": "^1.1.6",
+    "js-yaml": "^3.10.0",
+    "serverless-domain-manager": "^2.0.2",
+    "serverless-offline": "^3.16.0"
+  },
+  "scripts": {
+    "dev": "node server_dev.js",
+    "build": "next build --inspect",
+    "deploy": "npm run build && serverless deploy"
+  },
+  "author": "",
+  "license": "ISC"
+}

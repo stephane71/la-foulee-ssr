@@ -1,0 +1,24 @@
+{
+  "name": "La Foulée",
+  "short_name": "La Foulée",
+  "theme_color": "#264A43",
+  "background_color": "#264A43",
+  "display": "standalone",
+  "Scope": "/",
+  "start_url": "/",
+  "icons": [
+    {
+      "src":
+        "https://assets.la-foulee.com/android-chrome-192x192.png?v=yya2lgM4gb",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src":
+        "https://assets.la-foulee.com/android-chrome-512x512.png?v=yya2lgM4gb",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "splash_pages": null
+}
