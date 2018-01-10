@@ -1,5 +1,5 @@
-import { dominant, white } from './colors';
-import { getSpacing } from './styles-variables';
+import { dominant, white } from '../colors';
+import { getSpacing } from '../styles-variables';
 
 const A = props => (
   <a style={{ ...props.style }} href={props.href} target={'_blank'}>

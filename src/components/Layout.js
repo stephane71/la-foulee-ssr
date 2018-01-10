@@ -1,7 +1,7 @@
 import Header from './Header';
-import { HEIGHT_APPBAR } from './styles-variables';
+import { HEIGHT_APPBAR } from '../styles-variables';
 
-import GlobalStyles from '../components/styles';
+import GlobalStyles from '../styles';
 
 import moment from 'moment';
 moment.locale('fr');
@@ -17,7 +17,9 @@ const Layout = props => (
         padding-top: ${HEIGHT_APPBAR}px;
       }
     `}</style>
-    <style global jsx>{GlobalStyles}</style>
+    <style global jsx>
+      {GlobalStyles}
+    </style>
   </div>
 );
 

@@ -4,8 +4,8 @@
 import React from 'react';
 import Link from 'next/link';
 
-import { getSpacing } from './styles-variables';
-import { white, listBorderColor } from './colors';
+import { getSpacing } from '../styles-variables';
+import { white, listBorderColor } from '../colors';
 import Arrow from '../svgs/arrow_right_black_24px.svg';
 
 export default props => (

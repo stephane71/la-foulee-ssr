@@ -1,5 +1,5 @@
-import { dominant, white } from './colors';
-import { getSpacing } from './styles-variables';
+import { dominant, white } from '../colors';
+import { getSpacing } from '../styles-variables';
 
 const Button = props => (
   <button style={{ ...props.style }}>

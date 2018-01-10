@@ -3,8 +3,8 @@
 // read here https://github.com/kesne/babel-plugin-inline-react-svg/issues/31#issuecomment-342264348
 import React from 'react';
 
-import { HEIGHT_APPBAR, getSpacing } from './styles-variables';
-import { dominant } from './colors';
+import { HEIGHT_APPBAR, getSpacing } from '../styles-variables';
+import { dominant } from '../colors';
 import LogoTonic from '../svgs/lafoulee-tonic.svg';
 
 const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - 8;

@@ -10,8 +10,8 @@ import EurosSymbol from '../svgs/ic_euro_symbol_black_24px.svg';
 import Email from '../svgs/ic_email_black_24px.svg';
 import Smartphone from '../svgs/ic_smartphone_black_24px.svg';
 
-import { getSpacing, H6 } from './styles-variables';
-import { getColor, dominant } from './colors';
+import { getSpacing, H6 } from '../styles-variables';
+import { getColor, dominant } from '../colors';
 
 function formatDistance(value) {
   if (value < 1000) return `${value}m`;
@@ -97,6 +97,7 @@ const EventPage = ({ data }) => (
 
       .event-title {
         margin-bottom: ${getSpacing('m')}px;
+        text-transform: capitalize;
       }
 
       .event-date {
