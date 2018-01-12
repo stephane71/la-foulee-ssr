@@ -1,26 +1,15 @@
 import Layout from '../components/Layout';
-import EventListItem from '../components/EventListItem';
+import EventList from '../components/EventList';
 
-const mockItemData = {
-  title: `L'arverne run  -  nocturne`,
-  dep: '63',
-  city: 'Romagnat',
-  keyword: '10-km-paris-centre'
-};
-
-const mockItemData2 = {
-  title: `L'arverne run  -  nocturne`,
-  dep: '63',
-  city: 'Romagnat',
-  keyword: 'foulees-de-lucial'
-};
-
-const Search = () => (
+const Search = props => (
   <Layout>
-    {'Search pages'}
-    <EventListItem data={mockItemData} />
-    <EventListItem data={mockItemData2} lastItem />
+    {'Search pages test'}
+    <EventList data={props.eventList.strides} />
   </Layout>
 );
+
+Search.getInitialProps = async function({ query }) {
+  return { eventList: query.eventList };
+};
 
 export default Search;
