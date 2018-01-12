@@ -16,7 +16,9 @@ module.exports = function(server, app) {
         process.exit(1);
       });
   };
-
+  console.log('----------------');
+  console.log(process.env.NODE_ENV);
+  console.log('----------------');
   return process.env.NODE_ENV !== 'production'
     ? devHandler
     : serverless(server);

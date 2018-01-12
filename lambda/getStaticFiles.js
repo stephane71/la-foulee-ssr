@@ -2,7 +2,7 @@
 
 const express = require('express');
 const next = require('next');
-const getHandlerNextJS = require('./utils/getHandlerNextJS');
+const serverWrapper = require('./utils/serverWrapper');
 
 const dev = process.env.NODE_ENV !== 'production';
 const app = next({ dev, dir: './src' });
@@ -14,4 +14,4 @@ server.get('/static/*', (req, res) => {
   return handle(req, res);
 });
 
-module.exports.handler = getHandlerNextJS(server, app);
+module.exports.handler = serverWrapper(server, app);

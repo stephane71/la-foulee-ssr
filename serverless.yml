@@ -32,11 +32,11 @@ provider:
 
 functions:
   GetEvent:
-    handler: ${self:custom.functionsDir}/getEvent.handler
+    handler: ${self:custom.functionsDir}/getEventPage.handler
     events:
       - http: 'GET /event/{proxy+}'
   Search:
-    handler: ${self:custom.functionsDir}/searchEvents.handler
+    handler: ${self:custom.functionsDir}/getSearchPage.handler
     events:
       - http: GET /search
   NextJSFiles:
