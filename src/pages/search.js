@@ -3,7 +3,6 @@ import EventList from '../components/EventList';
 
 const Search = props => (
   <Layout>
-    {'Search pages test'}
     <EventList data={props.eventList.strides} />
   </Layout>
 );
