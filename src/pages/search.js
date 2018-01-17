@@ -3,7 +3,12 @@ import EventList from '../components/EventList';
 
 const Search = props => (
   <Layout>
-    <EventList data={props.eventList.strides} />
+    <EventList
+      data={props.eventList.strides.reduce(
+        (current, next) => (current = current.concat(next)),
+        []
+      )}
+    />
   </Layout>
 );
 
