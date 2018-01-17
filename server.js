@@ -13,16 +13,15 @@ const app = next({ dev: true, dir: './src' });
 const handle = app.getRequestHandler();
 const server = express();
 
-server.get('/search', (req, res) => {
+server.get('/search', async (req, res) => {
   const selectors = {
     month: '0-2018',
     dep: '',
     page: 0
   };
 
-  getStrideList(apigClient, selectors).then(data =>
-    app.render(req, res, '/search', { eventList: data })
-  );
+  let data = await getStrideList(apigClient, selectors);
+  app.render(req, res, '/search', { eventList: data });
 });
 
 server.get('/event/:keyword', (req, res) => {
