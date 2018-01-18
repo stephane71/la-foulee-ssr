@@ -43,8 +43,6 @@ export default class Search extends React.PureComponent {
   }
 
   handleLoadPage() {
-    console.log('handleLoadPage');
-
     this.setState({ loading: true });
     setTimeout(() => {
       this.setState(({ events }) => ({
@@ -56,5 +54,6 @@ export default class Search extends React.PureComponent {
 }
 
 Search.getInitialProps = async function({ query }) {
+  if (!query.eventList) return { eventList: { strides: [] } };
   return { eventList: query.eventList };
 };

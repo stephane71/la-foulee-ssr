@@ -32,7 +32,7 @@ const Event = props => (
   <Layout>
     <Head>
       <title>{`${props.event.title} | La Foulée`}</title>
-      <script type="application/ld+json">
+      <script type={'application/ld+json'}>
         {getEventStructuredData(props.event)}
       </script>
     </Head>
@@ -44,7 +44,7 @@ Event.getInitialProps = async function({ query }) {
   if (query.event && query.event.title) {
     return { event: query.event };
   }
-  return { event: { title: 'Data to fetch in client' } };
+  return { event: { title: 'Data to fetch in client', activities: [] } };
 };
 
 export default Event;

@@ -19,18 +19,21 @@ export default class EventList extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {
-      rendered: false,
-      stickyDate: props.data[0].date
-    };
-
     this.rowRenderer = this.rowRenderer.bind(this);
     this.onRowsRendered = this.onRowsRendered.bind(this);
     this.getRowHeight = this.getRowHeight.bind(this);
   }
 
+  state = {
+    rendered: false,
+    stickyDate: this.props.data.length && this.props.data[0].date
+  };
+
   render() {
     const { data } = this.props;
+
+    if (!data.length) return <div>{'Empty list !'}</div>;
+
     return (
       <div style={{ height: '100%' }}>
         {this.state.rendered ? (
@@ -55,14 +58,14 @@ export default class EventList extends React.PureComponent {
   }
 
   getRowHeight({ index }) {
-    if (index === this.props.data.length) return 73;
+    if (index === this.props.data.length) return EVENT_LIST_ITEM_HEIGHT;
     return index &&
       this.props.data[index].date !== this.props.data[index - 1].date
-      ? 122
-      : 73;
+      ? EVENT_LIST_ITEM_HEIGHT + EVENT_LIST_DATE_HEADER_HEIGHT
+      : EVENT_LIST_ITEM_HEIGHT;
   }
 
-  rowRenderer({ key, index, style, parent }) {
+  rowRenderer({ key, index, style }) {
     const { data } = this.props;
     if (index === data.length)
       return (
@@ -88,7 +91,7 @@ export default class EventList extends React.PureComponent {
     startIndex,
     stopIndex
   }) {
-    if (stopIndex + PADDING_INDEX_LOAD_MORE === this.props.data.length) {
+    if (stopIndex + PADDING_INDEX_LOAD_MORE >= this.props.data.length) {
       if (!this.props.loading) this.props.onLoadMore();
     }
     this.setState({
