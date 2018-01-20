@@ -21,9 +21,12 @@
     "serverless-offline": "^3.16.0"
   },
   "scripts": {
+    "build:dev": "NODE_ENV=dev next build src",
+    "build:production": "NODE_ENV=production next build src",
     "dev": "NODE_ENV=dev node server.js",
-    "build": "next build src",
-    "deploy": "npm run build && serverless deploy"
+    "offline": "npm run build:dev && sls offline start",
+    "deploy:dev": "npm run build:production && serverless deploy",
+    "deploy:prod": "npm run build:production && serverless deploy --stage prod"
   },
   "author": "",
   "license": "ISC"

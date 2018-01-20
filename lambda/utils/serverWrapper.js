@@ -17,9 +17,9 @@ module.exports = function(server, app) {
       });
   };
   console.log('----------------');
-  console.log(process.env.NODE_ENV);
+  console.log('NEXT_ENV', process.env.NEXT_ENV);
   console.log('----------------');
-  return process.env.NODE_ENV !== 'production'
+  return process.env.NEXT_ENV !== 'production'
     ? devHandler
     : serverless(server);
 };

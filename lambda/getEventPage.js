@@ -8,7 +8,7 @@ const getStride = require('./api/getStride');
 const apigClientFactory = require('./utils/getAPIGatewayClient');
 const apigClient = apigClientFactory();
 
-const dev = process.env.NODE_ENV !== 'production';
+const dev = process.env.NEXT_ENV !== 'production';
 const app = next({ dev, dir: './src' });
 const handle = app.getRequestHandler();
 const server = express();

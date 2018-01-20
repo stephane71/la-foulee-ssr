@@ -1,6 +1,6 @@
 .DS_Store
 node_modules
-.env.dev
+.env.*
+config.*
 .serverless
 .next
-config.yml
