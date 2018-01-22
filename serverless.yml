@@ -19,10 +19,10 @@ package:
 provider:
   name: aws
   runtime: nodejs6.10
-  stage: ${opt:stage, 'dev'}
+  stage: ${opt:stage, 'developpement'}
   # region: ue-west-1
   memorySize: 128
-  environment: ${file(./config.${self:provider.stage}.json)}
+  environment: ${file(./config/server/env.${self:provider.stage}.json)}
 
 custom:
   functionsDir: lambda

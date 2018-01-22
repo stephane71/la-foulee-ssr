@@ -1,4 +1,10 @@
-require('dotenv').config({ path: '.env.dev' });
+console.log('---- Running local dev server ----');
+
+const config = require('./config/server/env.developpement.json');
+for (let name in config) {
+  process.env[name] = config[name];
+}
+process.env['NEXT_ENV'] = 'developpement';
 
 const express = require('express');
 const next = require('next');
