@@ -4,6 +4,9 @@ import moment from 'moment';
 import Layout from '../components/Layout';
 import EventPage from '../components/EventPage';
 
+import withEventAPI from '../components/withEventAPI';
+import withCredentials from '../components/withCredentials';
+
 const getEventStructuredData = function(event) {
   const jsonLD = {
     '@context': 'http://schema.org',
@@ -47,4 +50,4 @@ Event.getInitialProps = async function({ query }) {
   return { event: { title: 'Data to fetch in client', activities: [] } };
 };
 
-export default Event;
+export default withCredentials(withEventAPI(Event));
