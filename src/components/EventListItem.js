@@ -35,7 +35,7 @@ export default props => (
         .event-list-item-root {
           display: flex;
           justify-content: space-between;
-          padding: ${getSpacing('s')}px;
+          padding: ${getSpacing('s')}px ${getSpacing('m')}px;
           align-items: center;
           background-color: ${white};
           border-bottom: 1px solid ${listBorderColor};
@@ -56,6 +56,9 @@ export default props => (
         .title {
           font-weight: 500;
           text-transform: capitalize;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
         }
       `}</style>
     </div>
