@@ -1,9 +1,20 @@
 import Head from 'next/head';
 
 import Layout from '../components/Layout';
+import Loader from '../components/Loader';
 import EventList from '../components/EventList';
+
 import withEventAPI from '../components/withEventAPI';
 import withCredentials from '../components/withCredentials';
+
+const getEventList = function(eventList) {
+  return eventList
+    ? eventList.strides.reduce(
+        (current, next) => (current = current.concat(next)),
+        []
+      )
+    : [];
+};
 
 const getEventStructuredData = function(event) {
   const jsonLD = {};
@@ -11,24 +22,31 @@ const getEventStructuredData = function(event) {
 };
 
 export class Search extends React.PureComponent {
+  static getInitialProps(context) {
+    let { query } = context;
+
+    if (!query.eventList) return { eventList: null };
+    return { eventList: query.eventList };
+  }
+
   constructor(props) {
     super(props);
 
     this.handleLoadPage = this.handleLoadPage.bind(this);
   }
 
-  static getInitialProps({ query }) {
-    if (!query.eventList) return { eventList: { strides: [] } };
-    return { eventList: query.eventList };
-  }
-
   state = {
     loading: false,
-    events: this.props.eventList.strides.reduce(
-      (current, next) => (current = current.concat(next)),
-      []
-    )
+    events: getEventList(this.props.eventList)
   };
+
+  async componentDidMount() {
+    if (!this.state.events.length) {
+      this.setState({ loading: true });
+      const events = await this.props.getEventList();
+      this.setState({ loading: false, events: getEventList(events) });
+    }
+  }
 
   render() {
     return (
@@ -40,11 +58,15 @@ export class Search extends React.PureComponent {
           </script>
         </Head>
 
-        <EventList
-          data={this.state.events}
-          onLoadMore={this.handleLoadPage}
-          loading={this.state.loading}
-        />
+        {!this.state.events.length && this.state.loading ? (
+          <Loader />
+        ) : (
+          <EventList
+            data={this.state.events}
+            onLoadMore={this.handleLoadPage}
+            loading={this.state.loading}
+          />
+        )}
       </Layout>
     );
   }
@@ -56,12 +78,7 @@ export class Search extends React.PureComponent {
     setTimeout(() => {
       this.setState(({ events }) => ({
         loading: false,
-        events: events.concat(
-          this.props.eventList.strides.reduce(
-            (current, next) => (current = current.concat(next)),
-            []
-          )
-        )
+        events: events.concat(getEventList(this.props.eventList))
       }));
     }, 3000);
   }

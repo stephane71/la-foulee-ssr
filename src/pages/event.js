@@ -3,6 +3,7 @@ import moment from 'moment';
 
 import Layout from '../components/Layout';
 import EventPage from '../components/EventPage';
+import Loader from '../components/Loader';
 
 import withEventAPI from '../components/withEventAPI';
 import withCredentials from '../components/withCredentials';
@@ -31,23 +32,41 @@ const getEventStructuredData = function(event) {
   return JSON.stringify(jsonLD);
 };
 
-const Event = props => (
-  <Layout>
-    <Head>
-      <title>{`${props.event.title} | La Foulée`}</title>
-      <script type={'application/ld+json'}>
-        {getEventStructuredData(props.event)}
-      </script>
-    </Head>
-    <EventPage data={props.event} />
-  </Layout>
-);
-
-Event.getInitialProps = async function({ query }) {
-  if (query.event && query.event.title) {
-    return { event: query.event };
+export class Event extends React.PureComponent {
+  static async getInitialProps(context) {
+    let { query } = context;
+    if (query.event && query.event.title) {
+      return { event: query.event };
+    }
+    return { event: null };
   }
-  return { event: { title: 'Data to fetch in client', activities: [] } };
-};
+
+  state = {
+    event: this.props.event || null
+  };
+
+  async componentDidMount() {
+    if (!this.state.event) {
+      const event = await this.props.getEvent(this.props.url.query.event);
+      this.setState({ event });
+    }
+  }
+
+  render() {
+    return (
+      <Layout>
+        {this.state.event && (
+          <Head>
+            <title>{`${this.state.event.title} | La Foulée`}</title>
+            <script type={'application/ld+json'}>
+              {getEventStructuredData(this.state.event)}
+            </script>
+          </Head>
+        )}
+        {this.state.event ? <EventPage data={this.state.event} /> : <Loader />}
+      </Layout>
+    );
+  }
+}
 
 export default withCredentials(withEventAPI(Event));

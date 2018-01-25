@@ -1,6 +1,7 @@
 import apigClientFactory from 'aws-api-gateway-client';
 
 import asyncGetCredentials from '../utils/asyncGetCredentials';
+import { getEventArgs, getEventListArgs } from '../api';
 
 function getAPIGatewayClient(credentials) {
   return apigClientFactory.newClient({
@@ -10,19 +11,6 @@ function getAPIGatewayClient(credentials) {
     secretKey: credentials.secretAccessKey,
     sessionToken: credentials.sessionToken
   });
-}
-
-async function getEventArgs(strideID) {
-  const params = {
-    strideID
-  };
-  // Template syntax follows url-template https://www.npmjs.com/package/url-template
-  const pathTemplate = '/stride/{strideID}';
-  const method = 'GET';
-  const additionalParams = {};
-  const body = {};
-
-  return [params, pathTemplate, method, additionalParams, body];
 }
 
 const withEventAPI = WrappedComponent => {
@@ -35,14 +23,21 @@ const withEventAPI = WrappedComponent => {
       return WrappedComponent.getInitialProps(context);
     }
 
-    componentDidMount() {
-      // This hook is only call on client side
-      this.api = this.getAPI();
+    constructor(...args) {
+      super(...args);
+
+      this.getAPI = this.getAPI.bind(this);
+      this.getEvent = this.getEvent.bind(this);
+      this.getEventList = this.getEventList.bind(this);
     }
 
     render() {
       return (
-        <WrappedComponent api={this.getEventApi(this.api)} {...this.props} />
+        <WrappedComponent
+          getEvent={this.getEvent}
+          getEventList={this.getEventList}
+          {...this.props}
+        />
       );
     }
 
@@ -54,17 +49,19 @@ const withEventAPI = WrappedComponent => {
         this.api = getAPIGatewayClient(credentials);
       }
 
-      return Promise.resolve(this.api);
+      return this.api;
     }
 
-    getEventApi() {
-      return {
-        async getEvent(strideID) {
-          // const args = getEventArgs(strideID);
-          // let api = await this.getAPI();
-          // return await api.invokeApi(...args);
-        }
-      };
+    async getEvent(strideID) {
+      let api = await this.getAPI();
+      const args = getEventArgs(strideID);
+      return await api.invokeApi(...args).then(res => res.data);
+    }
+
+    async getEventList() {
+      let api = await this.getAPI();
+      const args = getEventListArgs();
+      return await api.invokeApi(...args).then(res => res.data);
     }
   };
 };

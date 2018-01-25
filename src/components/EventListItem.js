@@ -9,7 +9,11 @@ import { white, listBorderColor } from '../colors';
 import Arrow from '../svgs/arrow_right_black_24px.svg';
 
 export default props => (
-  <Link prefetch as={`/event/${props.data.keyword}`} href={`/event`}>
+  <Link
+    prefetch
+    as={`/event/${props.data.keyword}`}
+    href={{ pathname: '/event', query: { event: props.data.keyword } }}
+  >
     <div
       className={`event-list-item-root ${
         props.lastItem ? `last-list-item` : ``

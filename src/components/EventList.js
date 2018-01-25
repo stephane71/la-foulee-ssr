@@ -67,6 +67,7 @@ export default class EventList extends React.PureComponent {
 
   rowRenderer({ key, index, style }) {
     const { data } = this.props;
+    // End list loader
     if (index === data.length)
       return (
         <div style={style} key={key}>
