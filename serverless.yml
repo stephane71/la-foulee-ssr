@@ -1,6 +1,7 @@
 service: la-foulee-ssr
 plugins:
   - serverless-offline
+  - serverless-domain-manager
 
 package:
   exclude:
@@ -20,13 +21,18 @@ provider:
   name: aws
   runtime: nodejs6.10
   stage: ${opt:stage, 'developpement'}
-  # region: ue-west-1
+  region: eu-west-3
   memorySize: 128
   environment: ${file(./config/server/env.${self:provider.stage}.json)}
 
 custom:
   functionsDir: lambda
   appDir: src
+  customDomain:
+    domainName: dev.la-foulee.com
+    basePath: ''
+    stage: ${self:provider.stage}
+    createRoute53Record: true
 
 functions:
   GetEvent:
