@@ -7,7 +7,13 @@ import EventList from '../components/EventList';
 import withEventAPI from '../components/withEventAPI';
 import withCredentials from '../components/withCredentials';
 
-const getEventList = function(eventList) {
+const DEFAULT_SELECTORS = {
+  month: '0-2018',
+  dep: '',
+  page: 0
+};
+
+const getEventListReducer = function(eventList) {
   return eventList
     ? eventList.strides.reduce(
         (current, next) => (current = current.concat(next)),
@@ -25,8 +31,11 @@ export class Search extends React.PureComponent {
   static getInitialProps(context) {
     let { query } = context;
 
-    if (!query.eventList) return { eventList: null };
-    return { eventList: query.eventList };
+    if (!query.eventList) return { eventListInitial: [] };
+    return {
+      eventListInitial: getEventListReducer(query.eventList),
+      pages: query.eventList.pages
+    };
   }
 
   constructor(props) {
@@ -37,14 +46,20 @@ export class Search extends React.PureComponent {
 
   state = {
     loading: false,
-    events: getEventList(this.props.eventList)
+    selectors: DEFAULT_SELECTORS,
+    events: this.props.eventListInitial,
+    pages: this.props.pages
   };
 
   async componentDidMount() {
     if (!this.state.events.length) {
       this.setState({ loading: true });
-      const events = await this.props.getEventList();
-      this.setState({ loading: false, events: getEventList(events) });
+      const eventList = await this.props.getEventList();
+      this.setState({
+        loading: false,
+        events: getEventListReducer(eventList),
+        pages: eventList.pages
+      });
     }
   }
 
@@ -65,22 +80,28 @@ export class Search extends React.PureComponent {
             data={this.state.events}
             onLoadMore={this.handleLoadPage}
             loading={this.state.loading}
+            endList={this.state.selectors.page + 1 === this.state.pages}
           />
         )}
       </Layout>
     );
   }
 
-  handleLoadPage() {
+  async handleLoadPage() {
     if (this.state.loading) return;
 
     this.setState({ loading: true });
-    setTimeout(() => {
-      this.setState(({ events }) => ({
-        loading: false,
-        events: events.concat(getEventList(this.props.eventList))
-      }));
-    }, 3000);
+
+    const newSelectors = Object.assign({}, this.state.selectors, {
+      page: this.state.selectors.page + 1
+    });
+
+    const eventList = await this.props.getEventList(newSelectors);
+    this.setState(({ events }) => ({
+      loading: false,
+      selectors: newSelectors,
+      events: events.concat(getEventListReducer(eventList))
+    }));
   }
 }
 

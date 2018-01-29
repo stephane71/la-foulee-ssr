@@ -19,9 +19,9 @@ export default class EventList extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    this.getRowHeight = this.getRowHeight.bind(this);
     this.rowRenderer = this.rowRenderer.bind(this);
     this.onRowsRendered = this.onRowsRendered.bind(this);
-    this.getRowHeight = this.getRowHeight.bind(this);
   }
 
   state = {
@@ -46,10 +46,11 @@ export default class EventList extends React.PureComponent {
             <List
               width={width}
               height={height - EVENT_LIST_DATE_HEADER_HEIGHT}
-              rowCount={data.length + 1}
+              rowCount={data.length}
               rowHeight={this.getRowHeight}
               onRowsRendered={this.onRowsRendered}
               rowRenderer={this.rowRenderer}
+              style={{ outline: 'none' }}
             />
           )}
         </AutoSizer>
@@ -67,13 +68,7 @@ export default class EventList extends React.PureComponent {
 
   rowRenderer({ key, index, style }) {
     const { data } = this.props;
-    // End list loader
-    if (index === data.length)
-      return (
-        <div style={style} key={key}>
-          <Loader />
-        </div>
-      );
+
     return (
       <div style={style} key={key}>
         {(index &&
@@ -81,19 +76,19 @@ export default class EventList extends React.PureComponent {
             <EventListDate date={data[index].date} />
           )) ||
           null}
-        <EventListItem data={data[index]} />
+
+        {index === data.length - 1 && this.props.loading ? (
+          <Loader />
+        ) : (
+          <EventListItem data={data[index]} />
+        )}
       </div>
     );
   }
 
-  onRowsRendered({
-    overscanStartIndex,
-    overscanStopIndex,
-    startIndex,
-    stopIndex
-  }) {
+  onRowsRendered({ startIndex, stopIndex }) {
     if (stopIndex + PADDING_INDEX_LOAD_MORE >= this.props.data.length) {
-      if (!this.props.loading) this.props.onLoadMore();
+      if (!this.props.loading && !this.props.endList) this.props.onLoadMore();
     }
     this.setState({
       rendered: true,

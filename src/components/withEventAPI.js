@@ -58,9 +58,9 @@ const withEventAPI = WrappedComponent => {
       return await api.invokeApi(...args).then(res => res.data);
     }
 
-    async getEventList() {
+    async getEventList(selectors) {
       let api = await this.getAPI();
-      const args = getEventListArgs();
+      const args = getEventListArgs(selectors);
       return await api.invokeApi(...args).then(res => res.data);
     }
   };
