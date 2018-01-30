@@ -2,11 +2,14 @@ import dynamic from 'next/dynamic';
 import Head from 'next/head';
 
 import Layout from '../components/Layout';
+import Loader from '../components/Loader';
+
 import { getSearchStructuredData } from '../utils/structuredData';
 import { getEventListReducer } from '../utils/reducers';
 
 const EventListContainer = dynamic(import('../containers/EventListContainer'), {
-  ssr: false
+  ssr: false,
+  loading: () => <Loader />
 });
 
 const Search = props => {

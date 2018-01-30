@@ -9,6 +9,7 @@ package:
     - .gitignore
     - ${self:custom.appDir}/pages/**
     - ${self:custom.appDir}/components/**
+    - ${self:custom.appDir}/containers/**
     - ${self:custom.appDir}/svgs/**
     - ${self:custom.appDir}/utils/**
     - package.json
