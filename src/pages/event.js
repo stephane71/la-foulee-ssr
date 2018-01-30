@@ -63,7 +63,22 @@ export class Event extends React.PureComponent {
             </script>
           </Head>
         )}
-        {this.state.event ? <EventPage data={this.state.event} /> : <Loader />}
+
+        <div className={'EventPageContainer'}>
+          {this.state.event ? (
+            <EventPage data={this.state.event} />
+          ) : (
+            <Loader />
+          )}
+        </div>
+
+        <style jsx>{`
+          .EventPageContainer {
+            margin: auto;
+            max-width: 768px;
+            height: 100%;
+          }
+        `}</style>
       </Layout>
     );
   }

@@ -1,17 +1,11 @@
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
 
 import Layout from '../components/Layout';
-import Loader from '../components/Loader';
-import EventList from '../components/EventList';
 
-import withEventAPI from '../components/withEventAPI';
-import withCredentials from '../components/withCredentials';
-
-const DEFAULT_SELECTORS = {
-  month: '0-2018',
-  dep: '',
-  page: 0
-};
+const EventListContainer = dynamic(import('../containers/EventListContainer'), {
+  ssr: false
+});
 
 const getEventListReducer = function(eventList) {
   return eventList
@@ -38,31 +32,6 @@ export class Search extends React.PureComponent {
     };
   }
 
-  constructor(props) {
-    super(props);
-
-    this.handleLoadPage = this.handleLoadPage.bind(this);
-  }
-
-  state = {
-    loading: false,
-    selectors: DEFAULT_SELECTORS,
-    events: this.props.eventListInitial,
-    pages: this.props.pages
-  };
-
-  async componentDidMount() {
-    if (!this.state.events.length) {
-      this.setState({ loading: true });
-      const eventList = await this.props.getEventList();
-      this.setState({
-        loading: false,
-        events: getEventListReducer(eventList),
-        pages: eventList.pages
-      });
-    }
-  }
-
   render() {
     return (
       <Layout>
@@ -73,36 +42,13 @@ export class Search extends React.PureComponent {
           </script>
         </Head>
 
-        {!this.state.events.length && this.state.loading ? (
-          <Loader />
-        ) : (
-          <EventList
-            data={this.state.events}
-            onLoadMore={this.handleLoadPage}
-            loading={this.state.loading}
-            endList={this.state.selectors.page + 1 === this.state.pages}
-          />
-        )}
+        <EventListContainer
+          pages={this.props.pages}
+          eventListInitial={this.props.eventListInitial}
+        />
       </Layout>
     );
   }
-
-  async handleLoadPage() {
-    if (this.state.loading) return;
-
-    this.setState({ loading: true });
-
-    const newSelectors = Object.assign({}, this.state.selectors, {
-      page: this.state.selectors.page + 1
-    });
-
-    const eventList = await this.props.getEventList(newSelectors);
-    this.setState(({ events }) => ({
-      loading: false,
-      selectors: newSelectors,
-      events: events.concat(getEventListReducer(eventList))
-    }));
-  }
 }
 
-export default withCredentials(withEventAPI(Search));
+export default Search;
