@@ -6,21 +6,13 @@ import EventList from '../components/EventList';
 import withEventAPI from '../components/withEventAPI';
 import withCredentials from '../components/withCredentials';
 
+import { getEventListReducer } from '../utils/reducers';
 import { listBorderColor } from '../colors';
 
 const DEFAULT_SELECTORS = {
   month: '0-2018',
   dep: '',
   page: 0
-};
-
-const getEventListReducer = function(eventList) {
-  return eventList
-    ? eventList.strides.reduce(
-        (current, next) => (current = current.concat(next)),
-        []
-      )
-    : [];
 };
 
 export class EventListContainer extends React.PureComponent {
