@@ -19,10 +19,7 @@ const Search = props => {
         </script>
       </Head>
 
-      <EventListContainer
-        pages={props.pages}
-        eventListInitial={props.eventListInitial}
-      />
+      <EventListContainer {...props} />
     </Layout>
   );
 };
