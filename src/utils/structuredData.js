@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export const getSearchStructuredData = function() {
+export const getEventListStructuredData = function() {
   const jsonLD = {};
   return JSON.stringify(jsonLD);
 };

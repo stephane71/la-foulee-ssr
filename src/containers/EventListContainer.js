@@ -1,12 +1,14 @@
+import { Fragment } from 'react';
+import Head from 'next/head';
+import css from 'styled-jsx/css';
 import Media from 'react-media';
 
 import Loader from '../components/Loader';
 import EventList from '../components/EventList';
 
-import withEventAPI from '../components/withEventAPI';
-import withCredentials from '../components/withCredentials';
-
 import { getEventListReducer } from '../utils/reducers';
+import { getEventListStructuredData } from '../utils/structuredData';
+
 import { listBorderColor } from '../colors';
 
 const DEFAULT_SELECTORS = {
@@ -14,6 +16,24 @@ const DEFAULT_SELECTORS = {
   dep: '',
   page: 0
 };
+
+const EventListContainerDesktop = css`
+  .EventListContainerDesktop {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+  }
+
+  .EventListContainerDesktop--selectors {
+    height: 100%;
+    width: 40%;
+  }
+
+  .EventListContainerDesktop--list {
+    height: 100%;
+    width: 60%;
+  }
+`;
 
 export class EventListContainer extends React.PureComponent {
   constructor(props) {
@@ -25,7 +45,7 @@ export class EventListContainer extends React.PureComponent {
   state = {
     loading: false,
     selectors: DEFAULT_SELECTORS,
-    events: this.props.eventListInitial,
+    events: this.props.eventListInitial || [],
     pages: this.props.pages
   };
 
@@ -43,39 +63,31 @@ export class EventListContainer extends React.PureComponent {
 
   render() {
     return (
-      <Media query={`(max-width: 768px)`}>
-        {matches =>
-          matches ? (
-            this.getEventListComponent()
-          ) : (
-            <div className={'EventListContainerDesktop'}>
-              <div className={'EventListContainerDesktop--selectors'}>
-                {'Selectors'}
+      <Fragment>
+        <Head>
+          <title>{`La Foulée | rechercher un evénement`}</title>
+          <script type={'application/ld+json'}>
+            {getEventListStructuredData()}
+          </script>
+        </Head>
+        <Media query={`(max-width: 768px)`}>
+          {matches =>
+            matches ? (
+              this.getEventListComponent()
+            ) : (
+              <div className={'EventListContainerDesktop'}>
+                <div className={'EventListContainerDesktop--selectors'}>
+                  {'Selectors'}
+                </div>
+                <div className={'EventListContainerDesktop--list'}>
+                  {this.getEventListComponent()}
+                </div>
+                <style jsx>{EventListContainerDesktop}</style>
               </div>
-              <div className={'EventListContainerDesktop--list'}>
-                {this.getEventListComponent()}
-              </div>
-              <style jsx>{`
-                .EventListContainerDesktop {
-                  display: flex;
-                  flex-direction: row;
-                  height: 100%;
-                }
-
-                .EventListContainerDesktop--selectors {
-                  height: 100%;
-                  width: 40%;
-                }
-
-                .EventListContainerDesktop--list {
-                  height: 100%;
-                  width: 60%;
-                }
-              `}</style>
-            </div>
-          )
-        }
-      </Media>
+            )
+          }
+        </Media>
+      </Fragment>
     );
   }
 
@@ -123,4 +135,4 @@ export class EventListContainer extends React.PureComponent {
   };
 }
 
-export default withCredentials(withEventAPI(EventListContainer));
+export default EventListContainer;

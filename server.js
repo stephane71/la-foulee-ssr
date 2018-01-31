@@ -9,36 +9,25 @@ process.env['NEXT_ENV'] = 'developpement';
 const express = require('express');
 const next = require('next');
 
-const getStrideList = require('./lambda/api/getStrideList');
-const getStride = require('./lambda/api/getStride');
 const serverWrapper = require('./lambda/utils/serverWrapper');
-const apigClientFactory = require('./lambda/utils/getAPIGatewayClient');
+const appMiddleware = require('./lambda/utils/appMiddleware');
 
-const apigClient = apigClientFactory();
-const app = next({ dev: true, dir: './src' });
+const dev = true;
+const dir = './src';
+
+const app = next({ dev, dir });
 const handle = app.getRequestHandler();
 const server = express();
 
-server.get('/search', async (req, res) => {
-  const selectors = {
-    month: '0-2018',
-    dep: '',
-    page: 0
-  };
-
-  let data = await getStrideList(apigClient, selectors);
-  app.render(req, res, '/search', { eventList: data });
-});
-
-server.get('/event/:keyword', (req, res) => {
-  let data;
-  getStride(apigClient, req.params.keyword)
-    .then(data => app.render(req, res, '/event', { event: data }))
-    .catch(e => {
-      console.log('Something bad happened here :(');
-      res.status(404).send('Event Not Found');
-    });
-});
+server.get('/search', appMiddleware(app));
+server.get(
+  '/event/:keyword',
+  (req, res, next) => {
+    req.query = { event: req.params.keyword };
+    next();
+  },
+  appMiddleware(app)
+);
 
 server.get('/_next/*', (req, res) => {
   return handle(req, res);

@@ -12,7 +12,7 @@ export default props => (
   <Link
     prefetch
     as={`/event/${props.data.keyword}`}
-    href={{ pathname: '/event', query: { event: props.data.keyword } }}
+    href={{ pathname: '/app', query: { event: props.data.keyword } }}
   >
     <div
       className={`event-list-item-root ${

@@ -3,9 +3,6 @@ import Head from 'next/head';
 import EventPage from '../components/EventPage';
 import Loader from '../components/Loader';
 
-import withEventAPI from '../components/withEventAPI';
-import withCredentials from '../components/withCredentials';
-
 import { getEventStructuredData } from '../utils/structuredData';
 
 export class EventPageContainer extends React.PureComponent {
@@ -21,8 +18,6 @@ export class EventPageContainer extends React.PureComponent {
   }
 
   render() {
-    // !! WARNING !!
-    // Does ld+json data set on header when navigate from client ?
     return (
       <div className={'EventPageContainer'}>
         {this.state.event && (
@@ -48,4 +43,4 @@ export class EventPageContainer extends React.PureComponent {
   }
 }
 
-export default withCredentials(withEventAPI(EventPageContainer));
+export default EventPageContainer;
