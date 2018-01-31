@@ -37,11 +37,11 @@ custom:
 
 functions:
   GetEvent:
-    handler: ${self:custom.functionsDir}/getEventPage.handler
+    handler: ${self:custom.functionsDir}/getAppPage.handler
     events:
       - http: 'GET /event/{proxy+}'
   Search:
-    handler: ${self:custom.functionsDir}/getSearchPage.handler
+    handler: ${self:custom.functionsDir}/getAppPage.handler
     events:
       - http: GET /search
   NextJSFiles:
