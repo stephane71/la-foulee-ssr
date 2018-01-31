@@ -52,7 +52,6 @@ export default class MyDocument extends Document {
           <link
             rel="preload"
             as="font"
-            type="font/vnd.ms-fontobject"
             href={`${ASSETS_URL}/fonts/lineto-circular-bold.eot`}
             crossorigin="anonymous"
           />
