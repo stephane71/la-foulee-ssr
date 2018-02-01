@@ -15,13 +15,16 @@ const EventListContainer = dynamic(import('../containers/EventListContainer'), {
 });
 
 const App = props => {
+  let eventPageDisplay = props.url.query.event ? 'block' : 'none';
+  let eventListDisplay = props.url.query.event ? 'none' : 'block';
   return (
     <Layout>
-      {props.url.query.event ? (
-        <EventPageContainer {...props} />
-      ) : (
+      <div style={{ height: '100%', display: `${eventPageDisplay}` }}>
+        {props.url.query.event && <EventPageContainer {...props} />}
+      </div>
+      <div style={{ height: '100%', display: `${eventListDisplay}` }}>
         <EventListContainer {...props} />
-      )}
+      </div>
     </Layout>
   );
 };

@@ -110,7 +110,7 @@ export class EventListContainer extends React.PureComponent {
 
   getEventListComponent = () => {
     return (
-      <div className={'EventListContainer'}>
+      <div className={'EventListComponent'}>
         {!this.state.events.length && this.state.loading ? (
           <Loader />
         ) : (
@@ -122,7 +122,7 @@ export class EventListContainer extends React.PureComponent {
           />
         )}
         <style jsx>{`
-          .EventListContainer {
+          .EventListComponent {
             margin: auto;
             max-width: 768px;
             height: 100%;
