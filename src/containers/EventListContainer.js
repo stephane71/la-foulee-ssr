@@ -1,4 +1,5 @@
 import { Fragment } from 'react';
+import { connect } from 'react-redux';
 import Head from 'next/head';
 import css from 'styled-jsx/css';
 import Media from 'react-media';
@@ -44,18 +45,22 @@ export class EventListContainer extends React.PureComponent {
 
   state = {
     loading: false,
-    selectors: DEFAULT_SELECTORS,
-    events: this.props.eventListInitial || [],
-    pages: this.props.pages
+    selectors: DEFAULT_SELECTORS
   };
 
   async componentDidMount() {
-    if (!this.state.events.length) {
+    if (!this.props.events.length) {
       this.setState({ loading: true });
       const eventList = await this.props.getEventList();
       this.setState({
-        loading: false,
-        events: getEventListReducer(eventList),
+        loading: false
+      });
+      this.props.dispatch({
+        type: 'CONCAT_EVENT_LIST',
+        events: getEventListReducer(eventList)
+      });
+      this.props.dispatch({
+        type: 'SET_EVENT_LIST_NB_PAGES',
         pages: eventList.pages
       });
     }
@@ -101,24 +106,30 @@ export class EventListContainer extends React.PureComponent {
     });
 
     const eventList = await this.props.getEventList(newSelectors);
+
+    this.props.dispatch({
+      type: 'CONCAT_EVENT_LIST',
+      events: getEventListReducer(eventList)
+    });
+
     this.setState(({ events }) => ({
       loading: false,
-      selectors: newSelectors,
-      events: events.concat(getEventListReducer(eventList))
+      selectors: newSelectors
     }));
   }
 
   getEventListComponent = () => {
+    console.log(this.props);
     return (
       <div className={'EventListComponent'}>
-        {!this.state.events.length && this.state.loading ? (
+        {!this.props.events.length && this.state.loading ? (
           <Loader />
         ) : (
           <EventList
-            data={this.state.events}
+            data={this.props.events}
             onLoadMore={this.handleLoadPage}
             loading={this.state.loading}
-            endList={this.state.selectors.page + 1 === this.state.pages}
+            endList={this.state.selectors.page + 1 === this.props.pages}
           />
         )}
         <style jsx>{`
@@ -135,4 +146,11 @@ export class EventListContainer extends React.PureComponent {
   };
 }
 
-export default EventListContainer;
+function mapStateToProps(state) {
+  return {
+    events: state.events,
+    pages: state.pages
+  };
+}
+
+export default connect(mapStateToProps)(EventListContainer);

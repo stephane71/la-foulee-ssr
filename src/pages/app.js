@@ -1,4 +1,8 @@
 import dynamic from 'next/dynamic';
+import withRedux from 'next-redux-wrapper';
+import { compose } from 'redux';
+
+import { makeStore } from '../store';
 
 import withEventAPI from '../components/withEventAPI';
 import withCredentials from '../components/withCredentials';
@@ -29,17 +33,25 @@ const App = props => {
   );
 };
 
-App.getInitialProps = function(context) {
+App.getInitialProps = function({ store, isServer, ...context }) {
   let { query } = context;
 
   if (query.event && query.event.title) return { event: query.event };
-  if (query.eventList)
-    return {
-      eventListInitial: getEventListReducer(query.eventList),
+  if (query.eventList) {
+    store.dispatch({
+      type: 'CONCAT_EVENT_LIST',
+      events: getEventListReducer(query.eventList)
+    });
+    store.dispatch({
+      type: 'SET_EVENT_LIST_NB_PAGES',
       pages: query.eventList.pages
-    };
+    });
+  }
 
   return {};
 };
 
-export default withCredentials(withEventAPI(App));
+export default compose(withRedux(makeStore), withCredentials, withEventAPI)(
+  App
+);
+// export default withCredentials(withEventAPI(App));
