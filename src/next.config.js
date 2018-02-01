@@ -1,7 +1,11 @@
 const webpack = require('webpack');
 
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const { ANALYZE } = process.env;
+let webpackBundleAnalyzer;
+
+if (ANALYZE) {
+  webpackBundleAnalyzer = require('webpack-bundle-analyzer');
+}
 
 console.log('- next.config.js -');
 console.log('NODE_ENV:', process.env.NODE_ENV);
@@ -16,7 +20,7 @@ module.exports = {
 
     if (ANALYZE) {
       config.plugins.push(
-        new BundleAnalyzerPlugin({
+        new webpackBundleAnalyzer.BundleAnalyzerPlugin({
           analyzerMode: 'server',
           analyzerPort: 8888,
           openAnalyzer: true
