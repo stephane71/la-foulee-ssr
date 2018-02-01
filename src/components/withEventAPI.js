@@ -1,6 +1,5 @@
 import apigClientFactory from 'aws-api-gateway-client';
 
-import asyncGetCredentials from '../utils/asyncGetCredentials';
 import { getEventArgs, getEventListArgs } from '../api';
 
 function getAPIGatewayClient(credentials) {
