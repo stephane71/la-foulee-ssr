@@ -58,9 +58,11 @@ export class EventListContainer extends React.PureComponent {
   async componentDidMount() {
     if (!this.props.events.length) {
       this.setState({ loading: true });
+
       const { events, pages } = await this.props.getEventList();
       this.props.dispatch(concatEventList(events));
       this.props.dispatch(setEventListNbPages(pages));
+
       this.setState({ loading: false });
     }
   }

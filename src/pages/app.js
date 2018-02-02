@@ -17,7 +17,11 @@ import Loader from '../components/Loader';
 
 import { getFormatEventList } from '../utils/apiProxy';
 
-import EventPageContainer from '../containers/EventPageContainer';
+const EventPageContainer = dynamic(import('../containers/EventPageContainer'), {
+  ssr: true,
+  loading: () => <Loader />
+});
+
 const EventListContainer = dynamic(import('../containers/EventListContainer'), {
   ssr: false,
   loading: () => <Loader />
@@ -36,7 +40,7 @@ const App = props => {
         {props.url.query.event && <EventPageContainer {...props} />}
       </div>
       <div style={{ height: '100%', display: `${eventListDisplay}` }}>
-        <EventListContainer {...props} />
+        {props.url.asPath === '/search' && <EventListContainer {...props} />}
       </div>
     </Layout>
   );
@@ -45,14 +49,16 @@ const App = props => {
 App.getInitialProps = function({ store, isServer, ...context }) {
   let { query } = context;
 
-  if (query.event && query.event.title)
-    store.dispatch(setSelectedEvent(query.event));
+  if (isServer) {
+    if (query.event && query.event.title)
+      store.dispatch(setSelectedEvent(query.event));
 
-  if (query.eventList) {
-    const { events, pages } = getFormatEventList(query.eventList);
+    if (query.eventList) {
+      const { events, pages } = getFormatEventList(query.eventList);
 
-    store.dispatch(concatEventList(events));
-    store.dispatch(setEventListNbPages(pages));
+      store.dispatch(concatEventList(events));
+      store.dispatch(setEventListNbPages(pages));
+    }
   }
 
   return {};
