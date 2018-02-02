@@ -14,7 +14,6 @@ import {
 import Loader from '../components/Loader';
 import EventList from '../components/EventList';
 
-import { getFormatEventList } from '../utils/apiProxy';
 import { getEventListStructuredData } from '../utils/structuredData';
 
 import { listBorderColor } from '../colors';
@@ -56,12 +55,15 @@ export class EventListContainer extends React.PureComponent {
     selectors: DEFAULT_SELECTORS
   };
 
-  // When sould we need this hook ?
-  // Container is rendered with server data in props on first load
-  // Then it's never unmount
-  // -> When assets will be cache in client side
-  // async componentDidMount() {
-  // }
+  async componentDidMount() {
+    if (!this.props.events.length) {
+      this.setState({ loading: true });
+      const { events, pages } = await this.props.getEventList();
+      this.props.dispatch(concatEventList(events));
+      this.props.dispatch(setEventListNbPages(pages));
+      this.setState({ loading: false });
+    }
+  }
 
   render() {
     return (
@@ -129,8 +131,7 @@ export class EventListContainer extends React.PureComponent {
 
     this.setState(({ events }) => ({ loading: true, selectors: newSelectors }));
 
-    const eventList = await this.props.getEventList(newSelectors);
-    const { events } = getFormatEventList(eventList);
+    const { events } = await this.props.getEventList(newSelectors);
     this.props.dispatch(concatEventList(events));
 
     this.setState({ loading: false });

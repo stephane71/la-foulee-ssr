@@ -1,6 +1,7 @@
 import apigClientFactory from 'aws-api-gateway-client';
 
 import { getEventArgs, getEventListArgs } from '../api';
+import { getFormatEventList } from '../utils/apiProxy';
 
 function getAPIGatewayClient(credentials) {
   return apigClientFactory.newClient({
@@ -60,7 +61,9 @@ const withEventAPI = WrappedComponent => {
     async getEventList(selectors) {
       let api = await this.getAPI();
       const args = getEventListArgs(selectors);
-      return await api.invokeApi(...args).then(res => res.data);
+      return await api
+        .invokeApi(...args)
+        .then(res => getFormatEventList(res.data));
     }
   };
 };
