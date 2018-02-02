@@ -44,7 +44,7 @@ const withEventAPI = WrappedComponent => {
     api = null;
 
     async getAPI() {
-      if (this.props.credentialsNeedsRefresh()) {
+      if (!this.api || this.props.credentialsNeedsRefresh()) {
         let credentials = await this.props.getCredentials();
         this.api = getAPIGatewayClient(credentials);
       }
