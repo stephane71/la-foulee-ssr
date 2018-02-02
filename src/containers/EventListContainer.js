@@ -1,13 +1,20 @@
 import { Fragment } from 'react';
 import { connect } from 'react-redux';
 import Head from 'next/head';
+import Router from 'next/router';
 import css from 'styled-jsx/css';
 import Media from 'react-media';
+
+import {
+  setSelectedEvent,
+  concatEventList,
+  setEventListNbPages
+} from '../actions';
 
 import Loader from '../components/Loader';
 import EventList from '../components/EventList';
 
-import { getEventListReducer } from '../utils/reducers';
+import { getFormatEventList } from '../utils/apiProxy';
 import { getEventListStructuredData } from '../utils/structuredData';
 
 import { listBorderColor } from '../colors';
@@ -41,6 +48,7 @@ export class EventListContainer extends React.PureComponent {
     super(props);
 
     this.handleLoadPage = this.handleLoadPage.bind(this);
+    this.handleEventSelection = this.handleEventSelection.bind(this);
   }
 
   state = {
@@ -48,23 +56,12 @@ export class EventListContainer extends React.PureComponent {
     selectors: DEFAULT_SELECTORS
   };
 
-  async componentDidMount() {
-    if (!this.props.events.length) {
-      this.setState({ loading: true });
-      const eventList = await this.props.getEventList();
-      this.setState({
-        loading: false
-      });
-      this.props.dispatch({
-        type: 'CONCAT_EVENT_LIST',
-        events: getEventListReducer(eventList)
-      });
-      this.props.dispatch({
-        type: 'SET_EVENT_LIST_NB_PAGES',
-        pages: eventList.pages
-      });
-    }
-  }
+  // When sould we need this hook ?
+  // Container is rendered with server data in props on first load
+  // Then it's never unmount
+  // -> When assets will be cache in client side
+  // async componentDidMount() {
+  // }
 
   render() {
     return (
@@ -96,30 +93,7 @@ export class EventListContainer extends React.PureComponent {
     );
   }
 
-  async handleLoadPage() {
-    if (this.state.loading) return;
-
-    this.setState({ loading: true });
-
-    const newSelectors = Object.assign({}, this.state.selectors, {
-      page: this.state.selectors.page + 1
-    });
-
-    const eventList = await this.props.getEventList(newSelectors);
-
-    this.props.dispatch({
-      type: 'CONCAT_EVENT_LIST',
-      events: getEventListReducer(eventList)
-    });
-
-    this.setState(({ events }) => ({
-      loading: false,
-      selectors: newSelectors
-    }));
-  }
-
   getEventListComponent = () => {
-    console.log(this.props);
     return (
       <div className={'EventListComponent'}>
         {!this.props.events.length && this.state.loading ? (
@@ -130,6 +104,7 @@ export class EventListContainer extends React.PureComponent {
             onLoadMore={this.handleLoadPage}
             loading={this.state.loading}
             endList={this.state.selectors.page + 1 === this.props.pages}
+            onSelectEvent={this.handleEventSelection}
           />
         )}
         <style jsx>{`
@@ -144,6 +119,33 @@ export class EventListContainer extends React.PureComponent {
       </div>
     );
   };
+
+  async handleLoadPage() {
+    if (this.state.loading) return;
+
+    const newSelectors = Object.assign({}, this.state.selectors, {
+      page: this.state.selectors.page + 1
+    });
+
+    this.setState(({ events }) => ({ loading: true, selectors: newSelectors }));
+
+    const eventList = await this.props.getEventList(newSelectors);
+    const { events } = getFormatEventList(eventList);
+    this.props.dispatch(concatEventList(events));
+
+    this.setState({ loading: false });
+  }
+
+  handleEventSelection(event) {
+    this.props.dispatch(setSelectedEvent(event));
+    Router.push(
+      {
+        pathname: '/app',
+        query: { event: event.keyword }
+      },
+      `/event/${event.keyword}`
+    );
+  }
 }
 
 function mapStateToProps(state) {

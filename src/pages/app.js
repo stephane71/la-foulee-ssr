@@ -3,6 +3,11 @@ import withRedux from 'next-redux-wrapper';
 import { compose } from 'redux';
 
 import { makeStore } from '../store';
+import {
+  setSelectedEvent,
+  concatEventList,
+  setEventListNbPages
+} from '../actions';
 
 import withEventAPI from '../components/withEventAPI';
 import withCredentials from '../components/withCredentials';
@@ -10,7 +15,7 @@ import withCredentials from '../components/withCredentials';
 import Layout from '../components/Layout';
 import Loader from '../components/Loader';
 
-import { getEventListReducer } from '../utils/reducers';
+import { getFormatEventList } from '../utils/apiProxy';
 
 import EventPageContainer from '../containers/EventPageContainer';
 const EventListContainer = dynamic(import('../containers/EventListContainer'), {
@@ -21,6 +26,10 @@ const EventListContainer = dynamic(import('../containers/EventListContainer'), {
 const App = props => {
   let eventPageDisplay = props.url.query.event ? 'block' : 'none';
   let eventListDisplay = props.url.query.event ? 'none' : 'block';
+  // Dans le cas du chargement de la page de détail:
+  // Avec cette méthode on perd l'intérêt du lasy loading
+  // le EventListContainer sera rendu et donc la lib aws-sdk sera loadé !
+  // Revenir au un unmount / mount des 2 containers ?
   return (
     <Layout>
       <div style={{ height: '100%', display: `${eventPageDisplay}` }}>
@@ -36,16 +45,14 @@ const App = props => {
 App.getInitialProps = function({ store, isServer, ...context }) {
   let { query } = context;
 
-  if (query.event && query.event.title) return { event: query.event };
+  if (query.event && query.event.title)
+    store.dispatch(setSelectedEvent(query.event));
+
   if (query.eventList) {
-    store.dispatch({
-      type: 'CONCAT_EVENT_LIST',
-      events: getEventListReducer(query.eventList)
-    });
-    store.dispatch({
-      type: 'SET_EVENT_LIST_NB_PAGES',
-      pages: query.eventList.pages
-    });
+    const { events, pages } = getFormatEventList(query.eventList);
+
+    store.dispatch(concatEventList(events));
+    store.dispatch(setEventListNbPages(pages));
   }
 
   return {};
@@ -54,4 +61,3 @@ App.getInitialProps = function({ store, isServer, ...context }) {
 export default compose(withRedux(makeStore), withCredentials, withEventAPI)(
   App
 );
-// export default withCredentials(withEventAPI(App));

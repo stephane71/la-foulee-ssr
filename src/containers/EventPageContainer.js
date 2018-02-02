@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import { connect } from 'react-redux';
 
 import EventPage from '../components/EventPage';
 import Loader from '../components/Loader';
@@ -6,30 +7,20 @@ import Loader from '../components/Loader';
 import { getEventStructuredData } from '../utils/structuredData';
 
 export class EventPageContainer extends React.PureComponent {
-  state = {
-    event: this.props.event || null
-  };
-
-  async componentDidMount() {
-    if (!this.state.event) {
-      const event = await this.props.getEvent(this.props.url.query.event);
-      this.setState({ event });
-    }
-  }
-
   render() {
+    const { event } = this.props;
     return (
       <div className={'EventPageContainer'}>
-        {this.state.event && (
+        {event && (
           <Head>
-            <title>{`${this.state.event.title} | La Foulée`}</title>
+            <title>{`${event.title} | La Foulée`}</title>
             <script type={'application/ld+json'}>
-              {getEventStructuredData(this.state.event)}
+              {getEventStructuredData(event)}
             </script>
           </Head>
         )}
 
-        {this.state.event ? <EventPage data={this.state.event} /> : <Loader />}
+        {event ? <EventPage data={event} /> : <Loader />}
 
         <style jsx>{`
           .EventPageContainer {
@@ -43,4 +34,10 @@ export class EventPageContainer extends React.PureComponent {
   }
 }
 
-export default EventPageContainer;
+function mapStateToProps(state) {
+  return {
+    event: state.event
+  };
+}
+
+export default connect(mapStateToProps)(EventPageContainer);
