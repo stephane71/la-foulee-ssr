@@ -8,7 +8,7 @@ import {
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
 // The loader aims to provide a state during react-virtualized calculation
-// There is no SSR with react-virtualized as its need client dimension
+// There is no SSR with react-virtualized as its need client dimensions
 import Loader from './Loader';
 
 const EVENT_LIST_ITEM_HEIGHT = 73;
@@ -80,7 +80,10 @@ export default class EventList extends React.PureComponent {
         {index === data.length - 1 && this.props.loading ? (
           <Loader />
         ) : (
-          <EventListItem data={data[index]} />
+          <EventListItem
+            data={data[index]}
+            onSelectEvent={this.props.onSelectEvent}
+          />
         )}
       </div>
     );

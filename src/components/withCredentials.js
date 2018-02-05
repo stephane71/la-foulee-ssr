@@ -19,6 +19,10 @@ const withCredentials = WrappedComponent => {
       return WrappedComponent.getInitialProps(context);
     }
 
+    componentDidMount() {
+      setTimeout(this.getCredentials, 2000);
+    }
+
     render() {
       return (
         <WrappedComponent
@@ -34,6 +38,8 @@ const withCredentials = WrappedComponent => {
     }
 
     async getCredentials(clearCache) {
+      if (this.credentials) return this.credentials;
+
       let credentials;
       try {
         credentials = await asyncGetCredentials(clearCache);

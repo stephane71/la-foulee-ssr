@@ -1,7 +1,7 @@
 import apigClientFactory from 'aws-api-gateway-client';
 
-import asyncGetCredentials from '../utils/asyncGetCredentials';
 import { getEventArgs, getEventListArgs } from '../api';
+import { getFormatEventList } from '../utils/apiProxy';
 
 function getAPIGatewayClient(credentials) {
   return apigClientFactory.newClient({
@@ -44,7 +44,7 @@ const withEventAPI = WrappedComponent => {
     api = null;
 
     async getAPI() {
-      if (this.props.credentialsNeedsRefresh()) {
+      if (!this.api || this.props.credentialsNeedsRefresh()) {
         let credentials = await this.props.getCredentials();
         this.api = getAPIGatewayClient(credentials);
       }
@@ -61,7 +61,9 @@ const withEventAPI = WrappedComponent => {
     async getEventList(selectors) {
       let api = await this.getAPI();
       const args = getEventListArgs(selectors);
-      return await api.invokeApi(...args).then(res => res.data);
+      return await api
+        .invokeApi(...args)
+        .then(res => getFormatEventList(res.data));
     }
   };
 };

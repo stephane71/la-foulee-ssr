@@ -1,8 +1,8 @@
-import AWS from 'aws-sdk/global';
-
 const IDENTITY_POOL_ID = process.env.IDENTITY_POOL_ID;
 
-export default function asyncGetCredentials(clearCache = false) {
+export default async function asyncGetCredentials(clearCache = false) {
+  let AWS = await import('aws-sdk/global');
+
   return new Promise((resolve, reject) => {
     // !! Don't put an empty object for "Logins" -> the prop is test is exist not empty
     // -> if "Logins" = {} -> cognitoIdentityCredentials can't load from cache
