@@ -13,6 +13,7 @@ import {
 
 import Loader from '../components/Loader';
 import EventList from '../components/EventList';
+import Selectors from '../components/Selectors';
 
 import { getEventListStructuredData } from '../utils/structuredData';
 
@@ -79,11 +80,12 @@ export class EventListContainer extends React.PureComponent {
         <Media query={`(max-width: 768px)`}>
           {matches =>
             matches ? (
-              this.getEventListComponent()
+              <Selectors />
             ) : (
+              // this.getEventListComponent()
               <div className={'EventListContainerDesktop'}>
                 <div className={'EventListContainerDesktop--selectors'}>
-                  {'Selectors'}
+                  <Selectors />
                 </div>
                 <div className={'EventListContainerDesktop--list'}>
                   {this.getEventListComponent()}
