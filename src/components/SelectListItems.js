@@ -2,11 +2,12 @@ import css from 'styled-jsx/css';
 
 import { getSpacing } from '../styles-variables';
 import { listBorderColor, getColor } from '../colors';
+import { BORDER_RADIUS } from '../enums';
 
 const style = css`
   .selectListItemsWrapper {
     border: 1px solid ${listBorderColor};
-    border-radius: 5px;
+    border-radius: ${BORDER_RADIUS}px;
   }
 
   .selectItemWrapper {

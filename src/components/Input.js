@@ -6,13 +6,14 @@ import css from 'styled-jsx/css';
 
 import { getSpacing, BaseFontSize } from '../styles-variables';
 import { listBorderColor, getColor } from '../colors';
+import { BORDER_RADIUS } from '../enums';
 
 import Arrow from '../svgs/arrow_down_black_24px.svg';
 
 const style = css`
   .inputWrapper {
     border: 1px solid ${listBorderColor};
-    border-radius: 5px;
+    border-radius: ${BORDER_RADIUS}px;
     padding: ${getSpacing('xxs')}px ${getSpacing('s')}px;
     display: flex;
     align-items: center;

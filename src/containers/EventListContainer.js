@@ -82,7 +82,6 @@ export class EventListContainer extends React.PureComponent {
             matches ? (
               <Selectors />
             ) : (
-              // this.getEventListComponent()
               <div className={'EventListContainerDesktop'}>
                 <div className={'EventListContainerDesktop--selectors'}>
                   <Selectors />
