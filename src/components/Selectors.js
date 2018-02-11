@@ -15,8 +15,16 @@ export class Selectors extends React.PureComponent {
         <h2>{'Rechercher une course'}</h2>
 
         <div className={'selectors-form'}>
-          <Select listComponent={GoogleMapPlacesApi} />
-          <Select listComponent={MonthWrapper} />
+          <Select
+            label={'Localisation'}
+            placeholder={'ex: Lyon'}
+            listComponent={GoogleMapPlacesApi}
+          />
+          <Select
+            label={'À partir du mois'}
+            placeholder={'cliquez pour sélectionner un mois'}
+            listComponent={MonthWrapper}
+          />
         </div>
 
         <style jsx>{`

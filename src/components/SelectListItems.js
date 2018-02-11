@@ -24,6 +24,7 @@ const style = css`
 
 class SelectListItems extends React.PureComponent {
   render() {
+    if (!this.props.items.length) return null;
     return (
       <div
         className={`selectListItemsWrapper ${this.props.hide &&

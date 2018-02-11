@@ -8,10 +8,15 @@ import { getSpacing } from '../styles-variables';
 
 const style = css`
   .selectWrapper {
+    margin-bottom: ${getSpacing('s')}px;
   }
 
   .selectInputWrapper {
     margin-bottom: ${getSpacing('xxs')}px;
+  }
+
+  .inputLabel {
+    padding-left: ${getSpacing('xs')}px;
   }
 `;
 
@@ -21,8 +26,8 @@ export class Select extends React.PureComponent {
 
     this.handleItemSelection = this.handleItemSelection.bind(this);
 
-    this.toggleHideListItems = this.toggleHideListItems.bind(this);
-    this.toggleHideListItems = debounce(this.toggleHideListItems, 300);
+    this.toggleItemList = this.toggleItemList.bind(this);
+    this.toggleItemList = debounce(this.toggleItemList, 300);
 
     this.updateInput = this.updateInput.bind(this);
     this.updateInput = debounce(this.updateInput, 250);
@@ -39,12 +44,14 @@ export class Select extends React.PureComponent {
 
     return (
       <div className={`selectWrapper`}>
+        <label className={'inputLabel'}>{this.props.label}</label>
         <div className={'selectInputWrapper'}>
           <Input
             value={this.state.inputValidated}
+            placeholder={this.props.placeholder}
             onChange={this.updateInput}
-            onFocus={this.toggleHideListItems}
-            onBlur={this.toggleHideListItems}
+            onFocus={() => this.toggleItemList(false)}
+            onBlur={() => this.toggleItemList(true)}
           />
         </div>
 
@@ -63,8 +70,8 @@ export class Select extends React.PureComponent {
     );
   }
 
-  toggleHideListItems(event) {
-    this.setState({ hideListItems: !this.state.hideListItems });
+  toggleItemList(toggle) {
+    this.setState({ hideListItems: toggle });
   }
 
   updateInput(value) {
@@ -72,7 +79,7 @@ export class Select extends React.PureComponent {
   }
 
   handleItemSelection(value) {
-    this.setState({ inputValidated: value });
+    this.setState({ inputValidated: value, input: '' });
   }
 }
 

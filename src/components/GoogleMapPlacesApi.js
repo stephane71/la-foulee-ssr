@@ -9,7 +9,7 @@ const GOOGLE_MAPS_OPTIONS = {
 };
 
 const mapPredictionToSelectList = predictions =>
-  predictions.map(({ description }) => description);
+  predictions.map(({ terms }) => terms[0].value);
 
 class GoogleMapPlacesApi extends React.PureComponent {
   constructor(props) {
@@ -30,6 +30,10 @@ class GoogleMapPlacesApi extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.input !== nextProps.input) {
+      if (!nextProps.input) {
+        this.setState({ predictions: [] });
+        return;
+      }
       this.service.getPlacePredictions(
         { ...GOOGLE_MAPS_OPTIONS, input: nextProps.input },
         this.predictionCB

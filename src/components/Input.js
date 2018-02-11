@@ -4,7 +4,7 @@
 import React from 'react';
 import css from 'styled-jsx/css';
 
-import { getSpacing } from '../styles-variables';
+import { getSpacing, BaseFontSize } from '../styles-variables';
 import { listBorderColor, getColor } from '../colors';
 
 import Arrow from '../svgs/arrow_down_black_24px.svg';
@@ -25,6 +25,7 @@ const style = css`
     text-decoration: none;
     border: none;
     text-transform: capitalize;
+    font-size: ${BaseFontSize}px;
   }
 `;
 
@@ -35,6 +36,7 @@ class Input extends React.PureComponent {
     this.state = { value: '' };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleInputWrapperClick = this.handleInputWrapperClick.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -45,19 +47,27 @@ class Input extends React.PureComponent {
 
   render() {
     return (
-      <div className={'inputWrapper'}>
+      <div className={'inputWrapper'} onClick={this.handleInputWrapperClick}>
         <input
+          ref={input => {
+            this.textInput = input;
+          }}
+          placeholder={this.props.placeholder}
           className={'inputElement'}
           type={'text'}
           value={this.state.value}
           onChange={this.handleChange}
-          onFocus={this.props.onFocus}
           onBlur={this.props.onBlur}
         />
         <Arrow style={{ fill: getColor('darkGrey', 'tonic') }} />
         <style jsx>{style}</style>
       </div>
     );
+  }
+
+  handleInputWrapperClick() {
+    this.textInput.focus();
+    this.props.onFocus();
   }
 
   handleChange(event) {
