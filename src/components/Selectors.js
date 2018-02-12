@@ -12,6 +12,18 @@ const MonthWrapper = props => (
 );
 
 export class Selectors extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      city: null,
+      month: null
+    };
+
+    this.handleSelectChange = this.handleSelectChange.bind(this);
+    this.handleSelectorsValidation = this.handleSelectorsValidation.bind(this);
+  }
+
   render() {
     return (
       <div className={'selectorsContainer'}>
@@ -20,18 +32,24 @@ export class Selectors extends React.PureComponent {
         <div className={'selectorsLayout'}>
           <div>
             <Select
+              name={'city'}
               label={'Localisation'}
               placeholder={'ex: Lyon'}
               listComponent={GoogleMapPlacesApi}
+              onChange={this.handleSelectChange}
             />
             <Select
+              name={'month'}
               label={'À partir du mois'}
               placeholder={'cliquez pour sélectionner un mois'}
               listComponent={MonthWrapper}
+              onChange={this.handleSelectChange}
             />
           </div>
 
-          <Button>{'Appliquer'}</Button>
+          <Button onClick={this.handleSelectorsValidation}>
+            {'Appliquer'}
+          </Button>
         </div>
 
         <style jsx>{`
@@ -50,6 +68,15 @@ export class Selectors extends React.PureComponent {
         `}</style>
       </div>
     );
+  }
+
+  handleSelectChange(data) {
+    this.setState(data);
+  }
+
+  handleSelectorsValidation() {
+    let { city, month } = this.state;
+    this.props.validate({ city, month });
   }
 }
 

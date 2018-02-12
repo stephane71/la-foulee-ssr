@@ -80,6 +80,7 @@ export class Select extends React.PureComponent {
 
   handleItemSelection(value) {
     this.setState({ inputValidated: value, input: '' });
+    this.props.onChange({ [this.props.name]: value });
   }
 }
 

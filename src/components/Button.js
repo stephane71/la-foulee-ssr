@@ -3,7 +3,7 @@ import { getSpacing } from '../styles-variables';
 import { BORDER_RADIUS } from '../enums';
 
 const Button = props => (
-  <button style={{ ...props.style }}>
+  <button style={{ ...props.style }} onClick={props.onClick}>
     {props.children}
     <style jsx>{`
       button {

@@ -8,7 +8,8 @@ import Media from 'react-media';
 import {
   setSelectedEvent,
   concatEventList,
-  setEventListNbPages
+  setEventListNbPages,
+  setSelectors
 } from '../actions';
 
 import Loader from '../components/Loader';
@@ -49,6 +50,7 @@ export class EventListContainer extends React.PureComponent {
 
     this.handleLoadPage = this.handleLoadPage.bind(this);
     this.handleEventSelection = this.handleEventSelection.bind(this);
+    this.handleSelectorsValidation = this.handleSelectorsValidation.bind(this);
   }
 
   state = {
@@ -80,7 +82,7 @@ export class EventListContainer extends React.PureComponent {
         <Media query={`(max-width: 768px)`}>
           {matches =>
             matches ? (
-              <Selectors />
+              <Selectors validate={this.handleSelectorsValidation} />
             ) : (
               <div className={'EventListContainerDesktop'}>
                 <div className={'EventListContainerDesktop--selectors'}>
@@ -124,6 +126,10 @@ export class EventListContainer extends React.PureComponent {
       </div>
     );
   };
+
+  handleSelectorsValidation(selectors) {
+    this.props.dispatch(setSelectors(selectors));
+  }
 
   async handleLoadPage() {
     if (this.state.loading) return;
