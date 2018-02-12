@@ -1,9 +1,13 @@
 const next = require('next');
+const moment = require('moment');
+
 const getStrideList = require('../api/getStrideList');
 const getStride = require('../api/getStride');
 const apigClientFactory = require('./getAPIGatewayClient');
 
 const apigClient = apigClientFactory();
+
+const CURRENT_MONTH = `${moment().month()}-${moment().year()}`;
 
 module.exports = function(app) {
   return function(req, res) {
@@ -16,7 +20,7 @@ module.exports = function(app) {
         });
     } else {
       const selectors = {
-        month: '0-2018',
+        month: CURRENT_MONTH,
         dep: '',
         page: 0
       };
