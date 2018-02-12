@@ -1,7 +1,9 @@
 export const SET_SELECTED_EVENT = 'SET_SELECTED_EVENT';
 export const CONCAT_EVENT_LIST = 'CONCAT_EVENT_LIST';
+export const SET_EVENT_LIST = 'SET_EVENT_LIST';
 export const SET_EVENT_LIST_NB_PAGES = 'SET_EVENT_LIST_NB_PAGES';
 export const SET_SELECTORS = 'SET_SELECTORS';
+export const INCREMENT_CURRENT_PAGE = 'INCREMENT_CURRENT_PAGE';
 
 export function setSelectedEvent(event) {
   return {
@@ -13,6 +15,13 @@ export function setSelectedEvent(event) {
 export function concatEventList(events) {
   return {
     type: CONCAT_EVENT_LIST,
+    events
+  };
+}
+
+export function setEventList(events) {
+  return {
+    type: SET_EVENT_LIST,
     events
   };
 }
@@ -29,4 +38,8 @@ export function setSelectors(selectors) {
     type: SET_SELECTORS,
     selectors
   };
+}
+
+export function incrementCurrentPage() {
+  return { type: INCREMENT_CURRENT_PAGE };
 }

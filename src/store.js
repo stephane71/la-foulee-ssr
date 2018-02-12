@@ -3,18 +3,21 @@ import { createStore } from 'redux';
 import {
   SET_SELECTED_EVENT,
   CONCAT_EVENT_LIST,
+  SET_EVENT_LIST,
   SET_EVENT_LIST_NB_PAGES,
-  SET_SELECTORS
+  SET_SELECTORS,
+  INCREMENT_CURRENT_PAGE
 } from './actions';
 
 const initialState = {
   event: null,
   events: [],
+  pages: 0,
   selectors: {
     month: '0-2018',
-    dep: '',
-    page: 0
-  }
+    dep: ''
+  },
+  currentPage: 0
 };
 
 const reducer = (state = initialState, action) => {
@@ -23,10 +26,14 @@ const reducer = (state = initialState, action) => {
       return { ...state, event: action.event };
     case CONCAT_EVENT_LIST:
       return { ...state, events: state.events.concat(action.events) };
+    case SET_EVENT_LIST:
+      return { ...state, events: action.events };
     case SET_EVENT_LIST_NB_PAGES:
       return { ...state, pages: action.pages };
     case SET_SELECTORS:
       return { ...state, selectors: action.selectors };
+    case INCREMENT_CURRENT_PAGE:
+      return { ...state, currentPage: state.currentPage + 1 };
     default:
       return state;
   }

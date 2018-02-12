@@ -55,15 +55,12 @@ export class Selectors extends React.PureComponent {
         <style jsx>{`
           .selectorsContainer {
             padding: 0 ${getSpacing('m')}px;
-            height: 100%;
             position: relative;
           }
 
           .selectorsLayout {
-            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
           }
         `}</style>
       </div>
