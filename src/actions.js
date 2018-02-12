@@ -3,7 +3,7 @@ export const CONCAT_EVENT_LIST = 'CONCAT_EVENT_LIST';
 export const SET_EVENT_LIST = 'SET_EVENT_LIST';
 export const SET_EVENT_LIST_NB_PAGES = 'SET_EVENT_LIST_NB_PAGES';
 export const SET_SELECTORS = 'SET_SELECTORS';
-export const INCREMENT_CURRENT_PAGE = 'INCREMENT_CURRENT_PAGE';
+export const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 
 export function setSelectedEvent(event) {
   return {
@@ -40,6 +40,9 @@ export function setSelectors(selectors) {
   };
 }
 
-export function incrementCurrentPage() {
-  return { type: INCREMENT_CURRENT_PAGE };
+export function setCurrentPage(currentPage) {
+  return {
+    type: SET_CURRENT_PAGE,
+    currentPage
+  };
 }

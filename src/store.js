@@ -6,7 +6,7 @@ import {
   SET_EVENT_LIST,
   SET_EVENT_LIST_NB_PAGES,
   SET_SELECTORS,
-  INCREMENT_CURRENT_PAGE
+  SET_CURRENT_PAGE
 } from './actions';
 
 const initialState = {
@@ -32,8 +32,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, pages: action.pages };
     case SET_SELECTORS:
       return { ...state, selectors: action.selectors };
-    case INCREMENT_CURRENT_PAGE:
-      return { ...state, currentPage: state.currentPage + 1 };
+    case SET_CURRENT_PAGE:
+      return { ...state, currentPage: action.currentPage };
     default:
       return state;
   }

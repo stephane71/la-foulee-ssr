@@ -1,6 +1,19 @@
 import moment from 'moment';
 
-import { setEventList, concatEventList } from '../actions';
+import {
+  setEventList,
+  concatEventList,
+  setEventListNbPages,
+  setCurrentPage
+} from '../actions';
+
+function getSelectors(selectors) {
+  const month = moment()
+    .month(selectors.month)
+    .month();
+
+  return { ...selectors, month: `${month}-2018` };
+}
 
 const withEventList = WrappedComponent => {
   return class eventListWrapper extends React.Component {
@@ -13,7 +26,8 @@ const withEventList = WrappedComponent => {
     }
 
     state = {
-      loading: false
+      loading: false,
+      loadingPage: false
     };
 
     async componentDidMount() {
@@ -21,7 +35,7 @@ const withEventList = WrappedComponent => {
         this.setState({ loading: true });
 
         const { events, pages } = await this.props.getEventList();
-        this.props.dispatch(concatEventList(events));
+        this.props.dispatch(setEventList(events));
         this.props.dispatch(setEventListNbPages(pages));
 
         this.setState({ loading: false });
@@ -30,10 +44,15 @@ const withEventList = WrappedComponent => {
 
     async componentWillReceiveProps(nextProps) {
       if (this.props.currentPage !== nextProps.currentPage) {
-        this.setState({ loading: true });
+        if (this.firstPageRequestDone && nextProps.currentPage === 0) {
+          this.firstPageRequestDone = false;
+          return;
+        }
+
+        this.setState({ loading: true, loadingPage: true });
 
         const { events } = await this.props.getEventList(
-          this.props.selectors,
+          getSelectors(this.props.selectors),
           nextProps.currentPage
         );
         this.props.dispatch(concatEventList(events));
@@ -42,21 +61,34 @@ const withEventList = WrappedComponent => {
       if (this.props.selectors !== nextProps.selectors) {
         this.setState({ loading: true });
 
-        const month = moment()
-          .month(nextProps.selectors.month)
-          .month();
-
         // TODO: manage the year of the event
-        let selectors = { ...nextProps.selectors, month: `${month}-2018` };
-        const { events } = await this.props.getEventList(selectors, 0);
+        const { events, pages } = await this.props.getEventList(
+          getSelectors(nextProps.selectors),
+          0
+        );
+
         this.props.dispatch(setEventList(events));
+        this.props.dispatch(setEventListNbPages(pages));
+
+        this.firstPageRequestDone = true;
+        this.props.dispatch(setCurrentPage(0));
       }
-      this.setState({ loading: false });
+      this.setState({ loading: false, loadingPage: false });
     }
 
     render() {
-      return <WrappedComponent {...this.props} loading={this.state.loading} />;
+      return (
+        <WrappedComponent
+          {...this.props}
+          loading={this.state.loading}
+          loadingPage={this.state.loadingPage}
+        />
+      );
     }
+
+    // Prevent triggering the same req
+    // dispatch setCurrentPage will be catch in the first test of this method
+    firstPageRequestDone: false;
   };
 };
 

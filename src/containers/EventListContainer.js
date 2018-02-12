@@ -5,11 +5,7 @@ import Router from 'next/router';
 import css from 'styled-jsx/css';
 import Media from 'react-media';
 
-import {
-  setSelectedEvent,
-  setSelectors,
-  incrementCurrentPage
-} from '../actions';
+import { setSelectedEvent, setSelectors, setCurrentPage } from '../actions';
 
 import Loader from '../components/Loader';
 import EventList from '../components/EventList';
@@ -80,7 +76,7 @@ export class EventListContainer extends React.PureComponent {
   getEventListComponent = () => {
     return (
       <div className={'EventListComponent'}>
-        {!this.props.events.length && this.props.loading ? (
+        {this.props.loading && !this.props.loadingPage ? (
           <Loader />
         ) : (
           <EventList
@@ -110,7 +106,7 @@ export class EventListContainer extends React.PureComponent {
 
   async handleLoadPage() {
     if (this.props.loading) return;
-    this.props.dispatch(incrementCurrentPage());
+    this.props.dispatch(setCurrentPage(this.props.currentPage + 1));
   }
 
   handleEventSelection(event) {

@@ -1,9 +1,12 @@
-import { CURRENT_MONTH } from './enums';
+import moment from 'moment';
+
 /*
  *  GET API methods args
  *  - getEventArgs
  *  - getEventListArgs
  */
+
+const CURRENT_MONTH = moment().format('MMMM');
 
 export function getEventArgs(strideID) {
   const params = {
