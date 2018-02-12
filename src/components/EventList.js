@@ -54,6 +54,20 @@ export default class EventList extends React.PureComponent {
             />
           )}
         </AutoSizer>
+        {this.props.loading ? (
+          <div
+            style={{
+              height: EVENT_LIST_ITEM_HEIGHT,
+              position: 'absolute',
+              bottom: '0',
+              left: '0',
+              width: '100%',
+              backgroundColor: 'white'
+            }}
+          >
+            <Loader />
+          </div>
+        ) : null}
       </div>
     );
   }
@@ -76,15 +90,10 @@ export default class EventList extends React.PureComponent {
             <EventListDate date={data[index].date} />
           )) ||
           null}
-
-        {index === data.length - 1 && this.props.loading ? (
-          <Loader />
-        ) : (
-          <EventListItem
-            data={data[index]}
-            onSelectEvent={this.props.onSelectEvent}
-          />
-        )}
+        <EventListItem
+          data={data[index]}
+          onSelectEvent={this.props.onSelectEvent}
+        />
       </div>
     );
   }
