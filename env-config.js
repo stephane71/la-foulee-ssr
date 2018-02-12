@@ -14,5 +14,6 @@ switch (process.env.NODE_ENV) {
 module.exports = {
   'process.env.ASSETS_URL': config.ASSETS_URL,
   'process.env.IDENTITY_POOL_ID': config.IDENTITY_POOL_ID,
-  'process.env.API_URL': config.API_URL
+  'process.env.API_URL': config.API_URL,
+  'process.env.GOOGLE_PLACES_API_KEY': config.GOOGLE_PLACES_API_KEY
 };
