@@ -1,3 +1,10 @@
+import { CURRENT_MONTH } from './enums';
+/*
+ *  GET API methods args
+ *  - getEventArgs
+ *  - getEventListArgs
+ */
+
 export function getEventArgs(strideID) {
   const params = {
     strideID
@@ -12,17 +19,17 @@ export function getEventArgs(strideID) {
 }
 
 const defaultSelectors = {
-  month: '0-2018',
-  dep: '',
-  page: 0
+  month: CURRENT_MONTH,
+  dep: ''
 };
 
-export function getEventListArgs(selectors = defaultSelectors) {
-  let { month, dep, page } = selectors;
-  // page = page ? page : 0;
+export function getEventListArgs(
+  selectors = defaultSelectors,
+  currentPage = 0
+) {
+  let { month, dep } = selectors;
   let params = {
-    month,
-    page
+    month
   };
 
   // Template syntax follows url-template https://www.npmjs.com/package/url-template
@@ -30,7 +37,7 @@ export function getEventListArgs(selectors = defaultSelectors) {
   const method = 'GET';
   const additionalParams = {
     queryParams: {
-      page
+      page: currentPage
     }
   };
   const body = {};

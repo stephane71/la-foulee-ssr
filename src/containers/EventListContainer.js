@@ -7,24 +7,18 @@ import Media from 'react-media';
 
 import {
   setSelectedEvent,
-  concatEventList,
-  setEventListNbPages,
-  setSelectors
+  setSelectors,
+  incrementCurrentPage
 } from '../actions';
 
 import Loader from '../components/Loader';
 import EventList from '../components/EventList';
 import Selectors from '../components/Selectors';
+import withEventList from '../components/withEventList';
 
 import { getEventListStructuredData } from '../utils/structuredData';
 
 import { listBorderColor } from '../colors';
-
-const DEFAULT_SELECTORS = {
-  month: '0-2018',
-  dep: '',
-  page: 0
-};
 
 const EventListContainerDesktop = css`
   .EventListContainerDesktop {
@@ -53,23 +47,6 @@ export class EventListContainer extends React.PureComponent {
     this.handleSelectorsValidation = this.handleSelectorsValidation.bind(this);
   }
 
-  state = {
-    loading: false,
-    selectors: DEFAULT_SELECTORS
-  };
-
-  async componentDidMount() {
-    if (!this.props.events.length) {
-      this.setState({ loading: true });
-
-      const { events, pages } = await this.props.getEventList();
-      this.props.dispatch(concatEventList(events));
-      this.props.dispatch(setEventListNbPages(pages));
-
-      this.setState({ loading: false });
-    }
-  }
-
   render() {
     return (
       <Fragment>
@@ -86,7 +63,7 @@ export class EventListContainer extends React.PureComponent {
             ) : (
               <div className={'EventListContainerDesktop'}>
                 <div className={'EventListContainerDesktop--selectors'}>
-                  <Selectors />
+                  <Selectors validate={this.handleSelectorsValidation} />
                 </div>
                 <div className={'EventListContainerDesktop--list'}>
                   {this.getEventListComponent()}
@@ -103,14 +80,14 @@ export class EventListContainer extends React.PureComponent {
   getEventListComponent = () => {
     return (
       <div className={'EventListComponent'}>
-        {!this.props.events.length && this.state.loading ? (
+        {!this.props.events.length && this.props.loading ? (
           <Loader />
         ) : (
           <EventList
             data={this.props.events}
             onLoadMore={this.handleLoadPage}
-            loading={this.state.loading}
-            endList={this.state.selectors.page + 1 === this.props.pages}
+            loading={this.props.loading}
+            endList={this.props.currentPage + 1 === this.props.pages}
             onSelectEvent={this.handleEventSelection}
           />
         )}
@@ -132,18 +109,8 @@ export class EventListContainer extends React.PureComponent {
   }
 
   async handleLoadPage() {
-    if (this.state.loading) return;
-
-    const newSelectors = Object.assign({}, this.state.selectors, {
-      page: this.state.selectors.page + 1
-    });
-
-    this.setState(({ events }) => ({ loading: true, selectors: newSelectors }));
-
-    const { events } = await this.props.getEventList(newSelectors);
-    this.props.dispatch(concatEventList(events));
-
-    this.setState({ loading: false });
+    if (this.props.loading) return;
+    this.props.dispatch(incrementCurrentPage());
   }
 
   handleEventSelection(event) {
@@ -160,9 +127,11 @@ export class EventListContainer extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
+    selectors: state.selectors,
     events: state.events,
-    pages: state.pages
+    pages: state.pages,
+    currentPage: state.currentPage
   };
 }
 
-export default connect(mapStateToProps)(EventListContainer);
+export default connect(mapStateToProps)(withEventList(EventListContainer));
