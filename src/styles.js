@@ -39,7 +39,15 @@ export default css`
   }
 
   .no-scroll {
-    overflow-y: hidden;
+    overflow: hidden;
+  }
+
+  .wrapper-hidden {
+    display: none;
+  }
+
+  .wrapper-show {
+    height: 100%;
   }
 
   *,

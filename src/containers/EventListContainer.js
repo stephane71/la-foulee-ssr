@@ -7,6 +7,7 @@ import Media from 'react-media';
 
 import { setSelectedEvent, setSelectors, setCurrentPage } from '../actions';
 
+import MobileWrapper from '../components/MobileWrapper';
 import Loader from '../components/Loader';
 import EventList from '../components/EventList';
 import Selectors from '../components/Selectors';
@@ -38,9 +39,15 @@ export class EventListContainer extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    this.state = {
+      isScrolling: false
+    };
+
     this.handleLoadPage = this.handleLoadPage.bind(this);
     this.handleEventSelection = this.handleEventSelection.bind(this);
     this.handleSelectorsValidation = this.handleSelectorsValidation.bind(this);
+
+    this.isScrolling = this.isScrolling.bind(this);
   }
 
   render() {
@@ -55,7 +62,10 @@ export class EventListContainer extends React.PureComponent {
         <Media query={`(max-width: 768px)`}>
           {matches =>
             matches ? (
-              <Selectors validate={this.handleSelectorsValidation} />
+              <MobileWrapper isScrolling={this.state.isScrolling}>
+                {this.getEventListComponent()}
+                <Selectors validate={this.handleSelectorsValidation} />
+              </MobileWrapper>
             ) : (
               <div className={'EventListContainerDesktop'}>
                 <div className={'EventListContainerDesktop--selectors'}>
@@ -76,7 +86,7 @@ export class EventListContainer extends React.PureComponent {
   getEventListComponent = () => {
     return (
       <div className={'EventListComponent'}>
-        {this.props.loading && !this.props.loadingPage ? (
+        {/* {this.props.loading && !this.props.loadingPage ? (
           <Loader />
         ) : (
           <EventList
@@ -86,7 +96,15 @@ export class EventListContainer extends React.PureComponent {
             endList={this.props.currentPage + 1 === this.props.pages}
             onSelectEvent={this.handleEventSelection}
           />
-        )}
+        )} */}
+        <EventList
+          data={this.props.events}
+          onLoadMore={this.handleLoadPage}
+          loading={this.props.loading}
+          endList={this.props.currentPage + 1 === this.props.pages}
+          onSelectEvent={this.handleEventSelection}
+          isScrolling={this.isScrolling}
+        />
         <style jsx>{`
           .EventListComponent {
             margin: auto;
@@ -99,6 +117,10 @@ export class EventListContainer extends React.PureComponent {
       </div>
     );
   };
+
+  isScrolling(down) {
+    this.setState({ isScrolling: down });
+  }
 
   handleSelectorsValidation(selectors) {
     this.props.dispatch(setSelectors(selectors));

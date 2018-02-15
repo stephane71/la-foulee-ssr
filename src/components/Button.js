@@ -12,7 +12,6 @@ const Button = props => (
         background-color: ${dominant};
         width: 100%;
         padding: ${getSpacing('xs')}px ${getSpacing('s')}px;
-        margin-bottom: ${getSpacing('m')}px;
         border-radius: ${BORDER_RADIUS}px;
       }
     `}</style>

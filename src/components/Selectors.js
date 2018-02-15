@@ -27,8 +27,6 @@ export class Selectors extends React.PureComponent {
   render() {
     return (
       <div className={'selectorsContainer'}>
-        <h2>{'Rechercher une course'}</h2>
-
         <div className={'selectorsLayout'}>
           <div>
             <Select
@@ -47,20 +45,33 @@ export class Selectors extends React.PureComponent {
             />
           </div>
 
-          <Button onClick={this.handleSelectorsValidation}>
-            {'Appliquer'}
-          </Button>
+          <div className={'selectorsValidation'}>
+            <Button onClick={this.handleSelectorsValidation}>
+              {'Appliquer'}
+            </Button>
+          </div>
         </div>
 
         <style jsx>{`
           .selectorsContainer {
             padding: 0 ${getSpacing('m')}px;
             position: relative;
+            height: 100%;
           }
 
           .selectorsLayout {
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+          }
+
+          .selectorsValidation {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: ${getSpacing('m')}px;
           }
         `}</style>
       </div>
