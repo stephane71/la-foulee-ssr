@@ -12,8 +12,9 @@ import EventListDate from './EventListDate';
 import Loader from './Loader';
 
 import { white, APP_BACKGROUND_COLOR } from '../colors';
+import { getSpacing } from '../styles-variables';
 
-const EVENT_LIST_ITEM_HEIGHT = 73;
+const EVENT_LIST_ITEM_HEIGHT = 72;
 const EVENT_LIST_DATE_HEADER_HEIGHT = 96;
 const PADDING_INDEX_LOAD_MORE = 1; // should be minimum one
 
@@ -34,7 +35,6 @@ const BottomPageLoader = ({ loading }) => (
         width: 100%;
         transition: transform 0.2s ease-out;
         will-change: transform;
-        background-color: ${white};
       }
 
       .in {
@@ -108,7 +108,8 @@ export default class EventList extends React.PureComponent {
                   scrollTop={scrollTop}
                   style={{
                     outline: 'none',
-                    backgroundColor: `${APP_BACKGROUND_COLOR}`
+                    backgroundColor: `${APP_BACKGROUND_COLOR}`,
+                    paddingBottom: `${getSpacing('xls')}px`
                   }}
                   deferredMeasurementCache={cache}
                   rowHeight={cache.rowHeight}
@@ -140,8 +141,8 @@ export default class EventList extends React.PureComponent {
   rowRenderer({ key, index, style, parent }) {
     const { data } = this.props;
 
-    let firstItemDay = index && data[index].date !== data[index - 1].date;
-    let lastItemDay =
+    const firstItemDay = index && data[index].date !== data[index - 1].date;
+    const lastItemDay =
       data[index + 1] && data[index].date !== data[index + 1].date;
 
     return (
@@ -152,13 +153,13 @@ export default class EventList extends React.PureComponent {
         parent={parent}
         rowIndex={index}
       >
-        <div style={{ ...style, top: style.top + index }}>
+        <div style={{ ...style, paddingBottom: 1 }}>
           {(firstItemDay && <EventListDate date={data[index].date} />) || null}
           <EventListItem
             data={data[index]}
             onSelectEvent={this.props.onSelectEvent}
             withBorderRadiusTop={index === 0 || firstItemDay}
-            withBorderRadiusBottom={lastItemDay}
+            withBorderRadiusBottom={index + 1 === data.length || lastItemDay}
           />
         </div>
       </CellMeasurer>
