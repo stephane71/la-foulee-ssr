@@ -43,11 +43,13 @@ export default ({
       }
 
       .border-top {
-        border-radius: 10px 10px 0 0;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
       }
 
       .border-bottom {
-        border-radius: 0 0 10px 10px;
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
       }
 
       .event-data {
