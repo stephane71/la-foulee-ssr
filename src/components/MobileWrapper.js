@@ -1,16 +1,14 @@
 import React from 'react';
 
 import { getSpacing } from '../styles-variables';
-import { white, listBorderColor, getColor } from '../colors';
-import { BORDER_RADIUS, HEIGHT_APPBAR } from '../enums';
+import { white, listBorderColor } from '../colors';
+import { HEIGHT_APPBAR } from '../enums';
 
 import CrossIcon from '../svgs/ic_close_black_24px.svg';
 
+import MobileInput from './MobileInput';
 // to remove
 import Button from './Button';
-
-// Enums ??? see: <EventListDate />
-const EVENT_LIST_DATE_COLOR = '#F4F5F7';
 
 const MobileFilters = props => (
   <div className={'mobileFilters'}>
@@ -53,54 +51,6 @@ const MobileFilters = props => (
   </div>
 );
 
-const MobileInput = props => (
-  <div className={`mobileInput ${props.hide ? 'out' : 'in'}`}>
-    <div className={'mobileInput-content'} onClick={props.onClick}>
-      <span className={'mobileInput-placeholder'}>
-        {'Rechercher par ville, date, épreuve'}
-      </span>
-    </div>
-
-    <style jsx>{`
-      .mobileInput {
-        background-color: ${EVENT_LIST_DATE_COLOR};
-        padding: ${getSpacing('xs')}px;
-        border: 1px solid ${listBorderColor};
-
-        transition: transform 0.3s ease-out;
-        will-change: transform;
-
-        position: absolute;
-        top: 56px;
-        left: 0;
-        right: 0;
-        width: 100%;
-        z-index: 2;
-      }
-
-      .mobileInput-content {
-        padding: ${getSpacing('s')}px;
-        background-color: ${white};
-        border-radius: ${BORDER_RADIUS}px;
-        border: 1px solid ${listBorderColor};
-      }
-
-      .mobileInput-placeholder {
-        text-align: center;
-        color: ${getColor('lightGrey', 'tonic')};
-      }
-
-      .in {
-        transform: translateY(0);
-      }
-
-      .out {
-        transform: translateY(-100%);
-      }
-    `}</style>
-  </div>
-);
-
 export class MobileWrapper extends React.PureComponent {
   state = {
     showFilters: false
@@ -137,6 +87,7 @@ export class MobileWrapper extends React.PureComponent {
         <style jsx>{`
           .mobileWrapper {
             height: 100%;
+            position: relative;
           }
         `}</style>
       </div>

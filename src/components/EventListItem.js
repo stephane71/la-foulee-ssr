@@ -4,16 +4,25 @@
 import React from 'react';
 
 import { getSpacing } from '../styles-variables';
-import { white, listBorderColor } from '../colors';
+import { white, dominant } from '../colors';
 import Arrow from '../svgs/arrow_right_black_24px.svg';
 
-export default ({ data, lastItem, onSelectEvent }) => (
+const EVENT_ITEM_LOCATION_COLOR = '#808597';
+
+export default ({
+  data,
+  onSelectEvent,
+  withBorderRadiusTop,
+  withBorderRadiusBottom
+}) => (
   <div
-    className={`event-list-item-root ${lastItem ? `last-list-item` : ``}`}
+    className={`event-list-item-root ${
+      withBorderRadiusTop ? 'border-top' : ''
+    } ${withBorderRadiusBottom ? 'border-bottom' : ''}`}
     onClick={() => onSelectEvent(data)}
   >
     <div className={`event-data`}>
-      <div className={`title`}>{data.title}</div>
+      <h6 className={`title`}>{data.title}</h6>
       <div className={'location'}>{`${data.dep}, ${data.city}`}</div>
     </div>
     <Arrow style={{ fill: '#A0A7BD' }} />
@@ -26,14 +35,18 @@ export default ({ data, lastItem, onSelectEvent }) => (
       .event-list-item-root {
         display: flex;
         justify-content: space-between;
-        padding: ${getSpacing('s')}px ${getSpacing('m')}px;
+        padding: ${getSpacing('s')}px;
         align-items: center;
         background-color: ${white};
-        border-bottom: 1px solid ${listBorderColor};
+        margin: 0 ${getSpacing('s')}px;
       }
 
-      .last-list-item {
-        border-bottom: none;
+      .border-top {
+        border-radius: 10px 10px 0 0;
+      }
+
+      .border-bottom {
+        border-radius: 0 0 10px 10px;
       }
 
       .event-data {
@@ -45,11 +58,15 @@ export default ({ data, lastItem, onSelectEvent }) => (
       }
 
       .title {
-        font-weight: 500;
         text-transform: capitalize;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
+        font-family: 'Circular-Bold-S';
+        color: ${dominant};
+        margin: 0;
+      }
+
+      .location {
+        color: ${EVENT_ITEM_LOCATION_COLOR};
+        font-weight: 400;
       }
     `}</style>
   </div>

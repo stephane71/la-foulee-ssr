@@ -1,9 +1,10 @@
+import moment from 'moment';
+
 import Header from './Header';
-import { HEIGHT_APPBAR } from '../styles-variables';
 
 import GlobalStyles from '../styles';
+import { HEIGHT_APPBAR } from '../styles-variables';
 
-import moment from 'moment';
 moment.locale('fr');
 
 const Layout = props => (

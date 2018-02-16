@@ -1,24 +1,37 @@
 import moment from 'moment';
 
 import { getSpacing } from '../styles-variables';
+import { dominant } from '../colors';
 
-const EVENT_LIST_BORDER_COLOR = '#E7E8EA';
-const EVENT_LIST_DATE_COLOR = '#F4F5F7';
 const DATE_FORMAT = 'dddd D MMMM';
 
-const EventListDate = props => (
-  <div>
-    {moment.unix(props.date).format(DATE_FORMAT)}
+function getWeeklyDay(date) {
+  return moment.unix(date).format('dddd');
+}
+
+function getDate(date) {
+  return moment.unix(date).format('D MMMM');
+}
+
+const EventListDate = ({ date }) => (
+  <h5>
+    <span className={'weeklyDay'}>{getWeeklyDay(date)}</span>{' '}
+    <span>{getDate(date)}</span>
     <style jsx>{`
-      div {
-        background-color: ${EVENT_LIST_DATE_COLOR};
-        padding: ${getSpacing(`s`)}px ${getSpacing(`m`)}px;
-        font-weight: 500;
-        border-bottom: 1px solid ${EVENT_LIST_BORDER_COLOR};
+      h5 {
         text-transform: capitalize;
+        padding: ${getSpacing(`m`)}px;
+        padding-top: ${getSpacing('ls')}px;
+        margin: 0;
+        color: ${dominant};
+        font-weight: 500;
+      }
+
+      .weeklyDay {
+        font-weight: 300;
       }
     `}</style>
-  </div>
+  </h5>
 );
 
 export default EventListDate;

@@ -15,7 +15,8 @@ import withEventList from '../components/withEventList';
 
 import { getEventListStructuredData } from '../utils/structuredData';
 
-import { listBorderColor } from '../colors';
+import { listBorderColor, getColor } from '../colors';
+import { HEIGHT_MOBILE_SEARCH_INPUT } from '../enums';
 
 const EventListContainerDesktop = css`
   .EventListContainerDesktop {
@@ -112,6 +113,7 @@ export class EventListContainer extends React.PureComponent {
             height: 100%;
             border-right: 1px solid ${listBorderColor};
             border-left: 1px solid ${listBorderColor};
+            padding-top: ${HEIGHT_MOBILE_SEARCH_INPUT}px;
           }
         `}</style>
       </div>

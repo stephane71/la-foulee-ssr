@@ -38,6 +38,11 @@ export default css`
     height: 1px;
   }
 
+  .ReactVirtualized__Grid__innerScrollContainer {
+    display: flex;
+    justify-content: center;
+  }
+
   .no-scroll {
     overflow: hidden;
   }

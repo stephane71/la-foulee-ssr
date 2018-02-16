@@ -3,7 +3,8 @@ import {
   CellMeasurer,
   CellMeasurerCache,
   AutoSizer,
-  List
+  List,
+  WindowScroller
 } from 'react-virtualized';
 
 import EventListItem from './EventListItem';
@@ -12,10 +13,10 @@ import EventListDate from './EventListDate';
 // There is no SSR with react-virtualized as its need client dimensions
 import Loader from './Loader';
 
-import { white } from '../colors';
+import { white, APP_BACKGROUND_COLOR } from '../colors';
 
 const EVENT_LIST_ITEM_HEIGHT = 73;
-const EVENT_LIST_DATE_HEADER_HEIGHT = 49;
+const EVENT_LIST_DATE_HEADER_HEIGHT = 96;
 const PADDING_INDEX_LOAD_MORE = 1; // should be minimum one
 
 const BottomPageLoader = ({ loading }) => (
@@ -66,48 +67,54 @@ export default class EventList extends React.PureComponent {
 
     return (
       <Fragment>
-        {/* <div style={{ height: '100%' }} className={'testClassName'}> */}
-        {/* {!this.state.rendered && <Loader />} */}
-
-        <div className={'topDateSticky'}>
+        <div>
           <EventListDate date={this.state.stickyDate} />
           <style jsx>{`
-            .topDateSticky {
-              position: absolute;
-              top: 0;
+            div {
+              background-color: ${APP_BACKGROUND_COLOR};
+              position: sticky;
+              top: 56px;
               left: 0;
               width: 100%;
-              z-index: 1;
+              opacity: 1;
+              z-index: 2;
             }
           `}</style>
         </div>
 
-        {/* {this.state.rendered ? (
-          <EventListDate date={this.state.stickyDate} />
-        ) : (
-          <Loader />
-        )} */}
-        <AutoSizer>
-          {({ height, width }) => (
-            <List
-              width={width}
-              height={height}
-              rowCount={data.length}
-              rowHeight={this.getRowHeight}
-              onRowsRendered={this.onRowsRendered}
-              rowRenderer={this.rowRenderer}
-              overscanRowCount={2}
-              onScroll={this.onScrollList}
-              style={{
-                outline: 'none',
-                paddingTop: `${EVENT_LIST_DATE_HEADER_HEIGHT}px`
-              }}
-            />
+        <WindowScroller>
+          {({
+            height,
+            isScrolling,
+            registerChild,
+            onChildScroll,
+            scrollTop
+          }) => (
+            <AutoSizer disableHeight>
+              {({ width }) => (
+                <List
+                  autoHeight
+                  width={width}
+                  height={height}
+                  rowCount={data.length}
+                  rowHeight={this.getRowHeight}
+                  onRowsRendered={this.onRowsRendered}
+                  rowRenderer={this.rowRenderer}
+                  overscanRowCount={2}
+                  onScroll={onChildScroll}
+                  isScrolling={isScrolling}
+                  scrollTop={scrollTop}
+                  style={{
+                    outline: 'none',
+                    backgroundColor: `${APP_BACKGROUND_COLOR}`
+                  }}
+                />
+              )}
+            </AutoSizer>
           )}
-        </AutoSizer>
+        </WindowScroller>
 
         <BottomPageLoader loading={this.props.loading} />
-        {/* </div> */}
       </Fragment>
     );
   }
@@ -117,15 +124,6 @@ export default class EventList extends React.PureComponent {
   onScrollList({ clientHeight, scrollHeight, scrollTop }) {
     this.props.isScrolling(scrollTop > this.scrollTop);
     this.scrollTop = scrollTop;
-    // if (scrollTop > this.scrollTop + EVENT_LIST_ITEM_HEIGHT) {
-    //   this.scrollTop = scrollTop;
-    //   this.props.isScrolling(true);
-    // }
-    //
-    // if (scrollTop < this.scrollTop - EVENT_LIST_ITEM_HEIGHT) {
-    //   this.scrollTop = scrollTop;
-    //   this.props.isScrolling(false);
-    // }
   }
 
   getRowHeight({ index }) {
@@ -138,16 +136,17 @@ export default class EventList extends React.PureComponent {
   rowRenderer({ key, index, style }) {
     const { data } = this.props;
 
+    let firstItemDay = index && data[index].date != data[index - 1].date;
+    let lastItemDay =
+      data[index + 1] && data[index].date != data[index + 1].date;
     return (
       <div style={style} key={key}>
-        {(index &&
-          data[index].date != data[index - 1].date && (
-            <EventListDate date={data[index].date} />
-          )) ||
-          null}
+        {(firstItemDay && <EventListDate date={data[index].date} />) || null}
         <EventListItem
           data={data[index]}
           onSelectEvent={this.props.onSelectEvent}
+          withBorderRadiusTop={index === 0 || firstItemDay}
+          withBorderRadiusBottom={lastItemDay}
         />
       </div>
     );
