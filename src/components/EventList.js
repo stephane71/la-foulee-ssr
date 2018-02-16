@@ -9,8 +9,6 @@ import {
 
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
-// The loader aims to provide a state during react-virtualized calculation
-// There is no SSR with react-virtualized as its need client dimensions
 import Loader from './Loader';
 
 import { white, APP_BACKGROUND_COLOR } from '../colors';
@@ -18,6 +16,11 @@ import { white, APP_BACKGROUND_COLOR } from '../colors';
 const EVENT_LIST_ITEM_HEIGHT = 73;
 const EVENT_LIST_DATE_HEADER_HEIGHT = 96;
 const PADDING_INDEX_LOAD_MORE = 1; // should be minimum one
+
+const cache = new CellMeasurerCache({
+  defaultHeight: EVENT_LIST_ITEM_HEIGHT,
+  fixedWidth: true
+});
 
 const BottomPageLoader = ({ loading }) => (
   <div className={`eventList-loader ${loading ? 'in' : 'out'}`}>
@@ -107,6 +110,8 @@ export default class EventList extends React.PureComponent {
                     outline: 'none',
                     backgroundColor: `${APP_BACKGROUND_COLOR}`
                   }}
+                  deferredMeasurementCache={cache}
+                  rowHeight={cache.rowHeight}
                 />
               )}
             </AutoSizer>
@@ -132,22 +137,31 @@ export default class EventList extends React.PureComponent {
       : EVENT_LIST_ITEM_HEIGHT;
   }
 
-  rowRenderer({ key, index, style }) {
+  rowRenderer({ key, index, style, parent }) {
     const { data } = this.props;
 
-    let firstItemDay = index && data[index].date != data[index - 1].date;
+    let firstItemDay = index && data[index].date !== data[index - 1].date;
     let lastItemDay =
-      data[index + 1] && data[index].date != data[index + 1].date;
+      data[index + 1] && data[index].date !== data[index + 1].date;
+
     return (
-      <div style={style} key={key}>
-        {(firstItemDay && <EventListDate date={data[index].date} />) || null}
-        <EventListItem
-          data={data[index]}
-          onSelectEvent={this.props.onSelectEvent}
-          withBorderRadiusTop={index === 0 || firstItemDay}
-          withBorderRadiusBottom={lastItemDay}
-        />
-      </div>
+      <CellMeasurer
+        cache={cache}
+        columnIndex={0}
+        key={key}
+        parent={parent}
+        rowIndex={index}
+      >
+        <div style={{ ...style, top: style.top + index }}>
+          {(firstItemDay && <EventListDate date={data[index].date} />) || null}
+          <EventListItem
+            data={data[index]}
+            onSelectEvent={this.props.onSelectEvent}
+            withBorderRadiusTop={index === 0 || firstItemDay}
+            withBorderRadiusBottom={lastItemDay}
+          />
+        </div>
+      </CellMeasurer>
     );
   }
 
