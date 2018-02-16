@@ -2,8 +2,7 @@ export const dominant = '#264A43';
 export const tonic = '#DDFF31';
 export const white = '#fff';
 export const listBorderColor = '#E7E8EA';
-// export const APP_BACKGROUND_COLOR = '#F4F5F7';
-export const APP_BACKGROUND_COLOR = 'rgba(38, 74, 67, 0.05)';
+export const APP_BACKGROUND_COLOR = '#F4F6F5';
 
 const themeDominant = {
   dark: '#132531',

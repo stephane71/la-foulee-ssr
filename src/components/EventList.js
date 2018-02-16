@@ -76,8 +76,7 @@ export default class EventList extends React.PureComponent {
               top: 56px;
               left: 0;
               width: 100%;
-              opacity: 1;
-              z-index: 2;
+              z-index: 1;
             }
           `}</style>
         </div>

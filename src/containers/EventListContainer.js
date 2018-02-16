@@ -87,17 +87,6 @@ export class EventListContainer extends React.PureComponent {
   getEventListComponent = () => {
     return (
       <div className={'EventListComponent'}>
-        {/* {this.props.loading && !this.props.loadingPage ? (
-          <Loader />
-        ) : (
-          <EventList
-            data={this.props.events}
-            onLoadMore={this.handleLoadPage}
-            loading={this.props.loading}
-            endList={this.props.currentPage + 1 === this.props.pages}
-            onSelectEvent={this.handleEventSelection}
-          />
-        )} */}
         <EventList
           data={this.props.events}
           onLoadMore={this.handleLoadPage}
@@ -108,9 +97,9 @@ export class EventListContainer extends React.PureComponent {
         />
         <style jsx>{`
           .EventListComponent {
+            height: auto;
             margin: auto;
             max-width: 768px;
-            height: 100%;
             border-right: 1px solid ${listBorderColor};
             border-left: 1px solid ${listBorderColor};
             padding-top: ${HEIGHT_MOBILE_SEARCH_INPUT}px;
