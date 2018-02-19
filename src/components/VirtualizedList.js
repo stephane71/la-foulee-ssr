@@ -106,7 +106,7 @@ export default class VirtualizedList extends React.PureComponent {
     if (stopIndex + PADDING_INDEX_LOAD_MORE >= this.props.data.length) {
       this.props.onReachEndList();
     }
-    this.props.onChangeStickyDate(this.props.data[startIndex].date);
+    this.props.onChangeStickyDate(this.props.data[startIndex + 1].date);
     this.setState({ rendered: true });
   }
 }
