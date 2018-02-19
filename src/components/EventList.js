@@ -52,6 +52,25 @@ const BottomPageLoader = ({ loading }) => (
   </div>
 );
 
+const FiltersWrapper = ({ show }) => (
+  <div className={`mobileInputWrapper ${show ? '' : 'out'}`}>
+    <MobileInput />
+    <style jsx>{`
+      .mobileInputWrapper {
+        position: sticky;
+        top: 56px;
+        transition: transform 0.3s ease-out;
+        will-change: transform;
+        z-index: 2;
+      }
+
+      .out {
+        transform: translateY(-100%);
+      }
+    `}</style>
+  </div>
+);
+
 export default class EventList extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -81,13 +100,7 @@ export default class EventList extends React.PureComponent {
 
     return (
       <div>
-        <div
-          className={`mobileInputWrapper ${
-            this.state.scrollUp || this.state.offsetScroll ? '' : 'out'
-          }`}
-        >
-          <MobileInput />
-        </div>
+        <FiltersWrapper show={this.state.scrollUp || this.state.offsetScroll} />
 
         <StickyDateHeader date={this.state.stickyDate} />
 
@@ -99,23 +112,7 @@ export default class EventList extends React.PureComponent {
           onScroll={this.handleScroll}
         />
 
-        {!this.props.endList && (
-          <BottomPageLoader loading={this.props.loading} />
-        )}
-
-        <style jsx>{`
-          .mobileInputWrapper {
-            position: sticky;
-            top: 56px;
-            transition: transform 0.3s ease-out;
-            will-change: transform;
-            z-index: 2;
-          }
-
-          .out {
-            transform: translateY(-100%);
-          }
-        `}</style>
+        <BottomPageLoader loading={this.props.loading} />
       </div>
     );
   }
@@ -133,6 +130,6 @@ export default class EventList extends React.PureComponent {
   }
 
   handleLoadMore() {
-    if (!this.props.loading && !this.props.endList) this.props.onLoadMore();
+    if (!this.props.loading) this.props.onLoadMore();
   }
 }
