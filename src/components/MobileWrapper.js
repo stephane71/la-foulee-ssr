@@ -67,7 +67,7 @@ export class MobileWrapper extends React.PureComponent {
     return (
       <div className={`mobileWrapper`}>
         <div className={`${showFilters ? 'wrapper-hidden' : 'wrapper-show'}`}>
-          <MobileInput onClick={() => this.setState({ showFilters: true })} />
+          {/* <MobileInput onClick={() => this.setState({ showFilters: true })} /> */}
           {this.props.children[0]}
         </div>
 

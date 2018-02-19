@@ -1,9 +1,9 @@
-import VirtualizedList from './VirtualizedList';
+import debounce from 'lodash.debounce';
 
+import VirtualizedList from './VirtualizedList';
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
 import Loader from './Loader';
-
 import MobileInput from './MobileInput';
 
 import { APP_BACKGROUND_COLOR } from '../colors';
@@ -56,13 +56,22 @@ export default class EventList extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.onScrollList = this.onScrollList.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
+    // This debounce fix a pb with the scroll top value:
+    // When reach the end a page: onLoadMore
+    // The scrollTop value returned by the VirtualizedList decrease
+    // Because of that we detect a false scrollTop and the MobileInput appears!
+    // This technic prevent this behaviour
+    this.handleScroll = debounce(this.handleScroll, 50);
+
     this.handleStickyDate = this.handleStickyDate.bind(this);
     this.handleLoadMore = this.handleLoadMore.bind(this);
   }
 
   state = {
-    stickyDate: this.props.data.length && this.props.data[0].date
+    stickyDate: this.props.data.length && this.props.data[0].date,
+    scrollUp: true,
+    offsetScroll: true
   };
 
   render() {
@@ -71,8 +80,14 @@ export default class EventList extends React.PureComponent {
     if (!data.length) return <div>{'Empty list !'}</div>;
 
     return (
-      <div className={'EventListComponent'}>
-        {/* <MobileInput /> */}
+      <div>
+        <div
+          className={`mobileInputWrapper ${
+            this.state.scrollUp || this.state.offsetScroll ? '' : 'out'
+          }`}
+        >
+          <MobileInput />
+        </div>
 
         <StickyDateHeader date={this.state.stickyDate} />
 
@@ -81,13 +96,24 @@ export default class EventList extends React.PureComponent {
           onSelectEvent={this.props.onSelectEvent}
           onChangeStickyDate={this.handleStickyDate}
           onReachEndList={this.handleLoadMore}
+          onScroll={this.handleScroll}
         />
 
-        <BottomPageLoader loading={this.props.loading} />
+        {!this.props.endList && (
+          <BottomPageLoader loading={this.props.loading} />
+        )}
 
         <style jsx>{`
-          .EventListComponent {
-            padding-top: ${HEIGHT_MOBILE_SEARCH_INPUT}px;
+          .mobileInputWrapper {
+            position: sticky;
+            top: 56px;
+            transition: transform 0.3s ease-out;
+            will-change: transform;
+            z-index: 2;
+          }
+
+          .out {
+            transform: translateY(-100%);
           }
         `}</style>
       </div>
@@ -96,8 +122,12 @@ export default class EventList extends React.PureComponent {
 
   scrollTop = 0;
 
-  onScrollList({ scrollTop, scrollLeft }) {
-    console.log(scrollLeft, scrollTop);
+  handleScroll({ scrollTop }) {
+    console.log(this.scrollTop, scrollTop);
+
+    const scrollUp = this.scrollTop > scrollTop;
+    this.scrollTop = scrollTop;
+    this.setState({ scrollUp, offsetScroll: !scrollTop });
   }
 
   handleStickyDate(stickyDate) {

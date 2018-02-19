@@ -28,14 +28,7 @@ const MobileInput = props => (
         padding: ${getSpacing('s')}px;
         padding-bottom: 0;
         background-color: ${APP_BACKGROUND_COLOR};
-        transition: transform 0.3s ease-out;
-        will-change: transform;
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
         width: 100%;
-        z-index: 2;
       }
 
       .mobileInput-content {
@@ -50,14 +43,6 @@ const MobileInput = props => (
       .mobileInput-placeholder {
         text-align: center;
         color: ${EVENT_ITEM_LOCATION_COLOR};
-      }
-
-      .in {
-        transform: translateY(0);
-      }
-
-      .out {
-        transform: translateY(-100%);
       }
     `}</style>
   </div>

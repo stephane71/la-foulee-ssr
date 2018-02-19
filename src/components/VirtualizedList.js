@@ -36,7 +36,7 @@ export default class VirtualizedList extends React.PureComponent {
 
   render() {
     return (
-      <WindowScroller>
+      <WindowScroller onScroll={this.props.onScroll}>
         {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => (
           <AutoSizer disableHeight>
             {({ width }) => (
