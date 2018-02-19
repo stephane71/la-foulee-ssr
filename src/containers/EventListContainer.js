@@ -5,36 +5,17 @@ import Router from 'next/router';
 import css from 'styled-jsx/css';
 import Media from 'react-media';
 
-import { setSelectedEvent, setSelectors, setCurrentPage } from '../actions';
+import {
+  setSelectedEvent,
+  setSelectors,
+  setCurrentPage,
+  setNextMonth
+} from '../actions';
 
-import MobileWrapper from '../components/MobileWrapper';
-import Loader from '../components/Loader';
 import EventList from '../components/EventList';
-import Selectors from '../components/Selectors';
 import withEventList from '../components/withEventList';
 
 import { getEventListStructuredData } from '../utils/structuredData';
-
-import { listBorderColor, getColor } from '../colors';
-import { HEIGHT_MOBILE_SEARCH_INPUT } from '../enums';
-
-const EventListContainerDesktop = css`
-  .EventListContainerDesktop {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-  }
-
-  .EventListContainerDesktop--selectors {
-    height: 100%;
-    width: 40%;
-  }
-
-  .EventListContainerDesktop--list {
-    height: 100%;
-    width: 60%;
-  }
-`;
 
 export class EventListContainer extends React.PureComponent {
   constructor(props) {
@@ -61,26 +42,15 @@ export class EventListContainer extends React.PureComponent {
         <Media query={`(max-width: 768px)`}>
           {matches =>
             matches ? (
-              <MobileWrapper>
-                <EventList
-                  data={this.props.events}
-                  onLoadMore={this.handleLoadPage}
-                  loading={this.props.loading}
-                  endList={this.props.currentPage + 1 === this.props.pages}
-                  onSelectEvent={this.handleEventSelection}
-                />
-                <Selectors validate={this.handleSelectorsValidation} />
-              </MobileWrapper>
+              <EventList
+                data={this.props.events}
+                onLoadMore={this.handleLoadPage}
+                loading={this.props.loading}
+                endList={this.props.currentPage + 1 === this.props.pages}
+                onSelectEvent={this.handleEventSelection}
+              />
             ) : (
-              <div className={'EventListContainerDesktop'}>
-                {/* <div className={'EventListContainerDesktop--selectors'}>
-                  <Selectors validate={this.handleSelectorsValidation} />
-                </div>
-                <div className={'EventListContainerDesktop--list'}>
-                  {this.getEventListComponent()}
-                </div>
-                <style jsx>{EventListContainerDesktop}</style> */}
-              </div>
+              <div className={'EventListContainerDesktop'} />
             )
           }
         </Media>
@@ -94,7 +64,12 @@ export class EventListContainer extends React.PureComponent {
 
   async handleLoadPage() {
     if (this.props.loading) return;
-    this.props.dispatch(setCurrentPage(this.props.currentPage + 1));
+
+    if (this.props.currentPage + 1 === this.props.pages) {
+      this.props.dispatch(setNextMonth());
+    } else {
+      this.props.dispatch(setCurrentPage(this.props.currentPage + 1));
+    }
   }
 
   handleEventSelection(event) {
