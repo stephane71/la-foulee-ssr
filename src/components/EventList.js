@@ -123,8 +123,6 @@ export default class EventList extends React.PureComponent {
   scrollTop = 0;
 
   handleScroll({ scrollTop }) {
-    console.log(this.scrollTop, scrollTop);
-
     const scrollUp = this.scrollTop > scrollTop;
     this.scrollTop = scrollTop;
     this.setState({ scrollUp, offsetScroll: !scrollTop });
