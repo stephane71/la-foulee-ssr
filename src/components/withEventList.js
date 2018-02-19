@@ -7,14 +7,6 @@ import {
   setCurrentPage
 } from '../actions';
 
-function getSelectors(selectors) {
-  const month = moment()
-    .month(selectors.month)
-    .month();
-
-  return { ...selectors, month: `${month}-2018` };
-}
-
 const withEventList = WrappedComponent => {
   return class eventListWrapper extends React.Component {
     static displayName = `withEventList(${WrappedComponent.displayName ||
@@ -52,7 +44,7 @@ const withEventList = WrappedComponent => {
         this.setState({ loading: true, loadingPage: true });
 
         const { events } = await this.props.getEventList(
-          getSelectors(this.props.selectors),
+          this.props.selectors,
           nextProps.currentPage
         );
         this.props.dispatch(concatEventList(events));
@@ -61,13 +53,15 @@ const withEventList = WrappedComponent => {
       if (this.props.selectors !== nextProps.selectors) {
         this.setState({ loading: true });
 
+        const FIRST_PAGE = 0;
+
         // TODO: manage the year of the event
         const { events, pages } = await this.props.getEventList(
-          getSelectors(nextProps.selectors),
-          0
+          nextProps.selectors,
+          FIRST_PAGE
         );
 
-        this.props.dispatch(setEventList(events));
+        this.props.dispatch(concatEventList(events));
         this.props.dispatch(setEventListNbPages(pages));
 
         this.firstPageRequestDone = true;
