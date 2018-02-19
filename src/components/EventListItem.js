@@ -7,6 +7,7 @@ import { getSpacing } from '../styles-variables';
 import { white, dominant } from '../colors';
 import Arrow from '../svgs/arrow_right_black_24px.svg';
 
+// duplicate
 const EVENT_ITEM_LOCATION_COLOR = '#808597';
 
 export default ({

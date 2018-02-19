@@ -1,27 +1,31 @@
-import { Fragment } from 'react';
-import {
-  CellMeasurer,
-  CellMeasurerCache,
-  AutoSizer,
-  List,
-  WindowScroller
-} from 'react-virtualized';
+import VirtualizedList from './VirtualizedList';
 
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
 import Loader from './Loader';
 
-import { white, APP_BACKGROUND_COLOR } from '../colors';
-import { getSpacing } from '../styles-variables';
+import MobileInput from './MobileInput';
+
+import { APP_BACKGROUND_COLOR } from '../colors';
+import { HEIGHT_MOBILE_SEARCH_INPUT } from '../enums';
 
 const EVENT_LIST_ITEM_HEIGHT = 72;
-const EVENT_LIST_DATE_HEADER_HEIGHT = 96;
-const PADDING_INDEX_LOAD_MORE = 1; // should be minimum one
 
-const cache = new CellMeasurerCache({
-  defaultHeight: EVENT_LIST_ITEM_HEIGHT,
-  fixedWidth: true
-});
+const StickyDateHeader = ({ date }) => (
+  <div>
+    <EventListDate date={date} />
+    <style jsx>{`
+      div {
+        background-color: ${APP_BACKGROUND_COLOR};
+        position: sticky;
+        top: 56px;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+      }
+    `}</style>
+  </div>
+);
 
 const BottomPageLoader = ({ loading }) => (
   <div className={`eventList-loader ${loading ? 'in' : 'out'}`}>
@@ -29,7 +33,7 @@ const BottomPageLoader = ({ loading }) => (
     <style jsx>{`
       .eventList-loader {
         height: ${EVENT_LIST_ITEM_HEIGHT}px;
-        position: fixed;
+        position: absolute;
         bottom: -${EVENT_LIST_ITEM_HEIGHT}px;
         left: 0;
         width: 100%;
@@ -52,14 +56,12 @@ export default class EventList extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.getRowHeight = this.getRowHeight.bind(this);
-    this.rowRenderer = this.rowRenderer.bind(this);
-    this.onRowsRendered = this.onRowsRendered.bind(this);
     this.onScrollList = this.onScrollList.bind(this);
+    this.handleStickyDate = this.handleStickyDate.bind(this);
+    this.handleLoadMore = this.handleLoadMore.bind(this);
   }
 
   state = {
-    rendered: false,
     stickyDate: this.props.data.length && this.props.data[0].date
   };
 
@@ -69,110 +71,40 @@ export default class EventList extends React.PureComponent {
     if (!data.length) return <div>{'Empty list !'}</div>;
 
     return (
-      <Fragment>
-        <div>
-          <EventListDate date={this.state.stickyDate} />
-          <style jsx>{`
-            div {
-              background-color: ${APP_BACKGROUND_COLOR};
-              position: sticky;
-              top: 56px;
-              left: 0;
-              width: 100%;
-              z-index: 1;
-            }
-          `}</style>
-        </div>
+      <div className={'EventListComponent'}>
+        {/* <MobileInput /> */}
 
-        <WindowScroller>
-          {({
-            height,
-            isScrolling,
-            registerChild,
-            onChildScroll,
-            scrollTop
-          }) => (
-            <AutoSizer disableHeight>
-              {({ width }) => (
-                <List
-                  autoHeight
-                  width={width}
-                  height={height}
-                  rowCount={data.length}
-                  rowHeight={this.getRowHeight}
-                  onRowsRendered={this.onRowsRendered}
-                  rowRenderer={this.rowRenderer}
-                  overscanRowCount={2}
-                  onScroll={onChildScroll}
-                  isScrolling={isScrolling}
-                  scrollTop={scrollTop}
-                  style={{
-                    outline: 'none',
-                    backgroundColor: `${APP_BACKGROUND_COLOR}`,
-                    paddingBottom: `${getSpacing('xls')}px`
-                  }}
-                  deferredMeasurementCache={cache}
-                  rowHeight={cache.rowHeight}
-                />
-              )}
-            </AutoSizer>
-          )}
-        </WindowScroller>
+        <StickyDateHeader date={this.state.stickyDate} />
+
+        <VirtualizedList
+          data={this.props.data}
+          onSelectEvent={this.props.onSelectEvent}
+          onChangeStickyDate={this.handleStickyDate}
+          onReachEndList={this.handleLoadMore}
+        />
 
         <BottomPageLoader loading={this.props.loading} />
-      </Fragment>
+
+        <style jsx>{`
+          .EventListComponent {
+            padding-top: ${HEIGHT_MOBILE_SEARCH_INPUT}px;
+          }
+        `}</style>
+      </div>
     );
   }
 
   scrollTop = 0;
 
-  onScrollList({ clientHeight, scrollHeight, scrollTop }) {
-    this.props.isScrolling(scrollTop > this.scrollTop);
-    this.scrollTop = scrollTop;
+  onScrollList({ scrollTop, scrollLeft }) {
+    console.log(scrollLeft, scrollTop);
   }
 
-  getRowHeight({ index }) {
-    return index &&
-      this.props.data[index].date !== this.props.data[index - 1].date
-      ? EVENT_LIST_ITEM_HEIGHT + EVENT_LIST_DATE_HEADER_HEIGHT
-      : EVENT_LIST_ITEM_HEIGHT;
+  handleStickyDate(stickyDate) {
+    this.setState({ stickyDate });
   }
 
-  rowRenderer({ key, index, style, parent }) {
-    const { data } = this.props;
-
-    const firstItemDay = index && data[index].date !== data[index - 1].date;
-    const lastItemDay =
-      data[index + 1] && data[index].date !== data[index + 1].date;
-
-    return (
-      <CellMeasurer
-        cache={cache}
-        columnIndex={0}
-        key={key}
-        parent={parent}
-        rowIndex={index}
-      >
-        <div style={{ ...style, paddingBottom: 1 }}>
-          {(firstItemDay && <EventListDate date={data[index].date} />) || null}
-          <EventListItem
-            data={data[index]}
-            onSelectEvent={this.props.onSelectEvent}
-            withBorderRadiusTop={index === 0 || firstItemDay}
-            withBorderRadiusBottom={index + 1 === data.length || lastItemDay}
-          />
-        </div>
-      </CellMeasurer>
-    );
-  }
-
-  onRowsRendered({ startIndex, stopIndex }) {
-    if (stopIndex + PADDING_INDEX_LOAD_MORE >= this.props.data.length) {
-      if (!this.props.loading && !this.props.endList) this.props.onLoadMore();
-    }
-    this.setState({
-      rendered: true,
-      stickyDate: this.props.data[startIndex].date
-    });
+  handleLoadMore() {
+    if (!this.props.loading && !this.props.endList) this.props.onLoadMore();
   }
 }

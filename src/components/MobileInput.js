@@ -11,10 +11,13 @@ import {
   APP_BACKGROUND_COLOR
 } from '../colors';
 
+// duplicate
+const EVENT_ITEM_LOCATION_COLOR = '#808597';
+
 const MobileInput = props => (
-  <div className={`mobileInput ${props.hide ? 'out' : 'in'}`}>
+  <div className={`mobileInput`}>
     <div className={'mobileInput-content'} onClick={props.onClick}>
-      <SearchIcon />
+      <SearchIcon fill={EVENT_ITEM_LOCATION_COLOR} />
       <span className={'mobileInput-placeholder'}>
         {'Rechercher par ville, date, épreuve'}
       </span>
@@ -25,10 +28,8 @@ const MobileInput = props => (
         padding: ${getSpacing('s')}px;
         padding-bottom: 0;
         background-color: ${APP_BACKGROUND_COLOR};
-
         transition: transform 0.3s ease-out;
         will-change: transform;
-
         position: absolute;
         top: 0;
         left: 0;
@@ -43,11 +44,12 @@ const MobileInput = props => (
         border-radius: ${BORDER_RADIUS}px;
         display: flex;
         align-items: center;
+        box-shadow: 0 10px 20px 0 rgba(38, 74, 67, 0.05);
       }
 
       .mobileInput-placeholder {
         text-align: center;
-        color: ${getColor('lightGrey', 'tonic')};
+        color: ${EVENT_ITEM_LOCATION_COLOR};
       }
 
       .in {
