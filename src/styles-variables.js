@@ -17,7 +17,8 @@ const fontSizeMap = {
   xxl: XXLFontSize
 };
 
-export const getFontSize = size => (!size ? fontSizeMap[`m`] : fontSizeMap[size]);
+export const getFontSize = size =>
+  !size ? fontSizeMap[`m`] : fontSizeMap[size];
 
 // Line height
 export const BaseLineHeight = Base * 6;
@@ -48,11 +49,6 @@ export const getSpacing = size => (!size ? spacingMap[`m`] : spacingMap[size]);
 /*
  * Headers
  */
-// $color = dominante or white
-
-export const SMALL = {
-  fontSize: BaseFontSize / BaseRatio
-};
 
 export const H6 = {
   lineHeight: BaseLineHeight,

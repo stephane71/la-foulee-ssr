@@ -3,14 +3,14 @@
 // read here https://github.com/kesne/babel-plugin-inline-react-svg/issues/31#issuecomment-342264348
 import React from 'react';
 
-import { getSpacing } from '../styles-variables';
-import { getFontSize } from '../styles-variables';
+import { getSpacing, getFontSize } from '../styles-variables';
 import { white, dominant } from '../colors';
 import Arrow from '../svgs/arrow_right_black_24px.svg';
 
 // duplicate
 const EVENT_ITEM_LOCATION_COLOR = '#67807B';
 const EVENT_ITEM_TITLE_COLOR = '#516E69';
+const BORDER_RADIUS_LIST_ITEM = 10;
 
 export default ({
   data,
@@ -19,7 +19,7 @@ export default ({
   withBorderRadiusBottom
 }) => (
   <div
-    rel="bookmark"
+    rel={'bookmark'}
     className={`event-list-item-root ${
       withBorderRadiusTop ? 'border-top' : ''
     } ${withBorderRadiusBottom ? 'border-bottom' : ''}`}
@@ -47,14 +47,13 @@ export default ({
       }
 
       .border-top {
-        border-top-left-radius: 10px;
-        border-top-right-radius: 10px;
+        border-top-left-radius: ${BORDER_RADIUS_LIST_ITEM}px;
+        border-top-right-radius: ${BORDER_RADIUS_LIST_ITEM}px;
       }
 
       .border-bottom {
-        border-bottom-right-radius: 10px;
-        border-bottom-left-radius: 10px;
-        margin-bottom: ${getSpacing('m')}px;
+        border-bottom-right-radius: ${BORDER_RADIUS_LIST_ITEM}px;
+        border-bottom-left-radius: ${BORDER_RADIUS_LIST_ITEM}px;
       }
 
       .event-data {
