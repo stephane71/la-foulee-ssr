@@ -4,11 +4,13 @@
 import React from 'react';
 
 import { getSpacing } from '../styles-variables';
+import { getFontSize } from '../styles-variables';
 import { white, dominant } from '../colors';
 import Arrow from '../svgs/arrow_right_black_24px.svg';
 
 // duplicate
-const EVENT_ITEM_LOCATION_COLOR = '#808597';
+const EVENT_ITEM_LOCATION_COLOR = '#67807B';
+const EVENT_ITEM_TITLE_COLOR = '#516E69';
 
 export default ({
   data,
@@ -17,15 +19,16 @@ export default ({
   withBorderRadiusBottom
 }) => (
   <div
+    rel="bookmark"
     className={`event-list-item-root ${
       withBorderRadiusTop ? 'border-top' : ''
     } ${withBorderRadiusBottom ? 'border-bottom' : ''}`}
     onClick={() => onSelectEvent(data)}
   >
-    <div className={`event-data`}>
+    <article className={`event-data`}>
       <h6 className={`title`}>{data.title}</h6>
-      <div className={'location'}>{`${data.dep}, ${data.city}`}</div>
-    </div>
+      <address className={'location'}>{`${data.dep}, ${data.city}`}</address>
+    </article>
     <Arrow style={{ fill: '#A0A7BD' }} />
 
     <style jsx>{`
@@ -51,6 +54,7 @@ export default ({
       .border-bottom {
         border-bottom-right-radius: 10px;
         border-bottom-left-radius: 10px;
+        margin-bottom: ${getSpacing('m')}px;
       }
 
       .event-data {
@@ -64,13 +68,15 @@ export default ({
       .title {
         text-transform: capitalize;
         font-family: 'Circular-Bold-S';
-        color: ${dominant};
+        color: ${EVENT_ITEM_TITLE_COLOR};
         margin: 0;
       }
 
       .location {
         color: ${EVENT_ITEM_LOCATION_COLOR};
         font-weight: 400;
+        font-size: ${getFontSize('s')}px;
+        font-style: normal;
       }
     `}</style>
   </div>

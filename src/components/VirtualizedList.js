@@ -55,7 +55,7 @@ export default class VirtualizedList extends React.PureComponent {
                 style={{
                   outline: 'none',
                   backgroundColor: `${APP_BACKGROUND_COLOR}`,
-                  paddingBottom: `${getSpacing('xls')}px`
+                  paddingBottom: `${getSpacing('xl')}px`
                 }}
                 deferredMeasurementCache={cache}
                 rowHeight={cache.rowHeight}

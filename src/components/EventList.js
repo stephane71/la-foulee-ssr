@@ -113,6 +113,22 @@ export default class EventList extends React.PureComponent {
         />
 
         <BottomPageLoader loading={this.props.loading} />
+
+        <style jsx>{`
+          .mobileInputWrapper {
+            position: fixed;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            transition: transform 0.3s ease-out;
+            will-change: transform;
+            z-index: 2;
+          }
+
+          .out {
+            transform: translateY(100%);
+          }
+        `}</style>
       </div>
     );
   }

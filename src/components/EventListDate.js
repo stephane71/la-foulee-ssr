@@ -1,6 +1,7 @@
 import moment from 'moment';
 
 import { getSpacing } from '../styles-variables';
+import { getFontSize } from '../styles-variables';
 import { dominant } from '../colors';
 
 const DATE_FORMAT = 'dddd D MMMM';
@@ -13,25 +14,31 @@ function getDate(date) {
   return moment.unix(date).format('D MMMM');
 }
 
+function getDateSemantic(date) {
+  return moment.unix(date).format('YYYY-MM-DD');
+}
+
 const EventListDate = ({ date }) => (
-  <h5>
+  <time className="Date" datetime={getDateSemantic(date)}>
     <span className={'weeklyDay'}>{getWeeklyDay(date)}</span>{' '}
     <span>{getDate(date)}</span>
     <style jsx>{`
-      h5 {
+      .Date {
         text-transform: capitalize;
         padding: ${getSpacing(`m`)}px;
-        padding-top: ${getSpacing('ls')}px;
+        padding-top: ${getSpacing('m')}px;
         margin: 0;
         color: ${dominant};
         font-weight: 500;
+        font-size: ${getFontSize('l')}px;
+        display: block;
       }
 
       .weeklyDay {
         font-weight: 300;
       }
     `}</style>
-  </h5>
+  </time>
 );
 
 export default EventListDate;

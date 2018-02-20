@@ -10,6 +10,7 @@ import {
   H5,
   H6,
   P,
+  SMALL,
   LISTS
 } from './styles-variables';
 

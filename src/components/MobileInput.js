@@ -4,6 +4,7 @@ import SearchIcon from '../svgs/ic_search_white_24px.svg';
 
 import { BORDER_RADIUS } from '../enums';
 import { getSpacing } from '../styles-variables';
+import { getFontSize } from '../styles-variables';
 import {
   white,
   listBorderColor,
@@ -25,9 +26,8 @@ const MobileInput = props => (
 
     <style jsx>{`
       .mobileInput {
-        padding: ${getSpacing('s')}px;
+        padding: ${getSpacing('s')}px ${getSpacing('xs')}px;
         padding-bottom: 0;
-        background-color: ${APP_BACKGROUND_COLOR};
         width: 100%;
       }
 
@@ -37,12 +37,13 @@ const MobileInput = props => (
         border-radius: ${BORDER_RADIUS}px;
         display: flex;
         align-items: center;
-        box-shadow: 0 10px 20px 0 rgba(38, 74, 67, 0.05);
+        box-shadow: 0 0 20px 0 rgba(38, 74, 67, .4);
       }
 
       .mobileInput-placeholder {
         text-align: center;
         color: ${EVENT_ITEM_LOCATION_COLOR};
+        font-size: ${getFontSize('s')}px;
       }
     `}</style>
   </div>
