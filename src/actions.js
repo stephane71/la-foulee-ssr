@@ -4,7 +4,7 @@ export const SET_EVENT_LIST = 'SET_EVENT_LIST';
 export const SET_EVENT_LIST_NB_PAGES = 'SET_EVENT_LIST_NB_PAGES';
 export const SET_SELECTORS = 'SET_SELECTORS';
 export const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
-export const SET_NEXT_MONTH = 'SET_NEXT_MONTH';
+export const SET_CURRENT_MONTH = 'SET_CURRENT_MONTH';
 
 export function setSelectedEvent(event) {
   return {
@@ -48,8 +48,8 @@ export function setCurrentPage(currentPage) {
   };
 }
 
-export function setNextMonth() {
+export function setCurrentMonth() {
   return {
-    type: SET_NEXT_MONTH
+    type: SET_CURRENT_MONTH
   };
 }

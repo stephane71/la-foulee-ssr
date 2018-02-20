@@ -11,6 +11,27 @@ import { HEIGHT_MOBILE_SEARCH_INPUT } from '../enums';
 
 const EVENT_LIST_ITEM_HEIGHT = 72;
 
+const FiltersWrapper = ({ show }) => (
+  <div className={`mobileInputWrapper ${show ? '' : 'out'}`}>
+    <MobileInput />
+    <style jsx>{`
+      .mobileInputWrapper {
+        position: fixed;
+        bottom: 12px;
+        left: 0;
+        right: 0;
+        transition: transform 0.3s ease-out;
+        will-change: transform;
+        z-index: 2;
+      }
+
+      .out {
+        transform: translateY(100%);
+      }
+    `}</style>
+  </div>
+);
+
 const StickyDateHeader = ({ date }) => (
   <div>
     <EventListDate date={date} />
@@ -47,27 +68,6 @@ const BottomPageLoader = ({ loading }) => (
 
       .out {
         transform: translateY(0);
-      }
-    `}</style>
-  </div>
-);
-
-const FiltersWrapper = ({ show }) => (
-  <div className={`mobileInputWrapper ${show ? '' : 'out'}`}>
-    <MobileInput />
-    <style jsx>{`
-      .mobileInputWrapper {
-        position: fixed;
-        bottom: 12px;
-        left: 0;
-        right: 0;
-        transition: transform 0.3s ease-out;
-        will-change: transform;
-        z-index: 2;
-      }
-
-      .out {
-        transform: translateY(100%);
       }
     `}</style>
   </div>

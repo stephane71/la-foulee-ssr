@@ -9,7 +9,7 @@ import {
   setSelectedEvent,
   setSelectors,
   setCurrentPage,
-  setNextMonth
+  setCurrentMonth
 } from '../actions';
 
 import EventList from '../components/EventList';
@@ -66,7 +66,7 @@ export class EventListContainer extends React.PureComponent {
     if (this.props.loading) return;
 
     if (this.props.currentPage + 1 === this.props.pages) {
-      this.props.dispatch(setNextMonth());
+      this.props.dispatch(setCurrentMonth());
     } else {
       this.props.dispatch(setCurrentPage(this.props.currentPage + 1));
     }
@@ -89,7 +89,8 @@ function mapStateToProps(state) {
     selectors: state.selectors,
     events: state.events,
     pages: state.pages,
-    currentPage: state.currentPage
+    currentPage: state.currentPage,
+    currentMonth: state.currentMonth
   };
 }
 

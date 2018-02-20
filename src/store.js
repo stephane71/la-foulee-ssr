@@ -8,7 +8,7 @@ import {
   SET_EVENT_LIST_NB_PAGES,
   SET_SELECTORS,
   SET_CURRENT_PAGE,
-  SET_NEXT_MONTH
+  SET_CURRENT_MONTH
 } from './actions';
 
 function getNextMonth(month) {
@@ -31,7 +31,8 @@ const initialState = {
     month: START_MONTH,
     dep: ''
   },
-  currentPage: 0
+  currentPage: 0,
+  currentMonth: START_MONTH
 };
 
 const reducer = (state = initialState, action) => {
@@ -48,12 +49,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, selectors: action.selectors };
     case SET_CURRENT_PAGE:
       return { ...state, currentPage: action.currentPage };
-    case SET_NEXT_MONTH:
-      const selectors = {
-        ...state.selectors,
-        month: getNextMonth(state.selectors.month)
-      };
-      return { ...state, selectors };
+    case SET_CURRENT_MONTH:
+      return { ...state, currentMonth: getNextMonth(state.currentMonth) };
     default:
       return state;
   }
