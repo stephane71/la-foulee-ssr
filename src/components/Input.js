@@ -1,24 +1,8 @@
-// should not be added !
-// when using babel-plugin-inline-react-svg (added for project) && babel-plugin-react-require (added from next.js)
-// read here https://github.com/kesne/babel-plugin-inline-react-svg/issues/31#issuecomment-342264348
-import React from 'react';
 import css from 'styled-jsx/css';
 
-import { getSpacing, BaseFontSize } from '../styles-variables';
-import { listBorderColor, getColor } from '../colors';
-import { BORDER_RADIUS } from '../enums';
-
-import Arrow from '../svgs/arrow_down_black_24px.svg';
+import { BaseFontSize } from '../styles-variables';
 
 const style = css`
-  .inputWrapper {
-    border: 1px solid ${listBorderColor};
-    border-radius: ${BORDER_RADIUS}px;
-    padding: ${getSpacing('xxs')}px ${getSpacing('s')}px;
-    display: flex;
-    align-items: center;
-  }
-
   .inputElement {
     width: 100%;
     appearence: none;
@@ -48,7 +32,7 @@ class Input extends React.PureComponent {
 
   render() {
     return (
-      <div className={'inputWrapper'} onClick={this.handleInputWrapperClick}>
+      <div onClick={this.handleInputWrapperClick}>
         <input
           ref={input => {
             this.textInput = input;
@@ -60,7 +44,6 @@ class Input extends React.PureComponent {
           onChange={this.handleChange}
           onBlur={this.props.onBlur}
         />
-        <Arrow style={{ fill: getColor('darkGrey', 'tonic') }} />
         <style jsx>{style}</style>
       </div>
     );
@@ -68,7 +51,7 @@ class Input extends React.PureComponent {
 
   handleInputWrapperClick() {
     this.textInput.focus();
-    this.props.onFocus();
+    this.props.onFocus && this.props.onFocus();
   }
 
   handleChange(event) {
