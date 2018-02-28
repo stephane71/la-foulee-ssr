@@ -4,11 +4,9 @@
 import React from 'react';
 
 import { getSpacing, getFontSize } from '../styles-variables';
-import { white, dominant } from '../colors';
+import { white, dominant, SECONDARY_COLOR } from '../colors';
 import Arrow from '../svgs/arrow_right_black_24px.svg';
 
-// duplicate
-const EVENT_ITEM_LOCATION_COLOR = '#67807B';
 const EVENT_ITEM_TITLE_COLOR = '#516E69';
 const BORDER_RADIUS_LIST_ITEM = 10;
 
@@ -72,7 +70,7 @@ export default ({
       }
 
       .location {
-        color: ${EVENT_ITEM_LOCATION_COLOR};
+        color: ${SECONDARY_COLOR};
         font-weight: 400;
         font-size: ${getFontSize('s')}px;
         font-style: normal;

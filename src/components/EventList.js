@@ -4,7 +4,6 @@ import VirtualizedList from './VirtualizedList';
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
 import Loader from './Loader';
-import MobileInput from './MobileInput';
 
 import { APP_BACKGROUND_COLOR } from '../colors';
 import { HEIGHT_MOBILE_SEARCH_INPUT } from '../enums';
@@ -12,15 +11,18 @@ import { getSpacing } from '../styles-variables';
 
 const EVENT_LIST_ITEM_HEIGHT = 72;
 
+import FilterContainer from '../containers/FilterContainer';
+
 const FiltersWrapper = ({ show }) => (
-  <div className={`mobileInputWrapper ${show ? '' : 'out'}`}>
-    <MobileInput />
+  <div className={`filterWrapper ${show ? '' : 'out'}`}>
+    <FilterContainer />
     <style jsx>{`
-      .mobileInputWrapper {
+      .filterWrapper {
         position: fixed;
         bottom: ${getSpacing('s')}px;
         left: 0;
         right: 0;
+        padding: 0 ${getSpacing('s')}px;
         transition: transform 0.3s ease-out;
         will-change: transform;
         z-index: 2;
@@ -84,7 +86,7 @@ export default class EventList extends React.PureComponent {
     // The scrollTop value returned by the VirtualizedList decrease
     // Because of that we detect a false scrollTop and the MobileInput appears!
     // This technic prevent this behaviour
-    this.handleScroll = debounce(this.handleScroll, 50);
+    // this.handleScroll = debounce(this.handleScroll, 50);
 
     this.handleStickyDate = this.handleStickyDate.bind(this);
     this.handleLoadMore = this.handleLoadMore.bind(this);
@@ -103,7 +105,8 @@ export default class EventList extends React.PureComponent {
 
     return (
       <div>
-        <FiltersWrapper show={this.state.scrollUp || this.state.offsetScroll} />
+        {/* <FiltersWrapper show={this.state.scrollUp || this.state.offsetScroll} /> */}
+        <FiltersWrapper show />
 
         <StickyDateHeader date={this.state.stickyDate} />
 
@@ -115,14 +118,22 @@ export default class EventList extends React.PureComponent {
           onScroll={this.handleScroll}
         />
 
-        <BottomPageLoader loading={this.props.loading} />
+        {/* <BottomPageLoader loading={this.props.loading} /> */}
       </div>
     );
   }
 
   scrollTop = 0;
+  windowScrollTop = 0;
 
   handleScroll({ scrollTop }) {
+    // tester de comperer avec window.scrollY
+    // const windowScrollUp = this.windowScrollTop > window.scrollY;
+    // console.log(this.windowScrollTop, window.scrollY, windowScrollUp);
+    // this.windowScrollTop = window.scrollY;
+
+    // console.log(this.scrollTop, scrollTop, this.scrollTop > scrollTop);
+
     const scrollUp = this.scrollTop > scrollTop;
     this.scrollTop = scrollTop;
     this.setState({ scrollUp, offsetScroll: !scrollTop });
