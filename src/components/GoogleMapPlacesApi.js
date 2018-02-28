@@ -1,5 +1,8 @@
 import Head from 'next/head';
 import { Fragment } from 'react';
+import { connect } from 'react-redux';
+
+import { setGoogleMapsService } from '../actions';
 
 let service = null;
 
@@ -16,15 +19,16 @@ class GoogleMapPlacesApi extends React.PureComponent {
     super(props);
 
     this.state = {
-      predictions: [],
-      scriptInserted: false
+      predictions: []
     };
 
     this.predictionCB = this.predictionCB.bind(this);
-    this.service = null;
 
     window.initService = () => {
-      this.service = new google.maps.places.AutocompleteService();
+      // this.service = new google.maps.places.AutocompleteService();
+      this.props.dispatch(
+        setGoogleMapsService(new google.maps.places.AutocompleteService())
+      );
     };
   }
 
@@ -34,7 +38,7 @@ class GoogleMapPlacesApi extends React.PureComponent {
         this.setState({ predictions: [] });
         return;
       }
-      this.service.getPlacePredictions(
+      this.props.googleMapsService.getPlacePredictions(
         { ...GOOGLE_MAPS_OPTIONS, input: nextProps.input },
         this.predictionCB
       );
@@ -44,7 +48,7 @@ class GoogleMapPlacesApi extends React.PureComponent {
   render() {
     return (
       <Fragment>
-        {!this.service && (
+        {!window.google && (
           <Head>
             <script
               src={`https://maps.googleapis.com/maps/api/js?key=${
@@ -67,4 +71,10 @@ class GoogleMapPlacesApi extends React.PureComponent {
   }
 }
 
-export default GoogleMapPlacesApi;
+function mapStateToProps(state) {
+  return {
+    googleMapsService: state.googleMapsService
+  };
+}
+
+export default connect(mapStateToProps)(GoogleMapPlacesApi);
