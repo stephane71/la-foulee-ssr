@@ -28,6 +28,9 @@ class Input extends React.PureComponent {
     if (this.props.value !== nextProps.value) {
       this.setState({ value: nextProps.value });
     }
+    if (nextProps.focus && this.props.focus !== nextProps.focus) {
+      this.textInput.focus();
+    }
   }
 
   render() {

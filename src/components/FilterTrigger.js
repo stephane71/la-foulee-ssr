@@ -45,7 +45,10 @@ const FilterTrigger = ({
         margin-left: ${marginLeft ? `${FILTER_MARGIN_LEFT}px` : 0};
         background: ${white};
         border-radius: ${BORDER_RADIUS}px;
+
         box-shadow: 0 5px 20px 0 rgba(38, 74, 67, 0.2);
+        vertical-align: bottom;
+
         overflow: hidden;
         white-space: nowrap;
         transition: width 0.25s ease-out;

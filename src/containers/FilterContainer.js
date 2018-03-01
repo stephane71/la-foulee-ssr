@@ -16,8 +16,11 @@ import DateIcon from '../svgs/ic_date_range_black_24px.svg';
 import RunIcon from '../svgs/ic_directions_run_black_24px.svg';
 
 import { getSpacing } from '../styles-variables';
-import { BORDER_RADIUS } from '../enums';
+import { BORDER_RADIUS, ICON_SIZE } from '../enums';
 
+// See FilterTrigger for the first part: 'ICON_SIZE + getSpacing('xs') * 2'
+const FILTER_ACTIVATORS_HEIGHT =
+  ICON_SIZE + getSpacing('xs') * 2 + getSpacing('xs');
 const CURRENT_MONTH = moment().format('MMMM');
 
 const LOCATION_FILTER = 'location';
@@ -28,6 +31,7 @@ const FILTERS = [
   {
     name: LOCATION_FILTER,
     Icon: GPSIcon,
+    Selector: CitySelector,
     placeholder: 'Localisation',
     value: '',
     marginLeft: false
@@ -35,6 +39,7 @@ const FILTERS = [
   {
     name: DATE_FILTER,
     Icon: DateIcon,
+    Selector: MonthSelector,
     placeholder: 'Date',
     value: '',
     marginLeft: true
@@ -42,17 +47,12 @@ const FILTERS = [
   {
     name: DISTANCE_FILTER,
     Icon: RunIcon,
+    Selector: DistanceSelector,
     placeholder: 'Distance',
     value: '',
     marginLeft: true
   }
 ];
-
-const FILTER_SELCTOR_MAP = {
-  [LOCATION_FILTER]: CitySelector,
-  [DATE_FILTER]: MonthSelector,
-  [DISTANCE_FILTER]: DistanceSelector
-};
 
 class FilterContainer extends React.PureComponent {
   constructor(props) {
@@ -76,50 +76,62 @@ class FilterContainer extends React.PureComponent {
   }
 
   render() {
-    const { filters } = this.state;
-    const activeFilterState = filters[this.state.activeFilter];
-    const FilterComponent = FILTER_SELCTOR_MAP[this.state.activeFilter];
+    const { filters, openFilter, activeFilter } = this.state;
 
     return (
       <div className={'filterContainer'}>
-        {this.state.openFilter && (
-          <div className={'filterWrapper'}>
-            <FilterComponent
+        {FILTERS.map(({ name, Selector }, i) => (
+          <div
+            key={i}
+            className={`filterSelector ${
+              openFilter === name ? 'filterSelector--active' : ''
+            }`}
+          >
+            <Selector
               onSelect={this.handleSelectFilter}
-              input={activeFilterState.value || ''}
+              input={filters[name].value || ''}
             />
           </div>
-        )}
+        ))}
 
-        <div className={'filterActivators'}>
-          {FILTERS.map((props, i) => (
-            <FilterTrigger
-              key={i}
-              {...props}
-              active={this.state.activeFilter === props.name}
-              onFilterActivation={this.handleFilterActivation}
-              value={filters[props.name].value}
-            >
-              {props.name === LOCATION_FILTER ? (
-                <Input
-                  value={filters[props.name].value || ''}
-                  placeholder={'Choisissez une ville'}
-                  onChange={this.updateLocationInput}
-                />
-              ) : null}
-            </FilterTrigger>
-          ))}
-        </div>
+        {FILTERS.map((props, i) => (
+          <FilterTrigger
+            key={i}
+            {...props}
+            active={activeFilter === props.name}
+            onFilterActivation={this.handleFilterActivation}
+            value={filters[props.name].value}
+          >
+            {props.name === LOCATION_FILTER ? (
+              <Input
+                value={filters[props.name].value || ''}
+                placeholder={'Choisissez une ville'}
+                onChange={this.updateLocationInput}
+                focus={activeFilter === props.name}
+              />
+            ) : null}
+          </FilterTrigger>
+        ))}
 
         <style jsx>{`
-          .filterActivators {
-          }
+          .filterSelector {
+            position: absolute;
+            left: ${getSpacing('s')}px;
+            right: ${getSpacing('s')}px;
+            bottom: ${FILTER_ACTIVATORS_HEIGHT}px;
 
-          .filterWrapper {
             background-color: #fff;
-            margin-bottom: ${getSpacing('s')}px;
             border-radius: ${BORDER_RADIUS}px;
             box-shadow: 0 5px 20px 0 rgba(38, 74, 67, 0.2);
+
+            transition: all 0.25s ease-in-out;
+            transform: scale(0);
+            overflow: scroll;
+          }
+
+          .filterSelector--active {
+            opacity: 1;
+            transform: scale(1);
           }
         `}</style>
       </div>
