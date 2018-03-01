@@ -59,7 +59,6 @@ const FilterTrigger = ({
       }
 
       .filterTrigger-value {
-        // margin-left: ${getSpacing('s')}px;
         vertical-align: top;
         text-transform: capitalize;
       }
@@ -67,6 +66,7 @@ const FilterTrigger = ({
       .filterTrigger-extend {
         display: inline-block;
         margin-left: ${getSpacing('s')}px;
+        width: calc(100% - ${getSpacing('s')}px - ${getSpacing('s')}px * 2);
       }
     `}</style>
   </div>
