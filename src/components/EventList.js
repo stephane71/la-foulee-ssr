@@ -116,8 +116,8 @@ export default class EventList extends React.PureComponent {
   scrollTop = 0;
 
   handleScroll({ scrollTop }) {
-    const scrollDown = this.scrollTop > scrollTop;
-    this.scrollTop = scrollTop;
+    const scrollDown = this.scrollTop > window.scrollY;
+    this.scrollTop = window.scrollY;
     this.setState({ scrollDown });
   }
 
