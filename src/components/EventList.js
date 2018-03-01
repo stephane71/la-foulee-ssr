@@ -1,5 +1,3 @@
-import debounce from 'lodash.debounce';
-
 import VirtualizedList from './VirtualizedList';
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
@@ -22,14 +20,14 @@ const FiltersWrapper = ({ show }) => (
         bottom: ${getSpacing('s')}px;
         left: 0;
         right: 0;
-        padding: 0 ${getSpacing('s')}px;
+        padding: 0 ${getSpacing('xs')}px;
         transition: transform 0.3s ease-out;
         will-change: transform;
         z-index: 2;
       }
 
       .out {
-        transform: translateY(100%);
+        transform: translateY(calc(100% + ${getSpacing('s')}px));
       }
     `}</style>
   </div>
@@ -51,26 +49,27 @@ const StickyDateHeader = ({ date }) => (
   </div>
 );
 
-const BottomPageLoader = ({ loading }) => (
-  <div className={`eventList-loader ${loading ? 'in' : 'out'}`}>
+// This offset prevent the page to stand on bottom:
+// When reach the page bottom, new data are loaded
+// Then the page reach automaticaly the end
+// Then a new data load is triggering...
+const LOADER_OFFSET_HEIGHT = 1;
+const EventListLoader = ({ show }) => (
+  <div className={`eventListLoader ${show ? 'in' : ''}`}>
     <Loader />
     <style jsx>{`
-      .eventList-loader {
-        height: ${EVENT_LIST_ITEM_HEIGHT}px;
+      .eventListLoader {
+        height: ${EVENT_LIST_ITEM_HEIGHT + LOADER_OFFSET_HEIGHT}px;
         position: absolute;
-        bottom: -${EVENT_LIST_ITEM_HEIGHT}px;
+        bottom: 0;
         left: 0;
         width: 100%;
-        transition: transform 0.2s ease-out;
-        will-change: transform;
+        visibility: hidden;
       }
 
       .in {
-        transform: translateY(-100%);
-      }
-
-      .out {
-        transform: translateY(0);
+        visibility: visible;
+        height: ${EVENT_LIST_ITEM_HEIGHT}px;
       }
     `}</style>
   </div>
@@ -81,21 +80,13 @@ export default class EventList extends React.PureComponent {
     super(props);
 
     this.handleScroll = this.handleScroll.bind(this);
-    // This debounce fix a pb with the scroll top value:
-    // When reach the end a page: onLoadMore
-    // The scrollTop value returned by the VirtualizedList decrease
-    // Because of that we detect a false scrollTop and the MobileInput appears!
-    // This technic prevent this behaviour
-    // this.handleScroll = debounce(this.handleScroll, 50);
-
     this.handleStickyDate = this.handleStickyDate.bind(this);
     this.handleLoadMore = this.handleLoadMore.bind(this);
   }
 
   state = {
     stickyDate: this.props.data.length && this.props.data[0].date,
-    scrollUp: true,
-    offsetScroll: true
+    scrollDown: true
   };
 
   render() {
@@ -105,8 +96,7 @@ export default class EventList extends React.PureComponent {
 
     return (
       <div>
-        {/* <FiltersWrapper show={this.state.scrollUp || this.state.offsetScroll} /> */}
-        <FiltersWrapper show />
+        <FiltersWrapper show={this.state.scrollDown} />
 
         <StickyDateHeader date={this.state.stickyDate} />
 
@@ -118,25 +108,17 @@ export default class EventList extends React.PureComponent {
           onScroll={this.handleScroll}
         />
 
-        {/* <BottomPageLoader loading={this.props.loading} /> */}
+        <EventListLoader show={this.props.loading} />
       </div>
     );
   }
 
   scrollTop = 0;
-  windowScrollTop = 0;
 
   handleScroll({ scrollTop }) {
-    // tester de comperer avec window.scrollY
-    // const windowScrollUp = this.windowScrollTop > window.scrollY;
-    // console.log(this.windowScrollTop, window.scrollY, windowScrollUp);
-    // this.windowScrollTop = window.scrollY;
-
-    // console.log(this.scrollTop, scrollTop, this.scrollTop > scrollTop);
-
-    const scrollUp = this.scrollTop > scrollTop;
+    const scrollDown = this.scrollTop > scrollTop;
     this.scrollTop = scrollTop;
-    this.setState({ scrollUp, offsetScroll: !scrollTop });
+    this.setState({ scrollDown });
   }
 
   handleStickyDate(stickyDate) {

@@ -126,7 +126,8 @@ class FilterContainer extends React.PureComponent {
 
             transition: all 0.25s ease-in-out;
             transform: scale(0);
-            overflow: scroll;
+            will-change: transform;
+            overflow-y: auto;
           }
 
           .filterSelector--active {
