@@ -2,11 +2,14 @@ import React from 'react';
 import moment from 'moment';
 import debounce from 'lodash.debounce';
 
-import GoogleMapPlacesApi from '../components/GoogleMapPlacesApi';
-
 import FilterTrigger from '../components/FilterTrigger';
-import List from '../components/List';
 import Input from '../components/Input';
+
+import {
+  MonthSelector,
+  CitySelector,
+  DistanceSelector
+} from '../components/FilterSelectors';
 
 import GPSIcon from '../svgs/ic_gps_fixed_black_24px.svg';
 import DateIcon from '../svgs/ic_date_range_black_24px.svg';
@@ -14,46 +17,6 @@ import RunIcon from '../svgs/ic_directions_run_black_24px.svg';
 
 import { getSpacing } from '../styles-variables';
 import { BORDER_RADIUS } from '../enums';
-
-const CitySelector = ({ onSelect, input }) => (
-  <GoogleMapPlacesApi input={input}>
-    {predictions => (
-      <List
-        list={predictions
-          .slice(0, 3)
-          .reverse()
-          .map(value => ({
-            value,
-            check: value === input
-          }))}
-        onClick={onSelect}
-      />
-    )}
-  </GoogleMapPlacesApi>
-);
-
-const MONTH_LIST = moment.months().map(month => ({
-  value: month,
-  check: false
-}));
-
-const MonthSelector = ({ onSelect, input }) => (
-  <div className={'monthSelector'}>
-    <List
-      list={MONTH_LIST.map(data => {
-        data.check = data.value === input;
-        return data;
-      })}
-      onClick={onSelect}
-    />
-    <style jsx>{`
-      .monthSelector {
-        height: 220px;
-        overflow-y: auto;
-      }
-    `}</style>
-  </div>
-);
 
 const CURRENT_MONTH = moment().format('MMMM');
 
@@ -85,16 +48,11 @@ const FILTERS = [
   }
 ];
 
-function getFilterComponent(filterName) {
-  switch (filterName) {
-    case DATE_FILTER:
-      return MonthSelector;
-    case LOCATION_FILTER:
-      return CitySelector;
-    default:
-      return MonthSelector;
-  }
-}
+const FILTER_SELCTOR_MAP = {
+  [LOCATION_FILTER]: CitySelector,
+  [DATE_FILTER]: MonthSelector,
+  [DISTANCE_FILTER]: DistanceSelector
+};
 
 class FilterContainer extends React.PureComponent {
   constructor(props) {
@@ -118,14 +76,9 @@ class FilterContainer extends React.PureComponent {
   }
 
   render() {
-    let bodyClassList = document.body.classList;
-    this.state.openFilter
-      ? bodyClassList.add('no-scroll')
-      : bodyClassList.remove('no-scroll');
-
     const { filters } = this.state;
-    let activeFilterState = filters[this.state.activeFilter];
-    let FilterComponent = getFilterComponent(this.state.activeFilter);
+    const activeFilterState = filters[this.state.activeFilter];
+    const FilterComponent = FILTER_SELCTOR_MAP[this.state.activeFilter];
 
     return (
       <div className={'filterContainer'}>
@@ -149,8 +102,8 @@ class FilterContainer extends React.PureComponent {
             >
               {props.name === LOCATION_FILTER ? (
                 <Input
-                  value={activeFilterState.value || ''}
-                  placeholder={'Placeholder de test'}
+                  value={filters[props.name].value || ''}
+                  placeholder={'Choisissez une ville'}
                   onChange={this.updateLocationInput}
                 />
               ) : null}
