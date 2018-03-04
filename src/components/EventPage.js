@@ -41,8 +41,12 @@ const EventDatum = ({ Icon, datum, pushRight, children }) => (
 
 const EventPage = ({ data }) => (
   <div className={'event-root'}>
-    <h1 className={'event-title circular-bold'}>{data.title}</h1>
-    <A className={'Button'} href={'https://www.google.com'} style={{ textTransform: 'uppercase' }}>
+    <h1 className={'event-title'}>{data.title}</h1>
+    <A
+      className={'Button'}
+      href={'https://www.google.com'}
+      style={{ textTransform: 'uppercase' }}
+    >
       {'Site organisateur'}
     </A>
     <EventDatum Icon={Agenda}>
@@ -98,6 +102,7 @@ const EventPage = ({ data }) => (
       .event-title {
         margin-bottom: ${getSpacing('m')}px;
         text-transform: capitalize;
+        font-familly: 'Circular-Bold-S';
       }
 
       .event-date {

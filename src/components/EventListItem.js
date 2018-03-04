@@ -64,8 +64,9 @@ export default ({
 
       .title {
         text-transform: capitalize;
-        font-family: 'Circular-Bold-S';
+        font-family: 'Circular-Medium';
         color: ${EVENT_ITEM_TITLE_COLOR};
+        font-weight: 500;
         margin: 0;
       }
 
