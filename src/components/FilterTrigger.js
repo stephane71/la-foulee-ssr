@@ -16,7 +16,7 @@ const FilterTrigger = ({
   children
 }) => (
   <div
-    className={`filterTrigger ${active ? 'active' : ''}`}
+    className={`filterTrigger ${active ? 'filterTrigger--active' : ''}`}
     onClick={() => onFilterActivation(name)}
   >
     <Icon
@@ -55,7 +55,7 @@ const FilterTrigger = ({
         cursor: pointer;
       }
 
-      .filterTrigger.active {
+      .filterTrigger.filterTrigger--active {
         width: calc(
           100% - ${FILTER_ICON_ACTION_WIDTH * 2 + FILTER_MARGIN_LEFT * 2}px
         );

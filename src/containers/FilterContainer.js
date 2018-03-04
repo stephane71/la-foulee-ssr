@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import moment from 'moment';
 import debounce from 'lodash.debounce';
 
@@ -17,6 +17,7 @@ import RunIcon from '../svgs/ic_directions_run_black_24px.svg';
 
 import { getSpacing } from '../styles-variables';
 import { BORDER_RADIUS, ICON_SIZE } from '../enums';
+import { white } from '../colors';
 
 // See FilterTrigger for the first part: 'ICON_SIZE + getSpacing('xs') * 2'
 const FILTER_ACTIVATORS_HEIGHT =
@@ -79,12 +80,12 @@ class FilterContainer extends React.PureComponent {
     const { filters, openFilter, activeFilter } = this.state;
 
     return (
-      <div className={'filterContainer'}>
+      <Fragment>
         {FILTERS.map(({ name, Selector }, i) => (
           <div
             key={i}
             className={`filterSelector ${
-              openFilter === name ? 'filterSelector--active' : ''
+              openFilter === name ? 'filterSelector--open' : ''
             }`}
           >
             <Selector
@@ -115,12 +116,10 @@ class FilterContainer extends React.PureComponent {
 
         <style jsx>{`
           .filterSelector {
-            position: absolute;
-            left: ${getSpacing('s')}px;
-            right: ${getSpacing('s')}px;
-            bottom: ${FILTER_ACTIVATORS_HEIGHT}px;
+            display: none;
+            margin-bottom: ${getSpacing('s')}px;
 
-            background-color: #fff;
+            background-color: ${white};
             border-radius: ${BORDER_RADIUS}px;
             box-shadow: 0 5px 20px 0 rgba(38, 74, 67, 0.2);
 
@@ -130,12 +129,14 @@ class FilterContainer extends React.PureComponent {
             overflow-y: auto;
           }
 
-          .filterSelector--active {
+          .filterSelector--open {
+            // FIXE ME: no more animation in transition with display toggle
+            display: block;
             opacity: 1;
             transform: scale(1);
           }
         `}</style>
-      </div>
+      </Fragment>
     );
   }
 

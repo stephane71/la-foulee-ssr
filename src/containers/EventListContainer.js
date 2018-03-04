@@ -21,10 +21,6 @@ export class EventListContainer extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {
-      isScrolling: false
-    };
-
     this.handleLoadPage = this.handleLoadPage.bind(this);
     this.handleEventSelection = this.handleEventSelection.bind(this);
     this.handleSelectorsValidation = this.handleSelectorsValidation.bind(this);
@@ -33,27 +29,36 @@ export class EventListContainer extends React.PureComponent {
   render() {
     return (
       <Fragment>
-        <Head>
-          <title>{`La Foulée | rechercher un evénement`}</title>
-          <script type={'application/ld+json'}>
-            {getEventListStructuredData()}
-          </script>
-        </Head>
-        <Media query={`(max-width: 768px)`}>
-          {matches =>
-            matches ? (
-              <EventList
-                data={this.props.events}
-                onLoadMore={this.handleLoadPage}
-                loading={this.props.loading}
-                endList={this.props.currentPage + 1 === this.props.pages}
-                onSelectEvent={this.handleEventSelection}
-              />
-            ) : (
-              <div className={'EventListContainerDesktop'} />
-            )
-          }
-        </Media>
+        {!this.props.hide && (
+          <Head>
+            <title>{`La Foulée | rechercher un evénement`}</title>
+            <script type={'application/ld+json'}>
+              {getEventListStructuredData()}
+            </script>
+          </Head>
+        )}
+        <div className={'eventListContainer-mobileWrapper prevent-scroll'}>
+          <Media query={`(max-width: 768px)`}>
+            {matches =>
+              matches ? (
+                <EventList
+                  data={this.props.events}
+                  onLoadMore={this.handleLoadPage}
+                  loading={this.props.loading}
+                  endList={this.props.currentPage + 1 === this.props.pages}
+                  onSelectEvent={this.handleEventSelection}
+                />
+              ) : (
+                <div className={'EventListContainerDesktop'} />
+              )
+            }
+          </Media>
+          <style jsx>{`
+            .eventListContainer-mobileWrapper {
+              display: ${this.props.hide ? 'none' : 'block'};
+            }
+          `}</style>
+        </div>
       </Fragment>
     );
   }

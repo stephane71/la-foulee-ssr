@@ -6,6 +6,8 @@ import {
   WindowScroller
 } from 'react-virtualized';
 
+import Loader from './Loader';
+
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
 
@@ -34,9 +36,20 @@ export default class VirtualizedList extends React.PureComponent {
     rendered: false
   };
 
+  componentWillReceiveProps(nextProps) {
+    // End loading more detection: pb -> will catch a refresh too.
+    // IF the new list is longer than the previous one
+    if (this.props.data.length < nextProps.data.length) {
+      cache.clear(this.props.data.length - 1);
+    }
+  }
+
   render() {
     return (
-      <WindowScroller onScroll={this.props.onScroll}>
+      <WindowScroller
+        onScroll={this.props.onScroll}
+        scrollElement={this.props.scrollElement}
+      >
         {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => (
           <AutoSizer disableHeight>
             {({ width }) => (
@@ -54,8 +67,7 @@ export default class VirtualizedList extends React.PureComponent {
                 scrollTop={scrollTop}
                 style={{
                   outline: 'none',
-                  backgroundColor: `${APP_BACKGROUND_COLOR}`,
-                  paddingBottom: `${getSpacing('xl')}px`
+                  backgroundColor: `${APP_BACKGROUND_COLOR}`
                 }}
                 deferredMeasurementCache={cache}
                 rowHeight={cache.rowHeight}
@@ -89,15 +101,22 @@ export default class VirtualizedList extends React.PureComponent {
         parent={parent}
         rowIndex={index}
       >
-        <div style={{ ...style, paddingBottom: 1 }}>
-          {(firstItemDay && <EventListDate date={data[index].date} />) || null}
-          <EventListItem
-            data={data[index]}
-            onSelectEvent={this.props.onSelectEvent}
-            withBorderRadiusTop={index === 0 || firstItemDay}
-            withBorderRadiusBottom={index + 1 === data.length || lastItemDay}
-          />
-        </div>
+        {index === data.length - 1 ? (
+          <div style={{ ...style }}>
+            <Loader />
+          </div>
+        ) : (
+          <div style={{ ...style }}>
+            {(firstItemDay && <EventListDate date={data[index].date} />) ||
+              null}
+            <EventListItem
+              data={data[index]}
+              onSelectEvent={this.props.onSelectEvent}
+              withBorderRadiusTop={index === 0 || firstItemDay}
+              withBorderRadiusBottom={index + 1 === data.length || lastItemDay}
+            />
+          </div>
+        )}
       </CellMeasurer>
     );
   }

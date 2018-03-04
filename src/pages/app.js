@@ -38,9 +38,9 @@ const App = props => {
       <div className={`${event ? 'wrapper-show' : 'wrapper-hidden'}`}>
         {event && <EventPageContainer {...props} />}
       </div>
-      <div className={`${event ? 'wrapper-hidden' : 'wrapper-show'}`}>
-        {EventListContainer_LOADED && <EventListContainer {...props} />}
-      </div>
+      {EventListContainer_LOADED && (
+        <EventListContainer {...props} hide={event} />
+      )}
     </Layout>
   );
 };
