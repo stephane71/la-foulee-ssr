@@ -148,6 +148,7 @@ class FilterContainer extends React.PureComponent {
 
   handleFilterActivation(filterName) {
     this.setState({ activeFilter: filterName, openFilter: filterName });
+    this.props.onToggleOpenning(true);
   }
 
   handleSelectFilter(data) {
@@ -155,6 +156,7 @@ class FilterContainer extends React.PureComponent {
       filters: { ...filters, [this.state.activeFilter]: data },
       openFilter: null
     }));
+    this.props.onToggleOpenning(false);
   }
 }
 

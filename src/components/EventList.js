@@ -11,9 +11,10 @@ import { HEIGHT_APPBAR } from '../enums';
 // See EventListDate component: line height + 2 * vertical padding
 const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
 
+let lockFilters = false;
 const FiltersWrapper = ({ show }) => (
-  <div className={`filterWrapper ${show ? '' : 'out'}`}>
-    <FilterContainer />
+  <div className={`filterWrapper ${show || lockFilters ? '' : 'out'}`}>
+    <FilterContainer onToggleOpenning={lock => (lockFilters = lock)} />
     <style jsx>{`
       .filterWrapper {
         position: fixed;
