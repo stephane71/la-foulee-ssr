@@ -92,6 +92,7 @@ export default class EventList extends React.PureComponent {
         <style jsx>{`
           .eventList-mobileWrapper {
             padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
+            -webkit-overflow-scrolling: touch;
           }
         `}</style>
       </div>
