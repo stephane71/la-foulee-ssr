@@ -30,9 +30,7 @@ export default css`
     color: #3a3d42;
   }
 
-  body > div:nth-child(1),
-  #__next,
-  #__next > div:nth-child(1) {
+  #__next {
     height: 100%;
     overflow: auto;
   }
