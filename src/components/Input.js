@@ -3,6 +3,10 @@ import css from 'styled-jsx/css';
 import { BaseFontSize } from '../styles-variables';
 
 const style = css`
+  .inputWrapper {
+    width: 100%;
+  }
+
   .inputElement {
     width: 100%;
     appearence: none;
@@ -14,11 +18,13 @@ const style = css`
   }
 `;
 
+const DEFAULT_VALUE = '';
+
 class Input extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = { value: '' };
+    this.state = { value: props.value || DEFAULT_VALUE };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleInputWrapperClick = this.handleInputWrapperClick.bind(this);
@@ -26,16 +32,16 @@ class Input extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.value !== nextProps.value) {
-      this.setState({ value: nextProps.value });
+      this.setState({ value: nextProps.value || DEFAULT_VALUE });
     }
-    if (nextProps.focus && this.props.focus !== nextProps.focus) {
+    if (nextProps.focus) {
       this.textInput.focus();
     }
   }
 
   render() {
     return (
-      <div onClick={this.handleInputWrapperClick}>
+      <div className={'inputWrapper'} onClick={this.handleInputWrapperClick}>
         <input
           ref={input => {
             this.textInput = input;

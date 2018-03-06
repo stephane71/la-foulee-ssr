@@ -4,7 +4,6 @@ import debounce from 'lodash.debounce';
 
 import FilterTrigger from '../components/FilterTrigger';
 import Input from '../components/Input';
-
 import {
   MonthSelector,
   CitySelector,
@@ -16,33 +15,36 @@ import DateIcon from '../svgs/ic_date_range_black_24px.svg';
 import RunIcon from '../svgs/ic_directions_run_black_24px.svg';
 
 import { getSpacing } from '../styles-variables';
-import { BORDER_RADIUS, ICON_SIZE } from '../enums';
+import { BORDER_RADIUS } from '../enums';
 import { white } from '../colors';
 
-// See FilterTrigger for the first part: 'ICON_SIZE + getSpacing('xs') * 2'
-const FILTER_ACTIVATORS_HEIGHT =
-  ICON_SIZE + getSpacing('xs') * 2 + getSpacing('xs');
 const CURRENT_MONTH = moment().format('MMMM');
 
 const LOCATION_FILTER = 'location';
 const DATE_FILTER = 'date';
 const DISTANCE_FILTER = 'distance';
 
+const LOCATION_DEFAULT = null;
+const DATE_DEFAULT = CURRENT_MONTH;
+const DISTANCE_DEFAULT = null;
+
+const LOCATION_PLACEHOLDER = 'Choisissez une ville';
+
 const FILTERS = [
   {
     name: LOCATION_FILTER,
     Icon: GPSIcon,
     Selector: CitySelector,
-    placeholder: 'Localisation',
-    value: '',
+    placeholder: LOCATION_PLACEHOLDER,
+    value: LOCATION_DEFAULT,
     marginLeft: false
   },
   {
     name: DATE_FILTER,
     Icon: DateIcon,
     Selector: MonthSelector,
-    placeholder: 'Date',
-    value: '',
+    placeholder: DATE_DEFAULT,
+    value: DATE_DEFAULT,
     marginLeft: true
   },
   {
@@ -50,7 +52,7 @@ const FILTERS = [
     Icon: RunIcon,
     Selector: DistanceSelector,
     placeholder: 'Distance',
-    value: '',
+    value: DISTANCE_DEFAULT,
     marginLeft: true
   }
 ];
@@ -63,17 +65,21 @@ class FilterContainer extends React.PureComponent {
       activeFilter: LOCATION_FILTER,
       openFilter: null,
       filters: {
-        [LOCATION_FILTER]: { value: null },
-        [DATE_FILTER]: { value: CURRENT_MONTH },
-        [DISTANCE_FILTER]: { value: null }
+        [LOCATION_FILTER]: { value: LOCATION_DEFAULT },
+        [DATE_FILTER]: { value: DATE_DEFAULT },
+        [DISTANCE_FILTER]: { value: DISTANCE_DEFAULT }
       }
     };
 
     this.handleFilterActivation = this.handleFilterActivation.bind(this);
-    this.handleSelectFilter = this.handleSelectFilter.bind(this);
+    this.handleFilterReset = this.handleFilterReset.bind(this);
+    this.handleFilterSelectValue = this.handleFilterSelectValue.bind(this);
 
-    this.updateLocationInput = this.updateLocationInput.bind(this);
-    this.updateLocationInput = debounce(this.updateLocationInput, 250);
+    this.handleLocationInputUpdate = this.handleLocationInputUpdate.bind(this);
+    this.handleLocationInputUpdate = debounce(
+      this.handleLocationInputUpdate,
+      250
+    );
   }
 
   render() {
@@ -89,7 +95,7 @@ class FilterContainer extends React.PureComponent {
             }`}
           >
             <Selector
-              onSelect={this.handleSelectFilter}
+              onSelect={this.handleFilterSelectValue}
               input={filters[name].value || ''}
             />
           </div>
@@ -101,16 +107,18 @@ class FilterContainer extends React.PureComponent {
             {...props}
             active={activeFilter === props.name}
             onFilterActivation={this.handleFilterActivation}
-            value={filters[props.name].value}
+            onReset={this.handleFilterReset}
           >
             {props.name === LOCATION_FILTER ? (
               <Input
-                value={filters[props.name].value || ''}
-                placeholder={'Choisissez une ville'}
-                onChange={this.updateLocationInput}
-                focus={activeFilter === props.name}
+                value={filters[LOCATION_FILTER].value}
+                placeholder={LOCATION_PLACEHOLDER}
+                onChange={this.handleLocationInputUpdate}
+                focus={activeFilter === LOCATION_FILTER}
               />
-            ) : null}
+            ) : (
+              filters[props.name].value
+            )}
           </FilterTrigger>
         ))}
 
@@ -140,23 +148,37 @@ class FilterContainer extends React.PureComponent {
     );
   }
 
-  updateLocationInput(value) {
+  handleLocationInputUpdate(value) {
     this.setState(({ filters }) => ({
       filters: { ...filters, [LOCATION_FILTER]: { value } }
     }));
   }
+
+  // FILTER SELECTORS
+
+  handleFilterSelectValue(data) {
+    this.setState(({ filters }) => ({
+      filters: { ...filters, [this.state.activeFilter]: data },
+      openFilter: null
+    }));
+    this.props.onToggleOpenning(false);
+  }
+
+  // FILTER TRIGGERS
 
   handleFilterActivation(filterName) {
     this.setState({ activeFilter: filterName, openFilter: filterName });
     this.props.onToggleOpenning(true);
   }
 
-  handleSelectFilter(data) {
+  handleFilterReset(filterName) {
+    let defaultValue = FILTERS.find(({ name }) => name === filterName).value;
     this.setState(({ filters }) => ({
-      filters: { ...filters, [this.state.activeFilter]: data },
-      openFilter: null
+      filters: {
+        ...filters,
+        [this.state.activeFilter]: { value: defaultValue }
+      }
     }));
-    this.props.onToggleOpenning(false);
   }
 }
 
