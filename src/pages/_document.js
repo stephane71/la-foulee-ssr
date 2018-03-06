@@ -52,28 +52,43 @@ export default class MyDocument extends Document {
           <link
             rel="preload"
             as="font"
-            href={`${ASSETS_URL}/fonts/lineto-circular-bold.eot`}
-            crossorigin="anonymous"
-          />
-          <link
-            rel="preload"
-            as="font"
             type="font/woff"
             href={`${ASSETS_URL}/fonts/lineto-circular-bold.woff`}
-            crossorigin="anonymous"
+            crossOrigin="anonymous"
           />
           <link
             rel="preload"
             as="font"
             type="font/woff2"
             href={`${ASSETS_URL}/fonts/lineto-circular-bold.woff2`}
-            crossorigin="anonymous"
+            crossOrigin="anonymous"
           />
 
           <link
             rel="stylesheet"
             type="text/css"
             href={`${ASSETS_URL}/style/circular-bold.css`}
+          />
+
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff"
+            href={`${ASSETS_URL}/fonts/circular-medium.woff`}
+            crossOrigin="anonymous"
+          />
+          <link
+            rel="preload"
+            as="font"
+            type="font/woff2"
+            href={`${ASSETS_URL}/fonts/circular-medium.woff2`}
+            crossOrigin="anonymous"
+          />
+
+          <link
+            rel="stylesheet"
+            type="text/css"
+            href={`${ASSETS_URL}/style/circular-medium.css`}
           />
 
           <link rel="manifest" href={`/static/manifest.json?v=yya2lgM4gb`} />

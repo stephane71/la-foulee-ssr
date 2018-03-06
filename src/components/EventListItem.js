@@ -3,19 +3,30 @@
 // read here https://github.com/kesne/babel-plugin-inline-react-svg/issues/31#issuecomment-342264348
 import React from 'react';
 
-import { getSpacing } from '../styles-variables';
-import { white, listBorderColor } from '../colors';
+import { getSpacing, getFontSize } from '../styles-variables';
+import { white, dominant, SECONDARY_COLOR } from '../colors';
 import Arrow from '../svgs/arrow_right_black_24px.svg';
 
-export default ({ data, lastItem, onSelectEvent }) => (
+const EVENT_ITEM_TITLE_COLOR = '#516E69';
+const BORDER_RADIUS_LIST_ITEM = 10;
+
+export default ({
+  data,
+  onSelectEvent,
+  withBorderRadiusTop,
+  withBorderRadiusBottom
+}) => (
   <div
-    className={`event-list-item-root ${lastItem ? `last-list-item` : ``}`}
+    rel={'bookmark'}
+    className={`event-list-item-root ${
+      withBorderRadiusTop ? 'border-top' : ''
+    } ${withBorderRadiusBottom ? 'border-bottom' : ''}`}
     onClick={() => onSelectEvent(data)}
   >
-    <div className={`event-data`}>
-      <div className={`title`}>{data.title}</div>
-      <div className={'location'}>{`${data.dep}, ${data.city}`}</div>
-    </div>
+    <article className={`event-data`}>
+      <h6 className={`title`}>{data.title}</h6>
+      <address className={'location'}>{`${data.dep}, ${data.city}`}</address>
+    </article>
     <Arrow style={{ fill: '#A0A7BD' }} />
 
     <style jsx>{`
@@ -26,14 +37,21 @@ export default ({ data, lastItem, onSelectEvent }) => (
       .event-list-item-root {
         display: flex;
         justify-content: space-between;
-        padding: ${getSpacing('s')}px ${getSpacing('m')}px;
+        padding: ${getSpacing('s')}px;
         align-items: center;
         background-color: ${white};
-        border-bottom: 1px solid ${listBorderColor};
+        margin: 0 ${getSpacing('s')}px;
+        box-shadow: 0 10px 20px 0 rgba(38, 74, 67, 0.05);
       }
 
-      .last-list-item {
-        border-bottom: none;
+      .border-top {
+        border-top-left-radius: ${BORDER_RADIUS_LIST_ITEM}px;
+        border-top-right-radius: ${BORDER_RADIUS_LIST_ITEM}px;
+      }
+
+      .border-bottom {
+        border-bottom-right-radius: ${BORDER_RADIUS_LIST_ITEM}px;
+        border-bottom-left-radius: ${BORDER_RADIUS_LIST_ITEM}px;
       }
 
       .event-data {
@@ -45,11 +63,18 @@ export default ({ data, lastItem, onSelectEvent }) => (
       }
 
       .title {
-        font-weight: 500;
         text-transform: capitalize;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
+        font-family: 'Circular-Medium';
+        color: ${EVENT_ITEM_TITLE_COLOR};
+        font-weight: 500;
+        margin: 0;
+      }
+
+      .location {
+        color: ${SECONDARY_COLOR};
+        font-weight: 400;
+        font-size: ${getFontSize('s')}px;
+        font-style: normal;
       }
     `}</style>
   </div>

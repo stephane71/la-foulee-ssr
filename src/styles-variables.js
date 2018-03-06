@@ -1,6 +1,24 @@
 const Base = 4; // px
-export const BaseFontSize = 14; // px
+export const BaseFontSize = 16; // px
 const BaseRatio = 1.125;
+
+// Font sizes
+
+const SFontSize = BaseFontSize / BaseRatio;
+const LFontSize = BaseFontSize * BaseRatio;
+const XLFontSize = LFontSize * BaseRatio;
+const XXLFontSize = XLFontSize * BaseRatio;
+
+const fontSizeMap = {
+  s: SFontSize,
+  m: BaseFontSize,
+  l: LFontSize,
+  xl: XLFontSize,
+  xxl: XXLFontSize
+};
+
+export const getFontSize = size =>
+  !size ? fontSizeMap[`m`] : fontSizeMap[size];
 
 // Line height
 export const BaseLineHeight = Base * 6;
@@ -21,9 +39,9 @@ const spacingMap = {
   xs: XSSpacing,
   s: SSpacing,
   m: BaseSpacing,
-  ls: LSpacing,
-  xls: XLSpacing,
-  xxls: XXLSpacing
+  l: LSpacing,
+  xl: XLSpacing,
+  xxl: XXLSpacing
 };
 
 export const getSpacing = size => (!size ? spacingMap[`m`] : spacingMap[size]);
@@ -31,11 +49,10 @@ export const getSpacing = size => (!size ? spacingMap[`m`] : spacingMap[size]);
 /*
  * Headers
  */
-// $color = dominante or white
 
 export const H6 = {
   lineHeight: BaseLineHeight,
-  fontSize: BaseFontSize * BaseRatio, // 15,75,
+  fontSize: BaseFontSize, // 16,
   marginTop: BaseSpacing
 };
 
@@ -68,7 +85,7 @@ export const H2 = {
 
 export const H1 = {
   lineHeight: BaseLineHeight * 2 - Base,
-  fontSize: H2.fontSize * Math.pow(BaseRatio, 4), // 40,39
+  fontSize: H2.fontSize * Math.pow(BaseRatio, 2), // 40,39
   marginBottom: LSpacing,
   marginTop: BaseSpacing
 };

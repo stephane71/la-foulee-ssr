@@ -1,33 +1,69 @@
-import {
-  CellMeasurer,
-  CellMeasurerCache,
-  AutoSizer,
-  List
-} from 'react-virtualized';
+import FilterContainer from '../containers/FilterContainer';
 
+import VirtualizedList from './VirtualizedList';
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
-// The loader aims to provide a state during react-virtualized calculation
-// There is no SSR with react-virtualized as its need client dimensions
-import Loader from './Loader';
 
-const EVENT_LIST_ITEM_HEIGHT = 73;
-const EVENT_LIST_DATE_HEADER_HEIGHT = 49;
-const PADDING_INDEX_LOAD_MORE = 2;
+import { getSpacing, BaseLineHeight } from '../styles-variables';
+import { APP_BACKGROUND_COLOR } from '../colors';
+import { HEIGHT_APPBAR } from '../enums';
+
+// See EventListDate component: line height + 2 * vertical padding
+const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
+
+let lockFilters = false;
+const FiltersWrapper = ({ show }) => (
+  <div className={`filterWrapper ${show || lockFilters ? '' : 'out'}`}>
+    <FilterContainer onFilterOpen={open => (lockFilters = open)} />
+    <style jsx>{`
+      .filterWrapper {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 0 ${getSpacing('xs')}px;
+        padding-bottom: ${getSpacing('s')}px;
+        transition: transform 0.3s ease-out;
+        will-change: transform;
+        z-index: 2;
+      }
+
+      .out {
+        transform: translateY(calc(100% + ${getSpacing('s')}px));
+      }
+    `}</style>
+  </div>
+);
+
+const FixedDateHeader = ({ date }) => (
+  <div className={'fixedDateHeader'}>
+    <EventListDate date={date} />
+    <style jsx>{`
+      .fixedDateHeader {
+        background-color: ${APP_BACKGROUND_COLOR};
+        position: fixed;
+        top: ${HEIGHT_APPBAR}px;
+        left: 0;
+        width: 100%;
+        z-index: 1;
+      }
+    `}</style>
+  </div>
+);
 
 export default class EventList extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.getRowHeight = this.getRowHeight.bind(this);
-    this.rowRenderer = this.rowRenderer.bind(this);
-    this.onRowsRendered = this.onRowsRendered.bind(this);
-  }
+    this.state = {
+      stickyDate: this.props.data.length && this.props.data[0].date,
+      scrollUp: true
+    };
 
-  state = {
-    rendered: false,
-    stickyDate: this.props.data.length && this.props.data[0].date
-  };
+    this.handleStickyDate = this.handleStickyDate.bind(this);
+    this.handleLoadMore = this.handleLoadMore.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
+  }
 
   render() {
     const { data } = this.props;
@@ -35,76 +71,50 @@ export default class EventList extends React.PureComponent {
     if (!data.length) return <div>{'Empty list !'}</div>;
 
     return (
-      <div style={{ height: '100%' }}>
-        {this.state.rendered ? (
-          <EventListDate date={this.state.stickyDate} />
-        ) : (
-          <Loader />
-        )}
-        <AutoSizer>
-          {({ height, width }) => (
-            <List
-              width={width}
-              height={height - EVENT_LIST_DATE_HEADER_HEIGHT}
-              rowCount={data.length}
-              rowHeight={this.getRowHeight}
-              onRowsRendered={this.onRowsRendered}
-              rowRenderer={this.rowRenderer}
-              style={{ outline: 'none' }}
-            />
-          )}
-        </AutoSizer>
-        {this.props.loading ? (
-          <div
-            style={{
-              height: EVENT_LIST_ITEM_HEIGHT,
-              position: 'absolute',
-              bottom: '0',
-              left: '0',
-              width: '100%',
-              backgroundColor: 'white'
-            }}
-          >
-            <Loader />
-          </div>
-        ) : null}
-      </div>
-    );
-  }
+      <div
+        ref={el => {
+          this.scrollElement = el;
+        }}
+        className={'eventList-mobileWrapper prevent-scroll'}
+      >
+        <FixedDateHeader date={this.state.stickyDate} />
 
-  getRowHeight({ index }) {
-    if (index === this.props.data.length) return EVENT_LIST_ITEM_HEIGHT;
-    return index &&
-      this.props.data[index].date !== this.props.data[index - 1].date
-      ? EVENT_LIST_ITEM_HEIGHT + EVENT_LIST_DATE_HEADER_HEIGHT
-      : EVENT_LIST_ITEM_HEIGHT;
-  }
-
-  rowRenderer({ key, index, style }) {
-    const { data } = this.props;
-
-    return (
-      <div style={style} key={key}>
-        {(index &&
-          data[index].date != data[index - 1].date && (
-            <EventListDate date={data[index].date} />
-          )) ||
-          null}
-        <EventListItem
-          data={data[index]}
+        <VirtualizedList
+          scrollElement={this.scrollElement}
+          data={this.props.data}
           onSelectEvent={this.props.onSelectEvent}
+          onChangeStickyDate={this.handleStickyDate}
+          onReachEndList={this.handleLoadMore}
+          onScroll={this.handleScroll}
         />
+
+        <FiltersWrapper show={this.state.scrollUp} />
+
+        <style jsx>{`
+          .eventList-mobileWrapper {
+            padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
+            -webkit-overflow-scrolling: touch;
+          }
+        `}</style>
       </div>
     );
   }
 
-  onRowsRendered({ startIndex, stopIndex }) {
-    if (stopIndex + PADDING_INDEX_LOAD_MORE >= this.props.data.length) {
-      if (!this.props.loading && !this.props.endList) this.props.onLoadMore();
-    }
-    this.setState({
-      rendered: true,
-      stickyDate: this.props.data[startIndex].date
-    });
+  scrollTop = 0;
+
+  handleStickyDate(stickyDate) {
+    this.setState({ stickyDate });
+  }
+
+  handleLoadMore() {
+    if (!this.props.loading) this.props.onLoadMore();
+  }
+
+  handleScroll({ scrollTop }) {
+    const scrollUp =
+      this.scrollTop > scrollTop ||
+      (this.scrollTop === scrollTop && !scrollTop);
+    this.scrollTop = scrollTop;
+    this.setState({ scrollUp });
   }
 }

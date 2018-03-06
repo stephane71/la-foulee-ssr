@@ -31,18 +31,16 @@ const EventListContainer = dynamic(import('../containers/EventListContainer'), {
 });
 
 const App = props => {
-  let eventPageDisplay = props.url.query.event ? 'block' : 'none';
-  let eventListDisplay = props.url.query.event ? 'none' : 'block';
-
+  let event = props.url.query.event;
   if (props.url.asPath === '/search') EventListContainer_LOADED = true;
   return (
     <Layout>
-      <div style={{ height: '100%', display: `${eventPageDisplay}` }}>
-        {props.url.query.event && <EventPageContainer {...props} />}
+      <div className={`${event ? 'wrapper-show' : 'wrapper-hidden'}`}>
+        {event && <EventPageContainer {...props} />}
       </div>
-      <div style={{ height: '100%', display: `${eventListDisplay}` }}>
-        {EventListContainer_LOADED && <EventListContainer {...props} />}
-      </div>
+      {EventListContainer_LOADED && (
+        <EventListContainer {...props} hide={event} />
+      )}
     </Layout>
   );
 };

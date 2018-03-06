@@ -16,9 +16,7 @@ import {
 export default css`
   html,
   body {
-    min-height: 100vh;
-    height: 1px;
-    width: 100%;
+    height: 100%;
     margin: 0;
     font-size: ${BaseFontSize}px;
     line-height: ${BaseLineHeight}px;
@@ -32,14 +30,28 @@ export default css`
     color: #3a3d42;
   }
 
-  #app {
-    min-height: 100%;
-    min-width: 100%;
-    height: 1px;
+  body > div:nth-child(1),
+  #__next,
+  #__next > div:nth-child(1) {
+    height: 100%;
+    overflow: auto;
+  }
+
+  .prevent-scroll {
+    height: 100%;
+    overflow: auto;
   }
 
   .no-scroll {
-    overflow-y: hidden;
+    overflow: hidden;
+  }
+
+  .wrapper-hidden {
+    display: none;
+  }
+
+  .wrapper-show {
+    height: 100%;
   }
 
   *,

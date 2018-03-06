@@ -13,7 +13,7 @@ function getFactor(size) {
 const Loader = props => {
   let factor = getFactor(props.size);
   return (
-    <div className={'spinner-wrapper'}>
+    <div className={'spinner-wrapper'} style={{ ...props.style }}>
       <div className={'spinner'} />
       <style jsx>{`
         @keyframes rotate360 {
@@ -40,7 +40,7 @@ const Loader = props => {
           width: ${factor * 10}px;
           height: ${factor * 10}px;
           border: ${factor}px solid ${dominant};
-          border-top-color: ${white};
+          border-top-color: transparent;
           border-radius: 50%;
           animation: rotate360 0.75s linear infinite;
           cursor: progress;
