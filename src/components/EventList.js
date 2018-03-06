@@ -14,7 +14,7 @@ const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
 let lockFilters = false;
 const FiltersWrapper = ({ show }) => (
   <div className={`filterWrapper ${show || lockFilters ? '' : 'out'}`}>
-    <FilterContainer onToggleOpenning={lock => (lockFilters = lock)} />
+    <FilterContainer onFilterOpen={open => (lockFilters = open)} />
     <style jsx>{`
       .filterWrapper {
         position: fixed;

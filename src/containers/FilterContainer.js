@@ -64,10 +64,10 @@ class FilterContainer extends React.PureComponent {
     this.state = {
       activeFilter: LOCATION_FILTER,
       openFilter: null,
-      filters: {
-        [LOCATION_FILTER]: { value: LOCATION_DEFAULT },
-        [DATE_FILTER]: { value: DATE_DEFAULT },
-        [DISTANCE_FILTER]: { value: DISTANCE_DEFAULT }
+      filter: {
+        [LOCATION_FILTER]: LOCATION_DEFAULT,
+        [DATE_FILTER]: DATE_DEFAULT,
+        [DISTANCE_FILTER]: DISTANCE_DEFAULT
       }
     };
 
@@ -83,7 +83,7 @@ class FilterContainer extends React.PureComponent {
   }
 
   render() {
-    const { filters, openFilter, activeFilter } = this.state;
+    const { filter, openFilter, activeFilter } = this.state;
 
     return (
       <Fragment>
@@ -96,7 +96,7 @@ class FilterContainer extends React.PureComponent {
           >
             <Selector
               onSelect={this.handleFilterSelectValue}
-              input={filters[name].value || ''}
+              input={filter[name] || ''}
             />
           </div>
         ))}
@@ -111,13 +111,13 @@ class FilterContainer extends React.PureComponent {
           >
             {props.name === LOCATION_FILTER ? (
               <Input
-                value={filters[LOCATION_FILTER].value}
+                value={filter[LOCATION_FILTER]}
                 placeholder={LOCATION_PLACEHOLDER}
                 onChange={this.handleLocationInputUpdate}
                 focus={activeFilter === LOCATION_FILTER}
               />
             ) : (
-              filters[props.name].value
+              filter[props.name]
             )}
           </FilterTrigger>
         ))}
@@ -148,37 +148,36 @@ class FilterContainer extends React.PureComponent {
     );
   }
 
-  handleLocationInputUpdate(value) {
-    this.setState(({ filters }) => ({
-      filters: { ...filters, [LOCATION_FILTER]: { value } }
+  updateFilterValue(value, keepFilterOpenned = false) {
+    this.setState(({ filter }) => ({
+      filter: { ...filter, [this.state.activeFilter]: value },
+      openFilter: keepFilterOpenned ? this.state.activeFilter : null
     }));
+    this.props.onFilterOpen(keepFilterOpenned);
+  }
+
+  handleLocationInputUpdate(value) {
+    this.updateFilterValue(value, true);
   }
 
   // FILTER SELECTORS
 
   handleFilterSelectValue(data) {
-    this.setState(({ filters }) => ({
-      filters: { ...filters, [this.state.activeFilter]: data },
-      openFilter: null
-    }));
-    this.props.onToggleOpenning(false);
+    this.updateFilterValue(data.value, false);
   }
 
   // FILTER TRIGGERS
 
   handleFilterActivation(filterName) {
     this.setState({ activeFilter: filterName, openFilter: filterName });
-    this.props.onToggleOpenning(true);
+    this.props.onFilterOpen(true);
   }
 
   handleFilterReset(filterName) {
-    let defaultValue = FILTERS.find(({ name }) => name === filterName).value;
-    this.setState(({ filters }) => ({
-      filters: {
-        ...filters,
-        [this.state.activeFilter]: { value: defaultValue }
-      }
-    }));
+    let defaultValue = FILTERS.find(
+      ({ name }) => name === this.state.activeFilter
+    ).value;
+    this.updateFilterValue(defaultValue, false);
   }
 }
 
