@@ -17,6 +17,7 @@ import { getSpacing } from '../styles-variables';
 const EVENT_LIST_ITEM_HEIGHT = 72;
 const EVENT_LIST_DATE_HEADER_HEIGHT = 96;
 const PADDING_INDEX_LOAD_MORE = 1; // should be minimum one
+const NO_ITEM_SELECTED = null;
 
 const cache = new CellMeasurerCache({
   defaultHeight: EVENT_LIST_ITEM_HEIGHT,
@@ -31,6 +32,11 @@ export default class VirtualizedList extends React.PureComponent {
     this.rowRenderer = this.rowRenderer.bind(this);
     this.onRowsRendered = this.onRowsRendered.bind(this);
   }
+
+  state = {
+    rendered: false,
+    selectedItem: NO_ITEM_SELECTED
+  };
 
   componentWillReceiveProps(nextProps) {
     // End loading more detection: pb -> will catch a refresh too.
@@ -111,14 +117,25 @@ export default class VirtualizedList extends React.PureComponent {
               null}
             <EventListItem
               data={data[index]}
-              onSelectEvent={this.props.onSelectEvent}
+              // onSelectEvent={this.props.onSelectEvent}
+              onSelectEvent={data => this.onSelectEvent(index, data)}
               withBorderRadiusTop={index === 0 || firstItemDay}
               withBorderRadiusBottom={index + 1 === data.length || lastItemDay}
+              showDetails={index === this.state.selectedItem}
             />
           </div>
         )}
       </CellMeasurer>
     );
+  }
+
+  onSelectEvent(index, data) {
+    cache.clear(index);
+    if (this.state.selectedItem !== NO_ITEM_SELECTED)
+      cache.clear(this.state.selectedItem);
+    this.setState({
+      selectedItem: this.state.selectedItem === index ? NO_ITEM_SELECTED : index
+    });
   }
 
   onRowsRendered({ startIndex, stopIndex }) {
