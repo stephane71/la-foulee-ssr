@@ -19,15 +19,13 @@ function getDateSemantic(date) {
 }
 
 const EventListDate = ({ date }) => (
-  <time className={'eventListDate'} dateTime={getDateSemantic(date)}>
+  <time className={'EventList-Date'} dateTime={getDateSemantic(date)}>
     <span className={'weeklyDay'}>{getWeeklyDay(date)}</span>{' '}
     <span>{getDate(date)}</span>
     <style jsx>{`
-      .eventListDate {
+      .EventList-Date {
         text-transform: capitalize;
         padding: ${getSpacing(`m`)}px;
-        padding-top: ${getSpacing('m')}px;
-        margin: 0;
         color: ${dominant};
         font-weight: 500;
         font-size: ${getFontSize('l')}px;

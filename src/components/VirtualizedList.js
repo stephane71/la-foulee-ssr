@@ -99,11 +99,11 @@ export default class VirtualizedList extends React.PureComponent {
         rowIndex={index}
       >
         {index === data.length - 1 ? (
-          <div className='EventList-Item' style={{ ...style }}>
+          <div className='EventList-Item EventList-Item--loader' style={{ ...style }}>
             <Loader />
           </div>
         ) : (
-          <div className='EventList-Item' style={{ ...style }}>
+          <div style={{ ...style }}>
             {(firstItemDay && <EventListDate date={data[index].date} />) ||
               null}
             <EventListItem

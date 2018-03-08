@@ -10,7 +10,8 @@ import {
   H5,
   H6,
   P,
-  LISTS
+  LISTS,
+  getSpacing
 } from './styles-variables';
 
 export default css`
@@ -116,5 +117,9 @@ export default css`
   .EventList {
     outline: none;
     z-index: 1;
+  }
+
+  .EventList .EventList-Date {
+    margin-top: ${getSpacing('l')}px;
   }
 `;
