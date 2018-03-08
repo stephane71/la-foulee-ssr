@@ -65,10 +65,7 @@ export default class VirtualizedList extends React.PureComponent {
                 onScroll={onChildScroll}
                 isScrolling={isScrolling}
                 scrollTop={scrollTop}
-                style={{
-                  outline: 'none',
-                  backgroundColor: `${APP_BACKGROUND_COLOR}`
-                }}
+                className='EventList'
                 deferredMeasurementCache={cache}
                 rowHeight={cache.rowHeight}
               />
