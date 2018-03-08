@@ -4,7 +4,10 @@ import { white, SECONDARY_COLOR } from '../colors';
 import { BORDER_RADIUS, ICON_SIZE } from '../enums';
 
 const FILTER_ICON_ACTION_WIDTH = ICON_SIZE + getSpacing('s') * 2;
+const FILTER_ICON_ACTION_COLOR = '#67807B';
 const FILTER_MARGIN_LEFT = getSpacing('xxs');
+
+
 
 const FilterTrigger = ({
   name,
@@ -24,7 +27,7 @@ const FilterTrigger = ({
       style={{
         display: 'inline-block',
         verticalAlign: 'bottom',
-        fill: `${SECONDARY_COLOR}`
+        fill: `${FILTER_ICON_ACTION_COLOR}`
       }}
     />
 
@@ -72,7 +75,9 @@ const FilterTrigger = ({
         display: inline-block;
         margin-left: ${getSpacing('s')}px;
         width: calc(100% - ${getSpacing('s')}px - ${getSpacing('s')}px * 2);
+        text-transform: capitalize;
       }
+
     `}</style>
   </div>
 );

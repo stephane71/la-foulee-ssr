@@ -22,6 +22,7 @@ export default ({
       withBorderRadiusTop ? 'border-top' : ''
     } ${withBorderRadiusBottom ? 'border-bottom' : ''}`}
     onClick={() => onSelectEvent(data)}
+    style={{ marginBottom: '1px' }}
   >
     <article className={`event-data`}>
       <h6 className={`title`}>{data.title}</h6>
