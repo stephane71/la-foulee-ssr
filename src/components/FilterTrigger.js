@@ -1,26 +1,18 @@
-import React from 'react';
-
-import ResetIcon from '../svgs/ic_close_black_24px.svg';
-
 import { getSpacing } from '../styles-variables';
+import { getFontSize } from '../styles-variables';
 import { white, SECONDARY_COLOR } from '../colors';
 import { BORDER_RADIUS, ICON_SIZE } from '../enums';
 
 const FILTER_ICON_ACTION_WIDTH = ICON_SIZE + getSpacing('s') * 2;
 const FILTER_MARGIN_LEFT = getSpacing('xxs');
-const inlineIconStyle = {
-  display: 'inline-block',
-  verticalAlign: 'bottom',
-  fill: `${SECONDARY_COLOR}`
-};
 
 const FilterTrigger = ({
   name,
   active,
   onFilterActivation,
-  onReset,
   Icon,
   placeholder,
+  value,
   marginLeft,
   children
 }) => (
@@ -28,19 +20,23 @@ const FilterTrigger = ({
     className={`filterTrigger ${active ? 'filterTrigger--active' : ''}`}
     onClick={() => onFilterActivation(name)}
   >
-    <Icon style={{ ...inlineIconStyle }} />
-
-    <div className={'filterTrigger-extend'}>
-      {children ? children : placeholder}
-    </div>
-
-    <ResetIcon
-      style={{ ...inlineIconStyle }}
-      onClick={e => {
-        e.stopPropagation();
-        onReset(name);
+    <Icon
+      style={{
+        display: 'inline-block',
+        verticalAlign: 'bottom',
+        fill: `${SECONDARY_COLOR}`
       }}
     />
+
+    <div className={'filterTrigger-extend'}>
+      {children ? (
+        children
+      ) : (
+        <span className={'filterTrigger-value'}>
+          {value ? value : placeholder}
+        </span>
+      )}
+    </div>
 
     <style jsx>{`
       .filterTrigger {
@@ -50,6 +46,7 @@ const FilterTrigger = ({
         margin-left: ${marginLeft ? `${FILTER_MARGIN_LEFT}px` : 0};
         background: ${white};
         border-radius: ${BORDER_RADIUS}px;
+        font-size: ${getFontSize('s')}px;
 
         box-shadow: 0 5px 20px 0 rgba(38, 74, 67, 0.2);
         vertical-align: bottom;
@@ -66,11 +63,15 @@ const FilterTrigger = ({
         );
       }
 
+      .filterTrigger-value {
+        vertical-align: top;
+        text-transform: capitalize;
+      }
+
       .filterTrigger-extend {
         display: inline-block;
         margin-left: ${getSpacing('s')}px;
-        width: calc(100% - ${ICON_SIZE}px - 3 * ${getSpacing('s')}px);
-        text-transform: capitalize;
+        width: calc(100% - ${getSpacing('s')}px - ${getSpacing('s')}px * 2);
       }
     `}</style>
   </div>
