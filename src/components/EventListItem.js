@@ -18,15 +18,25 @@ export default ({
 }) => (
   <article
     rel={'bookmark'}
-    className={`EventList-Item ${
-      withBorderRadiusTop ? 'border-top' : ''
-    } ${withBorderRadiusBottom ? 'border-bottom' : ''}`}
+    className={`EventList-Item ${withBorderRadiusTop ? 'border-top' : ''} ${
+      withBorderRadiusBottom ? 'border-bottom' : ''
+    }`}
     onClick={() => onSelectEvent(data)}
     style={{ marginBottom: '1px' }}
   >
     <h6 className={`EventList-ItemTitle`}>{data.title}</h6>
-    <address className={'EventList-ItemLocation'}>{`${data.dep}, ${data.city}`}</address>
-    <Arrow className={'EventList-ItemIcon'} style={{ fill: '#A0A7BD', position: 'absolute', right: '12px', top: 'calc(50% - 12px)' }} />
+    <address className={'EventList-ItemLocation'}>{`${data.dep}, ${
+      data.city
+    }`}</address>
+    <Arrow
+      className={'EventList-ItemIcon'}
+      style={{
+        fill: '#A0A7BD',
+        position: 'absolute',
+        right: '12px',
+        top: 'calc(50% - 12px)'
+      }}
+    />
 
     <style jsx>{`
       .EventList-Item:active {
@@ -51,23 +61,13 @@ export default ({
         border-bottom-left-radius: ${BORDER_RADIUS_LIST_ITEM}px;
       }
 
-      /*
-      .event-data {
-        max-width: calc(100% - 24px);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-      */
-
       .EventList-ItemTitle {
         text-transform: capitalize;
         font-family: 'Circular-Medium';
         color: ${EVENT_ITEM_TITLE_COLOR};
         font-weight: 500;
         margin: 0;
-        width: calc(100% - ${getSpacing('m')}px)
+        width: calc(100% - ${getSpacing('m')}px);
       }
 
       .EventList-ItemLocation {

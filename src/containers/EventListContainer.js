@@ -12,8 +12,7 @@ import {
   setCurrentMonth
 } from '../actions';
 
-import { APP_BACKGROUND_COLOR } from '../colors';
-import { tonic } from '../colors';
+import { APP_BACKGROUND_COLOR, tonic } from '../colors';
 import { Base } from '../styles-variables';
 
 import EventList from '../components/EventList';

@@ -18,8 +18,11 @@ function getDateSemantic(date) {
   return moment.unix(date).format('YYYY-MM-DD');
 }
 
-const EventListDate = ({ date }) => (
-  <time className={'EventList-Date'} dateTime={getDateSemantic(date)}>
+const EventListDate = ({ date, marginTop }) => (
+  <time
+    className={`EventList-Date ${marginTop ? 'EventList-Date--marginTop' : ''}`}
+    dateTime={getDateSemantic(date)}
+  >
     <span className={'weeklyDay'}>{getWeeklyDay(date)}</span>{' '}
     <span>{getDate(date)}</span>
     <style jsx>{`
@@ -30,6 +33,10 @@ const EventListDate = ({ date }) => (
         font-weight: 500;
         font-size: ${getFontSize('l')}px;
         display: block;
+      }
+
+      .EventList-Date--marginTop {
+        margin-top: ${getSpacing('l')}px;
       }
 
       .weeklyDay {

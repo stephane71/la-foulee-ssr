@@ -14,8 +14,7 @@ import GPSIcon from '../svgs/ic_gps_fixed_black_24px.svg';
 import DateIcon from '../svgs/ic_date_range_black_24px.svg';
 import RunIcon from '../svgs/ic_directions_run_black_24px.svg';
 
-import { getSpacing } from '../styles-variables';
-import { getFontSize } from '../styles-variables';
+import { getSpacing, getFontSize } from '../styles-variables';
 import { BORDER_RADIUS } from '../enums';
 import { white } from '../colors';
 
@@ -130,7 +129,6 @@ class FilterContainer extends React.PureComponent {
             left: ${getSpacing('xs')}px;
             right: ${getSpacing('xs')}px;
             font-size: ${getFontSize('s')}px;
-
 
             background-color: ${white};
             border-radius: ${BORDER_RADIUS}px;
