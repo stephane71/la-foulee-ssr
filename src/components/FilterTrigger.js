@@ -1,17 +1,17 @@
-import React from 'react';
-
 import ResetIcon from '../svgs/ic_close_black_24px.svg';
 
-import { getSpacing } from '../styles-variables';
+import { getSpacing, getFontSize } from '../styles-variables';
 import { white, SECONDARY_COLOR } from '../colors';
 import { BORDER_RADIUS, ICON_SIZE } from '../enums';
 
 const FILTER_ICON_ACTION_WIDTH = ICON_SIZE + getSpacing('s') * 2;
 const FILTER_MARGIN_LEFT = getSpacing('xxs');
+const FILTER_ICON_ACTION_COLOR = '#67807B';
+
 const inlineIconStyle = {
   display: 'inline-block',
   verticalAlign: 'bottom',
-  fill: `${SECONDARY_COLOR}`
+  fill: `${FILTER_ICON_ACTION_COLOR}`
 };
 
 const FilterTrigger = ({
@@ -50,6 +50,7 @@ const FilterTrigger = ({
         margin-left: ${marginLeft ? `${FILTER_MARGIN_LEFT}px` : 0};
         background: ${white};
         border-radius: ${BORDER_RADIUS}px;
+        font-size: ${getFontSize('s')}px;
 
         box-shadow: 0 5px 20px 0 rgba(38, 74, 67, 0.2);
         vertical-align: bottom;

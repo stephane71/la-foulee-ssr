@@ -14,7 +14,7 @@ import GPSIcon from '../svgs/ic_gps_fixed_black_24px.svg';
 import DateIcon from '../svgs/ic_date_range_black_24px.svg';
 import RunIcon from '../svgs/ic_directions_run_black_24px.svg';
 
-import { getSpacing } from '../styles-variables';
+import { getSpacing, getFontSize } from '../styles-variables';
 import { BORDER_RADIUS } from '../enums';
 import { white } from '../colors';
 
@@ -90,7 +90,7 @@ class FilterContainer extends React.PureComponent {
         {FILTERS.map(({ name, Selector }, i) => (
           <div
             key={i}
-            className={`filterSelector ${
+            className={`filterSelector filterSelector-${name} ${
               openFilter === name ? 'filterSelector--open' : ''
             }`}
           >
@@ -124,8 +124,11 @@ class FilterContainer extends React.PureComponent {
 
         <style jsx>{`
           .filterSelector {
-            display: none;
-            margin-bottom: ${getSpacing('s')}px;
+            position: absolute;
+            bottom: calc(${getSpacing('l')}px + ${getSpacing('s')}px);
+            left: ${getSpacing('xs')}px;
+            right: ${getSpacing('xs')}px;
+            font-size: ${getFontSize('s')}px;
 
             background-color: ${white};
             border-radius: ${BORDER_RADIUS}px;
@@ -133,13 +136,20 @@ class FilterContainer extends React.PureComponent {
 
             transition: all 0.25s ease-in-out;
             transform: scale(0);
+            transform-origin: bottom left;
             will-change: transform;
             overflow-y: auto;
           }
 
+          .filterSelector-date {
+            transform-origin: bottom center;
+          }
+
+          .filterSelector-distance {
+            transform-origin: bottom right;
+          }
+
           .filterSelector--open {
-            // FIXE ME: no more animation in transition with display toggle
-            display: block;
             opacity: 1;
             transform: scale(1);
           }

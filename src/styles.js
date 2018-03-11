@@ -112,4 +112,9 @@ export default css`
     font-size: ${BaseFontSize}px;
     line-height: ${BaseLineHeight}px;
   }
+
+  .EventList {
+    outline: none;
+    z-index: 1;
+  }
 `;

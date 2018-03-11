@@ -1,6 +1,6 @@
 import css from 'styled-jsx/css';
 
-import { BaseFontSize } from '../styles-variables';
+import { getFontSize } from '../styles-variables';
 
 const style = css`
   .inputWrapper {
@@ -14,7 +14,7 @@ const style = css`
     text-decoration: none;
     border: none;
     text-transform: capitalize;
-    font-size: ${BaseFontSize}px;
+    font-size: ${getFontSize('s')}px;
   }
 `;
 

@@ -1,4 +1,4 @@
-const Base = 4; // px
+export const Base = 4; // px
 export const BaseFontSize = 16; // px
 const BaseRatio = 1.125;
 

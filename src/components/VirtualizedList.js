@@ -65,10 +65,7 @@ export default class VirtualizedList extends React.PureComponent {
                 onScroll={onChildScroll}
                 isScrolling={isScrolling}
                 scrollTop={scrollTop}
-                style={{
-                  outline: 'none',
-                  backgroundColor: `${APP_BACKGROUND_COLOR}`
-                }}
+                className={'EventList'}
                 deferredMeasurementCache={cache}
                 rowHeight={cache.rowHeight}
               />
@@ -102,12 +99,17 @@ export default class VirtualizedList extends React.PureComponent {
         rowIndex={index}
       >
         {index === data.length - 1 ? (
-          <div style={{ ...style }}>
+          <div
+            className={'EventList-Item EventList-Item--loader'}
+            style={{ ...style }}
+          >
             <Loader />
           </div>
         ) : (
           <div style={{ ...style }}>
-            {(firstItemDay && <EventListDate date={data[index].date} />) ||
+            {(firstItemDay && (
+              <EventListDate date={data[index].date} marginTop />
+            )) ||
               null}
             <EventListItem
               data={data[index]}

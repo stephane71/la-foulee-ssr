@@ -12,6 +12,9 @@ import {
   setCurrentMonth
 } from '../actions';
 
+import { APP_BACKGROUND_COLOR, tonic } from '../colors';
+import { Base } from '../styles-variables';
+
 import EventList from '../components/EventList';
 import withEventList from '../components/withEventList';
 
@@ -56,6 +59,17 @@ export class EventListContainer extends React.PureComponent {
           <style jsx>{`
             .eventListContainer-mobileWrapper {
               display: ${this.props.hide ? 'none' : 'block'};
+              background: ${APP_BACKGROUND_COLOR};
+            }
+            .eventListContainer-mobileWrapper:after {
+              background: ${tonic};
+              position: absolute;
+              content: '';
+              bottom: 0;
+              left: 0;
+              right: 0;
+              clip-path: polygon(0 68%, 100% 0%, 100% 100%, 0% 100%);
+              height: calc(${Base}px * 80);
             }
           `}</style>
         </div>
