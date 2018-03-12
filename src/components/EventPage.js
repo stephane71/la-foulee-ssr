@@ -58,31 +58,32 @@ const EventPage = ({ data }) => (
 
     <h2>{`Épreuves`}</h2>
     <ul>
-      {data.activities
-        .sort((act1, act2) => act2.value - act1.value)
-        .map(({ value, time, inscriptionFee }, i) => (
-          <li
-            key={i}
-            className={`event-activity ${i < data.activities.length - 1 &&
-              'event-activity-borderBottom'}`}
-          >
-            <div className={'event-activity-distance'}>
-              {formatDistance(value)}
-            </div>
-            <div className={'event-activity-details'}>
-              <EventDatum Icon={AccessTime}>
-                {`Départ à${String.fromCharCode(160)}`}
-                <span className={'event-activity-datum'}>{`${time}`}</span>
-              </EventDatum>
-              <EventDatum Icon={EurosSymbol} pushRight>
-                {`Prix${String.fromCharCode(160)}`}
-                <span className={'event-activity-datum'}>{`${
-                  inscriptionFee ? `de ${inscriptionFee}` : 'NC'
-                }`}</span>
-              </EventDatum>
-            </div>
-          </li>
-        ))}
+      {data.activities &&
+        data.activities
+          .sort((act1, act2) => act2.value - act1.value)
+          .map(({ value, time, inscriptionFee }, i) => (
+            <li
+              key={i}
+              className={`event-activity ${i < data.activities.length - 1 &&
+                'event-activity-borderBottom'}`}
+            >
+              <div className={'event-activity-distance'}>
+                {formatDistance(value)}
+              </div>
+              <div className={'event-activity-details'}>
+                <EventDatum Icon={AccessTime}>
+                  {`Départ à${String.fromCharCode(160)}`}
+                  <span className={'event-activity-datum'}>{`${time}`}</span>
+                </EventDatum>
+                <EventDatum Icon={EurosSymbol} pushRight>
+                  {`Prix${String.fromCharCode(160)}`}
+                  <span className={'event-activity-datum'}>{`${
+                    inscriptionFee ? `de ${inscriptionFee}` : 'NC'
+                  }`}</span>
+                </EventDatum>
+              </div>
+            </li>
+          ))}
     </ul>
 
     <style jsx>{`
