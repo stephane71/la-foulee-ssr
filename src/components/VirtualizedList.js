@@ -56,6 +56,9 @@ export default class VirtualizedList extends React.PureComponent {
           <AutoSizer disableHeight>
             {({ width }) => (
               <List
+                ref={el => {
+                  this.listComponent = el;
+                }}
                 autoHeight
                 width={width}
                 height={height}
@@ -79,6 +82,7 @@ export default class VirtualizedList extends React.PureComponent {
   }
 
   firstRendering = false;
+  listComponent = null;
 
   getRowHeight({ index }) {
     return index &&
@@ -133,6 +137,8 @@ export default class VirtualizedList extends React.PureComponent {
     cache.clear(index);
     if (this.state.selectedItem !== NO_ITEM_SELECTED)
       cache.clear(this.state.selectedItem);
+    this.listComponent.recomputeRowHeights(index);
+
     this.setState({
       selectedItem: this.state.selectedItem === index ? NO_ITEM_SELECTED : index
     });

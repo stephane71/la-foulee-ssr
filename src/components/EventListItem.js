@@ -57,7 +57,7 @@ const EventListItem = ({
     rel={'bookmark'}
     className={`eventListItem ${withBorderRadiusTop ? 'border-top' : ''} ${
       withBorderRadiusBottom ? 'border-bottom' : ''
-    } ${showDetails && 'eventListItem-details'}`}
+    } ${showDetails ? 'eventListItem-details' : ''}`}
     onClick={() => onSelectEvent(data)}
     style={{ marginBottom: '1px' }}
   >
