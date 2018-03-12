@@ -12,6 +12,11 @@ console.log('NODE_ENV:', process.env.NODE_ENV);
 
 module.exports = {
   // assetPrefix: isProd ? `https://assets.la-foulee.com` : '',
+  exportPathMap: function() {
+    return {
+      '/': { page: '/' }
+    };
+  },
 
   webpack: (config, { buildId, dev }) => {
     config.plugins.push(
