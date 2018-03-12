@@ -34,7 +34,7 @@ class Input extends React.PureComponent {
     if (this.props.value !== nextProps.value) {
       this.setState({ value: nextProps.value || DEFAULT_VALUE });
     }
-    if (nextProps.focus) {
+    if (!this.props.focus && nextProps.focus) {
       this.textInput.focus();
     }
   }
@@ -60,7 +60,6 @@ class Input extends React.PureComponent {
 
   handleInputWrapperClick() {
     this.textInput.focus();
-    this.props.onFocus && this.props.onFocus();
   }
 
   handleChange(event) {
