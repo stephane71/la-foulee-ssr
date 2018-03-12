@@ -17,7 +17,8 @@
     "react-redux": "^5.0.6",
     "react-virtualized": "^9.16.1",
     "redux": "^3.7.2",
-    "serverless-http": "^1.5.2"
+    "serverless-http": "^1.5.2",
+    "url-pattern": "^1.0.3"
   },
   "devDependencies": {
     "babel-plugin-inline-react-svg": "^0.5.2",
@@ -35,7 +36,8 @@
     "offline": "npm run build:dev && sls offline start --dontPrintOutput --stage developpement",
     "deploy:dev": "npm run build:dev && serverless deploy --stage developpement",
     "deploy:prod": "npm run build:prod && serverless deploy --stage production",
-    "analyze": "cross-env ANALYZE=1 npm run build:dev"
+    "analyze": "cross-env ANALYZE=1 npm run build:dev",
+    "export": "npm run build:dev && next export src"
   },
   "author": "",
   "license": "ISC"
