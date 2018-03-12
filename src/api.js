@@ -6,7 +6,7 @@ import moment from 'moment';
  *  - getEventListArgs
  */
 
-const CURRENT_MONTH = moment().format('MMMM');
+const CURRENT_MONTH = moment().month();
 
 export function getEventArgs(strideID) {
   const params = {
@@ -21,15 +21,11 @@ export function getEventArgs(strideID) {
   return [params, pathTemplate, method, additionalParams, body];
 }
 
-const defaultSelectors = {
-  month: CURRENT_MONTH,
-  dep: ''
-};
+export function getEventListArgs(selectors, currentPage = 0) {
+  if (!selectors) {
+    throw new Error('api: Selectors need to be specified');
+  }
 
-export function getEventListArgs(
-  selectors = defaultSelectors,
-  currentPage = 0
-) {
   let { month, dep } = selectors;
   let params = {
     month
