@@ -10,7 +10,7 @@ moment.locale('fr');
 
 const Layout = props => (
   <div className={'root prevent-scroll'}>
-    <Header onClickHeaderLogo={() => Router.push('/', '/', {})} />
+    <Header onClickHeaderLogo={() => Router.push('/?from=header', '/', {})} />
     {props.children}
     <style jsx>{`
       .root {

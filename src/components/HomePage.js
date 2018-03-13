@@ -8,7 +8,7 @@ const HomePage = props => {
   return (
     <div style={{ textAlign: 'center' }}>
       <h3>{'Home page'}</h3>
-      <Link href={{ pathname: '/', query: {} }} as={'/search'}>
+      <Link href={'/?from=home'} as={'/search'}>
         <a>{'Go search an event !'}</a>
       </Link>
     </div>
