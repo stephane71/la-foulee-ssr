@@ -70,6 +70,8 @@ class Index extends React.PureComponent {
   }
 
   render() {
+    const listRoutingDisabled = this.props.url.query.routing === 'disabled';
+
     let homeMatch = homePattern.match(this.props.url.asPath);
     let eventMatch = eventPattern.match(this.props.url.asPath);
     let searchMatch = searchPattern.match(this.props.url.asPath);
@@ -84,14 +86,14 @@ class Index extends React.PureComponent {
           <HomePage {...this.props} />
         </Route>
 
-        <Route test={eventMatch}>
+        <Route test={!listRoutingDisabled && eventMatch}>
           <EventPageContainer
             {...this.props}
             keyword={eventMatch && eventMatch.keyword}
           />
         </Route>
 
-        <Route test={searchMatch}>
+        <Route test={listRoutingDisabled || searchMatch}>
           <EventListContainer {...this.props} />
         </Route>
 

@@ -93,8 +93,7 @@ export class EventListContainer extends React.PureComponent {
   }
 
   handleEventSelection(event) {
-    this.props.dispatch(setSelectedEvent(event));
-    Router.push('/', `/event/${event.keyword}`);
+    Router.push('/?routing=disabled', `/event/${event.keyword}`);
   }
 
   handleListRendered() {
