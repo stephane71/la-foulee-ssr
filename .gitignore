@@ -5,3 +5,4 @@ config/**
 config.*
 .serverless
 .next
+src/out

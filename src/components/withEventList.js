@@ -1,5 +1,3 @@
-import moment from 'moment';
-
 import {
   setEventList,
   concatEventList,
@@ -20,14 +18,16 @@ const withEventList = WrappedComponent => {
     }
 
     state = {
-      loading: false
+      loading: true
     };
 
     async componentDidMount() {
       if (!this.props.events.length) {
         this.setState({ loading: true });
 
-        const { events, pages } = await this.props.getEventList();
+        const { events, pages } = await this.props.getEventList(
+          this.props.selectors
+        );
         this.props.dispatch(setEventList(events));
         this.props.dispatch(setEventListNbPages(pages));
 

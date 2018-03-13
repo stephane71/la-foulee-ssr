@@ -6,6 +6,7 @@ export const SET_SELECTORS = 'SET_SELECTORS';
 export const SET_CURRENT_PAGE = 'SET_CURRENT_PAGE';
 export const SET_CURRENT_MONTH = 'SET_CURRENT_MONTH';
 export const SET_GOOGLE_MAPS_SERVICE = 'SET_GOOGLE_MAPS_SERVICE';
+export const SET_EVENT_LIST_READY_FLAG = 'SET_EVENT_LIST_READY_FLAG';
 
 export function setSelectedEvent(event) {
   return {
@@ -60,4 +61,8 @@ export function setGoogleMapsService(service) {
     type: SET_GOOGLE_MAPS_SERVICE,
     service
   };
+}
+
+export function setEventListReadyFlag() {
+  return { type: SET_EVENT_LIST_READY_FLAG };
 }

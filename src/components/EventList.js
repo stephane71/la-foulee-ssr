@@ -1,22 +1,24 @@
+import { Fragment } from 'react';
 import FilterContainer from '../containers/FilterContainer';
 
 import VirtualizedList from './VirtualizedList';
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
+import Loader from './Loader';
 
-import { getSpacing, BaseLineHeight } from '../styles-variables';
-import { APP_BACKGROUND_COLOR } from '../colors';
+import { getSpacing, BaseLineHeight, Base } from '../styles-variables';
+import { APP_BACKGROUND_COLOR, tonic } from '../colors';
 import { HEIGHT_APPBAR } from '../enums';
 
 // See EventListDate component: line height + 2 * vertical padding
 const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
 
 let lockFilters = false;
-const FiltersWrapper = ({ show }) => (
-  <div className={`filterWrapper ${show || lockFilters ? '' : 'out'}`}>
+const FixedFiltersFooter = ({ show }) => (
+  <div className={`FixedFiltersFooter ${show || lockFilters ? '' : 'out'}`}>
     <FilterContainer onFilterOpen={open => (lockFilters = open)} />
     <style jsx>{`
-      .filterWrapper {
+      .FixedFiltersFooter {
         position: fixed;
         bottom: 0;
         left: 0;
@@ -36,10 +38,10 @@ const FiltersWrapper = ({ show }) => (
 );
 
 const FixedDateHeader = ({ date }) => (
-  <div className={'fixedDateHeader'}>
+  <div className={'FixedDateHeader'}>
     <EventListDate date={date} />
     <style jsx>{`
-      .fixedDateHeader {
+      .FixedDateHeader {
         background-color: ${APP_BACKGROUND_COLOR};
         position: fixed;
         top: ${HEIGHT_APPBAR}px;
@@ -57,27 +59,38 @@ export default class EventList extends React.PureComponent {
 
     this.state = {
       stickyDate: this.props.data.length && this.props.data[0].date,
-      scrollUp: true
+      scrollUp: true,
+      listRendered: false
     };
 
     this.handleStickyDate = this.handleStickyDate.bind(this);
     this.handleLoadMore = this.handleLoadMore.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.handleListRendered = this.handleListRendered.bind(this);
   }
 
   render() {
     const { data } = this.props;
 
-    if (!data.length) return <div>{'Empty list !'}</div>;
+    if (!data.length && !this.props.loading) return <div>{'Empty list !'}</div>;
+
+    // if (!data.length && this.props.loading)
+    //   return (
+    //     <div>
+    //       {'Nous sommes presque prêt ! Les dernière données sont en routes...'}
+    //     </div>
+    //   );
 
     return (
       <div
         ref={el => {
           this.scrollElement = el;
         }}
-        className={'eventList-mobileWrapper prevent-scroll'}
+        className={'EventList prevent-scroll'}
       >
-        <FixedDateHeader date={this.state.stickyDate} />
+        {this.state.listRendered && (
+          <FixedDateHeader date={this.state.stickyDate} />
+        )}
 
         <VirtualizedList
           scrollElement={this.scrollElement}
@@ -86,14 +99,30 @@ export default class EventList extends React.PureComponent {
           onChangeStickyDate={this.handleStickyDate}
           onReachEndList={this.handleLoadMore}
           onScroll={this.handleScroll}
+          onListRendered={this.handleListRendered}
         />
 
-        <FiltersWrapper show={this.state.scrollUp} />
+        {this.state.listRendered && (
+          <FixedFiltersFooter show={this.state.scrollUp} />
+        )}
+
+        {!this.state.listRendered && (
+          <div className={'EventList-rendering'}>
+            <Loader />
+          </div>
+        )}
 
         <style jsx>{`
-          .eventList-mobileWrapper {
+          .EventList {
             padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
             -webkit-overflow-scrolling: touch;
+          }
+
+          .EventList-rendering {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
           }
         `}</style>
       </div>
@@ -116,5 +145,10 @@ export default class EventList extends React.PureComponent {
       (this.scrollTop === scrollTop && !scrollTop);
     this.scrollTop = scrollTop;
     this.setState({ scrollUp });
+  }
+
+  handleListRendered() {
+    this.setState({ listRendered: true });
+    this.props.onListRendered();
   }
 }

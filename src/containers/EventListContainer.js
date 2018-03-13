@@ -1,24 +1,24 @@
-import { Fragment } from 'react';
-import { connect } from 'react-redux';
 import Head from 'next/head';
 import Router from 'next/router';
-import css from 'styled-jsx/css';
 import Media from 'react-media';
-
-import {
-  setSelectedEvent,
-  setSelectors,
-  setCurrentPage,
-  setCurrentMonth
-} from '../actions';
-
-import { APP_BACKGROUND_COLOR, tonic } from '../colors';
-import { Base } from '../styles-variables';
+import { Fragment } from 'react';
+import { connect } from 'react-redux';
 
 import EventList from '../components/EventList';
 import withEventList from '../components/withEventList';
 
 import { getEventListStructuredData } from '../utils/structuredData';
+
+import {
+  setSelectedEvent,
+  setSelectors,
+  setCurrentPage,
+  setCurrentMonth,
+  setEventListReadyFlag
+} from '../actions';
+import { MAX_WIDTH } from '../enums';
+import { Base } from '../styles-variables';
+import { APP_BACKGROUND_COLOR, tonic } from '../colors';
 
 export class EventListContainer extends React.PureComponent {
   constructor(props) {
@@ -27,52 +27,53 @@ export class EventListContainer extends React.PureComponent {
     this.handleLoadPage = this.handleLoadPage.bind(this);
     this.handleEventSelection = this.handleEventSelection.bind(this);
     this.handleSelectorsValidation = this.handleSelectorsValidation.bind(this);
+    this.handleListRendered = this.handleListRendered.bind(this);
   }
 
   render() {
     return (
       <Fragment>
-        {!this.props.hide && (
-          <Head>
-            <title>{`La Foulée | rechercher un evénement`}</title>
-            <script type={'application/ld+json'}>
-              {getEventListStructuredData()}
-            </script>
-          </Head>
-        )}
-        <div className={'eventListContainer-mobileWrapper prevent-scroll'}>
-          <Media query={`(max-width: 768px)`}>
-            {matches =>
-              matches ? (
+        <Head>
+          <title>{`La Foulée | rechercher un evénement`}</title>
+          <script type={'application/ld+json'}>
+            {getEventListStructuredData()}
+          </script>
+        </Head>
+
+        <Media query={`(max-width: ${MAX_WIDTH}px)`}>
+          {matches =>
+            matches ? (
+              <div className={'EventListContainer-mobile prevent-scroll'}>
                 <EventList
                   data={this.props.events}
                   onLoadMore={this.handleLoadPage}
                   loading={this.props.loading}
                   endList={this.props.currentPage + 1 === this.props.pages}
                   onSelectEvent={this.handleEventSelection}
+                  onListRendered={this.handleListRendered}
                 />
-              ) : (
-                <div className={'EventListContainerDesktop'} />
-              )
-            }
-          </Media>
-          <style jsx>{`
-            .eventListContainer-mobileWrapper {
-              display: ${this.props.hide ? 'none' : 'block'};
-              background: ${APP_BACKGROUND_COLOR};
-            }
-            .eventListContainer-mobileWrapper:after {
-              background: ${tonic};
-              position: absolute;
-              content: '';
-              bottom: 0;
-              left: 0;
-              right: 0;
-              clip-path: polygon(0 68%, 100% 0%, 100% 100%, 0% 100%);
-              height: calc(${Base}px * 80);
-            }
-          `}</style>
-        </div>
+              </div>
+            ) : (
+              <div className={'EventListContainer-desktop'} />
+            )
+          }
+        </Media>
+        <style jsx>{`
+          .EventListContainer-mobile {
+            background: ${APP_BACKGROUND_COLOR};
+          }
+
+          .EventListContainer-mobile:after {
+            background: ${tonic};
+            position: absolute;
+            content: '';
+            bottom: 0;
+            left: 0;
+            right: 0;
+            clip-path: polygon(0 68%, 100% 0%, 100% 100%, 0% 100%);
+            height: calc(${Base}px * 80);
+          }
+        `}</style>
       </Fragment>
     );
   }
@@ -92,14 +93,14 @@ export class EventListContainer extends React.PureComponent {
   }
 
   handleEventSelection(event) {
-    this.props.dispatch(setSelectedEvent(event));
     Router.push(
-      {
-        pathname: '/app',
-        query: { event: event.keyword }
-      },
+      { pathname: '/', query: { routing: 'disabled' } },
       `/event/${event.keyword}`
     );
+  }
+
+  handleListRendered() {
+    this.props.dispatch(setEventListReadyFlag());
   }
 }
 

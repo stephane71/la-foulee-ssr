@@ -3,12 +3,14 @@
 // read here https://github.com/kesne/babel-plugin-inline-react-svg/issues/31#issuecomment-342264348
 import React from 'react';
 
-import { HEIGHT_APPBAR, getSpacing } from '../styles-variables';
-import { dominant } from '../colors';
 import LogoTonic from '../svgs/lafoulee-tonic.svg';
 
+import { HEIGHT_APPBAR, getSpacing } from '../styles-variables';
+import { dominant } from '../colors';
+import { ICON_SIZE } from '../enums';
+
 const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - 8;
-const ICONS_WIDTH = 24;
+
 /*
  * This calculation is based on this pattern:
  *  | Icon | Logo | Icon |
@@ -16,12 +18,12 @@ const ICONS_WIDTH = 24;
  * Content padding: 12 px (right & left)
  */
 const WIDTH_DIFF_CENTER_LOGO_WRAPPER =
-  ICONS_WIDTH * 2 + getSpacing(`s`) * 4 + getSpacing(`s`) * 2;
+  ICON_SIZE * 2 + getSpacing(`s`) * 4 + getSpacing(`s`) * 2;
 
-const Header = () => (
+const Header = ({ onClickHeaderLogo }) => (
   <div className={'header-root'}>
     <div className={'header-content'}>
-      <div className={'svg-wrapper'}>
+      <div className={'svg-wrapper'} onClick={onClickHeaderLogo}>
         <LogoTonic height={`${HEIGHT_LOGO_APP_HEADER}px`} />
       </div>
     </div>

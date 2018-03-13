@@ -9,7 +9,8 @@ import {
   SET_SELECTORS,
   SET_CURRENT_PAGE,
   SET_CURRENT_MONTH,
-  SET_GOOGLE_MAPS_SERVICE
+  SET_GOOGLE_MAPS_SERVICE,
+  SET_EVENT_LIST_READY_FLAG
 } from './actions';
 
 function getNextMonth(month) {
@@ -34,7 +35,8 @@ const initialState = {
   },
   currentPage: 0,
   currentMonth: START_MONTH,
-  googleMapsService: null
+  googleMapsService: null,
+  eventListReady: false
 };
 
 const reducer = (state = initialState, action) => {
@@ -55,6 +57,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, currentMonth: getNextMonth(state.currentMonth) };
     case SET_GOOGLE_MAPS_SERVICE:
       return { ...state, googleMapsService: action.service };
+    case SET_EVENT_LIST_READY_FLAG:
+      return { ...state, eventListReady: true };
     default:
       return state;
   }

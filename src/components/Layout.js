@@ -1,4 +1,5 @@
 import moment from 'moment';
+import Router from 'next/router';
 
 import Header from './Header';
 
@@ -9,7 +10,7 @@ moment.locale('fr');
 
 const Layout = props => (
   <div className={'root prevent-scroll'}>
-    <Header />
+    <Header onClickHeaderLogo={() => Router.push('/?from=header', '/', {})} />
     {props.children}
     <style jsx>{`
       .root {

@@ -32,10 +32,6 @@ export default class VirtualizedList extends React.PureComponent {
     this.onRowsRendered = this.onRowsRendered.bind(this);
   }
 
-  state = {
-    rendered: false
-  };
-
   componentWillReceiveProps(nextProps) {
     // End loading more detection: pb -> will catch a refresh too.
     // IF the new list is longer than the previous one
@@ -75,6 +71,8 @@ export default class VirtualizedList extends React.PureComponent {
       </WindowScroller>
     );
   }
+
+  firstRendering = false;
 
   getRowHeight({ index }) {
     return index &&
@@ -127,7 +125,10 @@ export default class VirtualizedList extends React.PureComponent {
     if (stopIndex + PADDING_INDEX_LOAD_MORE >= this.props.data.length) {
       this.props.onReachEndList();
     }
-    this.props.onChangeStickyDate(this.props.data[startIndex + 1].date);
-    this.setState({ rendered: true });
+    this.props.onChangeStickyDate(this.props.data[startIndex].date);
+    if (!this.firstRendering) {
+      this.firstRendering = true;
+      this.props.onListRendered();
+    }
   }
 }
