@@ -20,10 +20,10 @@ const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - 8;
 const WIDTH_DIFF_CENTER_LOGO_WRAPPER =
   ICON_SIZE * 2 + getSpacing(`s`) * 4 + getSpacing(`s`) * 2;
 
-const Header = () => (
+const Header = ({ onClickHeaderLogo }) => (
   <div className={'header-root'}>
     <div className={'header-content'}>
-      <div className={'svg-wrapper'}>
+      <div className={'svg-wrapper'} onClick={onClickHeaderLogo}>
         <LogoTonic height={`${HEIGHT_LOGO_APP_HEADER}px`} />
       </div>
     </div>
