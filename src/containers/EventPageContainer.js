@@ -19,18 +19,27 @@ export class EventPageContainer extends React.PureComponent {
 
   render() {
     const { event } = this.props;
+
+    if (!event) return null;
+
+    if (event.errorMessage) {
+      return (
+        <div className={'EventPageContainer'} style={{ textAlign: 'center' }}>
+          <h3>{`This event doesn't exist!`}</h3>
+        </div>
+      );
+    }
+
     return (
       <div className={'EventPageContainer'}>
-        {event && (
-          <Head>
-            <title>{`${event.title} | La Foulée`}</title>
-            <script type={'application/ld+json'}>
-              {getEventStructuredData(event)}
-            </script>
-          </Head>
-        )}
+        <Head>
+          <title>{`${event.title} | La Foulée`}</title>
+          <script type={'application/ld+json'}>
+            {getEventStructuredData(event)}
+          </script>
+        </Head>
 
-        {event && <EventPage data={event} />}
+        <EventPage data={event} />
 
         <style jsx>{`
           .EventPageContainer {
