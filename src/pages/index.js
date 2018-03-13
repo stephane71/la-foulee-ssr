@@ -13,6 +13,8 @@ import { makeStore } from '../store';
 import { setSelectedEvent } from '../actions';
 
 const MIN_LOAD_TIME = 2000;
+
+const homePattern = new UrlPattern('(/)');
 const eventPattern = new UrlPattern('/event/:keyword(/)');
 const searchPattern = new UrlPattern('/search(/)');
 
@@ -51,6 +53,11 @@ const UnknownPage = dynamic(import('../components/UnknownPage'), {
   loading: () => <Loader />
 });
 
+const HomePage = dynamic(import('../components/HomePage'), {
+  ssr: true,
+  loading: () => <Loader />
+});
+
 class Index extends React.PureComponent {
   state = {
     minLoading: true
@@ -63,6 +70,7 @@ class Index extends React.PureComponent {
   }
 
   render() {
+    let homeMatch = homePattern.match(this.props.url.asPath);
     let eventMatch = eventPattern.match(this.props.url.asPath);
     let searchMatch = searchPattern.match(this.props.url.asPath);
 
@@ -71,7 +79,11 @@ class Index extends React.PureComponent {
         {(this.state.minLoading || !this.props.eventListReady) && (
           <SplashScreen />
         )}
-        {/* PROBLEM: Amazon Cognito se fait à chaque route... */}
+
+        <Route test={homeMatch}>
+          <HomePage {...this.props} />
+        </Route>
+
         <Route test={eventMatch}>
           <EventPageContainer
             {...this.props}
@@ -83,7 +95,7 @@ class Index extends React.PureComponent {
           <EventListContainer {...this.props} />
         </Route>
 
-        <Route test={!eventMatch && !searchMatch}>
+        <Route test={!homeMatch && !eventMatch && !searchMatch}>
           <UnknownPage {...this.props} />
         </Route>
       </Layout>
