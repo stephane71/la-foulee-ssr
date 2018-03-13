@@ -10,7 +10,6 @@ import Loader from '../components/Loader';
 import Layout from '../components/Layout';
 
 import { makeStore } from '../store';
-import { setSelectedEvent } from '../actions';
 
 const MIN_LOAD_TIME = 2000;
 
@@ -78,9 +77,10 @@ class Index extends React.PureComponent {
 
     return (
       <Layout>
-        {(this.state.minLoading || !this.props.eventListReady) && (
-          <SplashScreen />
-        )}
+        {!homeMatch &&
+          (this.state.minLoading || !this.props.eventListReady) && (
+            <SplashScreen />
+          )}
 
         <Route test={homeMatch}>
           <HomePage {...this.props} />
