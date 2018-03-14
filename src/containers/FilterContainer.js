@@ -71,7 +71,7 @@ class FilterContainer extends React.PureComponent {
       }
     };
 
-    this.handleFilterActivation = this.handleFilterActivation.bind(this);
+    this.handleFilterClick = this.handleFilterClick.bind(this);
     this.handleFilterReset = this.handleFilterReset.bind(this);
     this.handleFilterSelectValue = this.handleFilterSelectValue.bind(this);
 
@@ -106,7 +106,7 @@ class FilterContainer extends React.PureComponent {
             key={i}
             {...props}
             active={activeFilter === props.name}
-            onFilterActivation={this.handleFilterActivation}
+            onClick={this.handleFilterClick}
             onReset={this.handleFilterReset}
           >
             {props.name === LOCATION_FILTER ? (
@@ -178,9 +178,16 @@ class FilterContainer extends React.PureComponent {
 
   // FILTER TRIGGERS
 
-  handleFilterActivation(filterName) {
-    this.setState({ activeFilter: filterName, openFilter: filterName });
-    this.props.onFilterOpen(true);
+  handleFilterClick(filterName) {
+    let openFilter = filterName;
+    if (this.state.activeFilter === filterName) {
+      openFilter = this.state.openFilter ? null : openFilter;
+    }
+    this.setState({
+      activeFilter: filterName,
+      openFilter
+    });
+    this.props.onFilterOpen(openFilter);
   }
 
   handleFilterReset(filterName) {

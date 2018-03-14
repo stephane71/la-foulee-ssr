@@ -17,7 +17,7 @@ const inlineIconStyle = {
 const FilterTrigger = ({
   name,
   active,
-  onFilterActivation,
+  onClick,
   onReset,
   Icon,
   placeholder,
@@ -26,7 +26,7 @@ const FilterTrigger = ({
 }) => (
   <div
     className={`filterTrigger ${active ? 'filterTrigger--active' : ''}`}
-    onClick={() => onFilterActivation(name)}
+    onClick={() => onClick(name)}
   >
     <Icon style={{ ...inlineIconStyle }} />
 

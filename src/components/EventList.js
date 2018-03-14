@@ -13,6 +13,7 @@ import { HEIGHT_APPBAR } from '../enums';
 // See EventListDate component: line height + 2 * vertical padding
 const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
 
+// prevent filters to be out on scroll when filters openned
 let lockFilters = false;
 const FixedFiltersFooter = ({ show }) => (
   <div className={`FixedFiltersFooter ${show || lockFilters ? '' : 'out'}`}>
