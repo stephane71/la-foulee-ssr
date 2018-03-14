@@ -7,12 +7,8 @@ import {
 } from 'react-virtualized';
 
 import Loader from './Loader';
-
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
-
-import { APP_BACKGROUND_COLOR } from '../colors';
-import { getSpacing } from '../styles-variables';
 
 const EVENT_LIST_ITEM_HEIGHT = 72;
 const EVENT_LIST_DATE_HEADER_HEIGHT = 96;
@@ -34,8 +30,7 @@ export default class VirtualizedList extends React.PureComponent {
   }
 
   state = {
-    rendered: false,
-    selectedItem: NO_ITEM_SELECTED
+    rendered: false
   };
 
   componentWillReceiveProps(nextProps) {
@@ -43,6 +38,10 @@ export default class VirtualizedList extends React.PureComponent {
     // IF the new list is longer than the previous one
     if (this.props.data.length < nextProps.data.length) {
       cache.clear(this.props.data.length - 1);
+    }
+
+    if (nextProps.closeSelectedEvent && this.selectedItem) {
+      this.updateSelectedEvent(this.selectedItem);
     }
   }
 
@@ -83,6 +82,7 @@ export default class VirtualizedList extends React.PureComponent {
 
   firstRendering = false;
   listComponent = null;
+  selectedItem = NO_ITEM_SELECTED;
 
   getRowHeight({ index }) {
     return index &&
@@ -121,11 +121,10 @@ export default class VirtualizedList extends React.PureComponent {
               null}
             <EventListItem
               data={data[index]}
-              // onSelectEvent={this.props.onSelectEvent}
               onSelectEvent={data => this.onSelectEvent(index, data)}
               withBorderRadiusTop={index === 0 || firstItemDay}
               withBorderRadiusBottom={index + 1 === data.length || lastItemDay}
-              showDetails={index === this.state.selectedItem}
+              showDetails={index === this.selectedItem}
             />
           </div>
         )}
@@ -134,14 +133,10 @@ export default class VirtualizedList extends React.PureComponent {
   }
 
   onSelectEvent(index, data) {
-    cache.clear(index);
-    if (this.state.selectedItem !== NO_ITEM_SELECTED)
-      cache.clear(this.state.selectedItem);
-    this.listComponent.recomputeRowHeights(index);
-
-    this.setState({
-      selectedItem: this.state.selectedItem === index ? NO_ITEM_SELECTED : index
-    });
+    const selectedItem = this.updateSelectedEvent(index);
+    this.props.onSelectEvent(
+      selectedItem === NO_ITEM_SELECTED ? NO_ITEM_SELECTED : data.keyword
+    );
   }
 
   onRowsRendered({ startIndex, stopIndex }) {
@@ -153,5 +148,22 @@ export default class VirtualizedList extends React.PureComponent {
       this.firstRendering = true;
       this.props.onListRendered();
     }
+  }
+
+  updateSelectedEvent(index) {
+    cache.clear(index);
+    let selectedItem = index;
+
+    if (this.selectedItem === index) {
+      selectedItem = NO_ITEM_SELECTED;
+    } else if (this.selectedItem !== NO_ITEM_SELECTED) {
+      cache.clear(this.selectedItem);
+    }
+
+    this.selectedItem = selectedItem;
+    // Will render the list; that why we don't need a state for selectedItem
+    this.listComponent.recomputeRowHeights();
+
+    return selectedItem;
   }
 }

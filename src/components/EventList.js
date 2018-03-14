@@ -69,6 +69,7 @@ export default class EventList extends React.PureComponent {
           <VirtualizedList
             scrollElement={this.scrollElement}
             data={this.props.data}
+            closeSelectedEvent={this.props.closeSelectedEvent}
             onSelectEvent={this.props.onSelectEvent}
             onChangeStickyDate={this.handleStickyDate}
             onReachEndList={this.handleLoadMore}

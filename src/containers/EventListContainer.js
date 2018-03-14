@@ -10,7 +10,7 @@ import withEventList from '../components/withEventList';
 import { getEventListStructuredData } from '../utils/structuredData';
 
 import {
-  setSelectedEvent,
+  setSelectors,
   setCurrentPage,
   setCurrentMonth,
   setEventListReadyFlag
@@ -44,8 +44,9 @@ export class EventListContainer extends React.PureComponent {
               <div className={'EventListContainer-mobile prevent-scroll'}>
                 <EventList
                   data={this.props.events}
-                  onLoadMore={this.handleLoadPage}
                   loading={this.props.loading}
+                  closeSelectedEvent={!this.props.keyword}
+                  onLoadMore={this.handleLoadPage}
                   endList={this.props.currentPage + 1 === this.props.pages}
                   onSelectEvent={this.handleEventSelection}
                   onListRendered={this.handleListRendered}
@@ -86,11 +87,13 @@ export class EventListContainer extends React.PureComponent {
     }
   }
 
-  handleEventSelection(event) {
-    Router.push(
-      { pathname: '/', query: { routing: 'disabled' } },
-      `/event/${event.keyword}`
-    );
+  handleEventSelection(keyword) {
+    if (!keyword) Router.back();
+    else
+      Router.push(
+        { pathname: '/', query: { routing: 'disabled' } },
+        `/event/${keyword}`
+      );
   }
 
   handleListRendered() {
