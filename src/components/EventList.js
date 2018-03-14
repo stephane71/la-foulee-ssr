@@ -82,25 +82,27 @@ export default class EventList extends React.PureComponent {
     //   );
 
     return (
-      <div
-        ref={el => {
-          this.scrollElement = el;
-        }}
-        className={'EventList prevent-scroll'}
-      >
+      <div className={'EventList prevent-scroll'}>
         {this.state.listRendered && (
           <FixedDateHeader date={this.state.stickyDate} />
         )}
 
-        <VirtualizedList
-          scrollElement={this.scrollElement}
-          data={this.props.data}
-          onSelectEvent={this.props.onSelectEvent}
-          onChangeStickyDate={this.handleStickyDate}
-          onReachEndList={this.handleLoadMore}
-          onScroll={this.handleScroll}
-          onListRendered={this.handleListRendered}
-        />
+        <div
+          ref={el => {
+            this.scrollElement = el;
+          }}
+          className={'EventList-scrollElement prevent-scroll'}
+        >
+          <VirtualizedList
+            scrollElement={this.scrollElement}
+            data={this.props.data}
+            onSelectEvent={this.props.onSelectEvent}
+            onChangeStickyDate={this.handleStickyDate}
+            onReachEndList={this.handleLoadMore}
+            onScroll={this.handleScroll}
+            onListRendered={this.handleListRendered}
+          />
+        </div>
 
         {this.state.listRendered && (
           <FixedFiltersFooter show={this.state.scrollUp} />
