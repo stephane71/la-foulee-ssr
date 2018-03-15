@@ -24,35 +24,41 @@ const LOCATION_FILTER = 'location';
 const DATE_FILTER = 'date';
 const DISTANCE_FILTER = 'distance';
 
-const LOCATION_DEFAULT = null;
-const DATE_DEFAULT = CURRENT_MONTH;
-const DISTANCE_DEFAULT = null;
+const DEFAULT_VALUES = {
+  [LOCATION_FILTER]: null,
+  [DATE_FILTER]: CURRENT_MONTH,
+  [DISTANCE_FILTER]: null
+};
 
-const LOCATION_PLACEHOLDER = 'Choisissez une ville';
+const PLACEHOLDER = {
+  [LOCATION_FILTER]: 'Choisissez une ville',
+  [DATE_FILTER]: null,
+  [DISTANCE_FILTER]: 'Quelle distance ?'
+};
 
 const FILTERS = [
   {
     name: LOCATION_FILTER,
     Icon: GPSIcon,
     Selector: CitySelector,
-    placeholder: LOCATION_PLACEHOLDER,
-    value: LOCATION_DEFAULT,
+    placeholder: PLACEHOLDER[LOCATION_FILTER],
+    value: DEFAULT_VALUES[LOCATION_FILTER],
     marginLeft: false
   },
   {
     name: DATE_FILTER,
     Icon: DateIcon,
     Selector: MonthSelector,
-    placeholder: DATE_DEFAULT,
-    value: DATE_DEFAULT,
+    placeholder: PLACEHOLDER[DATE_FILTER],
+    value: DEFAULT_VALUES[DATE_FILTER],
     marginLeft: true
   },
   {
     name: DISTANCE_FILTER,
     Icon: RunIcon,
     Selector: DistanceSelector,
-    placeholder: 'Distance',
-    value: DISTANCE_DEFAULT,
+    placeholder: PLACEHOLDER[DISTANCE_FILTER],
+    value: DEFAULT_VALUES[DISTANCE_FILTER],
     marginLeft: true
   }
 ];
@@ -64,11 +70,7 @@ class FilterContainer extends React.PureComponent {
     this.state = {
       activeFilter: LOCATION_FILTER,
       openFilter: null,
-      filter: {
-        [LOCATION_FILTER]: LOCATION_DEFAULT,
-        [DATE_FILTER]: DATE_DEFAULT,
-        [DISTANCE_FILTER]: DISTANCE_DEFAULT
-      }
+      filter: DEFAULT_VALUES
     };
 
     this.handleFilterClick = this.handleFilterClick.bind(this);
@@ -108,16 +110,19 @@ class FilterContainer extends React.PureComponent {
             active={activeFilter === props.name}
             onClick={this.handleFilterClick}
             onReset={this.handleFilterReset}
+            isDefaultValue={filter[props.name] === DEFAULT_VALUES[props.name]}
           >
             {props.name === LOCATION_FILTER ? (
               <Input
                 value={filter[LOCATION_FILTER]}
-                placeholder={LOCATION_PLACEHOLDER}
+                placeholder={props.placeholder}
                 onChange={this.handleLocationInputUpdate}
                 focus={activeFilter === LOCATION_FILTER}
               />
-            ) : (
+            ) : filter[props.name] ? (
               filter[props.name]
+            ) : (
+              PLACEHOLDER[props.name]
             )}
           </FilterTrigger>
         ))}
@@ -191,10 +196,7 @@ class FilterContainer extends React.PureComponent {
   }
 
   handleFilterReset(filterName) {
-    let defaultValue = FILTERS.find(
-      ({ name }) => name === this.state.activeFilter
-    ).value;
-    this.updateFilterValue(defaultValue, false);
+    this.updateFilterValue(DEFAULT_VALUES[filterName], false);
   }
 }
 
