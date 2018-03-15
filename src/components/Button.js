@@ -8,11 +8,12 @@ const Button = props => (
     <style jsx>{`
       button {
         display: block;
-        color: ${white};
-        background-color: ${dominant};
+        color: ${dominant};
+        background-color: ${white};
         width: 100%;
         padding: ${getSpacing('xs')}px ${getSpacing('s')}px;
-        border-radius: ${BORDER_RADIUS}px;
+        border-radius: 20px;
+        border: 1px solid ${dominant};
       }
     `}</style>
   </button>

@@ -33,7 +33,7 @@ const DEFAULT_VALUES = {
 const PLACEHOLDER = {
   [LOCATION_FILTER]: 'Choisissez une ville',
   [DATE_FILTER]: null,
-  [DISTANCE_FILTER]: 'Quelle distance ?'
+  [DISTANCE_FILTER]: 'Toutes les distances'
 };
 
 const FILTERS = [
@@ -90,17 +90,12 @@ class FilterContainer extends React.PureComponent {
     return (
       <Fragment>
         {FILTERS.map(({ name, Selector }, i) => (
-          <div
-            key={i}
-            className={`filterSelector filterSelector-${name} ${
-              openFilter === name ? 'filterSelector--open' : ''
-            }`}
-          >
+          <FilterSelectorWrapper key={i} name={name} open={openFilter === name}>
             <Selector
               onSelect={this.handleFilterSelectValue}
-              input={filter[name] || ''}
+              input={filter[name]}
             />
-          </div>
+          </FilterSelectorWrapper>
         ))}
 
         {FILTERS.map((props, i) => (
@@ -126,39 +121,6 @@ class FilterContainer extends React.PureComponent {
             )}
           </FilterTrigger>
         ))}
-
-        <style jsx>{`
-          .filterSelector {
-            position: absolute;
-            bottom: calc(${getSpacing('l')}px + ${getSpacing('s')}px);
-            left: ${getSpacing('xs')}px;
-            right: ${getSpacing('xs')}px;
-            font-size: ${getFontSize('s')}px;
-
-            background-color: ${white};
-            border-radius: ${BORDER_RADIUS}px;
-            box-shadow: 0 5px 20px 0 rgba(38, 74, 67, 0.2);
-
-            transition: all 0.25s ease-in-out;
-            transform: scale(0);
-            transform-origin: bottom left;
-            will-change: transform;
-            overflow-y: auto;
-          }
-
-          .filterSelector-date {
-            transform-origin: bottom center;
-          }
-
-          .filterSelector-distance {
-            transform-origin: bottom right;
-          }
-
-          .filterSelector--open {
-            opacity: 1;
-            transform: scale(1);
-          }
-        `}</style>
       </Fragment>
     );
   }
@@ -201,3 +163,45 @@ class FilterContainer extends React.PureComponent {
 }
 
 export default FilterContainer;
+
+const FilterSelectorWrapper = ({ name, open, children }) => (
+  <div
+    className={`filterSelector filterSelector-${name} ${
+      open ? 'filterSelector--open' : ''
+    }`}
+  >
+    {children}
+    <style jsx>{`
+      .filterSelector {
+        position: absolute;
+        bottom: calc(${getSpacing('l')}px + ${getSpacing('s')}px);
+        left: ${getSpacing('xs')}px;
+        right: ${getSpacing('xs')}px;
+        font-size: ${getFontSize('s')}px;
+
+        background-color: ${white};
+        border-radius: ${BORDER_RADIUS}px;
+        box-shadow: 0 5px 20px 0 rgba(38, 74, 67, 0.2);
+
+        transition: all 0.25s ease-in-out;
+        transform: scale(0);
+        transform-origin: bottom left;
+        will-change: transform;
+        overflow-y: auto;
+      }
+
+      .filterSelector-date {
+        transform-origin: bottom center;
+      }
+
+      .filterSelector-distance {
+        transform-origin: bottom right;
+      }
+
+      .filterSelector--open {
+        opacity: 1;
+        transform: scale(1);
+      }
+    `}</style>
+  </div>
+);
