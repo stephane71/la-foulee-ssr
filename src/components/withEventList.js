@@ -8,7 +8,7 @@ import {
 const FIRST_PAGE = 0;
 
 const withEventList = WrappedComponent => {
-  return class eventListWrapper extends React.Component {
+  return class EventListWrapper extends React.Component {
     static displayName = `withEventList(${WrappedComponent.displayName ||
       WrappedComponent.name ||
       'Component'})`;

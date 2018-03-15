@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import moment from 'moment';
 import debounce from 'lodash.debounce';
+import { connect } from 'react-redux';
 
 import FilterTrigger from '../components/FilterTrigger';
 import Input from '../components/Input';
@@ -14,21 +14,16 @@ import GPSIcon from '../svgs/ic_gps_fixed_black_24px.svg';
 import DateIcon from '../svgs/ic_date_range_black_24px.svg';
 import RunIcon from '../svgs/ic_directions_run_black_24px.svg';
 
+import { setSelectors } from '../actions';
 import { getSpacing, getFontSize } from '../styles-variables';
-import { BORDER_RADIUS } from '../enums';
 import { white } from '../colors';
-
-const CURRENT_MONTH = moment().format('MMMM');
-
-const LOCATION_FILTER = 'location';
-const DATE_FILTER = 'date';
-const DISTANCE_FILTER = 'distance';
-
-const DEFAULT_VALUES = {
-  [LOCATION_FILTER]: null,
-  [DATE_FILTER]: CURRENT_MONTH,
-  [DISTANCE_FILTER]: null
-};
+import {
+  DEFAULT_SELECTOR_VALUES,
+  LOCATION_FILTER,
+  DATE_FILTER,
+  DISTANCE_FILTER,
+  BORDER_RADIUS
+} from '../enums';
 
 const PLACEHOLDER = {
   [LOCATION_FILTER]: 'Choisissez une ville',
@@ -42,7 +37,7 @@ const FILTERS = [
     Icon: GPSIcon,
     Selector: CitySelector,
     placeholder: PLACEHOLDER[LOCATION_FILTER],
-    value: DEFAULT_VALUES[LOCATION_FILTER],
+    value: DEFAULT_SELECTOR_VALUES[LOCATION_FILTER],
     marginLeft: false
   },
   {
@@ -50,7 +45,7 @@ const FILTERS = [
     Icon: DateIcon,
     Selector: MonthSelector,
     placeholder: PLACEHOLDER[DATE_FILTER],
-    value: DEFAULT_VALUES[DATE_FILTER],
+    value: DEFAULT_SELECTOR_VALUES[DATE_FILTER],
     marginLeft: true
   },
   {
@@ -58,7 +53,7 @@ const FILTERS = [
     Icon: RunIcon,
     Selector: DistanceSelector,
     placeholder: PLACEHOLDER[DISTANCE_FILTER],
-    value: DEFAULT_VALUES[DISTANCE_FILTER],
+    value: DEFAULT_SELECTOR_VALUES[DISTANCE_FILTER],
     marginLeft: true
   }
 ];
@@ -70,7 +65,7 @@ class FilterContainer extends React.PureComponent {
     this.state = {
       activeFilter: LOCATION_FILTER,
       openFilter: null,
-      filter: DEFAULT_VALUES
+      filter: props.selectors
     };
 
     this.handleFilterClick = this.handleFilterClick.bind(this);
@@ -105,7 +100,9 @@ class FilterContainer extends React.PureComponent {
             active={activeFilter === props.name}
             onClick={this.handleFilterClick}
             onReset={this.handleFilterReset}
-            isDefaultValue={filter[props.name] === DEFAULT_VALUES[props.name]}
+            isDefaultValue={
+              filter[props.name] === DEFAULT_SELECTOR_VALUES[props.name]
+            }
           >
             {props.name === LOCATION_FILTER ? (
               <Input
@@ -125,22 +122,34 @@ class FilterContainer extends React.PureComponent {
     );
   }
 
-  updateFilterValue(value, keepFilterOpenned = false) {
-    this.setState(({ filter }) => ({
-      filter: { ...filter, [this.state.activeFilter]: value },
+  getNewFilterState(value, keepFilterOpenned = false) {
+    const filter = {
+      ...this.state.filter,
+      [this.state.activeFilter]: value
+    };
+
+    return {
+      filter,
       openFilter: keepFilterOpenned ? this.state.activeFilter : null
-    }));
-    this.props.onFilterOpen(keepFilterOpenned);
+    };
   }
 
+  dispatchFilterUpdate(value) {
+    const newState = this.getNewFilterState(value, false);
+    this.setState(newState);
+    this.props.dispatch(setSelectors(newState.filter));
+  }
+
+  // INPUT CITY SELECTOR
+
   handleLocationInputUpdate(value) {
-    this.updateFilterValue(value, true);
+    this.setState(this.getNewFilterState(value, true));
   }
 
   // FILTER SELECTORS
 
   handleFilterSelectValue(data) {
-    this.updateFilterValue(data.value, false);
+    this.dispatchFilterUpdate(data.value);
   }
 
   // FILTER TRIGGERS
@@ -158,11 +167,17 @@ class FilterContainer extends React.PureComponent {
   }
 
   handleFilterReset(filterName) {
-    this.updateFilterValue(DEFAULT_VALUES[filterName], false);
+    this.dispatchFilterUpdate(DEFAULT_SELECTOR_VALUES[filterName]);
   }
 }
 
-export default FilterContainer;
+function mapStateToProps(state) {
+  return {
+    selectors: state.selectors
+  };
+}
+
+export default connect(mapStateToProps)(FilterContainer);
 
 const FilterSelectorWrapper = ({ name, open, children }) => (
   <div
