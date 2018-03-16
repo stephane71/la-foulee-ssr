@@ -150,6 +150,7 @@ class FilterContainer extends React.PureComponent {
 
   handleFilterSelectValue(data) {
     this.dispatchFilterUpdate(data.value);
+    this.props.onFilterOpen(false);
   }
 
   // FILTER TRIGGERS
