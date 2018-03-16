@@ -38,9 +38,10 @@ export const CitySelector = ({ onSelect, input }) => (
         list={predictions
           .slice(0, 3)
           .reverse()
-          .map(value => ({
+          .map(({ value, matched }) => ({
             value,
-            check: value === input
+            check: value === input,
+            matched
           }))}
         onClick={onSelect}
       />

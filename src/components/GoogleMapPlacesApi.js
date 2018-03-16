@@ -12,7 +12,10 @@ const GOOGLE_MAPS_OPTIONS = {
 };
 
 const mapPredictionToSelectList = predictions =>
-  predictions.map(({ terms }) => terms[0].value);
+  predictions.map(({ structured_formatting }) => ({
+    value: structured_formatting.main_text,
+    matched: structured_formatting.main_text_matched_substrings[0]
+  }));
 
 class GoogleMapPlacesApi extends React.PureComponent {
   constructor(props) {

@@ -10,7 +10,17 @@ const List = ({ list, onClick }) => (
     {list.map((data, i) => (
       <li key={i} onClick={() => onClick(data)}>
         <div className={`listItem${data.check ? ' listItem-selected' : ''}`}>
-          <span>{data.value}</span>
+          {data.matched ? (
+            <div>
+              {data.value.slice(0, data.matched.offset)}
+              <span className={'listItem-matched'}>
+                {data.value.slice(data.matched.offset, data.matched.length)}
+              </span>
+              {data.value.slice(data.matched.length)}
+            </div>
+          ) : (
+            <span>{data.value}</span>
+          )}
           {data.check && <CheckIcon style={{ fill: SECONDARY_COLOR }} />}
         </div>
       </li>
@@ -35,7 +45,8 @@ const List = ({ list, onClick }) => (
         color: ${SECONDARY_COLOR};
       }
 
-      .listItem-selected {
+      .listItem-selected,
+      .listItem-matched {
         font-weight: bold;
       }
     `}</style>
