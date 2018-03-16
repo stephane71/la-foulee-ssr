@@ -60,7 +60,7 @@ const withEventList = WrappedComponent => {
         );
       } else if (this.props.selectors !== nextProps.selectors) {
         this.setState({ loading: true });
-        await this.refreshList(nextProps.selectors);
+        // await this.refreshList(nextProps.selectors);
       }
 
       this.setState({ loading: false });
