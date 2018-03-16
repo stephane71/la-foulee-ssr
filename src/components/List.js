@@ -53,6 +53,7 @@ const List = ({ list, onClick, poweredByGoogle }) => (
 
       .ListItem-container--googleLogo {
         padding: ${getSpacing('xxs')}px;
+        padding-left: ${getSpacing('s')}px;
         display: ${list.length && poweredByGoogle ? 'list-item' : 'none'};
       }
 
