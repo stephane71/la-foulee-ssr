@@ -35,6 +35,7 @@ export const CitySelector = ({ onSelect, input }) => (
   <GoogleMapPlacesApi input={input}>
     {predictions => (
       <List
+        poweredByGoogle
         list={predictions
           .slice(0, 3)
           .reverse()
