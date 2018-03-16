@@ -144,6 +144,7 @@ class FilterContainer extends React.PureComponent {
 
   handleLocationInputUpdate(value) {
     this.setState(this.getNewFilterState(value, true));
+    this.props.onFilterOpen(true);
   }
 
   // FILTER SELECTORS
