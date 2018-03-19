@@ -1,5 +1,6 @@
 import { SECONDARY_COLOR, white, dominant } from '../colors';
 import { getSpacing, getFontSize } from '../styles-variables';
+import { BORDER_RADIUS } from '../enums';
 
 function formatDistance(value) {
   if (value < 1000) return `${value}m`;
@@ -30,20 +31,20 @@ const OrgaLink = ({ href }) => (
 );
 
 const EventDetails = ({ data }) => (
-  <div className={'eventDetails'}>
-    <header className={`eventDetails-header`}>
-      <h6 className={`eventDetails-title`}>{data.title}</h6>
-      <address className={'eventDetails-location'}>{`${data.dep}, ${
+  <div className={'EventDetails'}>
+    <header className={`EventDetails-header`}>
+      <h6 className={`EventDetails-title`}>{data.title}</h6>
+      <address className={'EventDetails-location'}>{`${data.dep}, ${
         data.city
       }`}</address>
     </header>
 
     <h6>{'Épreuves'}</h6>
-    <ul className={`eventDetails-activities`}>
+    <ul className={`EventDetails-activities`}>
       {data.activities
         .sort((act1, act2) => act2.value - act1.value)
         .map(({ value, time, inscriptionFee }, i) => (
-          <li key={i} className={`eventDetails-activityItem`}>
+          <li key={i} className={`EventDetails-activityItem`}>
             {`${formatDistance(value)} ${time} ${inscriptionFee || 'NC'}`}
           </li>
         ))}
@@ -51,37 +52,40 @@ const EventDetails = ({ data }) => (
     <OrgaLink href={'https://www.google.com'} />
 
     <style jsx>{`
-      .eventDetails {
+      .EventDetails {
+        height: 100%;
         width: 100%;
         color: ${EVENT_ITEM_TITLE_COLOR};
+        background-color: ${dominant};
+        padding: ${getSpacing('s')}px;
+        border-radius: ${BORDER_RADIUS}px;
       }
 
-      .eventDetails-header {
+      .EventDetails-header {
         max-width: calc(100% - 24px);
-        height: 100%;
         display: flex;
         flex-direction: column;
         justify-content: center;
       }
 
-      .eventDetails-title {
+      .EventDetails-title {
         text-transform: capitalize;
         font-family: 'Circular-Medium';
         font-weight: 500;
         margin: 0;
       }
 
-      .eventDetails-location {
+      .EventDetails-location {
         color: ${SECONDARY_COLOR};
         font-weight: 400;
         font-size: ${getFontSize('s')}px;
         font-style: normal;
       }
 
-      .eventDetails-activities {
+      .EventDetails-activities {
       }
 
-      .eventDetails-activityItem {
+      .EventDetails-activityItem {
       }
     `}</style>
   </div>

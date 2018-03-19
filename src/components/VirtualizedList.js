@@ -13,7 +13,6 @@ import EventListDate from './EventListDate';
 const EVENT_LIST_ITEM_HEIGHT = 72;
 const EVENT_LIST_DATE_HEADER_HEIGHT = 96;
 const PADDING_INDEX_LOAD_MORE = 1; // should be minimum one
-const NO_ITEM_SELECTED = null;
 
 const cache = new CellMeasurerCache({
   defaultHeight: EVENT_LIST_ITEM_HEIGHT,
@@ -38,10 +37,6 @@ export default class VirtualizedList extends React.PureComponent {
     // IF the new list is longer than the previous one
     if (this.props.data.length < nextProps.data.length) {
       cache.clear(this.props.data.length - 1);
-    }
-
-    if (nextProps.closeSelectedEvent && this.selectedItem) {
-      this.updateSelectedEvent(this.selectedItem);
     }
   }
 
@@ -82,7 +77,6 @@ export default class VirtualizedList extends React.PureComponent {
 
   firstRendering = false;
   listComponent = null;
-  selectedItem = NO_ITEM_SELECTED;
 
   getRowHeight({ index }) {
     return index &&
@@ -121,10 +115,9 @@ export default class VirtualizedList extends React.PureComponent {
               null}
             <EventListItem
               data={data[index]}
-              onSelectEvent={data => this.onSelectEvent(index, data)}
+              onSelectEvent={data => this.onSelectEvent(data, style.top)}
               withBorderRadiusTop={index === 0 || firstItemDay}
               withBorderRadiusBottom={index + 1 === data.length || lastItemDay}
-              showDetails={index === this.selectedItem}
             />
           </div>
         )}
@@ -132,11 +125,8 @@ export default class VirtualizedList extends React.PureComponent {
     );
   }
 
-  onSelectEvent(index, data) {
-    const selectedItem = this.updateSelectedEvent(index);
-    this.props.onSelectEvent(
-      selectedItem === NO_ITEM_SELECTED ? NO_ITEM_SELECTED : data.keyword
-    );
+  onSelectEvent(data, position) {
+    this.props.onSelectEvent(data, position);
   }
 
   onRowsRendered({ startIndex, stopIndex }) {
@@ -148,22 +138,5 @@ export default class VirtualizedList extends React.PureComponent {
       this.firstRendering = true;
       this.props.onListRendered();
     }
-  }
-
-  updateSelectedEvent(index) {
-    cache.clear(index);
-    let selectedItem = index;
-
-    if (this.selectedItem === index) {
-      selectedItem = NO_ITEM_SELECTED;
-    } else if (this.selectedItem !== NO_ITEM_SELECTED) {
-      cache.clear(this.selectedItem);
-    }
-
-    this.selectedItem = selectedItem;
-    // Will render the list; that why we don't need a state for selectedItem
-    this.listComponent.recomputeRowHeights();
-
-    return selectedItem;
   }
 }

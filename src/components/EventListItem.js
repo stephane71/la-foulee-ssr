@@ -3,14 +3,18 @@
 // read here https://github.com/kesne/babel-plugin-inline-react-svg/issues/31#issuecomment-342264348
 import React, { Fragment } from 'react';
 
-import EventDetails from './EventDetails';
-
 import { getSpacing, getFontSize } from '../styles-variables';
-import { white, dominant, SECONDARY_COLOR } from '../colors';
+import { white, SECONDARY_COLOR } from '../colors';
 import Arrow from '../svgs/arrow_right_black_24px.svg';
 
 const EVENT_ITEM_TITLE_COLOR = '#516E69';
 const BORDER_RADIUS_LIST_ITEM = 10;
+
+/*
+  WARNING !!
+  The choosen dom's structure embed an <article> in an other <article>: see EventShort
+  Is this wanted ?
+*/
 
 const EventShort = ({ data }) => (
   <Fragment>
@@ -49,30 +53,29 @@ const EventShort = ({ data }) => (
 const EventListItem = ({
   data,
   onSelectEvent,
-  showDetails,
   withBorderRadiusTop,
   withBorderRadiusBottom
 }) => (
   <article
     rel={'bookmark'}
-    className={`eventListItem ${withBorderRadiusTop ? 'border-top' : ''} ${
+    className={`EventListItem ${withBorderRadiusTop ? 'border-top' : ''} ${
       withBorderRadiusBottom ? 'border-bottom' : ''
-    } ${showDetails ? 'eventListItem-details' : ''}`}
+    }`}
     onClick={() => onSelectEvent(data)}
-    style={{ marginBottom: '1px' }}
   >
-    {showDetails ? <EventDetails data={data} /> : <EventShort data={data} />}
+    <EventShort data={data} />
 
     <style jsx>{`
-      .eventListItem {
+      .EventListItem {
         display: flex;
         justify-content: space-between;
         padding: ${getSpacing('s')}px;
         align-items: center;
-        background-color: ${showDetails ? dominant : white};
+        background-color: ${white};
         margin: 0 ${getSpacing('s')}px;
         box-shadow: 0 10px 20px 0 rgba(38, 74, 67, 0.05);
         position: relative;
+        margin-bottom: 1px;
       }
 
       .border-top {
@@ -83,12 +86,6 @@ const EventListItem = ({
       .border-bottom {
         border-bottom-right-radius: ${BORDER_RADIUS_LIST_ITEM}px;
         border-bottom-left-radius: ${BORDER_RADIUS_LIST_ITEM}px;
-      }
-
-      .eventListItem-details {
-        border-radius: ${BORDER_RADIUS_LIST_ITEM}px;
-        margin-top: ${getSpacing('xs')}px;
-        margin-bottom: ${getSpacing('xs')}px;
       }
     `}</style>
   </article>

@@ -2,6 +2,7 @@ import VirtualizedList from './VirtualizedList';
 import EventListDate from './EventListDate';
 import Loader from './Loader';
 import MobileFilters from './MobileFilters';
+import EventDetails from './EventDetails';
 
 import { getSpacing, BaseLineHeight, Base } from '../styles-variables';
 import { APP_BACKGROUND_COLOR } from '../colors';
@@ -33,13 +34,22 @@ export default class EventList extends React.PureComponent {
     this.state = {
       stickyDate: this.props.data.length && this.props.data[0].date,
       scrollUp: true,
-      listRendered: false
+      listRendered: false,
+      eventDetails: null
     };
 
     this.handleStickyDate = this.handleStickyDate.bind(this);
     this.handleLoadMore = this.handleLoadMore.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.handleListRendered = this.handleListRendered.bind(this);
+
+    this.handleEventSelection = this.handleEventSelection.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.closeSelectedEvent && this.state.eventDetails) {
+      this.setState({ eventDetails: null });
+    }
   }
 
   render() {
@@ -69,8 +79,7 @@ export default class EventList extends React.PureComponent {
           <VirtualizedList
             scrollElement={this.scrollElement}
             data={this.props.data}
-            closeSelectedEvent={this.props.closeSelectedEvent}
-            onSelectEvent={this.props.onSelectEvent}
+            onSelectEvent={this.handleEventSelection}
             onChangeStickyDate={this.handleStickyDate}
             onReachEndList={this.handleLoadMore}
             onScroll={this.handleScroll}
@@ -88,7 +97,23 @@ export default class EventList extends React.PureComponent {
           </div>
         )}
 
+        {this.state.eventDetails && (
+          <div className={'EventList-selectedEvent'}>
+            <EventDetails data={this.state.eventDetails} />
+          </div>
+        )}
+
         <style jsx>{`
+          .EventList-selectedEvent {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+            padding: ${getSpacing('xs')}px;
+          }
+
           .EventList {
             padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
             -webkit-overflow-scrolling: touch;
@@ -103,6 +128,16 @@ export default class EventList extends React.PureComponent {
         `}</style>
       </div>
     );
+  }
+
+  handleEventSelection(data, elementPosition) {
+    // For transition
+    let windowPosition = elementPosition - this.scrollElement.scrollTop;
+    windowPosition += HEIGHT_APPBAR + EVENT_LIST_DATE_HEIGHT;
+    console.log('Position of the item in the window', windowPosition);
+
+    this.setState({ eventDetails: data });
+    this.props.onSelectEvent(data.keyword);
   }
 
   scrollTop = 0;
