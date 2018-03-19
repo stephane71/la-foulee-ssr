@@ -16,6 +16,8 @@ const MIN_LOAD_TIME = 2000;
 const homePattern = new UrlPattern('(/)');
 const eventPattern = new UrlPattern('/event/:keyword(/)');
 const searchPattern = new UrlPattern('/search(/)');
+const aboutPattern = new UrlPattern('/about(/)');
+const contactPattern = new UrlPattern('/contact(/)');
 
 class Route extends React.PureComponent {
   rendered = false;
@@ -74,6 +76,8 @@ class Index extends React.PureComponent {
     let homeMatch = homePattern.match(this.props.url.asPath);
     let eventMatch = eventPattern.match(this.props.url.asPath);
     let searchMatch = searchPattern.match(this.props.url.asPath);
+    let aboutMatch = aboutPattern.match(this.props.url.asPath);
+    let contactMatch = contactPattern.match(this.props.url.asPath);
 
     return (
       <Layout>
@@ -84,6 +88,14 @@ class Index extends React.PureComponent {
 
         <Route test={homeMatch}>
           <HomePage {...this.props} />
+        </Route>
+
+        <Route test={aboutMatch}>
+          <div>{'About page'}</div>
+        </Route>
+
+        <Route test={contactMatch}>
+          <div>{'Contact page'}</div>
         </Route>
 
         <Route test={!listRoutingDisabled && eventMatch}>
