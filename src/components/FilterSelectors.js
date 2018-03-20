@@ -88,7 +88,9 @@ export class DistanceSelector extends React.PureComponent {
         />
 
         <Button
-          onClick={() => this.props.onSelect({ value: this.state.value })}
+          onClick={() =>
+            this.props.onSelect({ value: `${this.state.value}km` })
+          }
         >
           {'Appliquer'}
         </Button>
