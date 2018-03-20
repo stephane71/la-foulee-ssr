@@ -18,6 +18,7 @@ const eventPattern = new UrlPattern('/event/:keyword(/)');
 const searchPattern = new UrlPattern('/search(/)');
 const aboutPattern = new UrlPattern('/about(/)');
 const contactPattern = new UrlPattern('/contact(/)');
+const legalPattern = new UrlPattern('/legal(/)');
 
 class Route extends React.PureComponent {
   rendered = false;
@@ -78,6 +79,7 @@ class Index extends React.PureComponent {
     let searchMatch = searchPattern.match(this.props.url.asPath);
     let aboutMatch = aboutPattern.match(this.props.url.asPath);
     let contactMatch = contactPattern.match(this.props.url.asPath);
+    let legalMatch = legalPattern.match(this.props.url.asPath);
 
     return (
       <Layout>
@@ -96,6 +98,12 @@ class Index extends React.PureComponent {
 
         <Route test={contactMatch}>
           <div>{'Contact page'}</div>
+        </Route>
+
+        <Route test={legalMatch}>
+          <div>
+            {`Mentions légales - Confidentialité - Conditions d'utilisation`}
+          </div>
         </Route>
 
         <Route test={!listRoutingDisabled && eventMatch}>

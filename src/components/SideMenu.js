@@ -61,7 +61,18 @@ const SideMenu = ({ show, onClose }) => (
         ))}
       </ul>
     </nav>
-    <div className={'SideMenu-companyInfo'} />
+    <div
+      className={'SideMenu-companyInfo'}
+      onClick={() => {
+        handleMenuSelect('legal');
+        onClose();
+      }}
+    >
+      <span>
+        {`Mentions légales - Confidentialité - Conditions d'utilisation`}
+      </span>
+      <span>{'La Foulée @2018'}</span>
+    </div>
 
     <style jsx>{`
       .SideMenu {
@@ -76,6 +87,8 @@ const SideMenu = ({ show, onClose }) => (
         max-width: 320px;
         background-color: ${dominant};
         color: ${white};
+        display: flex;
+        flex-direction: column;
       }
 
       .SideMenu--hide {
@@ -105,6 +118,10 @@ const SideMenu = ({ show, onClose }) => (
       }
 
       .SideMenu-companyInfo {
+        padding: ${getSpacing('s')}px;
+        margin-top: auto;
+        display: flex;
+        flex-direction: column;
       }
 
       .SideMenu-close {
