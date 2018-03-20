@@ -114,17 +114,25 @@ export default class EventList extends React.PureComponent {
 
         <style jsx>{`
           .EventList-selectedEventHeader {
-            background-color: #fff;
             padding: ${getSpacing('xs')}px ${getSpacing('s')}px;
           }
 
-          .EventList-selectedEvent {
+          .EventList-selectedEvent,
+          .EventList-selectedEvent:before {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
             z-index: 100;
+          }
+
+          .EventList-selectedEvent:before {
+            content: "";
+            background-color: #fff;
+            z-index: -1;
+            backdrop-filter: blur(3px);
+            opacity: 0.8;
           }
 
           .EventList {
