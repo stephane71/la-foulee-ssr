@@ -34,8 +34,8 @@ export default class Layout extends React.PureComponent {
 
         {this.props.children}
 
+        <Overlay show={this.state.menu} />
         <SideMenu show={this.state.menu} onClose={this.handleCloseMenu} />
-        {/* <OverLay  show={this.state.menu} /> */}
 
         <style jsx>{`
           .root {
@@ -126,6 +126,32 @@ const SideMenu = ({ show, onClose }) => (
 
       .SideMenu-close {
         padding: ${getSpacing('s')}px;
+      }
+    `}</style>
+  </div>
+);
+
+const Overlay = ({ show }) => (
+  <div className={`Overlay ${show ? 'Overlay-show' : 'Overlay-hide'}`}>
+    <style jsx>{`
+      .Overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.6);
+        transition: opacity 0.3s ease-out;
+        z-index: -1;
+      }
+
+      .Overlay-hide {
+        opacity: 0;
+      }
+
+      .Overlay-show {
+        opacity: 1;
+        z-index: 10;
       }
     `}</style>
   </div>
