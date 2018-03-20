@@ -5,7 +5,7 @@ const SVGWrapper = ({ icon: Icon, onClick }) => (
     <Icon style={{ verticalAlign: 'middle' }} />
     <style jsx>{`
       .withSVGWrapper {
-        padding: ${getSpacing('s')}px;
+        padding: ${getSpacing('xs')}px ${getSpacing('s')}px;
         display: inline-block;
       }
     `}</style>
