@@ -1,6 +1,12 @@
+import moment from 'moment';
+
+import SVGWrapper from './SVGWrapper';
+
+import IconLocation from '../svgs/ic_location_on_white_24px.svg';
+import IconAgenda from '../svgs/ic_event_white_24px.svg';
+
 import { SECONDARY_COLOR, white, dominant } from '../colors';
-import { getSpacing, getFontSize } from '../styles-variables';
-import { BORDER_RADIUS } from '../enums';
+import { getSpacing } from '../styles-variables';
 
 function formatDistance(value) {
   if (value < 1000) return `${value}m`;
@@ -9,6 +15,8 @@ function formatDistance(value) {
 
 // DUPLICATE
 const EVENT_ITEM_TITLE_COLOR = white;
+// DUPLICATE
+const DATE_FORMAT = 'dddd D MMMM';
 
 const OrgaLink = ({ href }) => (
   <a href={href} target={'_blank'}>
@@ -33,39 +41,71 @@ const OrgaLink = ({ href }) => (
 const EventDetails = ({ data }) => (
   <div className={'EventDetails'}>
     <header className={`EventDetails-header`}>
-      <h6 className={`EventDetails-title`}>{data.title}</h6>
-      <address className={'EventDetails-location'}>{`${data.dep}, ${
-        data.city
-      }`}</address>
+      <h1 className={`EventDetails-title`}>{data.title}</h1>
     </header>
 
-    <h6>{'Épreuves'}</h6>
-    <ul className={`EventDetails-activities`}>
-      {data.activities
-        .sort((act1, act2) => act2.value - act1.value)
-        .map(({ value, time, inscriptionFee }, i) => (
-          <li key={i} className={`EventDetails-activityItem`}>
-            {`${formatDistance(value)} ${time} ${inscriptionFee || 'NC'}`}
-          </li>
-        ))}
-    </ul>
-    <OrgaLink href={'https://www.google.com'} />
+    <div className={'EventDetails-informations'}>
+      <h2>{'Informations'}</h2>
+
+      <div className={'EventDetails-datum'}>
+        <SVGWrapper icon={IconLocation} />
+        <address className={'EventDetails-location'}>{`${data.dep}, ${
+          data.city
+        }`}</address>
+      </div>
+
+      <div className={'EventDetails-datum'}>
+        <SVGWrapper icon={IconAgenda} />
+        <div className={'EventDetails-date'}>
+          {moment.unix(data.date).format(DATE_FORMAT)}
+        </div>
+      </div>
+    </div>
+
+    <div className={'EventDetails-activities'}>
+      <h2>{'Épreuves'}</h2>
+      <ul className={``}>
+        {data.activities
+          .sort((act1, act2) => act2.value - act1.value)
+          .map(({ value, time, inscriptionFee }, i) => (
+            <li key={i} className={`EventDetails-activityItem`}>
+              {`${formatDistance(value)} ${time} ${inscriptionFee || 'NC'}`}
+            </li>
+          ))}
+      </ul>
+    </div>
+
+    <div className={'EventDetails-footer'}>
+      <OrgaLink href={'https://www.google.com'} />
+    </div>
 
     <style jsx>{`
       .EventDetails {
+        position: relative;
         height: 100%;
         width: 100%;
         color: ${EVENT_ITEM_TITLE_COLOR};
         background-color: ${dominant};
-        padding: ${getSpacing('s')}px;
-        border-radius: ${BORDER_RADIUS}px;
+        padding: ${getSpacing('m')}px;
       }
 
       .EventDetails-header {
-        max-width: calc(100% - 24px);
         display: flex;
         flex-direction: column;
         justify-content: center;
+      }
+
+      .EventDetails-activities {
+      }
+
+      .EventDetails-informations {
+      }
+
+      .EventDetails-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
       }
 
       .EventDetails-title {
@@ -76,16 +116,16 @@ const EventDetails = ({ data }) => (
       }
 
       .EventDetails-location {
-        color: ${SECONDARY_COLOR};
-        font-weight: 400;
-        font-size: ${getFontSize('s')}px;
-        font-style: normal;
+        font-style: inherit;
       }
 
-      .EventDetails-activities {
+      .EventDetails-datum {
+        display: flex;
+        align-items: center;
       }
 
-      .EventDetails-activityItem {
+      .EventDetails-date {
+        text-transform: capitalize;
       }
     `}</style>
   </div>

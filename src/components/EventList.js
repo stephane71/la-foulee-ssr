@@ -4,6 +4,9 @@ import Loader from './Loader';
 import MobileFilters from './MobileFilters';
 import EventDetails from './EventDetails';
 
+import SVGWrapper from './SVGWrapper';
+import CrossIcon from '../svgs/ic_close_black_24px.svg';
+
 import { getSpacing, BaseLineHeight, Base } from '../styles-variables';
 import { APP_BACKGROUND_COLOR } from '../colors';
 import { HEIGHT_APPBAR } from '../enums';
@@ -42,13 +45,13 @@ export default class EventList extends React.PureComponent {
     this.handleLoadMore = this.handleLoadMore.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.handleListRendered = this.handleListRendered.bind(this);
-
     this.handleEventSelection = this.handleEventSelection.bind(this);
+    this.handleCloseSelectedEvent = this.handleCloseSelectedEvent.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.closeSelectedEvent && this.state.eventDetails) {
-      this.setState({ eventDetails: null });
+      this.handleCloseSelectedEvent();
     }
   }
 
@@ -99,11 +102,22 @@ export default class EventList extends React.PureComponent {
 
         {this.state.eventDetails && (
           <div className={'EventList-selectedEvent'}>
+            <div className={'EventList-selectedEventHeader'}>
+              <SVGWrapper
+                icon={CrossIcon}
+                onClick={this.handleCloseSelectedEvent}
+              />
+            </div>
             <EventDetails data={this.state.eventDetails} />
           </div>
         )}
 
         <style jsx>{`
+          .EventList-selectedEventHeader {
+            background-color: #fff;
+            padding: ${getSpacing('xs')}px ${getSpacing('s')}px;
+          }
+
           .EventList-selectedEvent {
             position: fixed;
             top: 0;
@@ -111,7 +125,6 @@ export default class EventList extends React.PureComponent {
             right: 0;
             bottom: 0;
             z-index: 100;
-            padding: ${getSpacing('xs')}px;
           }
 
           .EventList {
@@ -128,6 +141,11 @@ export default class EventList extends React.PureComponent {
         `}</style>
       </div>
     );
+  }
+
+  handleCloseSelectedEvent() {
+    this.setState({ eventDetails: null });
+    this.props.onSelectEvent(null);
   }
 
   handleEventSelection(data, elementPosition) {
