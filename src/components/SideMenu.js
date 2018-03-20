@@ -36,9 +36,9 @@ const handleMenuSelect = route => {
 
 const SideMenu = ({ show, onClose }) => (
   <div className={`SideMenu ${show ? '' : 'SideMenu--hide'}`}>
-    <header className={'SideMenu-header'}>
+    <header className={'SideMenu-header SideMenu--padding'}>
       <LogoTonic height={`${HEIGHT_APPBAR - 8}px`} />
-      <div className={'SideMenu-close'} onClick={onClose}>
+      <div className={'SideMenu--padding'} onClick={onClose}>
         <CrossIcon fill={white} style={{ verticalAlign: 'middle' }} />
       </div>
     </header>
@@ -47,12 +47,13 @@ const SideMenu = ({ show, onClose }) => (
         {LINK_MENU.map(({ name, text, Icon }, i) => (
           <li
             key={i}
+            className={'SideMenu--padding'}
             onClick={() => {
               handleMenuSelect(name);
               onClose();
             }}
           >
-            <span className={'SideMenu-icon'}>
+            <span className={'SideMenu--padding'}>
               <Icon fill={white} style={{ verticalAlign: 'middle' }} />
             </span>
 
@@ -62,7 +63,7 @@ const SideMenu = ({ show, onClose }) => (
       </ul>
     </nav>
     <div
-      className={'SideMenu-companyInfo'}
+      className={'SideMenu-companyInfo SideMenu--padding'}
       onClick={() => {
         handleMenuSelect('legal');
         onClose();
@@ -79,7 +80,6 @@ const SideMenu = ({ show, onClose }) => (
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
         height: 100%;
         z-index: 10;
         transition: left 0.3s ease-out;
@@ -96,7 +96,6 @@ const SideMenu = ({ show, onClose }) => (
       }
 
       .SideMenu-header {
-        padding: ${getSpacing('s')}px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -110,7 +109,6 @@ const SideMenu = ({ show, onClose }) => (
       }
 
       .SideMenu-list > ul > li {
-        padding: ${getSpacing('s')}px;
         cursor: pointer;
         display: flex;
         justify-content: flex-start;
@@ -118,17 +116,12 @@ const SideMenu = ({ show, onClose }) => (
       }
 
       .SideMenu-companyInfo {
-        padding: ${getSpacing('s')}px;
         margin-top: auto;
         display: flex;
         flex-direction: column;
       }
 
-      .SideMenu-close {
-        padding: ${getSpacing('s')}px;
-      }
-
-      .SideMenu-icon {
+      .SideMenu--padding {
         padding: ${getSpacing('s')}px;
       }
     `}</style>

@@ -9,6 +9,10 @@ import SplashScreen from '../components/SplashScreen';
 import Loader from '../components/Loader';
 import Layout from '../components/Layout';
 
+import AboutPage from '../components/AboutPage';
+import ContactPage from '../components/ContactPage';
+
+import { setEventListReadyFlag } from '../actions';
 import { makeStore } from '../store';
 
 const MIN_LOAD_TIME = 2000;
@@ -50,6 +54,7 @@ const EventListContainer = dynamic(import('../containers/EventListContainer'), {
   loading: () => <Loader />
 });
 
+// NEED TO BE LAZY LOADED ???? ...
 const UnknownPage = dynamic(import('../components/UnknownPage'), {
   ssr: true,
   loading: () => <Loader />
@@ -81,9 +86,13 @@ class Index extends React.PureComponent {
     let contactMatch = contactPattern.match(this.props.url.asPath);
     let legalMatch = legalPattern.match(this.props.url.asPath);
 
+    if (!eventMatch && !searchMatch) {
+      this.props.dispatch(setEventListReadyFlag());
+    }
+
     return (
       <Layout>
-        {!homeMatch &&
+        {(eventMatch || searchMatch) &&
           (this.state.minLoading || !this.props.eventListReady) && (
             <SplashScreen />
           )}
@@ -93,11 +102,11 @@ class Index extends React.PureComponent {
         </Route>
 
         <Route test={aboutMatch}>
-          <div>{'About page'}</div>
+          <AboutPage />
         </Route>
 
         <Route test={contactMatch}>
-          <div>{'Contact page'}</div>
+          <ContactPage />
         </Route>
 
         <Route test={legalMatch}>
@@ -117,7 +126,16 @@ class Index extends React.PureComponent {
           <EventListContainer {...this.props} />
         </Route>
 
-        <Route test={!homeMatch && !eventMatch && !searchMatch}>
+        <Route
+          test={
+            !homeMatch &&
+            !aboutMatch &&
+            !contactMatch &&
+            !legalMatch &&
+            !eventMatch &&
+            !searchMatch
+          }
+        >
           <UnknownPage {...this.props} />
         </Route>
       </Layout>
