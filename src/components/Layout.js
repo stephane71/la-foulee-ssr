@@ -1,18 +1,16 @@
 import moment from 'moment';
 import Router from 'next/router';
-import Link from 'next/link';
 
 import Header from './Header';
-import LogoTonic from '../svgs/lafoulee-tonic.svg';
-import CrossIcon from '../svgs/ic_close_black_24px.svg';
+import Overlay from './Overlay';
+import SideMenu from './SideMenu';
 
 import GlobalStyles from '../styles';
-import { HEIGHT_APPBAR, getSpacing } from '../styles-variables';
-import { white, dominant } from '../colors';
+import { HEIGHT_APPBAR } from '../styles-variables';
 
 moment.locale('fr');
 
-export default class Layout extends React.PureComponent {
+class Layout extends React.PureComponent {
   constructor(props) {
     super(props);
 
@@ -34,7 +32,7 @@ export default class Layout extends React.PureComponent {
 
         {this.props.children}
 
-        <Overlay show={this.state.menu} />
+        <Overlay show={this.state.menu} onClick={this.handleCloseMenu} />
         <SideMenu show={this.state.menu} onClose={this.handleCloseMenu} />
 
         <style jsx>{`
@@ -59,100 +57,4 @@ export default class Layout extends React.PureComponent {
   }
 }
 
-// Duplicate
-const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - 8;
-
-const SideMenu = ({ show, onClose }) => (
-  <div className={`SideMenu ${show ? '' : 'SideMenu--hide'}`}>
-    <header className={'SideMenu-header'}>
-      <LogoTonic height={`${HEIGHT_APPBAR - 8}px`} />
-      <div className={'SideMenu-close'} onClick={onClose}>
-        <CrossIcon fill={white} style={{ verticalAlign: 'middle' }} />
-      </div>
-    </header>
-    <nav className={'SideMenu-list'}>
-      <ul>
-        <li onClick={onClose}>
-          <Link href={'/?to=search'} as={'/search'}>
-            <a>{'Chercher un event'}</a>
-          </Link>
-        </li>
-        <li onClick={onClose}>
-          <Link href={'/?to=about'} as={'/about'}>
-            <a>{'À propos'}</a>
-          </Link>
-        </li>
-        <li onClick={onClose}>
-          <Link href={'/?to=contact'} as={'/contact'}>
-            <a>{'Contactez nous'}</a>
-          </Link>
-        </li>
-      </ul>
-    </nav>
-    <div className={'SideMenu-companyInfo'} />
-
-    <style jsx>{`
-      .SideMenu {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 10;
-        transition: left 0.3s ease-out;
-        width: 90%;
-        max-width: 320px;
-        background-color: ${dominant};
-        color: ${white};
-      }
-
-      .SideMenu--hide {
-        left: -100%;
-      }
-
-      .SideMenu-header {
-        padding: ${getSpacing('s')}px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid ${white};
-      }
-
-      .SideMenu-list {
-      }
-
-      .SideMenu-companyInfo {
-      }
-
-      .SideMenu-close {
-        padding: ${getSpacing('s')}px;
-      }
-    `}</style>
-  </div>
-);
-
-const Overlay = ({ show }) => (
-  <div className={`Overlay ${show ? 'Overlay-show' : 'Overlay-hide'}`}>
-    <style jsx>{`
-      .Overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.6);
-        transition: opacity 0.3s ease-out;
-        z-index: -1;
-      }
-
-      .Overlay-hide {
-        opacity: 0;
-      }
-
-      .Overlay-show {
-        opacity: 1;
-        z-index: 10;
-      }
-    `}</style>
-  </div>
-);
+export default Layout;
