@@ -77,7 +77,7 @@ export default class EventList extends React.PureComponent {
           ref={el => {
             this.scrollElement = el;
           }}
-          className={'EventList-scrollElement prevent-scroll'}
+          className={'prevent-scroll'}
         >
           <VirtualizedList
             scrollElement={this.scrollElement}
@@ -95,14 +95,14 @@ export default class EventList extends React.PureComponent {
         )}
 
         {!this.state.listRendered && (
-          <div className={'EventList-rendering'}>
+          <div className={'EventList-Loading'}>
             <Loader />
           </div>
         )}
 
         {this.state.eventDetails && (
-          <div className={'EventList-selectedEvent'}>
-            <div className={'EventList-selectedEventHeader'}>
+          <div className={'EventList-SelectedEvent'}>
+            <div className={'EventList-SelectedEventHeader'}>
               <SVGWrapper
                 icon={CrossIcon}
                 onClick={this.handleCloseSelectedEvent}
@@ -113,12 +113,25 @@ export default class EventList extends React.PureComponent {
         )}
 
         <style jsx>{`
-          .EventList-selectedEventHeader {
-            padding: ${getSpacing('xs')}px ${getSpacing('s')}px;
+          .EventList {
+            padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
+            -webkit-overflow-scrolling: touch;
           }
 
-          .EventList-selectedEvent,
-          .EventList-selectedEvent:before {
+          .EventList-Loading {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+          }
+
+          .EventList-SelectedEvent {
+            display: flex;
+            flex-direction: column;
+          }
+
+          .EventList-SelectedEvent,
+          .EventList-SelectedEvent:before {
             position: fixed;
             top: 0;
             left: 0;
@@ -126,27 +139,19 @@ export default class EventList extends React.PureComponent {
             bottom: 0;
             z-index: 100;
             transform: scale(1);
-            transition: transform .25s ease-in-out;
+            transition: transform 0.25s ease-in-out;
           }
 
-          .EventList-selectedEvent:before {
-            content: "";
+          .EventList-SelectedEvent:before {
+            content: '';
             background-color: #fff;
             z-index: -1;
             backdrop-filter: blur(3px);
             opacity: 0.8;
           }
 
-          .EventList {
-            padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
-            -webkit-overflow-scrolling: touch;
-          }
-
-          .EventList-rendering {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            width: 100%;
+          .EventList-SelectedEventHeader {
+            padding: ${getSpacing('xs')}px ${getSpacing('s')}px;
           }
         `}</style>
       </div>

@@ -26,7 +26,6 @@ const OrgaLink = ({ href }) => (
         color: ${textColorTonic};
         background-color: ${dominant};
         padding: ${getSpacing('xs')}px ${getSpacing('m')}px;
-        margin-bottom: ${getSpacing('m')}px;
         text-align: center;
         text-decoration: none;
         border-radius: ${BORDER_RADIUS * 5}px;
@@ -85,12 +84,12 @@ const EventDetails = ({ data }) => (
     <style jsx>{`
       .EventDetails {
         position: relative;
-        height: 100%;
         width: 100%;
         color: ${textColorTonic};
         background-color: ${dominant};
         padding: ${getSpacing('m')}px;
         border-radius: ${BORDER_RADIUS}px ${BORDER_RADIUS}px 0 0;
+        flex: 1;
       }
 
       .EventDetails-Header {
@@ -106,10 +105,11 @@ const EventDetails = ({ data }) => (
       }
 
       .EventDetails-Footer {
-        position: fixed;
+        position: absolute;
         bottom: 0;
         left: 0;
         right: 0;
+        padding: ${getSpacing('m')}px;
       }
 
       .EventDetails-Title {
