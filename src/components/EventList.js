@@ -1,41 +1,14 @@
-import { Fragment } from 'react';
-import FilterContainer from '../containers/FilterContainer';
-
 import VirtualizedList from './VirtualizedList';
-import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
 import Loader from './Loader';
+import MobileFilters from './MobileFilters';
 
 import { getSpacing, BaseLineHeight, Base } from '../styles-variables';
-import { APP_BACKGROUND_COLOR, tonic } from '../colors';
+import { APP_BACKGROUND_COLOR } from '../colors';
 import { HEIGHT_APPBAR } from '../enums';
 
 // See EventListDate component: line height + 2 * vertical padding
 const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
-
-let lockFilters = false;
-const FixedFiltersFooter = ({ show }) => (
-  <div className={`FixedFiltersFooter ${show || lockFilters ? '' : 'out'}`}>
-    <FilterContainer onFilterOpen={open => (lockFilters = open)} />
-    <style jsx>{`
-      .FixedFiltersFooter {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 0 ${getSpacing('xs')}px;
-        padding-bottom: ${getSpacing('s')}px;
-        transition: transform 0.3s ease-out;
-        will-change: transform;
-        z-index: 2;
-      }
-
-      .out {
-        transform: translateY(calc(100% + ${getSpacing('s')}px));
-      }
-    `}</style>
-  </div>
-);
 
 const FixedDateHeader = ({ date }) => (
   <div className={'FixedDateHeader'}>
@@ -105,7 +78,7 @@ export default class EventList extends React.PureComponent {
         </div>
 
         {this.state.listRendered && (
-          <FixedFiltersFooter show={this.state.scrollUp} />
+          <MobileFilters show={this.state.scrollUp} />
         )}
 
         {!this.state.listRendered && (

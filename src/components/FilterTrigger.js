@@ -1,7 +1,7 @@
 import ResetIcon from '../svgs/ic_close_black_24px.svg';
 
 import { getSpacing, getFontSize } from '../styles-variables';
-import { white, SECONDARY_COLOR } from '../colors';
+import { white } from '../colors';
 import { BORDER_RADIUS, ICON_SIZE } from '../enums';
 
 const FILTER_ICON_ACTION_WIDTH = ICON_SIZE + getSpacing('s') * 2;
@@ -17,30 +17,30 @@ const inlineIconStyle = {
 const FilterTrigger = ({
   name,
   active,
-  onFilterActivation,
+  onClick,
   onReset,
   Icon,
-  placeholder,
   marginLeft,
+  isDefaultValue,
   children
 }) => (
   <div
     className={`filterTrigger ${active ? 'filterTrigger--active' : ''}`}
-    onClick={() => onFilterActivation(name)}
+    onClick={() => onClick(name)}
   >
     <Icon style={{ ...inlineIconStyle }} />
 
-    <div className={'filterTrigger-extend'}>
-      {children ? children : placeholder}
-    </div>
+    <div className={'filterTrigger-extend'}>{children}</div>
 
-    <ResetIcon
-      style={{ ...inlineIconStyle }}
-      onClick={e => {
-        e.stopPropagation();
-        onReset(name);
-      }}
-    />
+    {!isDefaultValue && (
+      <ResetIcon
+        style={{ ...inlineIconStyle }}
+        onClick={e => {
+          e.stopPropagation();
+          onReset(name);
+        }}
+      />
+    )}
 
     <style jsx>{`
       .filterTrigger {

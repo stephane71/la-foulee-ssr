@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import moment from 'moment';
 import debounce from 'lodash.debounce';
+import { connect } from 'react-redux';
 
 import FilterTrigger from '../components/FilterTrigger';
 import Input from '../components/Input';
@@ -14,45 +14,46 @@ import GPSIcon from '../svgs/ic_gps_fixed_black_24px.svg';
 import DateIcon from '../svgs/ic_date_range_black_24px.svg';
 import RunIcon from '../svgs/ic_directions_run_black_24px.svg';
 
+import { setSelectors } from '../actions';
 import { getSpacing, getFontSize } from '../styles-variables';
-import { BORDER_RADIUS } from '../enums';
 import { white } from '../colors';
+import {
+  DEFAULT_SELECTOR_VALUES,
+  LOCATION_FILTER,
+  DATE_FILTER,
+  DISTANCE_FILTER,
+  BORDER_RADIUS
+} from '../enums';
 
-const CURRENT_MONTH = moment().format('MMMM');
-
-const LOCATION_FILTER = 'location';
-const DATE_FILTER = 'date';
-const DISTANCE_FILTER = 'distance';
-
-const LOCATION_DEFAULT = null;
-const DATE_DEFAULT = CURRENT_MONTH;
-const DISTANCE_DEFAULT = null;
-
-const LOCATION_PLACEHOLDER = 'Choisissez une ville';
+const PLACEHOLDER = {
+  [LOCATION_FILTER]: 'Choisissez une ville',
+  [DATE_FILTER]: null,
+  [DISTANCE_FILTER]: 'Toutes les distances'
+};
 
 const FILTERS = [
   {
     name: LOCATION_FILTER,
     Icon: GPSIcon,
     Selector: CitySelector,
-    placeholder: LOCATION_PLACEHOLDER,
-    value: LOCATION_DEFAULT,
+    placeholder: PLACEHOLDER[LOCATION_FILTER],
+    value: DEFAULT_SELECTOR_VALUES[LOCATION_FILTER],
     marginLeft: false
   },
   {
     name: DATE_FILTER,
     Icon: DateIcon,
     Selector: MonthSelector,
-    placeholder: DATE_DEFAULT,
-    value: DATE_DEFAULT,
+    placeholder: PLACEHOLDER[DATE_FILTER],
+    value: DEFAULT_SELECTOR_VALUES[DATE_FILTER],
     marginLeft: true
   },
   {
     name: DISTANCE_FILTER,
     Icon: RunIcon,
     Selector: DistanceSelector,
-    placeholder: 'Distance',
-    value: DISTANCE_DEFAULT,
+    placeholder: PLACEHOLDER[DISTANCE_FILTER],
+    value: DEFAULT_SELECTOR_VALUES[DISTANCE_FILTER],
     marginLeft: true
   }
 ];
@@ -64,14 +65,10 @@ class FilterContainer extends React.PureComponent {
     this.state = {
       activeFilter: LOCATION_FILTER,
       openFilter: null,
-      filter: {
-        [LOCATION_FILTER]: LOCATION_DEFAULT,
-        [DATE_FILTER]: DATE_DEFAULT,
-        [DISTANCE_FILTER]: DISTANCE_DEFAULT
-      }
+      filter: props.selectors
     };
 
-    this.handleFilterActivation = this.handleFilterActivation.bind(this);
+    this.handleFilterClick = this.handleFilterClick.bind(this);
     this.handleFilterReset = this.handleFilterReset.bind(this);
     this.handleFilterSelectValue = this.handleFilterSelectValue.bind(this);
 
@@ -88,17 +85,12 @@ class FilterContainer extends React.PureComponent {
     return (
       <Fragment>
         {FILTERS.map(({ name, Selector }, i) => (
-          <div
-            key={i}
-            className={`filterSelector filterSelector-${name} ${
-              openFilter === name ? 'filterSelector--open' : ''
-            }`}
-          >
+          <FilterSelectorWrapper key={i} name={name} open={openFilter === name}>
             <Selector
               onSelect={this.handleFilterSelectValue}
-              input={filter[name] || ''}
+              input={filter[name]}
             />
-          </div>
+          </FilterSelectorWrapper>
         ))}
 
         {FILTERS.map((props, i) => (
@@ -106,89 +98,127 @@ class FilterContainer extends React.PureComponent {
             key={i}
             {...props}
             active={activeFilter === props.name}
-            onFilterActivation={this.handleFilterActivation}
+            onClick={this.handleFilterClick}
             onReset={this.handleFilterReset}
+            isDefaultValue={
+              filter[props.name] === DEFAULT_SELECTOR_VALUES[props.name]
+            }
           >
             {props.name === LOCATION_FILTER ? (
               <Input
                 value={filter[LOCATION_FILTER]}
-                placeholder={LOCATION_PLACEHOLDER}
+                placeholder={props.placeholder}
                 onChange={this.handleLocationInputUpdate}
                 focus={activeFilter === LOCATION_FILTER}
               />
-            ) : (
+            ) : filter[props.name] ? (
               filter[props.name]
+            ) : (
+              PLACEHOLDER[props.name]
             )}
           </FilterTrigger>
         ))}
-
-        <style jsx>{`
-          .filterSelector {
-            position: absolute;
-            bottom: calc(${getSpacing('l')}px + ${getSpacing('s')}px);
-            left: ${getSpacing('xs')}px;
-            right: ${getSpacing('xs')}px;
-            font-size: ${getFontSize('s')}px;
-
-            background-color: ${white};
-            border-radius: ${BORDER_RADIUS}px;
-            box-shadow: 0 5px 20px 0 rgba(38, 74, 67, 0.2);
-
-            transition: all 0.25s ease-in-out;
-            transform: scale(0);
-            transform-origin: bottom left;
-            will-change: transform;
-            overflow-y: auto;
-          }
-
-          .filterSelector-date {
-            transform-origin: bottom center;
-          }
-
-          .filterSelector-distance {
-            transform-origin: bottom right;
-          }
-
-          .filterSelector--open {
-            opacity: 1;
-            transform: scale(1);
-          }
-        `}</style>
       </Fragment>
     );
   }
 
-  updateFilterValue(value, keepFilterOpenned = false) {
-    this.setState(({ filter }) => ({
-      filter: { ...filter, [this.state.activeFilter]: value },
+  getNewFilterState(value, keepFilterOpenned = false) {
+    const filter = {
+      ...this.state.filter,
+      [this.state.activeFilter]: value
+    };
+
+    return {
+      filter,
       openFilter: keepFilterOpenned ? this.state.activeFilter : null
-    }));
-    this.props.onFilterOpen(keepFilterOpenned);
+    };
   }
 
+  dispatchFilterUpdate(value) {
+    const newState = this.getNewFilterState(value, false);
+    this.setState(newState);
+    this.props.dispatch(setSelectors(newState.filter));
+  }
+
+  // INPUT CITY SELECTOR
+
   handleLocationInputUpdate(value) {
-    this.updateFilterValue(value, true);
+    this.setState(this.getNewFilterState(value, true));
+    this.props.onFilterOpen(true);
   }
 
   // FILTER SELECTORS
 
   handleFilterSelectValue(data) {
-    this.updateFilterValue(data.value, false);
+    this.dispatchFilterUpdate(data.value);
+    this.props.onFilterOpen(false);
   }
 
   // FILTER TRIGGERS
 
-  handleFilterActivation(filterName) {
-    this.setState({ activeFilter: filterName, openFilter: filterName });
-    this.props.onFilterOpen(true);
+  handleFilterClick(filterName) {
+    let openFilter = filterName;
+    if (this.state.activeFilter === filterName) {
+      openFilter = this.state.openFilter ? null : openFilter;
+    }
+    this.setState({
+      activeFilter: filterName,
+      openFilter
+    });
+    this.props.onFilterOpen(openFilter);
   }
 
   handleFilterReset(filterName) {
-    let defaultValue = FILTERS.find(
-      ({ name }) => name === this.state.activeFilter
-    ).value;
-    this.updateFilterValue(defaultValue, false);
+    this.dispatchFilterUpdate(DEFAULT_SELECTOR_VALUES[filterName]);
   }
 }
 
-export default FilterContainer;
+function mapStateToProps(state) {
+  return {
+    selectors: state.selectors
+  };
+}
+
+export default connect(mapStateToProps)(FilterContainer);
+
+const FilterSelectorWrapper = ({ name, open, children }) => (
+  <div
+    className={`filterSelector filterSelector-${name} ${
+      open ? 'filterSelector--open' : ''
+    }`}
+  >
+    {children}
+    <style jsx>{`
+      .filterSelector {
+        position: absolute;
+        bottom: calc(${getSpacing('l')}px + ${getSpacing('s')}px);
+        left: ${getSpacing('xs')}px;
+        right: ${getSpacing('xs')}px;
+        font-size: ${getFontSize('s')}px;
+
+        background-color: ${white};
+        border-radius: ${BORDER_RADIUS}px;
+        box-shadow: 0 5px 20px 0 rgba(38, 74, 67, 0.2);
+
+        transition: all 0.25s ease-in-out;
+        transform: scale(0);
+        transform-origin: bottom left;
+        will-change: transform;
+        overflow-y: auto;
+      }
+
+      .filterSelector-date {
+        transform-origin: bottom center;
+      }
+
+      .filterSelector-distance {
+        transform-origin: bottom right;
+      }
+
+      .filterSelector--open {
+        opacity: 1;
+        transform: scale(1);
+      }
+    `}</style>
+  </div>
+);

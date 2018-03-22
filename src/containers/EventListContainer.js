@@ -11,7 +11,6 @@ import { getEventListStructuredData } from '../utils/structuredData';
 
 import {
   setSelectedEvent,
-  setSelectors,
   setCurrentPage,
   setCurrentMonth,
   setEventListReadyFlag
@@ -26,7 +25,6 @@ export class EventListContainer extends React.PureComponent {
 
     this.handleLoadPage = this.handleLoadPage.bind(this);
     this.handleEventSelection = this.handleEventSelection.bind(this);
-    this.handleSelectorsValidation = this.handleSelectorsValidation.bind(this);
     this.handleListRendered = this.handleListRendered.bind(this);
   }
 
@@ -76,10 +74,6 @@ export class EventListContainer extends React.PureComponent {
         `}</style>
       </Fragment>
     );
-  }
-
-  handleSelectorsValidation(selectors) {
-    this.props.dispatch(setSelectors(selectors));
   }
 
   async handleLoadPage() {

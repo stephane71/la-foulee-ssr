@@ -2,6 +2,12 @@ import moment from 'moment';
 import { createStore } from 'redux';
 
 import {
+  LOCATION_FILTER,
+  DATE_FILTER,
+  DISTANCE_FILTER,
+  DEFAULT_SELECTOR_VALUES
+} from './enums';
+import {
   SET_SELECTED_EVENT,
   CONCAT_EVENT_LIST,
   SET_EVENT_LIST,
@@ -25,14 +31,16 @@ function getNextMonth(month) {
 
 const START_MONTH = `${moment().month()}-${moment().year()}`;
 
+const LEGACY_SELECTORS = {
+  month: START_MONTH,
+  dep: ''
+};
+
 const initialState = {
   event: null,
   events: [],
   pages: 0,
-  selectors: {
-    month: START_MONTH,
-    dep: ''
-  },
+  selectors: Object.assign({}, DEFAULT_SELECTOR_VALUES, LEGACY_SELECTORS),
   currentPage: 0,
   currentMonth: START_MONTH,
   googleMapsService: null,
