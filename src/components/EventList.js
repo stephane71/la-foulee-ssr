@@ -9,7 +9,7 @@ import CrossIcon from '../svgs/ic_close_black_24px.svg';
 
 import { getSpacing, BaseLineHeight, Base } from '../styles-variables';
 import { APP_BACKGROUND_COLOR } from '../colors';
-import { HEIGHT_APPBAR } from '../enums';
+import { HEIGHT_APPBAR, NO_EVENT_SELECTED } from '../enums';
 
 // See EventListDate component: line height + 2 * vertical padding
 const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
@@ -37,8 +37,7 @@ export default class EventList extends React.PureComponent {
     this.state = {
       stickyDate: this.props.data.length && this.props.data[0].date,
       scrollUp: true,
-      listRendered: false,
-      eventDetails: null
+      listRendered: false
     };
 
     this.handleStickyDate = this.handleStickyDate.bind(this);
@@ -49,14 +48,8 @@ export default class EventList extends React.PureComponent {
     this.handleCloseSelectedEvent = this.handleCloseSelectedEvent.bind(this);
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.closeSelectedEvent && this.state.eventDetails) {
-      this.handleCloseSelectedEvent();
-    }
-  }
-
   render() {
-    const { data } = this.props;
+    const { data, event } = this.props;
 
     if (!data.length && !this.props.loading) return <div>{'Empty list !'}</div>;
 
@@ -100,7 +93,7 @@ export default class EventList extends React.PureComponent {
           </div>
         )}
 
-        {this.state.eventDetails && (
+        {event && (
           <div className={'EventList-SelectedEvent'}>
             <div className={'EventList-SelectedEventHeader'}>
               <SVGWrapper
@@ -108,7 +101,7 @@ export default class EventList extends React.PureComponent {
                 onClick={this.handleCloseSelectedEvent}
               />
             </div>
-            <EventDetails data={this.state.eventDetails} />
+            <EventDetails data={event} />
           </div>
         )}
 
@@ -159,8 +152,7 @@ export default class EventList extends React.PureComponent {
   }
 
   handleCloseSelectedEvent() {
-    this.setState({ eventDetails: null });
-    this.props.onSelectEvent(null);
+    this.props.onSelectEvent(NO_EVENT_SELECTED);
   }
 
   handleEventSelection(data, elementPosition) {
@@ -169,8 +161,7 @@ export default class EventList extends React.PureComponent {
     windowPosition += HEIGHT_APPBAR + EVENT_LIST_DATE_HEIGHT;
     console.log('Position of the item in the window', windowPosition);
 
-    this.setState({ eventDetails: data });
-    this.props.onSelectEvent(data.keyword);
+    this.props.onSelectEvent(data);
   }
 
   scrollTop = 0;

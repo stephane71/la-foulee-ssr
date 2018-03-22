@@ -14,3 +14,5 @@ export const DEFAULT_SELECTOR_VALUES = {
   [DATE_FILTER]: moment().format('MMMM'),
   [DISTANCE_FILTER]: null
 };
+
+export const NO_EVENT_SELECTED = null;
