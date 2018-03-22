@@ -125,6 +125,8 @@ export default class EventList extends React.PureComponent {
             right: 0;
             bottom: 0;
             z-index: 100;
+            transform: scale(1);
+            transition: transform .25s ease-in-out;
           }
 
           .EventList-selectedEvent:before {
