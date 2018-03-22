@@ -1,11 +1,9 @@
 import moment from 'moment';
 
-import SVGWrapper from './SVGWrapper';
-
 import IconLocation from '../svgs/ic_location_on_white_24px.svg';
 import IconAgenda from '../svgs/ic_event_white_24px.svg';
 
-import { SECONDARY_COLOR, textColorTonic, subtitleColorTonic, dominant } from '../colors';
+import { textColorTonic, subtitleColorTonic, dominant } from '../colors';
 import { getSpacing, getFontSize } from '../styles-variables';
 import { BORDER_RADIUS } from '../enums';
 
@@ -40,35 +38,35 @@ const OrgaLink = ({ href }) => (
 
 const EventDetails = ({ data }) => (
   <div className={'EventDetails'}>
-    <header className={`EventDetails-header`}>
-      <h1 className={`EventDetails-title`}>{data.title}</h1>
+    <header className={`EventDetails-Header`}>
+      <h1 className={`EventDetails-Title`}>{data.title}</h1>
     </header>
 
-    <div className={'EventDetails-informations'}>
+    <div className={'EventDetails-Informations'}>
       <h2 className={'EventDetails-Subtitle'}>{'Informations'}</h2>
 
       <div className={'EventDetails-Datum'}>
         <IconLocation style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
-        <address className={'EventDetails-location EventDetails-DatumLabel'}>{`${data.dep}, ${
-          data.city
-        }`}</address>
+        <address
+          className={'EventDetails-Location EventDetails-DatumLabel'}
+        >{`${data.dep}, ${data.city}`}</address>
       </div>
 
       <div className={'EventDetails-Datum'}>
         <IconAgenda style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
-        <div className={'EventDetails-date EventDetails-DatumLabel'}>
+        <div className={'EventDetails-Date EventDetails-DatumLabel'}>
           {moment.unix(data.date).format(DATE_FORMAT)}
         </div>
       </div>
     </div>
 
-    <div className={'EventDetails-activities'}>
+    <div className={'EventDetails-Activities'}>
       <h2 className={'EventDetails-Subtitle'}>{'Épreuves'}</h2>
-      <ul className={``}>
+      <ul>
         {data.activities
           .sort((act1, act2) => act2.value - act1.value)
           .map(({ value, time, inscriptionFee }, i) => (
-            <li key={i} className={`EventDetails-activityItem`}>
+            <li key={i}>
               {`${formatDistance(value)} ${time} ${inscriptionFee || 'NC'}`}
             </li>
           ))}
@@ -76,7 +74,12 @@ const EventDetails = ({ data }) => (
     </div>
 
     <div className={'EventDetails-Footer'}>
-      <OrgaLink target="_blank" href={'https://www.google.com/search?q='+data.title+'+'+data.dep+'+'+data.city+'+'+ moment.unix(data.date).format(DATE_FORMAT) + '&num=1' } />
+      <OrgaLink
+        target={`_blank`}
+        href={`https://www.google.com/search?q=${data.title}+${data.dep}+${
+          data.city
+        }+${moment.unix(data.date).format(DATE_FORMAT)}&num=1`}
+      />
     </div>
 
     <style jsx>{`
@@ -90,15 +93,17 @@ const EventDetails = ({ data }) => (
         border-radius: ${BORDER_RADIUS}px ${BORDER_RADIUS}px 0 0;
       }
 
-      .EventDetails-header {
+      .EventDetails-Header {
         display: flex;
         flex-direction: column;
         justify-content: center;
       }
 
-      .EventDetails-activities { }
+      .EventDetails-Informations {
+      }
 
-      .EventDetails-informations { }
+      .EventDetails-Activities {
+      }
 
       .EventDetails-Footer {
         position: fixed;
@@ -107,7 +112,7 @@ const EventDetails = ({ data }) => (
         right: 0;
       }
 
-      .EventDetails-title {
+      .EventDetails-Title {
         text-transform: capitalize;
         font-family: 'Circular-Medium';
         font-weight: 500;
@@ -120,20 +125,21 @@ const EventDetails = ({ data }) => (
         color: ${subtitleColorTonic};
       }
 
-      .EventDetails-location {
+      .EventDetails-Location {
         font-style: inherit;
       }
 
       .EventDetails-Datum {
-        maring-bottom: ${getSpacing('s')}px;
+        margin-bottom: ${getSpacing('s')}px;
       }
 
       .EventDetails-DatumLabel {
         margin-left: ${getSpacing('s')}px;
         display: inline-block;
+        vertical-align: middle;
       }
 
-      .EventDetails-date {
+      .EventDetails-Date {
         text-transform: capitalize;
       }
     `}</style>
