@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import Router from 'next/router';
-import Media from 'react-media';
 import { Fragment } from 'react';
 import { connect } from 'react-redux';
 
@@ -16,7 +15,7 @@ import {
   setEventListReadyFlag,
   setSelectedEvent
 } from '../actions';
-import { MAX_WIDTH, NO_EVENT_SELECTED } from '../enums';
+import { MAX_WIDTH, NO_EVENT_SELECTED, DESKTOP } from '../enums';
 import { Base } from '../styles-variables';
 import { APP_BACKGROUND_COLOR, tonic } from '../colors';
 
@@ -39,27 +38,19 @@ export class EventListContainer extends React.PureComponent {
           </script>
         </Head>
 
-        <Media query={`(max-width: ${MAX_WIDTH}px)`}>
-          {matches =>
-            matches ? (
-              <div className={'EventListContainer-mobile prevent-scroll'}>
-                <EventList
-                  data={this.props.events}
-                  loading={this.props.loading}
-                  event={
-                    this.props.keyword ? this.props.event : NO_EVENT_SELECTED
-                  }
-                  onLoadMore={this.handleLoadPage}
-                  endList={this.props.currentPage + 1 === this.props.pages}
-                  onSelectEvent={this.handleEventSelection}
-                  onListRendered={this.handleListRendered}
-                />
-              </div>
-            ) : (
-              <div className={'EventListContainer-desktop'} />
-            )
-          }
-        </Media>
+        <div className={'EventListContainer-mobile prevent-scroll'}>
+          <EventList
+            data={this.props.events}
+            loading={this.props.loading}
+            event={this.props.keyword ? this.props.event : NO_EVENT_SELECTED}
+            endList={this.props.currentPage + 1 === this.props.pages}
+            desktop={this.props.media === DESKTOP}
+            onLoadMore={this.handleLoadPage}
+            onSelectEvent={this.handleEventSelection}
+            onListRendered={this.handleListRendered}
+          />
+        </div>
+
         <style jsx>{`
           .EventListContainer-mobile {
             background: ${APP_BACKGROUND_COLOR};
@@ -115,7 +106,8 @@ function mapStateToProps(state) {
     events: state.events,
     pages: state.pages,
     currentPage: state.currentPage,
-    currentMonth: state.currentMonth
+    currentMonth: state.currentMonth,
+    media: state.media
   };
 }
 
