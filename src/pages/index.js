@@ -12,7 +12,8 @@ import Layout from '../components/Layout';
 import AboutPage from '../components/AboutPage';
 import ContactPage from '../components/ContactPage';
 
-import { setEventListReadyFlag } from '../actions';
+import { MAX_WIDTH, DESKTOP, MOBILE } from '../enums';
+import { setEventListReadyFlag, setMediaType } from '../actions';
 import { makeStore } from '../store';
 
 const MIN_LOAD_TIME = 2000;
@@ -70,10 +71,22 @@ class Index extends React.PureComponent {
     minLoading: true
   };
 
+  componentWillMount() {
+    if (typeof window !== 'object') return;
+
+    this.mediaQuery = window.matchMedia(`(max-width: ${MAX_WIDTH}px)`);
+    this.mediaQuery.addListener(this.updateMatches);
+    this.updateMatches();
+  }
+
   componentDidMount() {
     setTimeout(() => {
       this.setState({ minLoading: false });
     }, MIN_LOAD_TIME);
+  }
+
+  componentWillUnmount() {
+    this.mediaQuery.removeListener(this.updateMatches);
   }
 
   render() {
@@ -98,7 +111,7 @@ class Index extends React.PureComponent {
           )}
 
         <Route test={homeMatch}>
-          <HomePage {...this.props} />
+          <HomePage />
         </Route>
 
         <Route test={aboutMatch}>
@@ -144,6 +157,11 @@ class Index extends React.PureComponent {
       </Layout>
     );
   }
+
+  updateMatches = () =>
+    this.props.dispatch(
+      setMediaType(this.mediaQuery.matches ? MOBILE : DESKTOP)
+    );
 }
 
 Index.getInitialProps = function({ store, isServer, ...context }) {
