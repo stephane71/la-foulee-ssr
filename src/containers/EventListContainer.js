@@ -54,6 +54,8 @@ export class EventListContainer extends React.PureComponent {
         <style jsx>{`
           .EventListContainer-mobile {
             background: ${APP_BACKGROUND_COLOR};
+            max-width: ${MAX_WIDTH}px;
+            margin: 0 auto;
           }
 
           .EventListContainer-mobile:after {
