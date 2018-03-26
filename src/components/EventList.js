@@ -140,6 +140,8 @@ export default class EventList extends React.PureComponent {
             left: 0;
             right: 0;
             bottom: 0;
+            max-width: ${MAX_WIDTH}px;
+            margin: 0 auto;
             z-index: 100;
             transform: scale(1);
             transition: transform 0.25s ease-in-out;
