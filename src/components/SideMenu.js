@@ -6,8 +6,9 @@ import SearchIcon from '../svgs/ic_search_black_24px.svg';
 import InfoIcon from '../svgs/ic_info_outline_black_24px.svg';
 import MailIcon from '../svgs/ic_mail_outline_black_24px.svg';
 
-import { HEIGHT_APPBAR, getSpacing } from '../styles-variables';
+import { getSpacing } from '../styles-variables';
 import { white, dominant } from '../colors';
+import { HEIGHT_APPBAR } from '../enums';
 
 // Duplicate
 const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - 8;

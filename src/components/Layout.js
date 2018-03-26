@@ -6,7 +6,7 @@ import Overlay from './Overlay';
 import SideMenu from './SideMenu';
 
 import GlobalStyles from '../styles';
-import { HEIGHT_APPBAR } from '../styles-variables';
+import { HEIGHT_APPBAR } from '../enums';
 
 moment.locale('fr');
 
