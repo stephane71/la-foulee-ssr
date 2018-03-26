@@ -36,6 +36,7 @@ class Route extends React.PureComponent {
           className={`Route prevent-scroll  ${
             this.props.test ? '' : 'wrapper-hidden'
           }`}
+          style={{ position: 'relative' }}
         >
           {this.props.children}
         </div>

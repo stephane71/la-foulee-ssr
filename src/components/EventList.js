@@ -118,6 +118,7 @@ export default class EventList extends React.PureComponent {
               ? EVENT_LIST_DATE_HEIGHT + DESKTOP_HEIGHT_FILTERS
               : EVENT_LIST_DATE_HEIGHT}px;
             -webkit-overflow-scrolling: touch;
+            outline: none;
           }
 
           .EventList-Loading {

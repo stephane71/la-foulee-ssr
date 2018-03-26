@@ -38,37 +38,16 @@ export class EventListContainer extends React.PureComponent {
           </script>
         </Head>
 
-        <div className={'EventListContainer-mobile prevent-scroll'}>
-          <EventList
-            data={this.props.events}
-            loading={this.props.loading}
-            event={this.props.keyword ? this.props.event : NO_EVENT_SELECTED}
-            endList={this.props.currentPage + 1 === this.props.pages}
-            desktop={this.props.media === DESKTOP}
-            onLoadMore={this.handleLoadPage}
-            onSelectEvent={this.handleEventSelection}
-            onListRendered={this.handleListRendered}
-          />
-        </div>
-
-        <style jsx>{`
-          .EventListContainer-mobile {
-            background: ${APP_BACKGROUND_COLOR};
-            max-width: ${MAX_WIDTH}px;
-            margin: 0 auto;
-          }
-
-          .EventListContainer-mobile:after {
-            background: ${tonic};
-            position: absolute;
-            content: '';
-            bottom: 0;
-            left: 0;
-            right: 0;
-            clip-path: polygon(0 68%, 100% 0%, 100% 100%, 0% 100%);
-            height: calc(${Base}px * 80);
-          }
-        `}</style>
+        <EventList
+          data={this.props.events}
+          loading={this.props.loading}
+          event={this.props.keyword ? this.props.event : NO_EVENT_SELECTED}
+          endList={this.props.currentPage + 1 === this.props.pages}
+          desktop={this.props.media === DESKTOP}
+          onLoadMore={this.handleLoadPage}
+          onSelectEvent={this.handleEventSelection}
+          onListRendered={this.handleListRendered}
+        />
       </Fragment>
     );
   }
