@@ -78,6 +78,11 @@ class Index extends React.PureComponent {
     this.mediaQuery = window.matchMedia(`(max-width: ${MAX_WIDTH}px)`);
     this.mediaQuery.addListener(this.updateMatches);
     this.updateMatches();
+
+    // WARNING: This is a patch
+    // Prevent NextJS LINK & ROUTER to mute the url by adding a trailing slash
+    this.nextExportBuffer = __NEXT_DATA__.nextExport;
+    __NEXT_DATA__.nextExport = false;
   }
 
   componentDidMount() {
@@ -88,6 +93,10 @@ class Index extends React.PureComponent {
 
   componentWillUnmount() {
     this.mediaQuery.removeListener(this.updateMatches);
+
+    // WARNING: This is a patch
+    // Prevent NextJS LINK & ROUTER to mute the url by adding a trailing slash
+    __NEXT_DATA__.nextExport = this.nextExportBuffer;
   }
 
   render() {
@@ -106,10 +115,9 @@ class Index extends React.PureComponent {
 
     return (
       <Layout>
-        {(eventMatch || searchMatch) &&
-          (this.state.minLoading || !this.props.eventListReady) && (
-            <SplashScreen />
-          )}
+        {(this.state.minLoading || !this.props.eventListReady) && (
+          <SplashScreen />
+        )}
 
         <Route test={homeMatch}>
           <HomePage />
@@ -158,6 +166,8 @@ class Index extends React.PureComponent {
       </Layout>
     );
   }
+
+  nextExportBuffer = null;
 
   updateMatches = () =>
     this.props.dispatch(
