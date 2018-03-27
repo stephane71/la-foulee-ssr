@@ -7,12 +7,14 @@ if (ANALYZE) {
   webpackBundleAnalyzer = require('webpack-bundle-analyzer');
 }
 
-console.log('- next.config.js -');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-
 module.exports = {
   // useFileSystemPublicRoutes: false,
   // assetPrefix: isProd ? `https://assets.la-foulee.com` : '',
+
+  publicRuntimeConfig: {
+    ASSETS_URL: 'https://assets.la-foulee.com',
+    API_URL: 'https://api.la-foulee.com/test'
+  },
 
   exportPathMap: function() {
     return {

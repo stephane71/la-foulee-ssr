@@ -1,7 +1,10 @@
 import Document, { Head, Main, NextScript } from 'next/document';
+import getConfig from 'next/config';
 import flush from 'styled-jsx/server';
 
-const ASSETS_URL = process.env.ASSETS_URL;
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
+
+const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 
 export default class MyDocument extends Document {
   static getInitialProps({ renderPage }) {
