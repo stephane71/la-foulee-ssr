@@ -11,7 +11,9 @@ console.log('- next.config.js -');
 console.log('NODE_ENV:', process.env.NODE_ENV);
 
 module.exports = {
+  // useFileSystemPublicRoutes: false,
   // assetPrefix: isProd ? `https://assets.la-foulee.com` : '',
+
   exportPathMap: function() {
     return {
       '/': { page: '/' }
