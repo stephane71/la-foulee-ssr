@@ -58,15 +58,14 @@ export default class EventList extends React.PureComponent {
 
     if (!data.length && !this.props.loading) return <div>{'Empty list !'}</div>;
 
-    // if (!data.length && this.props.loading)
-    //   return (
-    //     <div>
-    //       {'Nous sommes presque prêt ! Les dernière données sont en routes...'}
-    //     </div>
-    //   );
-
     return (
       <div className={'EventList prevent-scroll'}>
+        {!this.state.listRendered && (
+          <div className={'EventList-Loading'}>
+            <Loader />
+          </div>
+        )}
+
         {this.state.listRendered && (
           <FixedDateHeader date={this.state.stickyDate} desktop={desktop} />
         )}
@@ -93,12 +92,6 @@ export default class EventList extends React.PureComponent {
 
         {this.state.listRendered &&
           desktop && <DesktopFilters show={this.state.scrollUp} />}
-
-        {!this.state.listRendered && (
-          <div className={'EventList-Loading'}>
-            <Loader />
-          </div>
-        )}
 
         {event && (
           <div className={'EventList-SelectedEvent'}>

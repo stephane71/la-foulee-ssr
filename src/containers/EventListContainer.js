@@ -70,7 +70,7 @@ export class EventListContainer extends React.PureComponent {
 
     this.props.dispatch(setSelectedEvent(event));
     Router.push(
-      { pathname: '/', query: { routing: 'disabled' } },
+      { pathname: '/', query: { from: 'search' } },
       `/event/${event.keyword}`
     );
   }

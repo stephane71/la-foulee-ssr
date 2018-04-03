@@ -1,71 +1,42 @@
 import dynamic from 'next/dynamic';
 import withRedux from 'next-redux-wrapper';
-import UrlPattern from 'url-pattern';
+import pathToRegexp from 'path-to-regexp';
 import { compose } from 'redux';
 
 import withEventAPI from '../components/withEventAPI';
 import withCredentials from '../components/withCredentials';
+
 import SplashScreen from '../components/SplashScreen';
 import Loader from '../components/Loader';
 import Layout from '../components/Layout';
-
 import AboutPage from '../components/AboutPage';
 import ContactPage from '../components/ContactPage';
 
+import Route from '../routes';
 import { MAX_WIDTH, DESKTOP, MOBILE } from '../enums';
 import { setEventListReadyFlag, setMediaType } from '../actions';
 import { makeStore } from '../store';
-
-const MIN_LOAD_TIME = 2000;
-
-const homePattern = new UrlPattern('(/)');
-const eventPattern = new UrlPattern('/event/:keyword(/)');
-const searchPattern = new UrlPattern('/search(/)');
-const aboutPattern = new UrlPattern('/about(/)');
-const contactPattern = new UrlPattern('/contact(/)');
-const legalPattern = new UrlPattern('/legal(/)');
-
-class Route extends React.PureComponent {
-  rendered = false;
-
-  render() {
-    if (this.rendered || this.props.test) {
-      this.rendered = true;
-      return (
-        <div
-          className={`Route prevent-scroll  ${
-            this.props.test ? '' : 'wrapper-hidden'
-          }`}
-          style={{ position: 'relative' }}
-        >
-          {this.props.children}
-        </div>
-      );
-    }
-    return null;
-  }
-}
 
 const EventPageContainer = dynamic(import('../containers/EventPageContainer'), {
   ssr: false,
   loading: () => <Loader />
 });
-
 const EventListContainer = dynamic(import('../containers/EventListContainer'), {
   ssr: false,
   loading: () => <Loader />
 });
-
 // NEED TO BE LAZY LOADED ???? ...
 const UnknownPage = dynamic(import('../components/UnknownPage'), {
   ssr: true,
   loading: () => <Loader />
 });
-
 const HomePage = dynamic(import('../components/HomePage'), {
   ssr: true,
   loading: () => <Loader />
 });
+
+const regexpEventEP = pathToRegexp('/event/:keyword');
+const MIN_LOAD_TIME = 2000;
 
 class Index extends React.PureComponent {
   state = {
@@ -100,18 +71,13 @@ class Index extends React.PureComponent {
   }
 
   render() {
-    const listRoutingDisabled = this.props.url.query.routing === 'disabled';
+    const { asPath } = this.props.url;
+    const fromSearchRoute = this.props.url.query.from === 'search';
 
-    let homeMatch = homePattern.match(this.props.url.asPath);
-    let eventMatch = eventPattern.match(this.props.url.asPath);
-    let searchMatch = searchPattern.match(this.props.url.asPath);
-    let aboutMatch = aboutPattern.match(this.props.url.asPath);
-    let contactMatch = contactPattern.match(this.props.url.asPath);
-    let legalMatch = legalPattern.match(this.props.url.asPath);
+    this.props.dispatch(setEventListReadyFlag());
 
-    if (!eventMatch && !searchMatch) {
-      this.props.dispatch(setEventListReadyFlag());
-    }
+    const matchKeyword = regexpEventEP.exec(asPath);
+    const keyword = matchKeyword && matchKeyword.length > 1 && matchKeyword[1];
 
     return (
       <Layout>
@@ -119,49 +85,52 @@ class Index extends React.PureComponent {
           <SplashScreen />
         )}
 
-        <Route test={homeMatch}>
+        <Route url={asPath} path={'/'}>
           <HomePage />
         </Route>
 
-        <Route test={aboutMatch}>
+        <Route url={asPath} path={'/about'}>
           <AboutPage />
         </Route>
 
-        <Route test={contactMatch}>
+        <Route url={asPath} path={'/contact'}>
           <ContactPage />
         </Route>
 
-        <Route test={legalMatch}>
+        <Route url={asPath} path={'/legal'}>
           <div>
             {`Mentions légales - Confidentialité - Conditions d'utilisation`}
           </div>
         </Route>
 
-        <Route test={!listRoutingDisabled && eventMatch}>
-          <EventPageContainer
-            {...this.props}
-            keyword={eventMatch && eventMatch.keyword}
-          />
-        </Route>
-
-        <Route test={listRoutingDisabled || searchMatch}>
-          <EventListContainer
-            {...this.props}
-            keyword={eventMatch && eventMatch.keyword}
-          />
+        <Route
+          url={asPath}
+          path={'/event/:keyword'}
+          forceHide={fromSearchRoute}
+        >
+          <EventPageContainer {...this.props} keyword={keyword} />
         </Route>
 
         <Route
-          test={
-            !homeMatch &&
-            !aboutMatch &&
-            !contactMatch &&
-            !legalMatch &&
-            !eventMatch &&
-            !searchMatch
-          }
+          url={asPath}
+          path={['/search', '/event/:keyword']}
+          forceHide={keyword && !fromSearchRoute}
         >
-          <UnknownPage {...this.props} />
+          <EventListContainer {...this.props} keyword={keyword} />
+        </Route>
+
+        <Route
+          url={asPath}
+          path={[
+            '/',
+            '/about',
+            '/contact',
+            '/legal',
+            '/event/:keyword',
+            '/search'
+          ]}
+        >
+          {show => !show && <UnknownPage {...this.props} />}
         </Route>
       </Layout>
     );

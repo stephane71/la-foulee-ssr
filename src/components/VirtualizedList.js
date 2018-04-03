@@ -75,7 +75,7 @@ export default class VirtualizedList extends React.PureComponent {
     );
   }
 
-  firstRendering = false;
+  firstRendering = true;
   listComponent = null;
 
   getRowHeight({ index }) {
@@ -134,8 +134,8 @@ export default class VirtualizedList extends React.PureComponent {
       this.props.onReachEndList();
     }
     this.props.onChangeStickyDate(this.props.data[startIndex].date);
-    if (!this.firstRendering) {
-      this.firstRendering = true;
+    if (this.firstRendering) {
+      this.firstRendering = false;
       this.props.onListRendered();
     }
   }
