@@ -6,12 +6,13 @@ import SearchIcon from '../svgs/ic_search_black_24px.svg';
 import InfoIcon from '../svgs/ic_info_outline_black_24px.svg';
 import MailIcon from '../svgs/ic_mail_outline_black_24px.svg';
 
-import { getSpacing } from '../styles-variables';
+import { getSpacing, Base } from '../styles-variables';
 import { white, dominant } from '../colors';
 import { HEIGHT_APPBAR } from '../enums';
 
 // Duplicate
-const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - 8;
+const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - (Base * 9);
+const WIDTH_LOGO_APP_HEADER = Base * 27;
 
 const LINK_MENU = [
   {
@@ -37,9 +38,9 @@ const handleMenuSelect = route => {
 
 const SideMenu = ({ show, onClose }) => (
   <div className={`SideMenu ${show ? '' : 'SideMenu--hide'}`}>
-    <header className={'SideMenu-header SideMenu--padding'}>
-      <LogoTonic height={`${HEIGHT_APPBAR - 8}px`} />
-      <div className={'SideMenu--padding'} onClick={onClose}>
+    <header className={'SideMenu-header'}>
+      <LogoTonic height={`${HEIGHT_LOGO_APP_HEADER}px`} width={`${WIDTH_LOGO_APP_HEADER}`} />
+      <div className={''} onClick={onClose}>
         <CrossIcon fill={white} style={{ verticalAlign: 'middle' }} />
       </div>
     </header>
@@ -48,13 +49,13 @@ const SideMenu = ({ show, onClose }) => (
         {LINK_MENU.map(({ name, text, Icon }, i) => (
           <li
             key={i}
-            className={'SideMenu--padding'}
+            className={''}
             onClick={() => {
               handleMenuSelect(name);
               onClose();
             }}
           >
-            <span className={'SideMenu--padding'}>
+            <span className={''}>
               <Icon fill={white} style={{ verticalAlign: 'middle' }} />
             </span>
 
@@ -64,7 +65,7 @@ const SideMenu = ({ show, onClose }) => (
       </ul>
     </nav>
     <div
-      className={'SideMenu-companyInfo SideMenu--padding'}
+      className={'SideMenu-companyInfo'}
       onClick={() => {
         handleMenuSelect('legal');
         onClose();
@@ -122,9 +123,6 @@ const SideMenu = ({ show, onClose }) => (
         flex-direction: column;
       }
 
-      .SideMenu--padding {
-        padding: ${getSpacing('s')}px;
-      }
     `}</style>
   </div>
 );
