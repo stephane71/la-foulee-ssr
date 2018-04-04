@@ -1,11 +1,14 @@
 import apigClientFactory from 'aws-api-gateway-client';
+import getConfig from 'next/config';
 
 import { getEventArgs, getEventListArgs } from '../api';
 import { getFormatEventList } from '../utils/apiProxy';
 
+const { publicRuntimeConfig } = getConfig();
+
 function getAPIGatewayClient(credentials) {
   return apigClientFactory.newClient({
-    invokeUrl: process.env.API_URL,
+    invokeUrl: publicRuntimeConfig.API_URL,
     region: 'eu-west-1',
     accessKey: credentials.accessKeyId,
     secretKey: credentials.secretAccessKey,
