@@ -6,12 +6,18 @@ import SearchIcon from '../svgs/ic_search_black_24px.svg';
 import InfoIcon from '../svgs/ic_info_outline_black_24px.svg';
 import MailIcon from '../svgs/ic_mail_outline_black_24px.svg';
 
-import { getSpacing, getFontSize, Base, BaseLineHeight, BaseRadius } from '../styles-variables';
+import {
+  getSpacing,
+  getFontSize,
+  Base,
+  BaseLineHeight,
+  BaseRadius
+} from '../styles-variables';
 import { white, dominant } from '../colors';
 import { HEIGHT_APPBAR } from '../enums';
 
 // Duplicate
-const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - (Base * 9);
+const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - Base * 9;
 const WIDTH_LOGO_APP_HEADER = Base * 27;
 
 const LINK_MENU = [
@@ -39,7 +45,10 @@ const handleMenuSelect = route => {
 const SideMenu = ({ show, onClose }) => (
   <div className={`SideMenu ${show ? '' : 'SideMenu--hide'}`}>
     <header className={'SideMenu-header'}>
-      <LogoTonic height={`${HEIGHT_LOGO_APP_HEADER}px`} width={`${WIDTH_LOGO_APP_HEADER}`} />
+      <LogoTonic
+        height={`${HEIGHT_LOGO_APP_HEADER}px`}
+        width={`${WIDTH_LOGO_APP_HEADER}`}
+      />
       <div className={'Button--flat Button--square'} onClick={onClose}>
         <CrossIcon fill={`#F4F5F7`} style={{ verticalAlign: 'top' }} />
       </div>
@@ -72,7 +81,11 @@ const SideMenu = ({ show, onClose }) => (
       }}
     >
       <div>{'La Foulée ©2018'}</div>
-      <span className={'SideMenuFooter-Link'}>Mentions légales</span> <span className={'SideMenuFooter-Link'}>Confidentialité</span> <span className={'SideMenuFooter-Link'}>{`Conditions d'utilisation`}</span>
+      <span className={'SideMenuFooter-Link'}>{'Mentions légales'}</span>
+      <span className={'SideMenuFooter-Link'}>{'Confidentialité'}</span>
+      <span
+        className={'SideMenuFooter-Link'}
+      >{`Conditions d'utilisation`}</span>
     </footer>
 
     <style jsx>{`
@@ -104,8 +117,9 @@ const SideMenu = ({ show, onClose }) => (
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-bottom: 1px solid #5A6362;
-        padding: ${getSpacing('xxs')}px 0 ${getSpacing('xxs') - 1 }px ${getSpacing('m')}px;
+        border-bottom: 1px solid #5a6362;
+        padding: ${getSpacing('xxs')}px 0 ${getSpacing('xxs') - 1}px
+          ${getSpacing('m')}px;
       }
 
       .SideMenu-Nav {
@@ -113,11 +127,11 @@ const SideMenu = ({ show, onClose }) => (
       }
 
       .SideMenuNav-Item {
-        color: #CFE6E1;
+        color: #cfe6e1;
       }
 
       .SideMenuNavItem-Icon {
-        width: ${Base* 6}px;
+        width: ${Base * 6}px;
         padding: 0;
         margin-left: ${getSpacing('s')}px;
         display: inline-block;
@@ -134,14 +148,13 @@ const SideMenu = ({ show, onClose }) => (
         margin-top: auto;
         font-size: ${getFontSize('s')}px;
         padding: ${getSpacing('m')}px;
-        color: #69968D;
+        color: #69968d;
       }
 
       .SideMenuFooter-Link {
         display: inline-block;
         text-decoration: underline;
       }
-
     `}</style>
   </div>
 );

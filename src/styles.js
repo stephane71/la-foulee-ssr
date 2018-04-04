@@ -140,5 +140,4 @@ export default css`
   .List-Item + .List-Item {
     margin-top: ${getSpacing('s')}px;
   }
-
 `;
