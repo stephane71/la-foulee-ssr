@@ -1,6 +1,8 @@
 import css from 'styled-jsx/css';
 
 import {
+  getSpacing,
+  getFontSize,
   BaseFontSize,
   BaseLineHeight,
   H1,
@@ -112,4 +114,31 @@ export default css`
     font-size: ${BaseFontSize}px;
     line-height: ${BaseLineHeight}px;
   }
+
+  .Button--square {
+    padding: ${getSpacing('s')}px;
+  }
+
+  .Button--flat {
+    background: none;
+  }
+
+  .List {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .List-Item {
+    text-transform: uppercase;
+    padding: ${getSpacing('s')}px;
+    cursor: pointer;
+    font-size: ${getFontSize('s')}px;
+    line-height: ${BaseLineHeight}px;
+  }
+
+  .List-Item + .List-Item {
+    margin-top: ${getSpacing('s')}px;
+  }
+
 `;

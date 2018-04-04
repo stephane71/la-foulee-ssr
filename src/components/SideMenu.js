@@ -6,7 +6,7 @@ import SearchIcon from '../svgs/ic_search_black_24px.svg';
 import InfoIcon from '../svgs/ic_info_outline_black_24px.svg';
 import MailIcon from '../svgs/ic_mail_outline_black_24px.svg';
 
-import { getSpacing, Base } from '../styles-variables';
+import { getSpacing, getFontSize, Base, BaseLineHeight, BaseRadius } from '../styles-variables';
 import { white, dominant } from '../colors';
 import { HEIGHT_APPBAR } from '../enums';
 
@@ -40,42 +40,40 @@ const SideMenu = ({ show, onClose }) => (
   <div className={`SideMenu ${show ? '' : 'SideMenu--hide'}`}>
     <header className={'SideMenu-header'}>
       <LogoTonic height={`${HEIGHT_LOGO_APP_HEADER}px`} width={`${WIDTH_LOGO_APP_HEADER}`} />
-      <div className={''} onClick={onClose}>
-        <CrossIcon fill={white} style={{ verticalAlign: 'middle' }} />
+      <div className={'Button--flat Button--square'} onClick={onClose}>
+        <CrossIcon fill={`#F4F5F7`} style={{ verticalAlign: 'top' }} />
       </div>
     </header>
-    <nav className={'SideMenu-list'}>
-      <ul>
+    <nav className={'SideMenu-Nav'}>
+      <ul className={'List'}>
         {LINK_MENU.map(({ name, text, Icon }, i) => (
           <li
             key={i}
-            className={''}
+            className={'SideMenuNav-Item List-Item Item'}
             onClick={() => {
               handleMenuSelect(name);
               onClose();
             }}
           >
-            <span className={''}>
-              <Icon fill={white} style={{ verticalAlign: 'middle' }} />
+            <span className={'SideMenuNavItem-Icon Item-Icon'}>
+              <Icon fill={`#7A9691`} style={{ verticalAlign: 'top' }} />
             </span>
 
-            <span>{text}</span>
+            <span className={'SideMenuNavItem-Label Item-Label'}>{text}</span>
           </li>
         ))}
       </ul>
     </nav>
-    <div
-      className={'SideMenu-companyInfo'}
+    <footer
+      className={'SideMenu-Footer'}
       onClick={() => {
         handleMenuSelect('legal');
         onClose();
       }}
     >
-      <span>
-        {`Mentions légales - Confidentialité - Conditions d'utilisation`}
-      </span>
-      <span>{'La Foulée @2018'}</span>
-    </div>
+      <div>{'La Foulée ©2018'}</div>
+      <span className={'SideMenuFooter-Link'}>Mentions légales</span> <span className={'SideMenuFooter-Link'}>Confidentialité</span> <span className={'SideMenuFooter-Link'}>{`Conditions d'utilisation`}</span>
+    </footer>
 
     <style jsx>{`
       .SideMenu {
@@ -84,43 +82,64 @@ const SideMenu = ({ show, onClose }) => (
         left: 0;
         height: 100%;
         z-index: 10;
-        transition: left 0.3s ease-out;
-        width: 90%;
-        max-width: 320px;
+        transition: transform 0.25s ease-out, box-shadow 1s ease-in;
+        width: ${Base * 80}px;
         background-color: ${dominant};
         color: ${white};
         display: flex;
         flex-direction: column;
+        transform-origin: left center;
+        transform: translate(0%);
+        box-shadow: 10px 0 20px 0 rgba(48, 43, 43, 0.2);
+        border-radius: 0 ${BaseRadius}px ${BaseRadius}px 0;
       }
 
       .SideMenu--hide {
-        left: -100%;
+        transition: transform 0.25s ease-in, box-shadow 0.25s ease-out;
+        transform: translate(-100%);
+        box-shadow: none;
       }
 
       .SideMenu-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-bottom: 1px solid ${white};
+        border-bottom: 1px solid #5A6362;
+        padding: ${getSpacing('xxs')}px 0 ${getSpacing('xxs') - 1 }px ${getSpacing('m')}px;
       }
 
-      .SideMenu-list > ul {
-        list-style: none;
+      .SideMenu-Nav {
+        margin-top: ${getSpacing('l')}px;
+      }
+
+      .SideMenuNav-Item {
+        color: #CFE6E1;
+      }
+
+      .SideMenuNavItem-Icon {
+        width: ${Base* 6}px;
         padding: 0;
-        margin: 0;
+        margin-left: ${getSpacing('s')}px;
+        display: inline-block;
+        vertical-align: top;
+        text-align: center;
       }
 
-      .SideMenu-list > ul > li {
-        cursor: pointer;
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
+      .SideMenuNavItem-Label {
+        margin-left: ${getSpacing('m')}px;
+        line-height: ${BaseLineHeight}px;
       }
 
-      .SideMenu-companyInfo {
+      .SideMenu-Footer {
         margin-top: auto;
-        display: flex;
-        flex-direction: column;
+        font-size: ${getFontSize('s')}px;
+        padding: ${getSpacing('m')}px;
+        color: #69968D;
+      }
+
+      .SideMenuFooter-Link {
+        display: inline-block;
+        text-decoration: underline;
       }
 
     `}</style>

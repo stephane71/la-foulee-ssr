@@ -1,5 +1,6 @@
 export const Base = 4; // px
 export const BaseFontSize = 16; // px
+export const BaseRadius = Base; // px
 const BaseRatio = 1.125;
 
 // Font sizes
