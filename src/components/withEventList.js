@@ -47,6 +47,8 @@ const withEventList = WrappedComponent => {
 
         this.firstPageRequestDone = true;
         this.props.dispatch(setCurrentPage(0));
+
+        this.setState({ loading: false });
       } else if (this.props.currentPage !== nextProps.currentPage) {
         if (this.firstPageRequestDone && nextProps.currentPage === 0) {
           this.firstPageRequestDone = false;
@@ -58,12 +60,11 @@ const withEventList = WrappedComponent => {
           { ...this.props.selectors, month: this.props.currentMonth },
           nextProps.currentPage
         );
+        this.setState({ loading: false });
       } else if (this.props.selectors !== nextProps.selectors) {
         this.setState({ loading: true });
         // await this.refreshList(nextProps.selectors);
       }
-
-      this.setState({ loading: false });
     }
 
     render() {

@@ -6,9 +6,9 @@ import React from 'react';
 import LogoTonic from '../svgs/lafoulee-tonic.svg';
 import MenuIcon from '../svgs/ic_menu_black_24px.svg';
 
-import { HEIGHT_APPBAR, getSpacing } from '../styles-variables';
+import { getSpacing } from '../styles-variables';
 import { dominant, white } from '../colors';
-import { ICON_SIZE } from '../enums';
+import { ICON_SIZE, HEIGHT_APPBAR, MAX_WIDTH } from '../enums';
 
 const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - 36;
 
@@ -35,10 +35,11 @@ const Header = ({ onClickHeaderLogo, onClickMenu }) => (
         position: fixed;
         top: 0;
         left: 0;
+        right: 0;
         z-index: 10;
-        width: 100%;
-        max-width: 100vw;
+        max-width: ${MAX_WIDTH}px;
         height: ${HEIGHT_APPBAR}px;
+        margin: 0 auto;
       }
 
       .Header-content {

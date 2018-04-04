@@ -101,5 +101,3 @@ export const LISTS = {
 export const appHeaderSpacing = {
   padding: `${SSpacing} ${BaseSpacing}`
 };
-
-export const HEIGHT_APPBAR = 56;

@@ -6,24 +6,29 @@ import EventDetails from './EventDetails';
 
 import SVGWrapper from './SVGWrapper';
 import CrossIcon from '../svgs/ic_close_black_24px.svg';
+import DesktopFilters, { DESKTOP_HEIGHT_FILTERS } from './DesktopFilters';
 
 import { getSpacing, BaseLineHeight, Base } from '../styles-variables';
 import { APP_BACKGROUND_COLOR } from '../colors';
-import { HEIGHT_APPBAR, NO_EVENT_SELECTED } from '../enums';
+import { HEIGHT_APPBAR, NO_EVENT_SELECTED, MAX_WIDTH } from '../enums';
 
 // See EventListDate component: line height + 2 * vertical padding
 const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
 
-const FixedDateHeader = ({ date }) => (
+const FixedDateHeader = ({ date, desktop }) => (
   <div className={'FixedDateHeader'}>
     <EventListDate date={date} />
     <style jsx>{`
       .FixedDateHeader {
         background-color: ${APP_BACKGROUND_COLOR};
         position: fixed;
-        top: ${HEIGHT_APPBAR}px;
+        top: ${desktop
+          ? HEIGHT_APPBAR + DESKTOP_HEIGHT_FILTERS
+          : HEIGHT_APPBAR}px;
         left: 0;
-        width: 100%;
+        right: 0;
+        max-width: ${MAX_WIDTH}px;
+        margin: 0 auto;
         z-index: 2;
       }
     `}</style>
@@ -49,21 +54,20 @@ export default class EventList extends React.PureComponent {
   }
 
   render() {
-    const { data, event } = this.props;
+    const { data, event, desktop } = this.props;
 
     if (!data.length && !this.props.loading) return <div>{'Empty list !'}</div>;
 
-    // if (!data.length && this.props.loading)
-    //   return (
-    //     <div>
-    //       {'Nous sommes presque prêt ! Les dernière données sont en routes...'}
-    //     </div>
-    //   );
-
     return (
       <div className={'EventList prevent-scroll'}>
+        {!this.state.listRendered && (
+          <div className={'EventList-Loading'}>
+            <Loader />
+          </div>
+        )}
+
         {this.state.listRendered && (
-          <FixedDateHeader date={this.state.stickyDate} />
+          <FixedDateHeader date={this.state.stickyDate} desktop={desktop} />
         )}
 
         <div
@@ -83,15 +87,11 @@ export default class EventList extends React.PureComponent {
           />
         </div>
 
-        {this.state.listRendered && (
-          <MobileFilters show={this.state.scrollUp} />
-        )}
+        {this.state.listRendered &&
+          !desktop && <MobileFilters show={this.state.scrollUp} />}
 
-        {!this.state.listRendered && (
-          <div className={'EventList-Loading'}>
-            <Loader />
-          </div>
-        )}
+        {this.state.listRendered &&
+          desktop && <DesktopFilters show={this.state.scrollUp} />}
 
         {event && (
           <div className={'EventList-SelectedEvent'}>
@@ -107,8 +107,11 @@ export default class EventList extends React.PureComponent {
 
         <style jsx>{`
           .EventList {
-            padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
+            padding-top: ${desktop
+              ? EVENT_LIST_DATE_HEIGHT + DESKTOP_HEIGHT_FILTERS
+              : EVENT_LIST_DATE_HEIGHT}px;
             -webkit-overflow-scrolling: touch;
+            outline: none;
           }
 
           .EventList-Loading {
@@ -130,6 +133,8 @@ export default class EventList extends React.PureComponent {
             left: 0;
             right: 0;
             bottom: 0;
+            max-width: ${MAX_WIDTH}px;
+            margin: 0 auto;
             z-index: 100;
             transform: scale(1);
             transition: transform 0.25s ease-in-out;

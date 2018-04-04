@@ -1,15 +1,11 @@
+console.log('----------------------------------');
 console.log('---- Running local dev server ----');
+console.log('----------------------------------');
 
-const config = require('./config/server/env.developpement.json');
-for (let name in config) {
-  process.env[name] = config[name];
-}
 process.env['NEXT_ENV'] = 'developpement';
 
 const express = require('express');
 const next = require('next');
-
-const serverWrapper = require('./lambda/utils/serverWrapper');
 
 const dev = true;
 const dir = './src';
@@ -32,4 +28,15 @@ server.get('*', (req, res) => {
   return app.render(req, res, APP_PAGE, {});
 });
 
-serverWrapper(server, app)();
+app
+  .prepare()
+  .then(() => {
+    server.listen(3000, err => {
+      if (err) throw err;
+      console.log('> Ready on http://localhost:3000');
+    });
+  })
+  .catch(ex => {
+    console.error(ex.stack);
+    process.exit(1);
+  });

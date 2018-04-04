@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import Router from 'next/router';
-import Media from 'react-media';
 import { Fragment } from 'react';
 import { connect } from 'react-redux';
 
@@ -16,7 +15,7 @@ import {
   setEventListReadyFlag,
   setSelectedEvent
 } from '../actions';
-import { MAX_WIDTH, NO_EVENT_SELECTED } from '../enums';
+import { MAX_WIDTH, NO_EVENT_SELECTED, DESKTOP } from '../enums';
 import { Base } from '../styles-variables';
 import { APP_BACKGROUND_COLOR, tonic } from '../colors';
 
@@ -39,43 +38,16 @@ export class EventListContainer extends React.PureComponent {
           </script>
         </Head>
 
-        <Media query={`(max-width: ${MAX_WIDTH}px)`}>
-          {matches =>
-            matches ? (
-              <div className={'EventListContainer-mobile prevent-scroll'}>
-                <EventList
-                  data={this.props.events}
-                  loading={this.props.loading}
-                  event={
-                    this.props.keyword ? this.props.event : NO_EVENT_SELECTED
-                  }
-                  onLoadMore={this.handleLoadPage}
-                  endList={this.props.currentPage + 1 === this.props.pages}
-                  onSelectEvent={this.handleEventSelection}
-                  onListRendered={this.handleListRendered}
-                />
-              </div>
-            ) : (
-              <div className={'EventListContainer-desktop'} />
-            )
-          }
-        </Media>
-        <style jsx>{`
-          .EventListContainer-mobile {
-            background: ${APP_BACKGROUND_COLOR};
-          }
-
-          .EventListContainer-mobile:after {
-            background: ${tonic};
-            position: absolute;
-            content: '';
-            bottom: 0;
-            left: 0;
-            right: 0;
-            clip-path: polygon(0 68%, 100% 0%, 100% 100%, 0% 100%);
-            height: calc(${Base}px * 80);
-          }
-        `}</style>
+        <EventList
+          data={this.props.events}
+          loading={this.props.loading}
+          event={this.props.keyword ? this.props.event : NO_EVENT_SELECTED}
+          endList={this.props.currentPage + 1 === this.props.pages}
+          desktop={this.props.media === DESKTOP}
+          onLoadMore={this.handleLoadPage}
+          onSelectEvent={this.handleEventSelection}
+          onListRendered={this.handleListRendered}
+        />
       </Fragment>
     );
   }
@@ -98,7 +70,7 @@ export class EventListContainer extends React.PureComponent {
 
     this.props.dispatch(setSelectedEvent(event));
     Router.push(
-      { pathname: '/', query: { routing: 'disabled' } },
+      { pathname: '/', query: { from: 'search' } },
       `/event/${event.keyword}`
     );
   }
@@ -115,7 +87,8 @@ function mapStateToProps(state) {
     events: state.events,
     pages: state.pages,
     currentPage: state.currentPage,
-    currentMonth: state.currentMonth
+    currentMonth: state.currentMonth,
+    media: state.media
   };
 }
 

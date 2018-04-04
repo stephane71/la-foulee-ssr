@@ -1,24 +1,22 @@
 import Head from 'next/head';
-import { connect } from 'react-redux';
 
 import EventPage from '../components/EventPage';
-import Loader from '../components/Loader';
 
 import { getEventStructuredData } from '../utils/structuredData';
 import { MAX_WIDTH } from '../enums';
-import { setEventListReadyFlag, setSelectedEvent } from '../actions';
 
 export class EventPageContainer extends React.PureComponent {
+  state = {
+    event: null
+  };
+
   async componentDidMount() {
-    if (!this.props.event && this.props.keyword) {
-      let event = await this.props.getEvent(this.props.keyword);
-      this.props.dispatch(setSelectedEvent(event));
-      this.props.dispatch(setEventListReadyFlag());
-    }
+    let event = await this.props.getEvent(this.props.keyword);
+    this.setState({ event });
   }
 
   render() {
-    const { event } = this.props;
+    const { event } = this.state;
 
     if (!event) return null;
 
@@ -53,10 +51,4 @@ export class EventPageContainer extends React.PureComponent {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    event: state.event
-  };
-}
-
-export default connect(mapStateToProps)(EventPageContainer);
+export default EventPageContainer;

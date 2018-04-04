@@ -1,5 +1,5 @@
-const configDev = require('./config/client/env.developpement.json');
-const configProd = require('./config/client/env.production.json');
+const configDev = require('./config/env.developpement.json');
+const configProd = require('./config/env.production.json');
 
 let config;
 
@@ -12,8 +12,6 @@ switch (process.env.NODE_ENV) {
 }
 
 module.exports = {
-  'process.env.ASSETS_URL': config.ASSETS_URL,
   'process.env.IDENTITY_POOL_ID': config.IDENTITY_POOL_ID,
-  'process.env.API_URL': config.API_URL,
   'process.env.GOOGLE_PLACES_API_KEY': config.GOOGLE_PLACES_API_KEY
 };

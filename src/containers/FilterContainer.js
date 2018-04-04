@@ -85,7 +85,12 @@ class FilterContainer extends React.PureComponent {
     return (
       <Fragment>
         {FILTERS.map(({ name, Selector }, i) => (
-          <FilterSelectorWrapper key={i} name={name} open={openFilter === name}>
+          <FilterSelectorWrapper
+            key={i}
+            name={name}
+            open={openFilter === name}
+            desktop={this.props.desktop}
+          >
             <Selector
               onSelect={this.handleFilterSelectValue}
               input={filter[name]}
@@ -144,14 +149,14 @@ class FilterContainer extends React.PureComponent {
 
   handleLocationInputUpdate(value) {
     this.setState(this.getNewFilterState(value, true));
-    this.props.onFilterOpen(true);
+    if (this.props.onFilterOpen) this.props.onFilterOpen(true);
   }
 
   // FILTER SELECTORS
 
   handleFilterSelectValue(data) {
     this.dispatchFilterUpdate(data.value);
-    this.props.onFilterOpen(false);
+    if (this.props.onFilterOpen) this.props.onFilterOpen(false);
   }
 
   // FILTER TRIGGERS
@@ -165,7 +170,7 @@ class FilterContainer extends React.PureComponent {
       activeFilter: filterName,
       openFilter
     });
-    this.props.onFilterOpen(openFilter);
+    if (this.props.onFilterOpen) this.props.onFilterOpen(openFilter);
   }
 
   handleFilterReset(filterName) {
@@ -181,43 +186,54 @@ function mapStateToProps(state) {
 
 export default connect(mapStateToProps)(FilterContainer);
 
-const FilterSelectorWrapper = ({ name, open, children }) => (
+const FilterSelectorWrapper = ({ name, open, desktop, children }) => (
   <div
     className={`filterSelector filterSelector-${name} ${
-      open ? 'filterSelector--open' : ''
-    }`}
+      desktop ? 'filterSelector--desktop' : 'filterSelector--mobile'
+    } ${open ? 'filterSelector--open' : ''}`}
   >
     {children}
     <style jsx>{`
       .filterSelector {
         position: absolute;
-        bottom: calc(${getSpacing('l')}px + ${getSpacing('s')}px);
         left: ${getSpacing('xs')}px;
         right: ${getSpacing('xs')}px;
         font-size: ${getFontSize('s')}px;
-
         background-color: ${white};
         border-radius: ${BORDER_RADIUS}px;
         box-shadow: 0 5px 20px 0 rgba(38, 74, 67, 0.2);
 
         transition: all 0.25s ease-in-out;
         transform: scale(0);
-        transform-origin: bottom left;
         will-change: transform;
         overflow-y: auto;
       }
 
-      .filterSelector-date {
-        transform-origin: bottom center;
+      .filterSelector--mobile {
+        bottom: calc(${getSpacing('l')}px + ${getSpacing('s')}px);
       }
 
-      .filterSelector-distance {
-        transform-origin: bottom right;
+      .filterSelector--desktop {
+        top: calc(${getSpacing('l')}px + ${getSpacing('s')}px);
       }
 
       .filterSelector--open {
         opacity: 1;
         transform: scale(1);
+      }
+    `}</style>
+
+    <style jsx>{`
+      .filterSelector-location {
+        transform-origin: ${desktop ? 'top' : 'bottom'} left;
+      }
+
+      .filterSelector-date {
+        transform-origin: ${desktop ? 'top' : 'bottom'} center;
+      }
+
+      .filterSelector-distance {
+        transform-origin: ${desktop ? 'top' : 'bottom'} right;
       }
     `}</style>
   </div>
