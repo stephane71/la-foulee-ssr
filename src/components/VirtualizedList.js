@@ -7,12 +7,8 @@ import {
 } from 'react-virtualized';
 
 import Loader from './Loader';
-
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
-
-import { APP_BACKGROUND_COLOR } from '../colors';
-import { getSpacing } from '../styles-variables';
 
 const EVENT_LIST_ITEM_HEIGHT = 72;
 const EVENT_LIST_DATE_HEADER_HEIGHT = 96;
@@ -32,6 +28,10 @@ export default class VirtualizedList extends React.PureComponent {
     this.onRowsRendered = this.onRowsRendered.bind(this);
   }
 
+  state = {
+    rendered: false
+  };
+
   componentWillReceiveProps(nextProps) {
     // End loading more detection: pb -> will catch a refresh too.
     // IF the new list is longer than the previous one
@@ -50,6 +50,9 @@ export default class VirtualizedList extends React.PureComponent {
           <AutoSizer disableHeight>
             {({ width }) => (
               <List
+                ref={el => {
+                  this.listComponent = el;
+                }}
                 autoHeight
                 width={width}
                 height={height}
@@ -73,6 +76,7 @@ export default class VirtualizedList extends React.PureComponent {
   }
 
   firstRendering = false;
+  listComponent = null;
 
   getRowHeight({ index }) {
     return index &&
@@ -111,7 +115,7 @@ export default class VirtualizedList extends React.PureComponent {
               null}
             <EventListItem
               data={data[index]}
-              onSelectEvent={this.props.onSelectEvent}
+              onSelectEvent={data => this.onSelectEvent(data, style.top)}
               withBorderRadiusTop={index === 0 || firstItemDay}
               withBorderRadiusBottom={index + 1 === data.length || lastItemDay}
             />
@@ -119,6 +123,10 @@ export default class VirtualizedList extends React.PureComponent {
         )}
       </CellMeasurer>
     );
+  }
+
+  onSelectEvent(data, position) {
+    this.props.onSelectEvent(data, position);
   }
 
   onRowsRendered({ startIndex, stopIndex }) {

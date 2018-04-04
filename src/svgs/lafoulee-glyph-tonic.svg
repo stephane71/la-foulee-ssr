@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="90px" height="116px" viewBox="0 0 90 116" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49 (51002) - http://www.bohemiancoding.com/sketch -->
+    <title>lafoulee-glyph</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="lafoulee-glyph" fill="#DDFF31" fill-rule="nonzero">
+            <polygon id="shape-center" opacity="0.6" points="0 75.25 58 50 58 89 0 89"></polygon>
+            <path d="M56,87 C57.104569,87 58,87.8954305 58,89 C58,89.934666 57.349998,90.620003 56.5,91 L0,116 L0,65.9949236 C0,50.1873749 9.3093408,35.8625152 23.7544614,29.4424616 L90,0 L90,12.0203267 C90,27.8200984 80.699707,42.139437 66.265135,48.5640726 L3.6465129,76.434789 C2.1034597,76.9895541 1,78.4659121 1,80.1999969 C1,82.4091359 2.790861,84.1999969 5,84.1999969 C5.2415008,84.1999969 22.2415008,85.1333313 56,87 Z" id="shape"></path>
+        </g>
+    </g>
+</svg>

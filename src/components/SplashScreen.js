@@ -1,4 +1,4 @@
-import LogoTonic from '../svgs/lafoulee-tonic.svg';
+import LogoTonic from '../svgs/lafoulee-glyph-tonic.svg';
 import { dominant } from '../colors';
 
 const PRIORITY_INDEX = 100;

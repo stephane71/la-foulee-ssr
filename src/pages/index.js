@@ -123,7 +123,10 @@ class Index extends React.PureComponent {
         </Route>
 
         <Route test={listRoutingDisabled || searchMatch}>
-          <EventListContainer {...this.props} />
+          <EventListContainer
+            {...this.props}
+            keyword={eventMatch && eventMatch.keyword}
+          />
         </Route>
 
         <Route

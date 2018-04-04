@@ -64,28 +64,28 @@ export const H5 = {
 
 export const H4 = {
   lineHeight: BaseLineHeight,
-  fontSize: H5.fontSize * BaseRatio, // 19,94
+  fontSize: BaseFontSize * Math.pow(BaseRatio, 1), // 19,94
   marginBottom: BaseSpacing,
   marginTop: BaseSpacing
 };
 
 export const H3 = {
   lineHeight: BaseLineHeight,
-  fontSize: H4.fontSize * BaseRatio, // 22,43
+  fontSize: BaseFontSize * Math.pow(BaseRatio, 2), // 22,43
   marginBottom: BaseSpacing,
   marginTop: BaseSpacing
 };
 
 export const H2 = {
   lineHeight: BaseLineHeight + Base * 2,
-  fontSize: H3.fontSize * BaseRatio, // 25,23
+  fontSize: BaseFontSize * Math.pow(BaseRatio, 3), // 25,23
   marginBottom: BaseSpacing,
   marginTop: BaseSpacing
 };
 
 export const H1 = {
   lineHeight: BaseLineHeight * 2 - Base,
-  fontSize: H2.fontSize * Math.pow(BaseRatio, 2), // 40,39
+  fontSize: BaseFontSize * Math.pow(BaseRatio, 4), // 40,39
   marginBottom: LSpacing,
   marginTop: BaseSpacing
 };

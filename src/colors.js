@@ -1,6 +1,10 @@
 export const dominant = '#264A43';
 export const tonic = '#DDFF31';
 export const white = '#fff';
+
+export const textColorTonic = '#E3FCF7';
+export const subtitleColorTonic = '#CFE3DF';
+
 export const listBorderColor = '#E7E8EA';
 export const APP_BACKGROUND_COLOR = '#F4F6F5';
 export const SECONDARY_COLOR = '#264A43';

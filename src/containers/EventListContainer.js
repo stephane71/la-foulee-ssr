@@ -10,12 +10,13 @@ import withEventList from '../components/withEventList';
 import { getEventListStructuredData } from '../utils/structuredData';
 
 import {
-  setSelectedEvent,
+  setSelectors,
   setCurrentPage,
   setCurrentMonth,
-  setEventListReadyFlag
+  setEventListReadyFlag,
+  setSelectedEvent
 } from '../actions';
-import { MAX_WIDTH } from '../enums';
+import { MAX_WIDTH, NO_EVENT_SELECTED } from '../enums';
 import { Base } from '../styles-variables';
 import { APP_BACKGROUND_COLOR, tonic } from '../colors';
 
@@ -44,8 +45,11 @@ export class EventListContainer extends React.PureComponent {
               <div className={'EventListContainer-mobile prevent-scroll'}>
                 <EventList
                   data={this.props.events}
-                  onLoadMore={this.handleLoadPage}
                   loading={this.props.loading}
+                  event={
+                    this.props.keyword ? this.props.event : NO_EVENT_SELECTED
+                  }
+                  onLoadMore={this.handleLoadPage}
                   endList={this.props.currentPage + 1 === this.props.pages}
                   onSelectEvent={this.handleEventSelection}
                   onListRendered={this.handleListRendered}
@@ -87,6 +91,12 @@ export class EventListContainer extends React.PureComponent {
   }
 
   handleEventSelection(event) {
+    if (event === NO_EVENT_SELECTED) {
+      Router.back();
+      return;
+    }
+
+    this.props.dispatch(setSelectedEvent(event));
     Router.push(
       { pathname: '/', query: { routing: 'disabled' } },
       `/event/${event.keyword}`
@@ -100,6 +110,7 @@ export class EventListContainer extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
+    event: state.event,
     selectors: state.selectors,
     events: state.events,
     pages: state.pages,

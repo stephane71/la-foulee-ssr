@@ -2,10 +2,14 @@ import VirtualizedList from './VirtualizedList';
 import EventListDate from './EventListDate';
 import Loader from './Loader';
 import MobileFilters from './MobileFilters';
+import EventDetails from './EventDetails';
+
+import SVGWrapper from './SVGWrapper';
+import CrossIcon from '../svgs/ic_close_black_24px.svg';
 
 import { getSpacing, BaseLineHeight, Base } from '../styles-variables';
 import { APP_BACKGROUND_COLOR } from '../colors';
-import { HEIGHT_APPBAR } from '../enums';
+import { HEIGHT_APPBAR, NO_EVENT_SELECTED } from '../enums';
 
 // See EventListDate component: line height + 2 * vertical padding
 const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
@@ -40,10 +44,12 @@ export default class EventList extends React.PureComponent {
     this.handleLoadMore = this.handleLoadMore.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
     this.handleListRendered = this.handleListRendered.bind(this);
+    this.handleEventSelection = this.handleEventSelection.bind(this);
+    this.handleCloseSelectedEvent = this.handleCloseSelectedEvent.bind(this);
   }
 
   render() {
-    const { data } = this.props;
+    const { data, event } = this.props;
 
     if (!data.length && !this.props.loading) return <div>{'Empty list !'}</div>;
 
@@ -64,12 +70,12 @@ export default class EventList extends React.PureComponent {
           ref={el => {
             this.scrollElement = el;
           }}
-          className={'EventList-scrollElement prevent-scroll'}
+          className={'prevent-scroll'}
         >
           <VirtualizedList
             scrollElement={this.scrollElement}
             data={this.props.data}
-            onSelectEvent={this.props.onSelectEvent}
+            onSelectEvent={this.handleEventSelection}
             onChangeStickyDate={this.handleStickyDate}
             onReachEndList={this.handleLoadMore}
             onScroll={this.handleScroll}
@@ -82,8 +88,20 @@ export default class EventList extends React.PureComponent {
         )}
 
         {!this.state.listRendered && (
-          <div className={'EventList-rendering'}>
+          <div className={'EventList-Loading'}>
             <Loader />
+          </div>
+        )}
+
+        {event && (
+          <div className={'EventList-SelectedEvent'}>
+            <div className={'EventList-SelectedEventHeader'}>
+              <SVGWrapper
+                icon={CrossIcon}
+                onClick={this.handleCloseSelectedEvent}
+              />
+            </div>
+            <EventDetails data={event} />
           </div>
         )}
 
@@ -93,15 +111,57 @@ export default class EventList extends React.PureComponent {
             -webkit-overflow-scrolling: touch;
           }
 
-          .EventList-rendering {
+          .EventList-Loading {
             position: absolute;
             top: 0;
             bottom: 0;
             width: 100%;
           }
+
+          .EventList-SelectedEvent {
+            display: flex;
+            flex-direction: column;
+          }
+
+          .EventList-SelectedEvent,
+          .EventList-SelectedEvent:before {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 100;
+            transform: scale(1);
+            transition: transform 0.25s ease-in-out;
+          }
+
+          .EventList-SelectedEvent:before {
+            content: '';
+            background-color: #fff;
+            z-index: -1;
+            backdrop-filter: blur(3px);
+            opacity: 0.8;
+          }
+
+          .EventList-SelectedEventHeader {
+            padding: ${getSpacing('xs')}px ${getSpacing('s')}px;
+          }
         `}</style>
       </div>
     );
+  }
+
+  handleCloseSelectedEvent() {
+    this.props.onSelectEvent(NO_EVENT_SELECTED);
+  }
+
+  handleEventSelection(data, elementPosition) {
+    // For transition
+    let windowPosition = elementPosition - this.scrollElement.scrollTop;
+    windowPosition += HEIGHT_APPBAR + EVENT_LIST_DATE_HEIGHT;
+    console.log('Position of the item in the window', windowPosition);
+
+    this.props.onSelectEvent(data);
   }
 
   scrollTop = 0;

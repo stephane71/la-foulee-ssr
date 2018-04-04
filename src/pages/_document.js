@@ -19,6 +19,11 @@ export default class MyDocument extends Document {
             content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
           />
           <meta name="mobile-web-app-capable" content="yes" />
+          <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="#264A43"
+          />
+          <meta name="apple-mobile-web-app-title" content="La Foulée" />
 
           {/* ICONS */}
           <link
@@ -92,7 +97,7 @@ export default class MyDocument extends Document {
           />
 
           <link rel="manifest" href={`/static/manifest.json?v=yya2lgM4gb`} />
-          <meta name="theme-color" content="#ddff31" />
+          <meta name="theme-color" content="#264A43" />
         </Head>
         <body>
           <Main />

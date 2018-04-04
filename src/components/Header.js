@@ -10,7 +10,7 @@ import { HEIGHT_APPBAR, getSpacing } from '../styles-variables';
 import { dominant, white } from '../colors';
 import { ICON_SIZE } from '../enums';
 
-const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - 8;
+const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - 36;
 
 /*
  * This calculation is based on this pattern:
