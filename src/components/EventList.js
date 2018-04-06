@@ -14,6 +14,7 @@ import { HEIGHT_APPBAR, NO_EVENT_SELECTED, MAX_WIDTH } from '../enums';
 
 // See EventListDate component: line height + 2 * vertical padding
 const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
+const ICON_COLOR = '#8FB0A9';
 
 const FixedDateHeader = ({ date, desktop }) => (
   <div className={'FixedDateHeader'}>
@@ -98,7 +99,9 @@ export default class EventList extends React.PureComponent {
             <div className={'EventList-SelectedEventHeader'}>
               <SVGWrapper
                 icon={CrossIcon}
+                fill={ICON_COLOR}
                 onClick={this.handleCloseSelectedEvent}
+                className={'Overlay-closeButton Button--circle'}
               />
             </div>
             <EventDetails data={event} />
@@ -112,6 +115,8 @@ export default class EventList extends React.PureComponent {
               : EVENT_LIST_DATE_HEIGHT}px;
             -webkit-overflow-scrolling: touch;
             outline: none;
+            max-width: ${MAX_WIDTH}px;
+            margin: 0 auto;
           }
 
           .EventList-Loading {
@@ -133,7 +138,6 @@ export default class EventList extends React.PureComponent {
             left: 0;
             right: 0;
             bottom: 0;
-            max-width: ${MAX_WIDTH}px;
             margin: 0 auto;
             z-index: 100;
             transform: scale(1);
@@ -142,10 +146,10 @@ export default class EventList extends React.PureComponent {
 
           .EventList-SelectedEvent:before {
             content: '';
-            background-color: #fff;
+            background-color: #264A43;
             z-index: -1;
             backdrop-filter: blur(3px);
-            opacity: 0.8;
+            opacity: 0.3;
           }
 
           .EventList-SelectedEventHeader {

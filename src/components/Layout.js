@@ -41,7 +41,6 @@ class Layout extends React.PureComponent {
           .root {
             background: ${APP_BACKGROUND_COLOR};
             padding-top: ${HEIGHT_APPBAR}px;
-            max-width: ${MAX_WIDTH}px;
             margin: 0 auto;
           }
 
@@ -54,7 +53,6 @@ class Layout extends React.PureComponent {
             right: 0;
             clip-path: polygon(0 68%, 100% 0%, 100% 100%, 0% 100%);
             height: calc(${Base}px * 80);
-            max-width: ${MAX_WIDTH}px;
             margin: 0 auto;
           }
         `}</style>

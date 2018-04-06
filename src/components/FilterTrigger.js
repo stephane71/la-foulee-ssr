@@ -15,6 +15,7 @@ const inlineIconStyle = {
 };
 
 const FilterTrigger = ({
+  desktop,
   name,
   active,
   onClick,
@@ -25,7 +26,7 @@ const FilterTrigger = ({
   children
 }) => (
   <div
-    className={`filterTrigger ${active ? 'filterTrigger--active' : ''}`}
+    className={`filterTrigger ${desktop ? 'filterTrigger--desktop' : ''} ${active ? 'filterTrigger--active' : ''}`}
     onClick={() => onClick(name)}
   >
     <Icon style={{ ...inlineIconStyle }} />
@@ -72,6 +73,10 @@ const FilterTrigger = ({
         margin-left: ${getSpacing('s')}px;
         width: calc(100% - ${ICON_SIZE}px - 3 * ${getSpacing('s')}px);
         text-transform: capitalize;
+      }
+
+      .filterTrigger--desktop {
+        box-shadow: none;
       }
     `}</style>
   </div>

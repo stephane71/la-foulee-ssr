@@ -5,14 +5,14 @@ import IconAgenda from '../svgs/ic_event_white_24px.svg';
 
 import { textColorTonic, subtitleColorTonic, dominant } from '../colors';
 import { getSpacing, getFontSize } from '../styles-variables';
-import { BORDER_RADIUS } from '../enums';
+import { BORDER_RADIUS, MAX_WIDTH } from '../enums';
 
 function formatDistance(value) {
   if (value < 1000) return `${value}m`;
   return `${value / 1000}km`;
 }
 
-const ICON_COLOR = '#8FB0A9';
+const ICON_COLOR = '#B7C9C6';
 
 // DUPLICATE
 const DATE_FORMAT = 'dddd D MMMM';
@@ -61,15 +61,27 @@ const EventDetails = ({ data }) => (
 
     <div className={'EventDetails-Activities'}>
       <h2 className={'EventDetails-Subtitle'}>{'Épreuves'}</h2>
-      <ul>
+      <table className={'Table'}>
+        <thead className={'Table-Head'}>
+          <tr className={'Table-Row'}>
+            <th className={'Table-DataHeader'}></th>
+            <th className={'Table-DataHeader'}>{`Départ`}</th>
+            <th className={'Table-DataHeader'}>{`Prix`}</th>
+          </tr>
+        </thead>
+        <tbody className={'Table-Body'}>
+
         {data.activities
           .sort((act1, act2) => act2.value - act1.value)
           .map(({ value, time, inscriptionFee }, i) => (
-            <li key={i}>
-              {`${formatDistance(value)} ${time} ${inscriptionFee || 'NC'}`}
-            </li>
+            <tr className={'Table-Row'} key={i}>
+              <td className={'Table-DataCell Table-DataCell--bold'}>{formatDistance(value)}</td>
+              <td className={'Table-DataCell'}>{time}</td>
+              <td className={'Table-DataCell'}>{inscriptionFee || 'NC'}</td>
+            </tr>
           ))}
-      </ul>
+        </tbody>
+      </table>
     </div>
 
     <div className={'EventDetails-Footer'}>
@@ -85,11 +97,16 @@ const EventDetails = ({ data }) => (
       .EventDetails {
         position: relative;
         width: 100%;
-        color: ${textColorTonic};
-        background-color: ${dominant};
+        max-width: ${MAX_WIDTH}px;
+        max-height: ${MAX_WIDTH}px;
+        margin: auto;
+        color: #EBFEFA;
+        background: ${dominant} url(/static/details-background.svg) bottom center no-repeat;
         padding: ${getSpacing('m')}px;
-        border-radius: ${BORDER_RADIUS}px ${BORDER_RADIUS}px 0 0;
+        border-radius: ${BORDER_RADIUS}px;
         flex: 1;
+        background-size: 100%;
+        box-shadow: 0 0 20px 0 rgba(0,0,0,.2);
       }
 
       .EventDetails-Header {
@@ -99,9 +116,11 @@ const EventDetails = ({ data }) => (
       }
 
       .EventDetails-Informations {
+        margin-top: ${getSpacing('l')}px;
       }
 
       .EventDetails-Activities {
+        margin-top: ${getSpacing('l')}px;
       }
 
       .EventDetails-Footer {
@@ -117,6 +136,7 @@ const EventDetails = ({ data }) => (
         font-family: 'Circular-Medium';
         font-weight: 500;
         margin: 0;
+        color: #E3FCF7;
       }
 
       .EventDetails-Subtitle {

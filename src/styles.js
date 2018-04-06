@@ -5,6 +5,7 @@ import {
   getFontSize,
   BaseFontSize,
   BaseLineHeight,
+  BaseRadius,
   H1,
   H2,
   H3,
@@ -115,12 +116,23 @@ export default css`
     line-height: ${BaseLineHeight}px;
   }
 
-  .Button--square {
+
+  .Button--square,
+  .Button--circle {
     padding: ${getSpacing('s')}px;
   }
 
   .Button--flat {
     background: none;
+  }
+
+  .Button--circle {
+    border-radius: 50%;
+  }
+
+  .Overlay-closeButton {
+    background: #0C1715;
+    cursor: pointer;
   }
 
   .List {
@@ -140,4 +152,45 @@ export default css`
   .List-Item + .List-Item {
     margin-top: ${getSpacing('s')}px;
   }
+
+  .Table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .Table-DataHeader,
+  .Table-DataCell {
+    padding: ${getSpacing('xxs')}px ${getSpacing('xs')}px;
+  }
+
+  .Table-DataHeader {
+    font-weight: 300;
+    font-size: ${getFontSize('s')}px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #3A4F4B;
+  }
+
+  .Table-DataCell {
+    font-weight: 300;
+    vertical-align: text-top;
+    border-bottom: 1px solid #3A4F4B;
+  }
+
+  .Table-DataCell--bold {
+    font-weight: 500;
+  }
+
+  .Table-DataCell:first-child {
+    border-radius: ${BaseRadius}px 0 0 ${BaseRadius}px;
+  }
+
+  .Table-DataCell:last-child {
+    border-radius: 0 ${BaseRadius}px ${BaseRadius}px 0;
+  }
+
+  .DesktopFilters .filterTrigger {
+    box-shadow: none;
+  }
+
 `;

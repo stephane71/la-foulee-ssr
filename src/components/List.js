@@ -16,11 +16,11 @@ const List = ({ list, onClick, poweredByGoogle }) => (
         className={'ListItem-container'}
         onClick={() => onClick(data)}
       >
-        <div className={`ListItem ${data.check ? 'ListItem-selected' : ''}`}>
+        <div className={`ListItem ${data.check ? 'ListItem--selected' : ''}`}>
           {data.matched ? (
             <div>
               {data.value.slice(0, data.matched.offset)}
-              <span className={'ListItem-matched'}>
+              <span className={'ListItem--matched'}>
                 {data.value.slice(data.matched.offset, data.matched.length)}
               </span>
               {data.value.slice(data.matched.length)}
@@ -61,12 +61,16 @@ const List = ({ list, onClick, poweredByGoogle }) => (
         display: flex;
         justify-content: space-between;
         align-items: center;
-        color: ${SECONDARY_COLOR};
+        color: #727D7B;
       }
 
-      .ListItem-selected,
-      .ListItem-matched {
+      .ListItem--selected,
+      .ListItem--matched {
         font-weight: bold;
+      }
+
+      .ListItem--matched {
+        color: ${SECONDARY_COLOR};
       }
 
       .ListItem-googleLogo {
