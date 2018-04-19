@@ -13,5 +13,6 @@ switch (process.env.NODE_ENV) {
 
 module.exports = {
   'process.env.IDENTITY_POOL_ID': config.IDENTITY_POOL_ID,
-  'process.env.GOOGLE_PLACES_API_KEY': config.GOOGLE_PLACES_API_KEY
+  'process.env.GOOGLE_PLACES_API_KEY': config.GOOGLE_PLACES_API_KEY,
+  'process.env.GOOGLE_GEOLOC_API_KEY': config.GOOGLE_GEOLOC_API_KEY
 };

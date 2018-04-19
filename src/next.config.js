@@ -13,7 +13,7 @@ module.exports = {
 
   publicRuntimeConfig: {
     ASSETS_URL: 'https://assets.la-foulee.com',
-    API_URL: 'https://api.la-foulee.com/test'
+    API_URL: 'https://q3z21ff3yg.execute-api.eu-west-3.amazonaws.com/dev'
   },
 
   exportPathMap: function() {

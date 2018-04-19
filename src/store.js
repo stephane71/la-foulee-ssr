@@ -31,7 +31,6 @@ function getNextMonth(month) {
 }
 
 const START_MONTH = `${moment().month()}-${moment().year()}`;
-
 const LEGACY_SELECTORS = {
   month: START_MONTH,
   dep: ''

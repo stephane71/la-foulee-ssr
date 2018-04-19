@@ -9,7 +9,6 @@ import withEventList from '../components/withEventList';
 import { getEventListStructuredData } from '../utils/structuredData';
 
 import {
-  setSelectors,
   setCurrentPage,
   setCurrentMonth,
   setEventListReadyFlag,

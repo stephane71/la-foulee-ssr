@@ -2,7 +2,8 @@ import {
   setEventList,
   concatEventList,
   setEventListNbPages,
-  setCurrentPage
+  setCurrentPage,
+  setSelectors
 } from '../actions';
 
 const FIRST_PAGE = 0;
@@ -25,11 +26,18 @@ const withEventList = WrappedComponent => {
       if (!this.props.events.length) {
         this.setState({ loading: true });
 
-        const { events, pages } = await this.props.getEventList(
-          this.props.selectors
+        const geohash = await this.props.getUserGeolocation();
+        console.log(geohash);
+
+        this.props.dispatch(
+          setSelectors({ ...this.props.selectors, location: geohash })
         );
-        this.props.dispatch(setEventList(events));
-        this.props.dispatch(setEventListNbPages(pages));
+
+        // const { events, pages } = await this.props.getEventList(
+        //   this.props.selectors
+        // );
+        // this.props.dispatch(setEventList(events));
+        // this.props.dispatch(setEventListNbPages(pages));
 
         this.setState({ loading: false });
       }
