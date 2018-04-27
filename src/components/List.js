@@ -61,7 +61,7 @@ const List = ({ list, onClick, poweredByGoogle }) => (
         display: flex;
         justify-content: space-between;
         align-items: center;
-        color: #727D7B;
+        color: #727d7b;
       }
 
       .ListItem--selected,

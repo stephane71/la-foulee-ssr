@@ -12,13 +12,13 @@ import Smartphone from '../svgs/ic_smartphone_black_24px.svg';
 
 import { getSpacing, H6 } from '../styles-variables';
 import { getColor, dominant } from '../colors';
+import { DATE_FORMAT } from '../enums';
 
 function formatDistance(value) {
   if (value < 1000) return `${value}m`;
   return `${value / 1000}km`;
 }
 
-const DATE_FORMAT = 'dddd D MMMM';
 const FONT_WEIGHT_SEMI_BOLD = 600;
 
 const EventDatum = ({ Icon, datum, pushRight, children }) => (

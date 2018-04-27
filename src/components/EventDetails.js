@@ -5,7 +5,7 @@ import IconAgenda from '../svgs/ic_event_white_24px.svg';
 
 import { textColorTonic, subtitleColorTonic, dominant } from '../colors';
 import { getSpacing, getFontSize } from '../styles-variables';
-import { BORDER_RADIUS, MAX_WIDTH } from '../enums';
+import { BORDER_RADIUS, MAX_WIDTH, DATE_FORMAT } from '../enums';
 
 function formatDistance(value) {
   if (value < 1000) return `${value}m`;
@@ -13,9 +13,6 @@ function formatDistance(value) {
 }
 
 const ICON_COLOR = '#B7C9C6';
-
-// DUPLICATE
-const DATE_FORMAT = 'dddd D MMMM';
 
 const OrgaLink = ({ href }) => (
   <a href={href} target={'_blank'}>
@@ -64,22 +61,23 @@ const EventDetails = ({ data }) => (
       <table className={'Table'}>
         <thead className={'Table-Head'}>
           <tr className={'Table-Row'}>
-            <th className={'Table-DataHeader'}></th>
+            <th className={'Table-DataHeader'} />
             <th className={'Table-DataHeader'}>{`Départ`}</th>
             <th className={'Table-DataHeader'}>{`Prix`}</th>
           </tr>
         </thead>
         <tbody className={'Table-Body'}>
-
-        {data.activities
-          .sort((act1, act2) => act2.value - act1.value)
-          .map(({ value, time, inscriptionFee }, i) => (
-            <tr className={'Table-Row'} key={i}>
-              <td className={'Table-DataCell Table-DataCell--bold'}>{formatDistance(value)}</td>
-              <td className={'Table-DataCell'}>{time}</td>
-              <td className={'Table-DataCell'}>{inscriptionFee || 'NC'}</td>
-            </tr>
-          ))}
+          {data.activities
+            .sort((act1, act2) => act2.value - act1.value)
+            .map(({ value, time, inscriptionFee }, i) => (
+              <tr className={'Table-Row'} key={i}>
+                <td className={'Table-DataCell Table-DataCell--bold'}>
+                  {formatDistance(value)}
+                </td>
+                <td className={'Table-DataCell'}>{time}</td>
+                <td className={'Table-DataCell'}>{inscriptionFee || 'NC'}</td>
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
@@ -98,7 +96,7 @@ const EventDetails = ({ data }) => (
         position: relative;
         width: 100%;
         max-width: ${MAX_WIDTH}px;
-        max-height: ${MAX_WIDTH}px;
+        // max-height: ${MAX_WIDTH}px;
         margin: auto;
         color: #EBFEFA;
         background: ${dominant} url(/static/details-background.svg) bottom center no-repeat;
@@ -136,7 +134,7 @@ const EventDetails = ({ data }) => (
         font-family: 'Circular-Medium';
         font-weight: 500;
         margin: 0;
-        color: #E3FCF7;
+        color: ${textColorTonic};
       }
 
       .EventDetails-Subtitle {

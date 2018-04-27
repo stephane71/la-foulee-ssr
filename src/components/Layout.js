@@ -6,7 +6,7 @@ import Overlay from './Overlay';
 import SideMenu from './SideMenu';
 
 import GlobalStyles from '../styles';
-import { HEIGHT_APPBAR, MAX_WIDTH } from '../enums';
+import { HEIGHT_APPBAR } from '../enums';
 import { APP_BACKGROUND_COLOR, tonic } from '../colors';
 import { Base } from '../styles-variables';
 

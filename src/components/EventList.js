@@ -8,8 +8,8 @@ import SVGWrapper from './SVGWrapper';
 import CrossIcon from '../svgs/ic_close_black_24px.svg';
 import DesktopFilters, { DESKTOP_HEIGHT_FILTERS } from './DesktopFilters';
 
-import { getSpacing, BaseLineHeight, Base } from '../styles-variables';
-import { APP_BACKGROUND_COLOR } from '../colors';
+import { getSpacing, BaseLineHeight } from '../styles-variables';
+import { APP_BACKGROUND_COLOR, SECONDARY_COLOR } from '../colors';
 import { HEIGHT_APPBAR, NO_EVENT_SELECTED, MAX_WIDTH } from '../enums';
 
 // See EventListDate component: line height + 2 * vertical padding
@@ -146,7 +146,7 @@ export default class EventList extends React.PureComponent {
 
           .EventList-SelectedEvent:before {
             content: '';
-            background-color: #264A43;
+            background-color: ${SECONDARY_COLOR};
             z-index: -1;
             backdrop-filter: blur(3px);
             opacity: 0.3;
