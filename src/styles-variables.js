@@ -7,10 +7,12 @@ const BaseRatio = 1.125;
 
 const SFontSize = BaseFontSize / BaseRatio;
 const LFontSize = BaseFontSize * BaseRatio;
+const XSFontSize = SFontSize / BaseRatio;
 const XLFontSize = LFontSize * BaseRatio;
 const XXLFontSize = XLFontSize * BaseRatio;
 
 const fontSizeMap = {
+  xs: XSFontSize,
   s: SFontSize,
   m: BaseFontSize,
   l: LFontSize,

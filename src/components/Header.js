@@ -37,17 +37,17 @@ const Header = ({ onClickHeaderLogo, onClickMenu }) => (
         left: 0;
         right: 0;
         z-index: 10;
-        max-width: ${MAX_WIDTH}px;
         height: ${HEIGHT_APPBAR}px;
-        margin: 0 auto;
+        background-color: ${dominant};
       }
 
       .Header-content {
         padding: 0 ${getSpacing(`s`)}px;
-        background-color: ${dominant};
         height: 100%;
         display: flex;
         align-items: center;
+        max-width: ${MAX_WIDTH}px;
+        margin: 0 auto;
       }
 
       .Header-menuWrapper {

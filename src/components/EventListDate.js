@@ -3,8 +3,7 @@ import moment from 'moment';
 import { getSpacing } from '../styles-variables';
 import { getFontSize } from '../styles-variables';
 import { dominant } from '../colors';
-
-const DATE_FORMAT = 'dddd D MMMM';
+import { DATE_FORMAT } from '../enums';
 
 function getWeeklyDay(date) {
   return moment.unix(date).format('dddd');

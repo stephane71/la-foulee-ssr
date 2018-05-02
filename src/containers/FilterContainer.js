@@ -105,6 +105,7 @@ class FilterContainer extends React.PureComponent {
             active={activeFilter === props.name}
             onClick={this.handleFilterClick}
             onReset={this.handleFilterReset}
+            desktop={this.props.desktop}
             isDefaultValue={
               filter[props.name] === DEFAULT_SELECTOR_VALUES[props.name]
             }

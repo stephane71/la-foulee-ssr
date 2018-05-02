@@ -1,9 +1,9 @@
 import FilterContainer from '../containers/FilterContainer';
 
-import { getSpacing } from '../styles-variables';
-import { HEIGHT_APPBAR, MAX_WIDTH } from '../enums';
+import { getSpacing, Base } from '../styles-variables';
+import { HEIGHT_APPBAR } from '../enums';
 
-export const DESKTOP_HEIGHT_FILTERS = 56;
+const DESKTOP_FILTERS_MAX_WIDTH = Base * 120;
 
 const DesktopFilters = () => (
   <div className={`DesktopFilters`}>
@@ -15,7 +15,7 @@ const DesktopFilters = () => (
         left: 0;
         right: 0;
         padding: ${getSpacing('xs')}px;
-        max-width: ${MAX_WIDTH}px;
+        max-width: ${DESKTOP_FILTERS_MAX_WIDTH}px;
         margin: 0 auto;
         z-index: 10;
       }
@@ -24,3 +24,4 @@ const DesktopFilters = () => (
 );
 
 export default DesktopFilters;
+export const DESKTOP_HEIGHT_FILTERS = 56;

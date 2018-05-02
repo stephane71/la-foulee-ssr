@@ -6,7 +6,7 @@ import GoogleMapPlacesApi from './GoogleMapPlacesApi';
 
 import { BORDER_RADIUS } from '../enums';
 import { getSpacing } from '../styles-variables';
-import { dominant } from '../colors';
+import { dominant, SECONDARY_COLOR } from '../colors';
 
 const MONTH_LIST = moment.months().map(month => ({
   value: month,
@@ -145,7 +145,7 @@ export class DistanceSelector extends React.PureComponent {
 
           .DistanceSelector-input::-webkit-slider-thumb {
             -webkit-appearance: none;
-            background-color: #264a43;
+            background-color: ${SECONDARY_COLOR};
             height: 24px;
             width: 24px;
             border-radius: 50%;
