@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import dynamic from 'next/dynamic';
 import withRedux from 'next-redux-wrapper';
 import pathToRegexp from 'path-to-regexp';
@@ -33,6 +34,10 @@ const UnknownPage = dynamic(import('../components/UnknownPage'), {
 const HomePage = dynamic(import('../components/HomePage'), {
   ssr: true,
   loading: () => <Loader />
+});
+const ClientRedirects = dynamic(import('../components/ClientRedirects'), {
+  ssr: false,
+  loading: () => null
 });
 
 const regexpEventEP = pathToRegexp('/event/:keyword');
@@ -81,6 +86,8 @@ class Index extends React.PureComponent {
 
     return (
       <Layout>
+        <ClientRedirects position={this.props.position} />
+
         {(this.state.minLoading || !this.props.eventListReady) && (
           <SplashScreen />
         )}
@@ -116,7 +123,9 @@ class Index extends React.PureComponent {
           path={['/search', '/event/:keyword']}
           forceHide={keyword && !fromSearchRoute}
         >
-          <EventListContainer {...this.props} keyword={keyword} />
+          {this.props.position && (
+            <EventListContainer {...this.props} keyword={keyword} />
+          )}
         </Route>
 
         <Route
@@ -150,7 +159,8 @@ Index.getInitialProps = function({ store, isServer, ...context }) {
 
 function mapStateToProps(state) {
   return {
-    eventListReady: state.eventListReady
+    eventListReady: state.eventListReady,
+    position: state.position
   };
 }
 

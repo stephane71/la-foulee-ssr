@@ -1,14 +1,8 @@
-import axios from 'axios';
-import Geohash from 'latlon-geohash';
 import apigClientFactory from 'aws-api-gateway-client';
 import getConfig from 'next/config';
 
-import { getEventArgs, getEventListArgs } from '../api';
+import { getEventArgs, getEventListArgs, getAroundEventListArgs } from '../api';
 import { getFormatEventList } from '../utils/apiProxy';
-
-const GOOGLE_GEOLOC_URL = 'https://www.googleapis.com/geolocation/v1/geolocate';
-const GOOGLE_GEOLOC_API_KEY = process.env.GOOGLE_GEOLOC_API_KEY;
-const GEOHASH_PRECISION = 4;
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -38,6 +32,7 @@ const withEventAPI = WrappedComponent => {
       this.getAPI = this.getAPI.bind(this);
       this.getEvent = this.getEvent.bind(this);
       this.getEventList = this.getEventList.bind(this);
+      this.getAroundEventList = this.getAroundEventList.bind(this);
     }
 
     render() {
@@ -45,7 +40,7 @@ const withEventAPI = WrappedComponent => {
         <WrappedComponent
           getEvent={this.getEvent}
           getEventList={this.getEventList}
-          getUserGeolocation={this.getUserGeolocation}
+          getAroundEventList={this.getAroundEventList}
           {...this.props}
         />
       );
@@ -76,18 +71,10 @@ const withEventAPI = WrappedComponent => {
         .then(res => getFormatEventList(res.data));
     }
 
-    async getUserGeolocation() {
-      const req = `${GOOGLE_GEOLOC_URL}?key=${GOOGLE_GEOLOC_API_KEY}`;
-      let res;
-      try {
-        res = await axios.post(req);
-      } catch (e) {
-        console.log('Problem when try to fetch the user position');
-        console.log(e);
-        return null;
-      }
-      const { lat, lng } = res.data.location;
-      return Geohash.encode(lat, lng, GEOHASH_PRECISION);
+    async getAroundEventList(selectors, currentPage) {
+      let api = await this.getAPI();
+      const args = getAroundEventListArgs(selectors.location, currentPage);
+      return await api.invokeApi(...args).then(res => res.data);
     }
   };
 };

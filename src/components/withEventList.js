@@ -22,27 +22,6 @@ const withEventList = WrappedComponent => {
       loading: true
     };
 
-    async componentDidMount() {
-      if (!this.props.events.length) {
-        this.setState({ loading: true });
-
-        const geohash = await this.props.getUserGeolocation();
-        console.log(geohash);
-
-        this.props.dispatch(
-          setSelectors({ ...this.props.selectors, location: geohash })
-        );
-
-        // const { events, pages } = await this.props.getEventList(
-        //   this.props.selectors
-        // );
-        // this.props.dispatch(setEventList(events));
-        // this.props.dispatch(setEventListNbPages(pages));
-
-        this.setState({ loading: false });
-      }
-    }
-
     async componentWillReceiveProps(nextProps) {
       if (this.props.currentMonth !== nextProps.currentMonth) {
         this.setState({ loading: true });
@@ -70,19 +49,21 @@ const withEventList = WrappedComponent => {
         );
         this.setState({ loading: false });
       }
-      // else if (this.props.selectors !== nextProps.selectors) {
-      //   this.setState({ loading: true });
-      //   // await this.refreshList(nextProps.selectors);
-      // }
     }
 
     render() {
-      return <WrappedComponent {...this.props} loading={this.state.loading} />;
+      return (
+        <WrappedComponent
+          {...this.props}
+          loading={this.state.loading}
+          fetchEvents={this.fetchEvents.bind(this)}
+        />
+      );
     }
 
     // Prevent triggering the same req
     // dispatch setCurrentPage will be catch in the first test of this method
-    firstPageRequestDone: false;
+    firstPageRequestDone = false;
 
     async concatList(selectors, currentPage) {
       const { events, pages } = await this.props.getEventList(
@@ -94,17 +75,16 @@ const withEventList = WrappedComponent => {
       return pages;
     }
 
-    async refreshList(selectors) {
-      const { events, pages } = await this.props.getEventList(
-        selectors,
+    async fetchEvents(position) {
+      this.setState({ loading: true });
+
+      const { events } = await this.props.getAroundEventList(
+        { location: position },
         FIRST_PAGE
       );
       this.props.dispatch(setEventList(events));
-      this.props.dispatch(setEventListNbPages(pages));
 
-      this.firstPageRequestDone = true;
-      this.props.dispatch(setCurrentPage(FIRST_PAGE));
-      return pages;
+      this.setState({ loading: false });
     }
   };
 };
