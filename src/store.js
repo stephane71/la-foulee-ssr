@@ -17,8 +17,11 @@ import {
   SET_CURRENT_MONTH,
   SET_GOOGLE_MAPS_SERVICE,
   SET_EVENT_LIST_READY_FLAG,
-  SET_MEDIA_TYPE
+  SET_MEDIA_TYPE,
+  SET_USER_POSITION
 } from './actions';
+
+const GEOHASH_PRECISION = 4;
 
 function getNextMonth(month) {
   let [monthNumber, year] = month.split('-');
@@ -45,7 +48,8 @@ const initialState = {
   currentMonth: START_MONTH,
   googleMapsService: null,
   eventListReady: false,
-  media: null
+  media: null,
+  position: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -70,6 +74,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, eventListReady: true };
     case SET_MEDIA_TYPE:
       return { ...state, media: action.media };
+    case SET_USER_POSITION:
+      return { ...state, position: action.position };
     default:
       return state;
   }

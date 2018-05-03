@@ -8,6 +8,7 @@ export const SET_CURRENT_MONTH = 'SET_CURRENT_MONTH';
 export const SET_GOOGLE_MAPS_SERVICE = 'SET_GOOGLE_MAPS_SERVICE';
 export const SET_EVENT_LIST_READY_FLAG = 'SET_EVENT_LIST_READY_FLAG';
 export const SET_MEDIA_TYPE = 'SET_MEDIA_TYPE';
+export const SET_USER_POSITION = 'SET_USER_POSITION';
 
 export function setSelectedEvent(event) {
   return {
@@ -65,12 +66,21 @@ export function setGoogleMapsService(service) {
 }
 
 export function setEventListReadyFlag() {
-  return { type: SET_EVENT_LIST_READY_FLAG };
+  return {
+    type: SET_EVENT_LIST_READY_FLAG
+  };
 }
 
 export function setMediaType(media) {
   return {
     type: SET_MEDIA_TYPE,
     media
+  };
+}
+
+export function setUserPosition(position) {
+  return {
+    type: SET_USER_POSITION,
+    position
   };
 }
