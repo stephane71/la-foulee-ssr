@@ -32,7 +32,7 @@ const withEventAPI = WrappedComponent => {
       this.getAPI = this.getAPI.bind(this);
       this.getEvent = this.getEvent.bind(this);
       this.getEventList = this.getEventList.bind(this);
-      this.getAroundEventList = this.getAroundEventList.bind(this);
+      this.getEventListAround = this.getEventListAround.bind(this);
     }
 
     render() {
@@ -40,7 +40,7 @@ const withEventAPI = WrappedComponent => {
         <WrappedComponent
           getEvent={this.getEvent}
           getEventList={this.getEventList}
-          getAroundEventList={this.getAroundEventList}
+          getEventListAround={this.getEventListAround}
           {...this.props}
         />
       );
@@ -71,9 +71,9 @@ const withEventAPI = WrappedComponent => {
         .then(res => getFormatEventList(res.data));
     }
 
-    async getAroundEventList(selectors, currentPage) {
+    async getEventListAround(position) {
       let api = await this.getAPI();
-      const args = getAroundEventListArgs(selectors.location, currentPage);
+      const args = getAroundEventListArgs(position);
       return await api.invokeApi(...args).then(res => res.data);
     }
   };

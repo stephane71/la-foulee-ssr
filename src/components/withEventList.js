@@ -78,10 +78,7 @@ const withEventList = WrappedComponent => {
     async fetchEvents(position) {
       this.setState({ loading: true });
 
-      const { events } = await this.props.getAroundEventList(
-        { location: position },
-        FIRST_PAGE
-      );
+      const { events } = await this.props.getEventListAround(position);
       this.props.dispatch(setEventList(events));
 
       this.setState({ loading: false });

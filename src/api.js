@@ -44,14 +44,17 @@ export function getEventListArgs(selectors, currentPage = 0) {
   return [params, pathTemplate, method, additionalParams, body];
 }
 
-export function getAroundEventListArgs(geohash, currentPage = 0) {
-  const params = {
-    geohash
-  };
+export function getAroundEventListArgs(position) {
+  const params = {};
   // Template syntax follows url-template https://www.npmjs.com/package/url-template
-  const pathTemplate = '/events/around/{geohash}';
+  const pathTemplate = '/events/around';
   const method = 'GET';
-  const additionalParams = {};
+  const additionalParams = {
+    queryParams: {
+      lat: position.latitude,
+      lng: position.longitude
+    }
+  };
   const body = {};
 
   return [params, pathTemplate, method, additionalParams, body];

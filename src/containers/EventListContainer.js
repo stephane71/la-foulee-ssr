@@ -18,9 +18,6 @@ import { MAX_WIDTH, NO_EVENT_SELECTED, DESKTOP } from '../enums';
 import { Base } from '../styles-variables';
 import { APP_BACKGROUND_COLOR, tonic } from '../colors';
 
-// Will change to lat & lng; geocode will be manipulate on back-end
-const FAKE_POSITION = 'u09t';
-
 export class EventListContainer extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -31,7 +28,7 @@ export class EventListContainer extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (this.props.position) this.props.fetchEvents(FAKE_POSITION);
+    if (this.props.position) this.props.fetchEvents(this.props.position);
   }
 
   render() {
