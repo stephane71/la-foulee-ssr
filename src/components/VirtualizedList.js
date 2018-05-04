@@ -32,20 +32,9 @@ export default class VirtualizedList extends React.PureComponent {
     rendered: false
   };
 
-  componentWillReceiveProps(nextProps) {
-    // End loading more detection: pb -> will catch a refresh too.
-    // IF the new list is longer than the previous one
-    if (this.props.data.length < nextProps.data.length) {
-      cache.clear(this.props.data.length - 1);
-    }
-  }
-
   render() {
     return (
-      <WindowScroller
-        onScroll={this.props.onScroll}
-        scrollElement={this.props.scrollElement}
-      >
+      <WindowScroller scrollElement={this.props.scrollElement}>
         {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => (
           <AutoSizer disableHeight>
             {({ width }) => (
@@ -64,7 +53,6 @@ export default class VirtualizedList extends React.PureComponent {
                 onScroll={onChildScroll}
                 isScrolling={isScrolling}
                 scrollTop={scrollTop}
-                className={'EventList'}
                 deferredMeasurementCache={cache}
                 rowHeight={cache.rowHeight}
               />
@@ -101,10 +89,7 @@ export default class VirtualizedList extends React.PureComponent {
         rowIndex={index}
       >
         {index === data.length - 1 ? (
-          <div
-            className={'EventList-Item EventList-Item--loader'}
-            style={{ ...style }}
-          >
+          <div style={{ ...style }}>
             <Loader />
           </div>
         ) : (

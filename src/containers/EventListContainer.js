@@ -8,21 +8,13 @@ import withEventList from '../components/withEventList';
 
 import { getEventListStructuredData } from '../utils/structuredData';
 
-import {
-  setCurrentPage,
-  setCurrentMonth,
-  setEventListReadyFlag,
-  setSelectedEvent
-} from '../actions';
+import { setEventListReadyFlag, setSelectedEvent } from '../actions';
 import { MAX_WIDTH, NO_EVENT_SELECTED, DESKTOP } from '../enums';
-import { Base } from '../styles-variables';
-import { APP_BACKGROUND_COLOR, tonic } from '../colors';
 
 export class EventListContainer extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.handleLoadPage = this.handleLoadPage.bind(this);
     this.handleEventSelection = this.handleEventSelection.bind(this);
     this.handleListRendered = this.handleListRendered.bind(this);
   }
@@ -45,24 +37,12 @@ export class EventListContainer extends React.PureComponent {
           data={this.props.events}
           loading={this.props.loading}
           event={this.props.keyword ? this.props.event : NO_EVENT_SELECTED}
-          endList={this.props.currentPage + 1 === this.props.pages}
           desktop={this.props.media === DESKTOP}
-          onLoadMore={this.handleLoadPage}
           onSelectEvent={this.handleEventSelection}
           onListRendered={this.handleListRendered}
         />
       </Fragment>
     );
-  }
-
-  async handleLoadPage() {
-    if (this.props.loading) return;
-
-    if (this.props.currentPage + 1 === this.props.pages) {
-      this.props.dispatch(setCurrentMonth());
-    } else {
-      this.props.dispatch(setCurrentPage(this.props.currentPage + 1));
-    }
   }
 
   handleEventSelection(event) {
@@ -88,9 +68,6 @@ function mapStateToProps(state) {
     event: state.event,
     selectors: state.selectors,
     events: state.events,
-    pages: state.pages,
-    currentPage: state.currentPage,
-    currentMonth: state.currentMonth,
     media: state.media
   };
 }

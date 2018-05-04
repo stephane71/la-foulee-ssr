@@ -1,12 +1,10 @@
 import VirtualizedList from './VirtualizedList';
 import EventListDate from './EventListDate';
 import Loader from './Loader';
-import MobileFilters from './MobileFilters';
 import EventDetails from './EventDetails';
 
 import SVGWrapper from './SVGWrapper';
 import CrossIcon from '../svgs/ic_close_black_24px.svg';
-import DesktopFilters, { DESKTOP_HEIGHT_FILTERS } from './DesktopFilters';
 
 import { getSpacing, BaseLineHeight } from '../styles-variables';
 import { APP_BACKGROUND_COLOR, SECONDARY_COLOR } from '../colors';
@@ -15,26 +13,6 @@ import { HEIGHT_APPBAR, NO_EVENT_SELECTED, MAX_WIDTH } from '../enums';
 // See EventListDate component: line height + 2 * vertical padding
 const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
 const ICON_COLOR = '#8FB0A9';
-
-const FixedDateHeader = ({ date, desktop }) => (
-  <div className={'FixedDateHeader'}>
-    <EventListDate date={date} />
-    <style jsx>{`
-      .FixedDateHeader {
-        background-color: ${APP_BACKGROUND_COLOR};
-        position: fixed;
-        top: ${desktop
-          ? HEIGHT_APPBAR + DESKTOP_HEIGHT_FILTERS
-          : HEIGHT_APPBAR}px;
-        left: 0;
-        right: 0;
-        max-width: ${MAX_WIDTH}px;
-        margin: 0 auto;
-        z-index: 2;
-      }
-    `}</style>
-  </div>
-);
 
 export default class EventList extends React.PureComponent {
   constructor(props) {
@@ -47,8 +25,6 @@ export default class EventList extends React.PureComponent {
     };
 
     this.handleStickyDate = this.handleStickyDate.bind(this);
-    this.handleLoadMore = this.handleLoadMore.bind(this);
-    this.handleScroll = this.handleScroll.bind(this);
     this.handleListRendered = this.handleListRendered.bind(this);
     this.handleEventSelection = this.handleEventSelection.bind(this);
     this.handleCloseSelectedEvent = this.handleCloseSelectedEvent.bind(this);
@@ -82,37 +58,20 @@ export default class EventList extends React.PureComponent {
             data={this.props.data}
             onSelectEvent={this.handleEventSelection}
             onChangeStickyDate={this.handleStickyDate}
-            onReachEndList={this.handleLoadMore}
-            onScroll={this.handleScroll}
             onListRendered={this.handleListRendered}
           />
         </div>
 
-        {this.state.listRendered &&
-          !desktop && <MobileFilters show={this.state.scrollUp} />}
-
-        {this.state.listRendered &&
-          desktop && <DesktopFilters show={this.state.scrollUp} />}
-
         {event && (
-          <div className={'EventList-SelectedEvent'}>
-            <div className={'EventList-SelectedEventHeader'}>
-              <SVGWrapper
-                icon={CrossIcon}
-                fill={ICON_COLOR}
-                onClick={this.handleCloseSelectedEvent}
-                className={'Overlay-closeButton Button--circle'}
-              />
-            </div>
-            <EventDetails data={event} />
-          </div>
+          <EventDetailsWrapper
+            event={event}
+            onClose={this.handleCloseSelectedEvent}
+          />
         )}
 
         <style jsx>{`
           .EventList {
-            padding-top: ${desktop
-              ? EVENT_LIST_DATE_HEIGHT + DESKTOP_HEIGHT_FILTERS
-              : EVENT_LIST_DATE_HEIGHT}px;
+            padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
             -webkit-overflow-scrolling: touch;
             outline: none;
             max-width: ${MAX_WIDTH}px;
@@ -124,36 +83,6 @@ export default class EventList extends React.PureComponent {
             top: 0;
             bottom: 0;
             width: 100%;
-          }
-
-          .EventList-SelectedEvent {
-            display: flex;
-            flex-direction: column;
-          }
-
-          .EventList-SelectedEvent,
-          .EventList-SelectedEvent:before {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            margin: 0 auto;
-            z-index: 100;
-            transform: scale(1);
-            transition: transform 0.25s ease-in-out;
-          }
-
-          .EventList-SelectedEvent:before {
-            content: '';
-            background-color: ${SECONDARY_COLOR};
-            z-index: -1;
-            backdrop-filter: blur(3px);
-            opacity: 0.3;
-          }
-
-          .EventList-SelectedEventHeader {
-            padding: ${getSpacing('xs')}px ${getSpacing('s')}px;
           }
         `}</style>
       </div>
@@ -173,22 +102,8 @@ export default class EventList extends React.PureComponent {
     this.props.onSelectEvent(data);
   }
 
-  scrollTop = 0;
-
   handleStickyDate(stickyDate) {
     this.setState({ stickyDate });
-  }
-
-  handleLoadMore() {
-    if (!this.props.loading) this.props.onLoadMore();
-  }
-
-  handleScroll({ scrollTop }) {
-    const scrollUp =
-      this.scrollTop > scrollTop ||
-      (this.scrollTop === scrollTop && !scrollTop);
-    this.scrollTop = scrollTop;
-    this.setState({ scrollUp });
   }
 
   handleListRendered() {
@@ -196,3 +111,67 @@ export default class EventList extends React.PureComponent {
     this.props.onListRendered();
   }
 }
+
+const FixedDateHeader = ({ date, desktop }) => (
+  <div className={'FixedDateHeader'}>
+    <EventListDate date={date} />
+    <style jsx>{`
+      .FixedDateHeader {
+        background-color: ${APP_BACKGROUND_COLOR};
+        position: fixed;
+        top: ${HEIGHT_APPBAR}px;
+        left: 0;
+        right: 0;
+        max-width: ${MAX_WIDTH}px;
+        margin: 0 auto;
+        z-index: 2;
+      }
+    `}</style>
+  </div>
+);
+
+const EventDetailsWrapper = ({ onClose, event }) => (
+  <div className={'EventList-SelectedEvent'}>
+    <div className={'EventList-SelectedEventHeader'}>
+      <SVGWrapper
+        icon={CrossIcon}
+        fill={ICON_COLOR}
+        onClick={onClose}
+        className={'Overlay-closeButton Button--circle'}
+      />
+    </div>
+    <EventDetails data={event} />
+
+    <style jsx>{`
+      .EventList-SelectedEvent {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .EventList-SelectedEvent,
+      .EventList-SelectedEvent:before {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: 0 auto;
+        z-index: 100;
+        transform: scale(1);
+        transition: transform 0.25s ease-in-out;
+      }
+
+      .EventList-SelectedEvent:before {
+        content: '';
+        background-color: ${SECONDARY_COLOR};
+        z-index: -1;
+        backdrop-filter: blur(3px);
+        opacity: 0.3;
+      }
+
+      .EventList-SelectedEventHeader {
+        padding: ${getSpacing('xs')}px ${getSpacing('s')}px;
+      }
+    `}</style>
+  </div>
+);
