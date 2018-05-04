@@ -35,10 +35,13 @@ const HomePage = dynamic(import('../components/HomePage'), {
   ssr: true,
   loading: () => <Loader />
 });
-const ClientRedirects = dynamic(import('../components/ClientRedirects'), {
-  ssr: false,
-  loading: () => null
-});
+const ClientSideUserPosition = dynamic(
+  import('../components/ClientSideUserPosition'),
+  {
+    ssr: false,
+    loading: () => null
+  }
+);
 
 const regexpEventEP = pathToRegexp('/event/:keyword');
 const MIN_LOAD_TIME = 2000;
@@ -86,7 +89,7 @@ class Index extends React.PureComponent {
 
     return (
       <Layout>
-        <ClientRedirects position={this.props.position} />
+        <ClientSideUserPosition currentPosition={this.props.position} />
 
         {(this.state.minLoading || !this.props.eventListReady) && (
           <SplashScreen />

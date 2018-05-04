@@ -1,4 +1,5 @@
 import moment from 'moment';
+import store from 'store';
 import { createStore } from 'redux';
 
 import {
@@ -14,7 +15,8 @@ import {
   SET_GOOGLE_MAPS_SERVICE,
   SET_EVENT_LIST_READY_FLAG,
   SET_MEDIA_TYPE,
-  SET_USER_POSITION
+  SET_USER_POSITION,
+  LOCAL_STORAGE_SET
 } from './actions';
 
 const GEOHASH_PRECISION = 4;
@@ -61,6 +63,9 @@ const reducer = (state = initialState, action) => {
       return { ...state, media: action.media };
     case SET_USER_POSITION:
       return { ...state, position: action.position };
+    case LOCAL_STORAGE_SET:
+      store.set(action.key, action.value);
+      return state;
     default:
       return state;
   }

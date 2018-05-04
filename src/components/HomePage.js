@@ -1,7 +1,7 @@
 import Router, { withRouter } from 'next/router';
 import { connect } from 'react-redux';
 
-import { setUserPosition } from '../actions';
+import { setUserPosition, localStorageSet } from '../actions';
 
 import Button from './Button';
 
@@ -21,7 +21,12 @@ export class HomePage extends React.PureComponent {
     // TODO: fallback if error or timeout
     navigator.geolocation.getCurrentPosition(
       position => {
-        this.props.dispatch(setUserPosition(position.coords));
+        const coords = {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        };
+        this.props.dispatch(setUserPosition(coords));
+        this.props.dispatch(localStorageSet('position', coords));
         Router.push({ pathname: '/', query: { from: 'home' } }, `/search`);
       },
       error => {
