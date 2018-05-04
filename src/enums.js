@@ -19,3 +19,4 @@ export const NO_EVENT_SELECTED = null;
 export const DESKTOP = 'DESKTOP';
 export const MOBILE = 'MOBILE';
 export const DATE_FORMAT = 'dddd D MMMM';
+export const USER_POSITION_KEY = 'userPosition';

@@ -1,9 +1,11 @@
 import Router, { withRouter } from 'next/router';
 import { connect } from 'react-redux';
 
-import { setUserPosition, localStorageSet } from '../actions';
-
 import Button from './Button';
+
+import Geohash, { GEOHASH_PRECISION } from '../utils/geohash';
+import { setUserPosition, localStorageSet } from '../actions';
+import { USER_POSITION_KEY } from '../enums';
 
 export class HomePage extends React.PureComponent {
   render() {
@@ -21,12 +23,13 @@ export class HomePage extends React.PureComponent {
     // TODO: fallback if error or timeout
     navigator.geolocation.getCurrentPosition(
       position => {
-        const coords = {
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        };
-        this.props.dispatch(setUserPosition(coords));
-        this.props.dispatch(localStorageSet('position', coords));
+        const geohash = Geohash.encode(
+          position.coords.latitude,
+          position.coords.longitude,
+          GEOHASH_PRECISION
+        );
+        this.props.dispatch(setUserPosition(geohash));
+        this.props.dispatch(localStorageSet(USER_POSITION_KEY, geohash));
         Router.push({ pathname: '/', query: { from: 'home' } }, `/search`);
       },
       error => {

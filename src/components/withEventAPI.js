@@ -60,9 +60,9 @@ const withEventAPI = WrappedComponent => {
       return await api.invokeApi(...args).then(res => res.data);
     }
 
-    async getEventListAround(position) {
+    async getEventListAround(geohash) {
       let api = await this.getAPI();
-      const args = getAroundEventListArgs(position);
+      const args = getAroundEventListArgs(geohash);
       return await api.invokeApi(...args).then(res => res.data);
     }
   };

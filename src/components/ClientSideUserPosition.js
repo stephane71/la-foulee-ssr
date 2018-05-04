@@ -16,10 +16,12 @@ import Router, { withRouter } from 'next/router';
 import { connect } from 'react-redux';
 
 import { setUserPosition } from '../actions';
+import { USER_POSITION_KEY } from '../enums';
 
 const ClientSideUserPosition = ({ currentPosition, router, dispatch }) => {
   if (!currentPosition) {
-    let position = store.get('position');
+    let position = store.get(USER_POSITION_KEY);
+    store.remove('position'); // Remove legacy key
 
     if (!position && router.asPath === '/search') {
       Router.replace('/', '/');

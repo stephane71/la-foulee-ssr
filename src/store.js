@@ -19,8 +19,6 @@ import {
   LOCAL_STORAGE_SET
 } from './actions';
 
-const GEOHASH_PRECISION = 4;
-
 function getNextMonth(month) {
   let [monthNumber, year] = month.split('-');
   monthNumber = parseInt(monthNumber) + 1;

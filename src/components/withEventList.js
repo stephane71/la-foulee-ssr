@@ -24,10 +24,10 @@ const withEventList = WrappedComponent => {
       );
     }
 
-    async fetchEvents(position) {
+    async fetchEvents(geohash) {
       this.setState({ loading: true });
 
-      const { events } = await this.props.getEventListAround(position);
+      const { events } = await this.props.getEventListAround(geohash);
       this.props.dispatch(setEventList(events));
 
       this.setState({ loading: false });
