@@ -1,4 +1,7 @@
-const IDENTITY_POOL_ID = process.env.IDENTITY_POOL_ID;
+import getConfig from 'next/config';
+const { publicRuntimeConfig } = getConfig();
+
+const IDENTITY_POOL_ID = publicRuntimeConfig.IDENTITY_POOL_ID;
 
 export default async function asyncGetCredentials(clearCache = false) {
   let AWS = await import('aws-sdk/global');

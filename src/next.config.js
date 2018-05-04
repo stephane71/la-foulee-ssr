@@ -1,3 +1,4 @@
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
 const webpack = require('webpack');
 
 const { ANALYZE } = process.env;
@@ -7,13 +8,17 @@ if (ANALYZE) {
   webpackBundleAnalyzer = require('webpack-bundle-analyzer');
 }
 
+console.log('Building', process.env.NODE_ENV, 'environnement');
+
 module.exports = {
   // useFileSystemPublicRoutes: false,
   // assetPrefix: isProd ? `https://assets.la-foulee.com` : '',
 
   publicRuntimeConfig: {
-    ASSETS_URL: 'https://assets.la-foulee.com',
-    API_URL: 'https://q3z21ff3yg.execute-api.eu-west-3.amazonaws.com/dev'
+    ASSETS_URL: process.env.ASSETS_URL,
+    API_URL: process.env.API_URL,
+    IDENTITY_POOL_ID: process.env.IDENTITY_POOL_ID,
+    GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY
   },
 
   exportPathMap: function() {
