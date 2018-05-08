@@ -2,8 +2,6 @@ console.log('----------------------------------');
 console.log('---- Running local dev server ----');
 console.log('----------------------------------');
 
-process.env['NEXT_ENV'] = 'developpement';
-
 const express = require('express');
 const next = require('next');
 
@@ -25,7 +23,7 @@ server.get('/static/*', (req, res) => {
 
 server.get('*', (req, res) => {
   // FIXME: doesn't serve pre-render pages
-  return app.render(req, res, APP_PAGE, {});
+  return handle(req, res);
 });
 
 app

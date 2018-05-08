@@ -9,6 +9,7 @@ if (ANALYZE) {
 }
 
 console.log('Building', process.env.NODE_ENV, 'environnement');
+console.log('API_URL', process.env.API_URL);
 
 module.exports = {
   // useFileSystemPublicRoutes: false,
@@ -23,7 +24,10 @@ module.exports = {
 
   exportPathMap: function() {
     return {
-      '/': { page: '/' }
+      '/': { page: '/' },
+      '/about': { page: '/about' },
+      '/contact': { page: '/contact' },
+      '/legal': { page: '/legal' }
     };
   },
 

@@ -1,0 +1,69 @@
+import React from 'react';
+import App, { Container } from 'next/app';
+import withRedux from 'next-redux-wrapper';
+import { compose } from 'redux';
+
+import Layout from '../components/Layout';
+import Media from '../components/Media';
+
+import withEventAPI from '../components/withEventAPI';
+import withCredentials from '../components/withCredentials';
+
+import { makeStore } from '../store';
+
+import { NODE_ENV_DEVELOPMENT } from '../enums';
+
+class MyApp extends App {
+  static async getInitialProps({ Component, router, ctx }) {
+    let pageProps = {};
+
+    if (Component.getInitialProps) {
+      pageProps = await Component.getInitialProps(ctx);
+    }
+
+    return { pageProps };
+  }
+
+  componentWillMount() {
+    if (typeof window !== 'object') return;
+
+    // WARNING: This is a patch
+    // Prevent NextJS LINK & ROUTER to mute the url by adding a trailing slash
+    this.nextExportBuffer = __NEXT_DATA__.nextExport;
+    __NEXT_DATA__.nextExport = false;
+  }
+
+  componentWillUnmount() {
+    // WARNING: This is a patch
+    // Prevent NextJS LINK & ROUTER to mute the url by adding a trailing slash
+    __NEXT_DATA__.nextExport = this.nextExportBuffer;
+  }
+
+  render() {
+    const { Component, pageProps } = this.props;
+
+    return (
+      <Container>
+        <Media>
+          <Layout>
+            <Component
+              {...pageProps}
+              getEvent={this.props.getEvent}
+              getEventListAround={this.props.getEventListAround}
+            />
+          </Layout>
+        </Media>
+      </Container>
+    );
+  }
+
+  nextExportBuffer = null;
+}
+
+export default compose(
+  withRedux(makeStore, {
+    debug: process.env.NODE_ENV === false
+  }),
+  withCredentials,
+  withEventAPI
+)(MyApp);
