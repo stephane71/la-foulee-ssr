@@ -1,8 +1,12 @@
 import Head from 'next/head';
+import getConfig from 'next/config';
 import { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import { setGoogleMapsService } from '../actions';
+
+const { publicRuntimeConfig } = getConfig();
+const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
 
 let service = null;
 
@@ -54,9 +58,7 @@ class GoogleMapPlacesApi extends React.PureComponent {
         {!window.google && (
           <Head>
             <script
-              src={`https://maps.googleapis.com/maps/api/js?key=${
-                process.env.GOOGLE_PLACES_API_KEY
-              }&libraries=places&callback=initService`}
+              src={`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places&callback=initService`}
             />
           </Head>
         )}
