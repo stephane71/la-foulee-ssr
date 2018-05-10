@@ -10,7 +10,7 @@ import SearchMobile from './SearchMobile';
 import getUserLocation from '../utils/getUserLocation';
 
 import GlobalStyles from '../styles';
-import { HEIGHT_APPBAR, USER_POSITION_KEY } from '../enums';
+import { HEIGHT_APPBAR, USER_POSITION_KEY, MAX_WIDTH } from '../enums';
 import { APP_BACKGROUND_COLOR, tonic } from '../colors';
 import { Base } from '../styles-variables';
 import { setUserPosition, localStorageSet, toggleSearch } from '../actions';
@@ -41,11 +41,12 @@ class Layout extends React.PureComponent {
           showSearchTrigger
         />
 
-        {this.props.children}
+        <div className={'PagesWrapper'}>{this.props.children}</div>
 
         <Overlay
           show={this.state.menu || this.props.searching}
           onClick={this.handleCloseMenu}
+          headerPadding={this.props.searching}
         />
         <SideMenu show={this.state.menu} onClose={this.handleCloseMenu} />
 
@@ -73,6 +74,12 @@ class Layout extends React.PureComponent {
             clip-path: polygon(0 68%, 100% 0%, 100% 100%, 0% 100%);
             height: calc(${Base}px * 80);
             margin: 0 auto;
+          }
+
+          .PagesWrapper {
+            max-width: ${MAX_WIDTH}px;
+            margin: 0 auto;
+            position: relative;
           }
         `}</style>
 

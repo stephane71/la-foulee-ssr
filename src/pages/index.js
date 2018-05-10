@@ -23,20 +23,13 @@ class Index extends React.PureComponent {
 
   render() {
     return (
-      <div className={'IndexPage prevent-scroll'}>
+      <>
         {this.props.position ? (
           <EventListContainer {...this.props} />
         ) : (
           <HomePage onClick={this.handleSearchCityToggle} />
         )}
-
-        <style jsx>{`
-          .IndexPage {
-            max-width: ${MAX_WIDTH}px;
-            margin: 0 auto;
-          }
-        `}</style>
-      </div>
+      </>
     );
   }
 
