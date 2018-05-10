@@ -80,6 +80,7 @@ export default class EventList extends React.PureComponent {
             top: 0;
             bottom: 0;
             width: 100%;
+            max-width: ${MAX_WIDTH}px;
           }
         `}</style>
       </div>
