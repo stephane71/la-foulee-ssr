@@ -1,6 +1,7 @@
 import css from 'styled-jsx/css';
 
 import { getFontSize } from '../styles-variables';
+import { white } from '../colors';
 
 const style = css`
   .inputWrapper {
@@ -15,6 +16,8 @@ const style = css`
     border: none;
     text-transform: capitalize;
     font-size: ${getFontSize('s')}px;
+    background-color: transparent;
+    color: ${white};
   }
 `;
 
@@ -30,7 +33,14 @@ class Input extends React.PureComponent {
     this.handleInputWrapperClick = this.handleInputWrapperClick.bind(this);
   }
 
+  componentDidMount() {
+    this.handleInputWrapperClick();
+  }
+
   componentWillReceiveProps(nextProps) {
+    if (this.props.reset !== nextProps.reset && nextProps.reset) {
+      this.setState({ value: DEFAULT_VALUE });
+    }
     if (this.props.value !== nextProps.value) {
       this.setState({ value: nextProps.value || DEFAULT_VALUE });
     }
