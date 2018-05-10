@@ -2,8 +2,8 @@ import React from 'react';
 
 import CheckIcon from '../svgs/ic_check_black_24px.svg';
 
-import { APP_BACKGROUND_COLOR, SECONDARY_COLOR } from '../colors';
-import { getSpacing } from '../styles-variables';
+import { APP_BACKGROUND_COLOR, SECONDARY_COLOR, white } from '../colors';
+import { getSpacing, BaseRadius } from '../styles-variables';
 
 const POWERED_BY_GOOGLE_LOGO_WIDTH = 144;
 const POWERED_BY_GOOGLE_LOGO_HEIGHT = 18;
@@ -49,8 +49,22 @@ const List = ({ list, onClick, poweredByGoogle }) => (
 
       .ListItem-container {
         padding: ${getSpacing('s')}px;
-        border-top: 1px solid ${APP_BACKGROUND_COLOR};
         text-transform: capitalize;
+        margin-bottom: 1px;
+        background-color: ${white};
+        cursor: pointer;
+      }
+
+      .ListItem-container:first-child {
+        border-radius: ${BaseRadius}px ${BaseRadius}px 0 0;
+      }
+
+      .ListItem-container:last-child {
+        border-radius: 0 0 ${BaseRadius}px ${BaseRadius}px;
+      }
+
+      .ListItem-container:only-child {
+        border-radius: ${BaseRadius}px;
       }
 
       .ListItem-container--googleLogo {

@@ -21,7 +21,6 @@ const ListWrapper = ({ children }) => (
     {children}
     <style jsx>{`
       .ListWrapper {
-        background-color: ${white};
         border-radius: ${BORDER_RADIUS}px;
         box-shadow: 0 5px 20px 0 rgba(38, 74, 67, 0.2);
         margin-bottom: ${getSpacing('m')}px;
