@@ -32,12 +32,14 @@ const List = ({ list, onClick, poweredByGoogle }) => (
         </div>
       </li>
     ))}
-    <li className={'ListItem-container ListItem-container--googleLogo'}>
-      <img
-        className={'ListItem-googleLogo'}
-        src={'/static/powered_by_google.png'}
-      />
-    </li>
+    {poweredByGoogle && (
+      <li className={'ListItem-container ListItem-container--googleLogo'}>
+        <img
+          className={'ListItem-googleLogo'}
+          src={'/static/powered_by_google.png'}
+        />
+      </li>
+    )}
     <style jsx>{`
       ul {
         list-style: none;
@@ -54,7 +56,6 @@ const List = ({ list, onClick, poweredByGoogle }) => (
       .ListItem-container--googleLogo {
         padding: ${getSpacing('xxs')}px;
         padding-left: ${getSpacing('s')}px;
-        display: ${list.length && poweredByGoogle ? 'list-item' : 'none'};
       }
 
       .ListItem {
