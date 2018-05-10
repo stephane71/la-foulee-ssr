@@ -25,6 +25,7 @@ class Layout extends React.PureComponent {
       menu: false
     };
 
+    this.handleClickOverlay = this.handleClickOverlay.bind(this);
     this.handleToggleMenu = this.handleToggleMenu.bind(this);
     this.handleCloseMenu = this.handleCloseMenu.bind(this);
     this.handleToggleSearch = this.handleToggleSearch.bind(this);
@@ -47,7 +48,7 @@ class Layout extends React.PureComponent {
 
         <Overlay
           show={this.state.menu || this.props.searching}
-          onClick={this.handleCloseMenu}
+          onClick={this.handleClickOverlay}
           headerPadding={this.props.searching}
         />
         <SideMenu show={this.state.menu} onClose={this.handleCloseMenu} />
@@ -90,6 +91,11 @@ class Layout extends React.PureComponent {
         </style>
       </div>
     );
+  }
+
+  handleClickOverlay() {
+    this.handleCloseMenu();
+    this.handleToggleSearch();
   }
 
   handleToggleMenu() {

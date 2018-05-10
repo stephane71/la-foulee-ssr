@@ -70,12 +70,14 @@ class SearchMobile extends React.PureComponent {
             reset={!this.state.input}
             focus={true}
           />
-          <div
-            className={'Search-Icon--paddingLeft'}
-            onClick={this.handleInputReset}
-          >
-            <IconCross fill={'#fff'} style={{ verticalAlign: 'top' }} />
-          </div>
+          {this.state.input && (
+            <div
+              className={'Search-Icon--paddingLeft'}
+              onClick={this.handleInputReset}
+            >
+              <IconCross fill={'#fff'} style={{ verticalAlign: 'top' }} />
+            </div>
+          )}
         </div>
 
         <div className={'SearchMobile-Content'}>
