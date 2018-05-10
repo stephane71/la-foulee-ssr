@@ -12,6 +12,7 @@ import { dominant, white } from '../colors';
 import { ICON_SIZE, HEIGHT_APPBAR, MAX_WIDTH } from '../enums';
 
 const HEIGHT_LOGO_APP_HEADER = HEIGHT_APPBAR - 36;
+const WIDTH_LOGO_APP_HEADER = 108;
 
 /*
  * This calculation is based on this pattern:
@@ -32,7 +33,7 @@ const Header = ({
         <MenuIcon style={{ fill: white, verticalAlign: 'middle' }} />
       </div>
       <div className={'Header-svgWrapper'} onClick={onClickHeaderLogo}>
-        <LogoTonic height={`${HEIGHT_LOGO_APP_HEADER}px`} />
+        <LogoTonic height={`${HEIGHT_LOGO_APP_HEADER}px`} width={`${WIDTH_LOGO_APP_HEADER}px`} />
       </div>
       {showSearchTrigger && (
         <div className={'Header-menuWrapper'} onClick={onClickSearch}>
