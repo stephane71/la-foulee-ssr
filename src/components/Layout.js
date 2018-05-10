@@ -22,7 +22,8 @@ class Layout extends React.PureComponent {
     super(props);
 
     this.state = {
-      menu: false
+      menu: false,
+      city: null
     };
 
     this.handleClickOverlay = this.handleClickOverlay.bind(this);
@@ -30,6 +31,7 @@ class Layout extends React.PureComponent {
     this.handleCloseMenu = this.handleCloseMenu.bind(this);
     this.handleToggleSearch = this.handleToggleSearch.bind(this);
     this.handleSelectUserPosition = this.handleSelectUserPosition.bind(this);
+    this.handleSelectCity = this.handleSelectCity.bind(this);
   }
 
   render() {
@@ -95,19 +97,19 @@ class Layout extends React.PureComponent {
 
   handleClickOverlay() {
     this.handleCloseMenu();
-    this.handleToggleSearch();
-  }
-
-  handleToggleMenu() {
-    this.setState(({ menu }) => ({ menu: !menu }));
+    this.handleToggleSearch(false);
   }
 
   handleCloseMenu() {
     this.setState({ menu: false });
   }
 
-  handleToggleSearch() {
-    this.props.dispatch(toggleSearch());
+  handleToggleMenu() {
+    this.setState(({ menu }) => ({ menu: !menu }));
+  }
+
+  handleToggleSearch(toggle) {
+    this.props.dispatch(toggleSearch(toggle));
   }
 
   handleSelectCity(city) {

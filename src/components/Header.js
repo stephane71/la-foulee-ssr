@@ -33,7 +33,10 @@ const Header = ({
         <MenuIcon style={{ fill: white, verticalAlign: 'middle' }} />
       </div>
       <div className={'Header-svgWrapper'} onClick={onClickHeaderLogo}>
-        <LogoTonic height={`${HEIGHT_LOGO_APP_HEADER}px`} width={`${WIDTH_LOGO_APP_HEADER}px`} />
+        <LogoTonic
+          height={`${HEIGHT_LOGO_APP_HEADER}px`}
+          width={`${WIDTH_LOGO_APP_HEADER}px`}
+        />
       </div>
       {showSearchTrigger && (
         <div className={'Header-menuWrapper'} onClick={onClickSearch}>

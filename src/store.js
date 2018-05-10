@@ -67,7 +67,11 @@ const reducer = (state = initialState, action) => {
       store.set(action.key, action.value);
       return state;
     case TOGGLE_SEARCH:
-      return { ...state, searching: !state.searching };
+      return {
+        ...state,
+        searching:
+          action.toggle === undefined ? !state.searching : action.toggle
+      };
     default:
       return state;
   }

@@ -66,8 +66,9 @@ export function localStorageSet(key, value) {
   };
 }
 
-export function toggleSearch() {
+export function toggleSearch(toggle) {
   return {
-    type: TOGGLE_SEARCH
+    type: TOGGLE_SEARCH,
+    toggle
   };
 }
