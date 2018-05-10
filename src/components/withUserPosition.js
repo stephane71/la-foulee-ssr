@@ -1,6 +1,5 @@
 import store from 'store';
 
-import Geohash, { GEOHASH_PRECISION } from '../utils/geohash';
 import { setUserPosition } from '../actions';
 import { USER_POSITION_KEY } from '../enums';
 
@@ -17,12 +16,7 @@ const withUserPosition = WrappedComponent => {
     }
 
     render() {
-      return (
-        <WrappedComponent
-          {...this.props}
-          getUserGeolocation={this.getUserGeolocation}
-        />
-      );
+      return <WrappedComponent {...this.props} />;
     }
 
     getUserPosition(storedPosition) {
@@ -31,26 +25,6 @@ const withUserPosition = WrappedComponent => {
       store.remove('position'); // Remove legacy key
 
       this.props.dispatch(setUserPosition(position));
-    }
-
-    getUserGeolocation() {
-      return new Promise((resolve, reject) => {
-        // TODO: fallback if error or timeout
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            const geohash = Geohash.encode(
-              position.coords.latitude,
-              position.coords.longitude,
-              GEOHASH_PRECISION
-            );
-            resolve(geohash);
-          },
-          error => {
-            console.error(error);
-            reject(error);
-          }
-        );
-      });
     }
   };
 };

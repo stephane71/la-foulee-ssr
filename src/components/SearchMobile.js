@@ -60,7 +60,7 @@ class SearchMobile extends React.PureComponent {
         <div className={'SearchMobile-Header'}>
           <div
             className={'Search-Icon--paddingRight'}
-            onClick={this.props.onGoBack}
+            onClick={this.props.onLeaveSearch}
           >
             <IconArrowBack fill={'#fff'} style={{ verticalAlign: 'top' }} />
           </div>
@@ -111,8 +111,9 @@ class SearchMobile extends React.PureComponent {
             top: 0;
             width: 100%;
             max-width: ${MAX_WIDTH}px;
-            margin: 0 auto;
             z-index: 20;
+            left: 50%;
+            transform: translate(-50%);
           }
 
           .SearchMobile-Header {

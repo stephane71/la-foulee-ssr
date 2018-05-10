@@ -4,25 +4,21 @@ import { connect } from 'react-redux';
 
 import EventListContainer from '../containers/EventListContainer';
 
-import withUserPosition from '../components/withUserPosition';
 import HomePage from '../components/HomePage';
-import SearchMobile from '../components/SearchMobile';
+import withUserPosition from '../components/withUserPosition';
 
-import { setUserPosition, localStorageSet } from '../actions';
-import { USER_POSITION_KEY, MAX_WIDTH } from '../enums';
+import { toggleSearch } from '../actions';
+import { MAX_WIDTH } from '../enums';
 
 class Index extends React.PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
-      searching: false,
       city: ''
     };
 
-    this.handleCitySelect = this.handleCitySelect.bind(this);
     this.handleSearchCityToggle = this.handleSearchCityToggle.bind(this);
-    this.handleUserPositionSelect = this.handleUserPositionSelect.bind(this);
   }
 
   render() {
@@ -30,13 +26,6 @@ class Index extends React.PureComponent {
       <div className={'IndexPage prevent-scroll'}>
         {this.props.position ? (
           <EventListContainer {...this.props} />
-        ) : this.state.searching ? (
-          <SearchMobile
-            onSelectAround={this.handleUserPositionSelect}
-            onResetInput={this.handleInputReset}
-            onGoBack={this.handleSearchCityToggle}
-            onSelectCity={this.handleCitySelect}
-          />
         ) : (
           <HomePage onClick={this.handleSearchCityToggle} />
         )}
@@ -51,18 +40,8 @@ class Index extends React.PureComponent {
     );
   }
 
-  handleSearchCityToggle(searching) {
-    this.setState(({ searching }) => ({ searching: !searching }));
-  }
-
-  handleCitySelect(city) {
-    this.setState({ city });
-  }
-
-  async handleUserPositionSelect() {
-    const geohash = await this.props.getUserGeolocation();
-    this.props.dispatch(setUserPosition(geohash));
-    this.props.dispatch(localStorageSet(USER_POSITION_KEY, geohash));
+  handleSearchCityToggle() {
+    this.props.dispatch(toggleSearch());
   }
 }
 

@@ -1,14 +1,19 @@
 import moment from 'moment';
 import Router from 'next/router';
+import { connect } from 'react-redux';
 
 import Header from './Header';
 import Overlay from './Overlay';
 import SideMenu from './SideMenu';
+import SearchMobile from './SearchMobile';
+
+import getUserLocation from '../utils/getUserLocation';
 
 import GlobalStyles from '../styles';
-import { HEIGHT_APPBAR } from '../enums';
+import { HEIGHT_APPBAR, USER_POSITION_KEY } from '../enums';
 import { APP_BACKGROUND_COLOR, tonic } from '../colors';
 import { Base } from '../styles-variables';
+import { setUserPosition, localStorageSet, toggleSearch } from '../actions';
 
 moment.locale('fr');
 
@@ -22,6 +27,8 @@ class Layout extends React.PureComponent {
 
     this.handleToggleMenu = this.handleToggleMenu.bind(this);
     this.handleCloseMenu = this.handleCloseMenu.bind(this);
+    this.handleToggleSearch = this.handleToggleSearch.bind(this);
+    this.handleSelectUserPosition = this.handleSelectUserPosition.bind(this);
   }
 
   render() {
@@ -30,12 +37,25 @@ class Layout extends React.PureComponent {
         <Header
           onClickMenu={this.handleToggleMenu}
           onClickHeaderLogo={() => Router.push('/?from=header', '/', {})}
+          onClickSearch={this.handleToggleSearch}
+          showSearchTrigger
         />
 
         {this.props.children}
 
-        <Overlay show={this.state.menu} onClick={this.handleCloseMenu} />
+        <Overlay
+          show={this.state.menu || this.props.searching}
+          onClick={this.handleCloseMenu}
+        />
         <SideMenu show={this.state.menu} onClose={this.handleCloseMenu} />
+
+        {this.props.searching && (
+          <SearchMobile
+            onSelectAround={this.handleSelectUserPosition}
+            onSelectCity={this.handleSelectCity}
+            onLeaveSearch={this.handleToggleSearch}
+          />
+        )}
 
         <style jsx>{`
           .root {
@@ -70,6 +90,27 @@ class Layout extends React.PureComponent {
   handleCloseMenu() {
     this.setState({ menu: false });
   }
+
+  handleToggleSearch() {
+    this.props.dispatch(toggleSearch());
+  }
+
+  handleSelectCity(city) {
+    this.setState({ city });
+  }
+
+  async handleSelectUserPosition() {
+    this.handleToggleSearch();
+    const geohash = await getUserLocation();
+    this.props.dispatch(setUserPosition(geohash));
+    this.props.dispatch(localStorageSet(USER_POSITION_KEY, geohash));
+  }
 }
 
-export default Layout;
+function mapStateToProps(state) {
+  return {
+    searching: state.searching
+  };
+}
+
+export default connect(mapStateToProps)(Layout);
