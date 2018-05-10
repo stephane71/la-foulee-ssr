@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 import debounce from 'lodash.debounce';
 
 import { dominant, white } from '../colors';
-import { HEIGHT_APPBAR, BORDER_RADIUS } from '../enums';
+import { HEIGHT_APPBAR, BORDER_RADIUS, MAX_WIDTH } from '../enums';
 import { getSpacing, getFontSize } from '../styles-variables';
 
 import Input from './Input';
@@ -109,9 +109,9 @@ class SearchMobile extends React.PureComponent {
           .SearchMobile {
             position: fixed;
             top: 0;
-            left: 0;
             width: 100%;
-            height: 100vh;
+            max-width: ${MAX_WIDTH}px;
+            margin: 0 auto;
             z-index: 20;
           }
 

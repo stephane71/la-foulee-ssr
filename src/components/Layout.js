@@ -41,7 +41,6 @@ class Layout extends React.PureComponent {
           .root {
             background: ${APP_BACKGROUND_COLOR};
             padding-top: ${HEIGHT_APPBAR}px;
-            margin: 0 auto;
           }
 
           .root:before {

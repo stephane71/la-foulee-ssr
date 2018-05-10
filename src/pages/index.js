@@ -9,7 +9,7 @@ import HomePage from '../components/HomePage';
 import SearchMobile from '../components/SearchMobile';
 
 import { setUserPosition, localStorageSet } from '../actions';
-import { USER_POSITION_KEY } from '../enums';
+import { USER_POSITION_KEY, MAX_WIDTH } from '../enums';
 
 class Index extends React.PureComponent {
   constructor(props) {
@@ -27,7 +27,7 @@ class Index extends React.PureComponent {
 
   render() {
     return (
-      <>
+      <div className={'IndexPage prevent-scroll'}>
         {this.props.position ? (
           <EventListContainer {...this.props} />
         ) : this.state.searching ? (
@@ -40,7 +40,14 @@ class Index extends React.PureComponent {
         ) : (
           <HomePage onClick={this.handleSearchCityToggle} />
         )}
-      </>
+
+        <style jsx>{`
+          .IndexPage {
+            max-width: ${MAX_WIDTH}px;
+            margin: 0 auto;
+          }
+        `}</style>
+      </div>
     );
   }
 
