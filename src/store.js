@@ -16,7 +16,8 @@ import {
   SET_EVENT_LIST_READY_FLAG,
   SET_MEDIA_TYPE,
   SET_USER_POSITION,
-  LOCAL_STORAGE_SET
+  LOCAL_STORAGE_SET,
+  TOGGLE_SEARCH
 } from './actions';
 
 function getNextMonth(month) {
@@ -42,7 +43,8 @@ const initialState = {
   googleMapsService: null,
   eventListReady: false,
   media: null,
-  position: null
+  position: null,
+  searching: false
 };
 
 const reducer = (state = initialState, action) => {
@@ -64,6 +66,8 @@ const reducer = (state = initialState, action) => {
     case LOCAL_STORAGE_SET:
       store.set(action.key, action.value);
       return state;
+    case TOGGLE_SEARCH:
+      return { ...state, searching: !state.searching };
     default:
       return state;
   }

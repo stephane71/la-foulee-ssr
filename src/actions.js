@@ -8,6 +8,7 @@ export const SET_EVENT_LIST_READY_FLAG = 'SET_EVENT_LIST_READY_FLAG';
 export const SET_MEDIA_TYPE = 'SET_MEDIA_TYPE';
 export const SET_USER_POSITION = 'SET_USER_POSITION';
 export const LOCAL_STORAGE_SET = 'LOCAL_STORAGE_SET';
+export const TOGGLE_SEARCH = 'TOGGLE_SEARCH';
 
 export function setSelectedEvent(event) {
   return {
@@ -62,5 +63,11 @@ export function localStorageSet(key, value) {
     type: LOCAL_STORAGE_SET,
     key,
     value
+  };
+}
+
+export function toggleSearch() {
+  return {
+    type: TOGGLE_SEARCH
   };
 }
