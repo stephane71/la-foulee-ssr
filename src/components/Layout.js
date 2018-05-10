@@ -38,10 +38,12 @@ class Layout extends React.PureComponent {
           onClickMenu={this.handleToggleMenu}
           onClickHeaderLogo={() => Router.push('/?from=header', '/', {})}
           onClickSearch={this.handleToggleSearch}
-          showSearchTrigger
+          showSearchTrigger={this.props.position}
         />
 
-        <div className={'PagesWrapper'}>{this.props.children}</div>
+        <div className={'PagesWrapper prevent-scroll'}>
+          {this.props.children}
+        </div>
 
         <Overlay
           show={this.state.menu || this.props.searching}
@@ -116,7 +118,8 @@ class Layout extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    searching: state.searching
+    searching: state.searching,
+    position: state.position
   };
 }
 
