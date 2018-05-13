@@ -66,7 +66,7 @@ class Layout extends React.PureComponent {
           <SearchMobile
             onSelectAround={this.handleSelectUserPosition}
             onSelectCity={this.handleSelectCity}
-            onLeaveSearch={this.handleToggleSearch}
+            onLeave={this.handleToggleSearch}
           />
         )}
 

@@ -79,7 +79,7 @@ class SearchMobile extends React.PureComponent {
         <div className={'SearchMobile-Header'}>
           <div
             className={'Search-Icon--paddingRight'}
-            onClick={this.props.onLeaveSearch}
+            onClick={() => this.props.onLeave()}
           >
             <IconArrowBack fill={'#fff'} style={{ verticalAlign: 'top' }} />
           </div>
