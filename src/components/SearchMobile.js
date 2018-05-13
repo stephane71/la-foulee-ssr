@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import debounce from 'lodash.debounce';
 
-import { dominant, white } from '../colors';
+import { dominant, white, SECONDARY_COLOR } from '../colors';
 import { HEIGHT_APPBAR, BORDER_RADIUS, MAX_WIDTH } from '../enums';
 import { getSpacing, getFontSize } from '../styles-variables';
 
@@ -15,6 +15,7 @@ const GoogleMapPlacesApi = dynamic(import('./GoogleMapPlacesApi'), {
 
 import IconArrowBack from '../svgs/ic_arrow_back_black_24px.svg';
 import IconCross from '../svgs/baseline-clear-24px.svg';
+import IconNearMe from '../svgs/baseline-near_me-24px.svg';
 
 const ListWrapper = ({ children }) => (
   <div className={`ListWrapper`}>
@@ -102,7 +103,19 @@ class SearchMobile extends React.PureComponent {
         <div className={'SearchMobile-Content'}>
           <ListWrapper>
             <List
-              list={[{ value: 'Votre position' }]}
+              list={[{ value: 'Votre position', Icon: IconNearMe }]}
+              renderItem={({ value, Icon }) => (
+                <div>
+                  <Icon
+                    style={{
+                      fill: SECONDARY_COLOR,
+                      verticalAlign: 'top',
+                      marginRight: getSpacing('s')
+                    }}
+                  />
+                  <span>{value}</span>
+                </div>
+              )}
               onClick={this.props.onSelectAround}
             />
           </ListWrapper>
