@@ -21,7 +21,6 @@ export default class EventList extends React.PureComponent {
 
     this.state = {
       stickyDate: this.props.data.length && this.props.data[0].date,
-      scrollUp: true,
       listRendered: false
     };
 
@@ -38,7 +37,7 @@ export default class EventList extends React.PureComponent {
 
     return (
       <div className={'EventList prevent-scroll'}>
-        {!this.state.listRendered && (
+        {(!this.state.listRendered || this.props.loading) && (
           <div className={'EventList-Loading'}>
             <Loader />
           </div>
@@ -81,6 +80,8 @@ export default class EventList extends React.PureComponent {
             bottom: 0;
             width: 100%;
             max-width: ${MAX_WIDTH}px;
+            z-index: 10;
+            background-color: ${APP_BACKGROUND_COLOR};
           }
         `}</style>
       </div>
