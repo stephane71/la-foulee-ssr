@@ -30,10 +30,30 @@ const ListWrapper = ({ children }) => (
 );
 
 const BIG_CITIES = [
-  { value: 'Paris' },
-  { value: 'Lyon' },
-  { value: 'Marseille' },
-  { value: 'Bordeaux' }
+  {
+    value: 'Paris',
+    geometry: {
+      location: { lat: () => 48.85661400000001, lng: () => 2.3522219000000177 }
+    }
+  },
+  {
+    value: 'Lyon',
+    geometry: {
+      location: { lat: () => 45.764043, lng: () => 4.835658999999964 }
+    }
+  },
+  {
+    value: 'Marseille',
+    geometry: {
+      location: { lat: () => 43.296482, lng: () => 5.369779999999992 }
+    }
+  },
+  {
+    value: 'Bordeaux',
+    geometry: {
+      location: { lat: () => 44.837789, lng: () => -0.5791799999999512 }
+    }
+  }
 ];
 
 class SearchMobile extends React.PureComponent {

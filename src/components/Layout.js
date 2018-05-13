@@ -120,10 +120,13 @@ class Layout extends React.PureComponent {
   }
 
   async handleSelectCity(_city) {
-    const city = await GoogleMapPlacesApi.getDetails(
-      this.props.googleMapsServiceDetails,
-      _city.placeId
-    );
+    const city = _city.geometry
+      ? _city
+      : await GoogleMapPlacesApi.getDetails(
+          this.props.googleMapsServiceDetails,
+          _city.placeId
+        );
+
     this.setState({ city });
     this.handleToggleSearch();
 
