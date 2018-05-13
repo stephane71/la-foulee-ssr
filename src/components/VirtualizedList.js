@@ -57,6 +57,7 @@ export default class VirtualizedList extends React.PureComponent {
                 deferredMeasurementCache={cache}
                 rowHeight={cache.rowHeight}
                 scrollToIndex={0}
+                className={'VirtualizedList-List'}
               />
             )}
           </AutoSizer>

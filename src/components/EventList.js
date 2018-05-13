@@ -13,7 +13,6 @@ import { HEIGHT_APPBAR, NO_EVENT_SELECTED, MAX_WIDTH } from '../enums';
 // See EventListDate component: line height + 2 * vertical padding
 const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
 const ICON_COLOR = '#8FB0A9';
-const EVENT_LIST_PADDING_BOTTOM = 30;
 
 export default class EventList extends React.PureComponent {
   constructor(props) {
@@ -67,7 +66,6 @@ export default class EventList extends React.PureComponent {
         <style jsx>{`
           .EventList {
             padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
-            padding-bottom: ${EVENT_LIST_PADDING_BOTTOM}px;
             -webkit-overflow-scrolling: touch;
             outline: none;
             max-width: ${MAX_WIDTH}px;

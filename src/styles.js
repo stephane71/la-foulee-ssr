@@ -43,16 +43,8 @@ export default css`
     overflow: auto;
   }
 
-  .no-scroll {
-    overflow: hidden;
-  }
-
-  .wrapper-hidden {
-    display: none;
-  }
-
-  .wrapper-show {
-    height: 100%;
+  .VirtualizedList-List {
+    padding-bottom: ${getSpacing('m')}px;
   }
 
   *,
