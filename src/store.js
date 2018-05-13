@@ -6,7 +6,9 @@ import {
   LOCATION_FILTER,
   DATE_FILTER,
   DISTANCE_FILTER,
-  DEFAULT_SELECTOR_VALUES
+  DEFAULT_SELECTOR_VALUES,
+  GOOGLE_DETAILS_SERVICE,
+  GOOGLE_AUTOCOMPLETE_SERVICE
 } from './enums';
 import {
   SET_SELECTED_EVENT,
@@ -40,7 +42,10 @@ const initialState = {
   event: null,
   events: [],
   selectors: Object.assign({}, DEFAULT_SELECTOR_VALUES, LEGACY_SELECTORS),
-  googleMapsService: null,
+  googleMapsService: {
+    [GOOGLE_DETAILS_SERVICE]: null,
+    [GOOGLE_AUTOCOMPLETE_SERVICE]: null
+  },
   eventListReady: false,
   media: null,
   position: null,
@@ -56,7 +61,11 @@ const reducer = (state = initialState, action) => {
     case SET_SELECTORS:
       return { ...state, selectors: action.selectors };
     case SET_GOOGLE_MAPS_SERVICE:
-      return { ...state, googleMapsService: action.service };
+      const googleMapsService = {
+        ...state.googleMapsService,
+        [action.service]: action.value
+      };
+      return { ...state, googleMapsService: googleMapsService };
     case SET_EVENT_LIST_READY_FLAG:
       return { ...state, eventListReady: true };
     case SET_MEDIA_TYPE:

@@ -6,11 +6,18 @@ import Header from './Header';
 import Overlay from './Overlay';
 import SideMenu from './SideMenu';
 import SearchMobile from './SearchMobile';
+import GoogleMapPlacesApi from './GoogleMapPlacesApi';
 
 import getUserLocation from '../utils/getUserLocation';
+import Geohash, { GEOHASH_PRECISION } from '../utils/geohash';
 
 import GlobalStyles from '../styles';
-import { HEIGHT_APPBAR, USER_POSITION_KEY, MAX_WIDTH } from '../enums';
+import {
+  HEIGHT_APPBAR,
+  USER_POSITION_KEY,
+  MAX_WIDTH,
+  GOOGLE_DETAILS_SERVICE
+} from '../enums';
 import { APP_BACKGROUND_COLOR, tonic } from '../colors';
 import { Base } from '../styles-variables';
 import { setUserPosition, localStorageSet, toggleSearch } from '../actions';
@@ -112,8 +119,21 @@ class Layout extends React.PureComponent {
     this.props.dispatch(toggleSearch(toggle));
   }
 
-  handleSelectCity(city) {
+  async handleSelectCity(_city) {
+    const city = await GoogleMapPlacesApi.getDetails(
+      this.props.googleMapsServiceDetails,
+      _city.placeId
+    );
     this.setState({ city });
+    this.handleToggleSearch();
+
+    const geohash = Geohash.encode(
+      city.geometry.location.lat(),
+      city.geometry.location.lng(),
+      GEOHASH_PRECISION
+    );
+
+    this.props.dispatch(setUserPosition(geohash));
   }
 
   async handleSelectUserPosition() {
@@ -127,7 +147,8 @@ class Layout extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     searching: state.searching,
-    position: state.position
+    position: state.position,
+    googleMapsServiceDetails: state.googleMapsService[GOOGLE_DETAILS_SERVICE]
   };
 }
 

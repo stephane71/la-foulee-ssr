@@ -4,21 +4,24 @@ import { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import { setGoogleMapsService } from '../actions';
+import { GOOGLE_DETAILS_SERVICE, GOOGLE_AUTOCOMPLETE_SERVICE } from '../enums';
 
 const { publicRuntimeConfig } = getConfig();
 const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
 
 let service = null;
 
+const GOOGLE_MAPS_API_URL = 'https://maps.googleapis.com/maps/api';
 const GOOGLE_MAPS_OPTIONS = {
   types: ['(cities)'],
   componentRestrictions: { country: 'fr' }
 };
 
 const mapPredictionToSelectList = predictions =>
-  predictions.map(({ structured_formatting }) => ({
+  predictions.map(({ structured_formatting, place_id }) => ({
     value: structured_formatting.main_text,
-    matched: structured_formatting.main_text_matched_substrings[0]
+    matched: structured_formatting.main_text_matched_substrings[0],
+    placeId: place_id
   }));
 
 class GoogleMapPlacesApi extends React.PureComponent {
@@ -31,10 +34,19 @@ class GoogleMapPlacesApi extends React.PureComponent {
 
     this.predictionCB = this.predictionCB.bind(this);
 
-    window.initService = () => {
-      // this.service = new google.maps.places.AutocompleteService();
+    window.initService = async () => {
       this.props.dispatch(
-        setGoogleMapsService(new google.maps.places.AutocompleteService())
+        setGoogleMapsService(
+          GOOGLE_AUTOCOMPLETE_SERVICE,
+          new google.maps.places.AutocompleteService()
+        )
+      );
+
+      this.props.dispatch(
+        setGoogleMapsService(
+          GOOGLE_DETAILS_SERVICE,
+          new google.maps.places.PlacesService(new google.maps.Map(''))
+        )
       );
     };
   }
@@ -45,7 +57,7 @@ class GoogleMapPlacesApi extends React.PureComponent {
         this.setState({ predictions: [] });
         return;
       }
-      this.props.googleMapsService.getPlacePredictions(
+      this.props.googleMapsServiceAutocomplete.getPlacePredictions(
         { ...GOOGLE_MAPS_OPTIONS, input: nextProps.input },
         this.predictionCB
       );
@@ -58,7 +70,7 @@ class GoogleMapPlacesApi extends React.PureComponent {
         {!window.google && (
           <Head>
             <script
-              src={`https://maps.googleapis.com/maps/api/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places&callback=initService`}
+              src={`${GOOGLE_MAPS_API_URL}/js?key=${GOOGLE_PLACES_API_KEY}&libraries=places&callback=initService`}
             />
           </Head>
         )}
@@ -74,11 +86,22 @@ class GoogleMapPlacesApi extends React.PureComponent {
     }
     this.setState({ predictions });
   }
+
+  static getDetails(service, placeId) {
+    return new Promise((resolve, reject) => {
+      service.getDetails({ placeId }, (place, status) => {
+        status == google.maps.places.PlacesServiceStatus.OK
+          ? resolve(place)
+          : reject(status);
+      });
+    });
+  }
 }
 
 function mapStateToProps(state) {
   return {
-    googleMapsService: state.googleMapsService
+    googleMapsServiceAutocomplete:
+      state.googleMapsService[GOOGLE_AUTOCOMPLETE_SERVICE]
   };
 }
 

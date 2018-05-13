@@ -31,10 +31,11 @@ export function setSelectors(selectors) {
   };
 }
 
-export function setGoogleMapsService(service) {
+export function setGoogleMapsService(service, value) {
   return {
     type: SET_GOOGLE_MAPS_SERVICE,
-    service
+    service,
+    value
   };
 }
 
