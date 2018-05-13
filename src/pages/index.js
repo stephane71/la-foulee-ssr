@@ -25,7 +25,10 @@ class Index extends React.PureComponent {
     return (
       <>
         {this.props.position ? (
-          <EventListContainer {...this.props} />
+          <EventListContainer
+            getEvent={this.props.getEvent}
+            getEventListAround={this.props.getEventListAround}
+          />
         ) : (
           <HomePage onClick={this.handleSearchCityToggle} />
         )}
