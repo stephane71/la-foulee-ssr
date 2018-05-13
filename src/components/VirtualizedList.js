@@ -27,9 +27,11 @@ export default class VirtualizedList extends React.PureComponent {
     this.onRowsRendered = this.onRowsRendered.bind(this);
   }
 
-  state = {
-    rendered: false
-  };
+  componentWillReceiveProps(nextProps) {
+    if (this.props.data !== nextProps.data) {
+      cache.clearAll();
+    }
+  }
 
   render() {
     return (
@@ -54,6 +56,7 @@ export default class VirtualizedList extends React.PureComponent {
                 scrollTop={scrollTop}
                 deferredMeasurementCache={cache}
                 rowHeight={cache.rowHeight}
+                scrollToIndex={0}
               />
             )}
           </AutoSizer>
