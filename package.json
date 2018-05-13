@@ -9,7 +9,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.round": "^4.0.4",
     "moment": "^2.22.1",
-    "next": "^6.0.0",
+    "next": "^6.0.1",
     "next-redux-wrapper": "^2.0.0-beta.4",
     "path-to-regexp": "^2.2.1",
     "react": "^16.3.2",
@@ -35,8 +35,7 @@
     "analyze": "cross-env ANALYZE=1 npm run build:dev",
     "export:dev": "npm run build:dev && NODE_ENV=dev next export src",
     "export:prod": "npm run build:prod && NODE_ENV=production next export src",
-    "deploy:test":
-      "npm run export:dev && scotty --spa --source ./src/out --bucket test.la-foulee --update"
+    "deploy:test": "npm run export:dev && scotty --spa --source ./src/out --bucket test.la-foulee --update"
   },
   "author": "",
   "license": "ISC"
