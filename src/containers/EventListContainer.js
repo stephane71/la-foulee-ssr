@@ -23,6 +23,12 @@ export class EventListContainer extends React.PureComponent {
     if (this.props.position) this.props.fetchEvents(this.props.position);
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.position !== this.props.position) {
+      this.props.fetchEvents(nextProps.position);
+    }
+  }
+
   render() {
     return (
       <Fragment>
@@ -66,9 +72,9 @@ export class EventListContainer extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     event: state.event,
-    selectors: state.selectors,
     events: state.events,
-    media: state.media
+    media: state.media,
+    position: state.position
   };
 }
 
