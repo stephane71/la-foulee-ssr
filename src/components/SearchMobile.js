@@ -86,20 +86,17 @@ class SearchMobile extends React.PureComponent {
               onClick={this.props.onSelectAround}
             />
           </ListWrapper>
-          {!this.state.input && (
-            <ListWrapper>
-              <List list={BIG_CITIES} onClick={this.props.onSelectCity} />
-            </ListWrapper>
-          )}
           <ListWrapper>
             <GoogleMapPlacesApi input={this.state.input}>
               {predictions =>
-                this.state.input && (
+                this.state.input ? (
                   <List
                     list={predictions}
                     onClick={this.props.onSelectCity}
                     poweredByGoogle
                   />
+                ) : (
+                  <List list={BIG_CITIES} onClick={this.props.onSelectCity} />
                 )
               }
             </GoogleMapPlacesApi>
