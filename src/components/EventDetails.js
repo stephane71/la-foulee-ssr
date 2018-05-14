@@ -45,7 +45,7 @@ const EventDetails = ({ data }) => (
         <IconLocation style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
         <address
           className={'EventDetails-Location EventDetails-DatumLabel'}
-        >{`${data.dep}, ${data.city}`}</address>
+        >{`${data.department.name}, ${data.city}`}</address>
       </div>
 
       <div className={'EventDetails-Datum'}>
