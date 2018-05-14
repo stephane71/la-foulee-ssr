@@ -22,7 +22,7 @@ const WIDTH_LOGO_APP_HEADER = Base * 27;
 
 const LINK_MENU = [
   {
-    href: '/search',
+    href: '/',
     text: 'Chercher un event',
     Icon: SearchIcon
   },
