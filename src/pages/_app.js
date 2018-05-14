@@ -41,7 +41,7 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps, store } = this.props;
+    const { Component, pageProps, store, router } = this.props;
 
     return (
       <Container>
@@ -52,6 +52,7 @@ class MyApp extends App {
                 {...pageProps}
                 getEvent={this.props.getEvent}
                 getEventListAround={this.props.getEventListAround}
+                query={router.query || {}}
               />
             </Layout>
           </Media>

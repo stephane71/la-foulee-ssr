@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
@@ -6,6 +7,8 @@ import EventListContainer from '../containers/EventListContainer';
 
 import HomePage from '../components/HomePage';
 import withUserPosition from '../components/withUserPosition';
+
+import { getEventListStructuredData } from '../utils/structuredData';
 
 import { toggleSearch } from '../actions';
 import { MAX_WIDTH } from '../enums';
@@ -22,12 +25,22 @@ class Index extends React.PureComponent {
   }
 
   render() {
+    const { position, getEvent, getEventListAround, query } = this.props;
+
     return (
       <>
-        {this.props.position ? (
+        <Head>
+          <title>{`La Foulée | rechercher un evénement`}</title>
+          <script type={'application/ld+json'}>
+            {getEventListStructuredData()}
+          </script>
+        </Head>
+
+        {position ? (
           <EventListContainer
-            getEvent={this.props.getEvent}
-            getEventListAround={this.props.getEventListAround}
+            getEvent={getEvent}
+            getEventListAround={getEventListAround}
+            keyword={query.keyword}
           />
         ) : (
           <HomePage onClick={this.handleSearchCityToggle} />
