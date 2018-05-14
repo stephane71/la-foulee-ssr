@@ -71,7 +71,9 @@ export class EventListContainer extends React.PureComponent {
   }
 
   componentDidMount() {
-    if (this.props.position) this.props.fetchEvents(this.props.position);
+    if (this.props.position && !this.props.events.length) {
+      this.props.fetchEvents(this.props.position);
+    }
   }
 
   componentWillReceiveProps(nextProps) {

@@ -11,7 +11,7 @@ const withEventList = WrappedComponent => {
     }
 
     state = {
-      loading: true
+      loading: false
     };
 
     render() {
