@@ -2,6 +2,7 @@ import React from 'react';
 import App, { Container } from 'next/app';
 import withRedux from 'next-redux-wrapper';
 import { compose } from 'redux';
+import { Provider } from 'react-redux';
 
 import Layout from '../components/Layout';
 import Media from '../components/Media';
@@ -40,19 +41,21 @@ class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps, store } = this.props;
 
     return (
       <Container>
-        <Media>
-          <Layout>
-            <Component
-              {...pageProps}
-              getEvent={this.props.getEvent}
-              getEventListAround={this.props.getEventListAround}
-            />
-          </Layout>
-        </Media>
+        <Provider store={store}>
+          <Media>
+            <Layout>
+              <Component
+                {...pageProps}
+                getEvent={this.props.getEvent}
+                getEventListAround={this.props.getEventListAround}
+              />
+            </Layout>
+          </Media>
+        </Provider>
       </Container>
     );
   }
