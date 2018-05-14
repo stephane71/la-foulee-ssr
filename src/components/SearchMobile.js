@@ -5,7 +5,7 @@ import { dominant, white, SECONDARY_COLOR } from '../colors';
 import { HEIGHT_APPBAR, BORDER_RADIUS, MAX_WIDTH } from '../enums';
 import { getSpacing, getFontSize } from '../styles-variables';
 
-import Input from './Input';
+import Input, { KEYBOARD_NAV_UP, KEYBOARD_NAV_DOWN } from './Input';
 import List from './List';
 
 const GoogleMapPlacesApi = dynamic(import('./GoogleMapPlacesApi'), {
@@ -62,7 +62,9 @@ class SearchMobile extends React.PureComponent {
     super(props);
 
     this.state = {
-      input: ''
+      input: '',
+      keyboardItemSelect: 0,
+      keyboardValidation: false
     };
 
     this.handleInputReset = this.handleInputReset.bind(this);
@@ -72,6 +74,10 @@ class SearchMobile extends React.PureComponent {
       this.handleLocationInputUpdate,
       250
     );
+    this.handleKeyboardItemSelection = this.handleKeyboardItemSelection.bind(
+      this
+    );
+    this.handleKeyboardValidation = this.handleKeyboardValidation.bind(this);
   }
 
   render() {
@@ -89,6 +95,8 @@ class SearchMobile extends React.PureComponent {
             onChange={this.handleLocationInputUpdate}
             reset={!this.state.input}
             focus={true}
+            onKeyboardNavigation={this.handleKeyboardItemSelection}
+            onKeyboardValidation={this.handleKeyboardValidation}
           />
           {this.state.input && (
             <div
@@ -117,21 +125,25 @@ class SearchMobile extends React.PureComponent {
                 </div>
               )}
               onClick={this.props.onSelectAround}
+              highlightIndex={this.state.keyboardItemSelect - 1}
+              highlightIndexValidation={this.state.keyboardValidation}
             />
           </ListWrapper>
           <ListWrapper>
             <GoogleMapPlacesApi input={this.state.input}>
-              {predictions =>
-                this.state.input ? (
+              {predictions => {
+                const data = this.state.input ? predictions : BIG_CITIES;
+                this.nbItems = data.length + 1;
+                return (
                   <List
-                    list={predictions}
+                    list={data}
                     onClick={this.props.onSelectCity}
-                    poweredByGoogle
+                    highlightIndex={this.state.keyboardItemSelect - 2}
+                    highlightIndexValidation={this.state.keyboardValidation}
+                    poweredByGoogle={this.state.input}
                   />
-                ) : (
-                  <List list={BIG_CITIES} onClick={this.props.onSelectCity} />
-                )
-              }
+                );
+              }}
             </GoogleMapPlacesApi>
           </ListWrapper>
         </div>
@@ -172,12 +184,29 @@ class SearchMobile extends React.PureComponent {
     );
   }
 
+  nbItems = 0;
+
   handleInputReset() {
     this.setState({ input: '' });
   }
 
   handleLocationInputUpdate(value) {
     this.setState({ input: value });
+  }
+
+  handleKeyboardItemSelection(direction) {
+    let index = this.state.keyboardItemSelect;
+    if (direction === KEYBOARD_NAV_UP) {
+      index = index === 1 ? this.nbItems : index - 1;
+    }
+    if (direction === KEYBOARD_NAV_DOWN) {
+      index = index >= this.nbItems ? 1 : index + 1;
+    }
+    this.setState({ keyboardItemSelect: index });
+  }
+
+  handleKeyboardValidation() {
+    this.setState({ keyboardValidation: true });
   }
 }
 
