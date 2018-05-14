@@ -8,14 +8,30 @@ import { getSpacing, BaseRadius } from '../styles-variables';
 const POWERED_BY_GOOGLE_LOGO_WIDTH = 144;
 const POWERED_BY_GOOGLE_LOGO_HEIGHT = 18;
 
-const List = ({ list, onClick, poweredByGoogle, renderItem }) => {
+const ITEM_COLOR = '#727d7b';
+
+const List = ({
+  list,
+  onClick,
+  poweredByGoogle,
+  renderItem,
+  highlightIndex,
+  highlightIndexValidation
+}) => {
   if (!list.length) return null;
+
+  if (highlightIndexValidation && list[highlightIndex]) {
+    onClick(list[highlightIndex]);
+  }
+
   return (
     <ul>
       {list.map((data, i) => (
         <li
           key={i}
-          className={'ListItem-container'}
+          className={`ListItem-container ${
+            i === highlightIndex ? 'ListItem-container--highlight' : ''
+          }`}
           onClick={() => onClick(data)}
         >
           {renderItem ? (
@@ -27,7 +43,11 @@ const List = ({ list, onClick, poweredByGoogle, renderItem }) => {
               {data.matched ? (
                 <div>
                   {data.value.slice(0, data.matched.offset)}
-                  <span className={'ListItem--matched'}>
+                  <span
+                    className={`ListItem--matched ${
+                      i === highlightIndex ? 'ListItem--highlight' : ''
+                    }`}
+                  >
                     {data.value.slice(data.matched.offset, data.matched.length)}
                   </span>
                   {data.value.slice(data.matched.length)}
@@ -59,8 +79,10 @@ const List = ({ list, onClick, poweredByGoogle, renderItem }) => {
           padding: ${getSpacing('s')}px;
           text-transform: capitalize;
           margin-bottom: 1px;
-          background-color: ${white};
           cursor: pointer;
+
+          background-color: ${white};
+          color: ${ITEM_COLOR};
         }
 
         .ListItem-container:first-child {
@@ -75,6 +97,11 @@ const List = ({ list, onClick, poweredByGoogle, renderItem }) => {
           border-radius: ${BaseRadius}px;
         }
 
+        .ListItem-container--highlight {
+          background-color: ${ITEM_COLOR};
+          color: ${white};
+        }
+
         .ListItem-container--googleLogo {
           padding: ${getSpacing('xxs')}px;
           padding-left: ${getSpacing('s')}px;
@@ -84,7 +111,6 @@ const List = ({ list, onClick, poweredByGoogle, renderItem }) => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          color: #727d7b;
         }
 
         .ListItem--selected,
@@ -94,6 +120,10 @@ const List = ({ list, onClick, poweredByGoogle, renderItem }) => {
 
         .ListItem--matched {
           color: ${SECONDARY_COLOR};
+        }
+
+        .ListItem--highlight {
+          color: ${white};
         }
 
         .ListItem-googleLogo {
