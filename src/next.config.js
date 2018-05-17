@@ -9,7 +9,6 @@ if (ANALYZE) {
 }
 
 console.log('Building', process.env.NODE_ENV, 'environnement');
-console.log('API_URL', process.env.API_URL);
 
 module.exports = {
   // useFileSystemPublicRoutes: false,
@@ -20,15 +19,6 @@ module.exports = {
     API_URL: process.env.API_URL,
     IDENTITY_POOL_ID: process.env.IDENTITY_POOL_ID,
     GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY
-  },
-
-  exportPathMap: function() {
-    return {
-      '/': { page: '/' },
-      '/about': { page: '/about' },
-      '/contact': { page: '/contact' },
-      '/legal': { page: '/legal' }
-    };
   },
 
   webpack: (config, { buildId, dev }) => {

@@ -1,24 +1,23 @@
 console.log('----------------------------------');
-console.log('---- Running local dev server ----');
+console.log('----- Running NextJS server ------');
 console.log('----------------------------------');
 
 const express = require('express');
 const next = require('next');
 
-const dev = true;
+const port = process.env.PORT || 3000;
+const dev = process.env.NODE_ENV !== 'production';
 const dir = './src';
 
 const app = next({ dev, dir });
 const handle = app.getRequestHandler();
 const server = express();
-const APP_PAGE = '/';
 
-server.get('/_next/*', (req, res) => {
-  return handle(req, res);
-});
-
-server.get('/static/*', (req, res) => {
-  return handle(req, res);
+server.get('/event/:keyword', (req, res) => {
+  console.log('Req for /event/', req.params.keyword);
+  const eventPage = '/event';
+  const queryParams = { title: req.params.keyword };
+  app.render(req, res, eventPage, queryParams);
 });
 
 server.get('*', (req, res) => {
@@ -29,9 +28,14 @@ server.get('*', (req, res) => {
 app
   .prepare()
   .then(() => {
-    server.listen(3000, err => {
-      if (err) throw err;
-      console.log('> Ready on http://localhost:3000');
+    server.listen(port, err => {
+      if (err) {
+        console.log(`Error when try to run NextJS server`);
+        console.log(JSON.stringify(err));
+        throw err;
+        return
+      }
+      console.log(`> Ready on http://localhost:${port}`);
     });
   })
   .catch(ex => {
