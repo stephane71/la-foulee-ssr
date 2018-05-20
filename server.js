@@ -2,6 +2,8 @@ console.log('----------------------------------');
 console.log('----- Running NextJS server ------');
 console.log('----------------------------------');
 
+console.log('NODE_ENV', process.env.NODE_ENV);
+
 const express = require('express');
 const next = require('next');
 

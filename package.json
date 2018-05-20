@@ -27,10 +27,12 @@
     "webpack-bundle-analyzer": "^2.11.3"
   },
   "scripts": {
-    "start": "NODE_ENV=$NODE_ENV next build src && NODE_ENV=$NODE_ENV node server.js",
-    "start:dev": "NODE_ENV=dev npm start",
-    "create-zip:dev": "zip ../la-foulee-ssr -r * .[^.]* -x node_modules/**\\* .git/**\\* .env.production *.DS_Store src/out/**\\*  src/.next/**\\* -D",
-    "create-zip:production": "zip ../la-foulee-ssr -r * .[^.]* -x node_modules/**\\* .git/**\\* .env.dev *.DS_Store src/out/**\\*  src/.next/**\\* -D"
+    "start": "NODE_ENV=$NODE_ENV LA_FOULEE_ENV=$LA_FOULEE_ENV node server.js",
+    "build": "NODE_ENV=$NODE_ENV LA_FOULEE_ENV=$LA_FOULEE_ENV next build src",
+    "start:dev": "NODE_ENV=production LA_FOULEE_ENV=dev npm start",
+    "local:dev": "NODE_ENV=dev LA_FOULEE_ENV=dev npm run build && NODE_ENV=dev LA_FOULEE_ENV=dev npm start",
+    "create-zip:dev": "zip ../la-foulee-ssr -r * .[^.]* -x node_modules/**\\* .git/**\\* .env.production *.DS_Store -D",
+    "create-zip:production": "zip ../la-foulee-ssr -r * .[^.]* -x node_modules/**\\* .git/**\\* .env.dev *.DS_Store -D"
   },
   "author": "",
   "license": "ISC"
