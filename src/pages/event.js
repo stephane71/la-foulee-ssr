@@ -1,9 +1,10 @@
 const EventPage = ({ query }) => (
   <div className={'EventPage'}>
-    {JSON.stringify(query)}
+    {query.keyword ?
+    JSON.stringify(query) : <div>{`Cette évenement n'existe pas :(`}</div>}
 
     <style jsx>{`
-      .ContactPage {
+      .EventPage {
       }
     `}</style>
   </div>
