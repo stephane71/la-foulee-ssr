@@ -11,7 +11,6 @@ import withUserPosition from '../components/withUserPosition';
 import { getEventListStructuredData } from '../utils/structuredData';
 
 import { toggleSearch } from '../actions';
-import { MAX_WIDTH } from '../enums';
 
 class Index extends React.PureComponent {
   constructor(props) {

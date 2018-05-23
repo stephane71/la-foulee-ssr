@@ -12,8 +12,6 @@ import withCredentials from '../components/withCredentials';
 
 import { makeStore } from '../store';
 
-import { NODE_ENV_DEVELOPMENT } from '../enums';
-
 class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
     let pageProps = {};
@@ -66,7 +64,7 @@ class MyApp extends App {
 
 export default compose(
   withRedux(makeStore, {
-    debug: process.env.NODE_ENV === false
+    debug: process.env.NODE_ENV === 'dev'
   }),
   withCredentials,
   withEventAPI
