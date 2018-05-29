@@ -11,6 +11,7 @@ import withUserPosition from '../components/withUserPosition';
 import { getEventListStructuredData } from '../utils/structuredData';
 
 import { toggleSearch } from '../actions';
+import { DESKTOP } from '../enums';
 
 class Index extends React.PureComponent {
   constructor(props) {
@@ -42,7 +43,10 @@ class Index extends React.PureComponent {
             keyword={query.keyword}
           />
         ) : (
-          <HomePage onClick={this.handleSearchCityToggle} />
+          <HomePage
+            onClick={this.handleSearchCityToggle}
+            desktop={this.props.media === DESKTOP}
+          />
         )}
       </>
     );
@@ -59,7 +63,8 @@ Index.getInitialProps = function({ store, isServer, ...context }) {
 
 function mapStateToProps(state) {
   return {
-    position: state.position
+    position: state.position,
+    media: state.media
   };
 }
 
