@@ -30,7 +30,9 @@ const Header = ({
   <div className={'Header'}>
     <div className={'Header-content'}>
       <div className={'Header-menuWrapper'} onClick={onClickMenu}>
-        <MenuIcon style={{ fill: white, verticalAlign: 'middle' }} />
+        <MenuIcon
+          style={{ fill: white, verticalAlign: 'middle', visibility: 'hidden' }}
+        />
       </div>
       <div className={'Header-svgWrapper'} onClick={onClickHeaderLogo}>
         <LogoTonic

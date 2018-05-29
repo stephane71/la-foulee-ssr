@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import Header from './Header';
 import Overlay from './Overlay';
-import SideMenu from './SideMenu';
+// import SideMenu from './SideMenu';
 import SearchMobile from './SearchMobile';
 import GoogleMapPlacesApi from './GoogleMapPlacesApi';
 
@@ -45,7 +45,7 @@ class Layout extends React.PureComponent {
     return (
       <div className={'root prevent-scroll'}>
         <Header
-          onClickMenu={this.handleToggleMenu}
+          // onClickMenu={this.handleToggleMenu}
           onClickHeaderLogo={() => Router.push('/?from=header', '/', {})}
           onClickSearch={this.handleToggleSearch}
           showSearchTrigger={this.props.position}
@@ -60,7 +60,7 @@ class Layout extends React.PureComponent {
           onClick={this.handleClickOverlay}
           headerPadding={this.props.searching}
         />
-        <SideMenu show={this.state.menu} onClose={this.handleCloseMenu} />
+        {/* <SideMenu show={this.state.menu} onClose={this.handleCloseMenu} /> */}
 
         {this.props.searching && (
           <SearchMobile
