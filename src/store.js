@@ -1,23 +1,25 @@
 import moment from 'moment';
+import store from 'store';
 import { createStore } from 'redux';
 
 import {
   LOCATION_FILTER,
   DATE_FILTER,
   DISTANCE_FILTER,
-  DEFAULT_SELECTOR_VALUES
+  DEFAULT_SELECTOR_VALUES,
+  GOOGLE_DETAILS_SERVICE,
+  GOOGLE_AUTOCOMPLETE_SERVICE
 } from './enums';
 import {
   SET_SELECTED_EVENT,
-  CONCAT_EVENT_LIST,
   SET_EVENT_LIST,
-  SET_EVENT_LIST_NB_PAGES,
   SET_SELECTORS,
-  SET_CURRENT_PAGE,
-  SET_CURRENT_MONTH,
   SET_GOOGLE_MAPS_SERVICE,
   SET_EVENT_LIST_READY_FLAG,
-  SET_MEDIA_TYPE
+  SET_MEDIA_TYPE,
+  SET_USER_POSITION,
+  LOCAL_STORAGE_SET,
+  TOGGLE_SEARCH
 } from './actions';
 
 function getNextMonth(month) {
@@ -31,7 +33,6 @@ function getNextMonth(month) {
 }
 
 const START_MONTH = `${moment().month()}-${moment().year()}`;
-
 const LEGACY_SELECTORS = {
   month: START_MONTH,
   dep: ''
@@ -40,37 +41,46 @@ const LEGACY_SELECTORS = {
 const initialState = {
   event: null,
   events: [],
-  pages: 0,
   selectors: Object.assign({}, DEFAULT_SELECTOR_VALUES, LEGACY_SELECTORS),
-  currentPage: 0,
-  currentMonth: START_MONTH,
-  googleMapsService: null,
+  googleMapsService: {
+    [GOOGLE_DETAILS_SERVICE]: null,
+    [GOOGLE_AUTOCOMPLETE_SERVICE]: null
+  },
   eventListReady: false,
-  media: null
+  media: null,
+  position: null,
+  searching: false
 };
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_SELECTED_EVENT:
       return { ...state, event: action.event };
-    case CONCAT_EVENT_LIST:
-      return { ...state, events: state.events.concat(action.events) };
     case SET_EVENT_LIST:
       return { ...state, events: action.events };
-    case SET_EVENT_LIST_NB_PAGES:
-      return { ...state, pages: action.pages };
     case SET_SELECTORS:
       return { ...state, selectors: action.selectors };
-    case SET_CURRENT_PAGE:
-      return { ...state, currentPage: action.currentPage };
-    case SET_CURRENT_MONTH:
-      return { ...state, currentMonth: getNextMonth(state.currentMonth) };
     case SET_GOOGLE_MAPS_SERVICE:
-      return { ...state, googleMapsService: action.service };
+      const googleMapsService = {
+        ...state.googleMapsService,
+        [action.service]: action.value
+      };
+      return { ...state, googleMapsService: googleMapsService };
     case SET_EVENT_LIST_READY_FLAG:
       return { ...state, eventListReady: true };
     case SET_MEDIA_TYPE:
       return { ...state, media: action.media };
+    case SET_USER_POSITION:
+      return { ...state, position: action.position };
+    case LOCAL_STORAGE_SET:
+      store.set(action.key, action.value);
+      return state;
+    case TOGGLE_SEARCH:
+      return {
+        ...state,
+        searching:
+          action.toggle === undefined ? !state.searching : action.toggle
+      };
     default:
       return state;
   }

@@ -1,4 +1,6 @@
-const Overlay = ({ show, onClick }) => (
+import { HEIGHT_APPBAR } from '../enums';
+
+const Overlay = ({ show, onClick, headerPadding }) => (
   <div
     className={`Overlay ${show ? 'Overlay-show' : 'Overlay-hide'}`}
     onClick={onClick}
@@ -6,7 +8,7 @@ const Overlay = ({ show, onClick }) => (
     <style jsx>{`
       .Overlay {
         position: fixed;
-        top: 0;
+        top: ${headerPadding ? HEIGHT_APPBAR : 0}px;
         left: 0;
         right: 0;
         bottom: 0;

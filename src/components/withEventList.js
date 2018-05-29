@@ -1,11 +1,4 @@
-import {
-  setEventList,
-  concatEventList,
-  setEventListNbPages,
-  setCurrentPage
-} from '../actions';
-
-const FIRST_PAGE = 0;
+import { setEventList } from '../actions';
 
 const withEventList = WrappedComponent => {
   return class EventListWrapper extends React.Component {
@@ -18,85 +11,26 @@ const withEventList = WrappedComponent => {
     }
 
     state = {
-      loading: true
+      loading: false
     };
 
-    async componentDidMount() {
-      if (!this.props.events.length) {
-        this.setState({ loading: true });
-
-        const { events, pages } = await this.props.getEventList(
-          this.props.selectors
-        );
-        this.props.dispatch(setEventList(events));
-        this.props.dispatch(setEventListNbPages(pages));
-
-        this.setState({ loading: false });
-      }
-    }
-
-    async componentWillReceiveProps(nextProps) {
-      if (this.props.currentMonth !== nextProps.currentMonth) {
-        this.setState({ loading: true });
-
-        const pages = await this.concatList(
-          { ...this.props.selectors, month: nextProps.currentMonth },
-          FIRST_PAGE
-        );
-        this.props.dispatch(setEventListNbPages(pages));
-
-        this.firstPageRequestDone = true;
-        this.props.dispatch(setCurrentPage(0));
-
-        this.setState({ loading: false });
-      } else if (this.props.currentPage !== nextProps.currentPage) {
-        if (this.firstPageRequestDone && nextProps.currentPage === 0) {
-          this.firstPageRequestDone = false;
-          return;
-        }
-
-        this.setState({ loading: true });
-        await this.concatList(
-          { ...this.props.selectors, month: this.props.currentMonth },
-          nextProps.currentPage
-        );
-        this.setState({ loading: false });
-      }
-      // else if (this.props.selectors !== nextProps.selectors) {
-      //   this.setState({ loading: true });
-      //   // await this.refreshList(nextProps.selectors);
-      // }
-    }
-
     render() {
-      return <WrappedComponent {...this.props} loading={this.state.loading} />;
+      return (
+        <WrappedComponent
+          {...this.props}
+          loading={this.state.loading}
+          fetchEvents={this.fetchEvents.bind(this)}
+        />
+      );
     }
 
-    // Prevent triggering the same req
-    // dispatch setCurrentPage will be catch in the first test of this method
-    firstPageRequestDone: false;
+    async fetchEvents(geohash) {
+      this.setState({ loading: true });
 
-    async concatList(selectors, currentPage) {
-      const { events, pages } = await this.props.getEventList(
-        selectors,
-        currentPage
-      );
-      this.props.dispatch(concatEventList(events));
-
-      return pages;
-    }
-
-    async refreshList(selectors) {
-      const { events, pages } = await this.props.getEventList(
-        selectors,
-        FIRST_PAGE
-      );
+      const { events } = await this.props.getEventListAround(geohash);
       this.props.dispatch(setEventList(events));
-      this.props.dispatch(setEventListNbPages(pages));
 
-      this.firstPageRequestDone = true;
-      this.props.dispatch(setCurrentPage(FIRST_PAGE));
-      return pages;
+      this.setState({ loading: false });
     }
   };
 };

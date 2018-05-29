@@ -19,3 +19,7 @@ export const NO_EVENT_SELECTED = null;
 export const DESKTOP = 'DESKTOP';
 export const MOBILE = 'MOBILE';
 export const DATE_FORMAT = 'dddd D MMMM';
+export const USER_POSITION_KEY = 'userPosition';
+
+export const GOOGLE_DETAILS_SERVICE = 'details';
+export const GOOGLE_AUTOCOMPLETE_SERVICE = 'autocomplete';

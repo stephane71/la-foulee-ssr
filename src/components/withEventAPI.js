@@ -1,8 +1,7 @@
 import apigClientFactory from 'aws-api-gateway-client';
 import getConfig from 'next/config';
 
-import { getEventArgs, getEventListArgs } from '../api';
-import { getFormatEventList } from '../utils/apiProxy';
+import { getEventArgs, getAroundEventListArgs } from '../api';
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -31,14 +30,14 @@ const withEventAPI = WrappedComponent => {
 
       this.getAPI = this.getAPI.bind(this);
       this.getEvent = this.getEvent.bind(this);
-      this.getEventList = this.getEventList.bind(this);
+      this.getEventListAround = this.getEventListAround.bind(this);
     }
 
     render() {
       return (
         <WrappedComponent
           getEvent={this.getEvent}
-          getEventList={this.getEventList}
+          getEventListAround={this.getEventListAround}
           {...this.props}
         />
       );
@@ -61,12 +60,10 @@ const withEventAPI = WrappedComponent => {
       return await api.invokeApi(...args).then(res => res.data);
     }
 
-    async getEventList(selectors, currentPage) {
+    async getEventListAround(geohash) {
       let api = await this.getAPI();
-      const args = getEventListArgs(selectors, currentPage);
-      return await api
-        .invokeApi(...args)
-        .then(res => getFormatEventList(res.data));
+      const args = getAroundEventListArgs(geohash);
+      return await api.invokeApi(...args).then(res => res.data);
     }
   };
 };

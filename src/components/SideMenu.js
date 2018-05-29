@@ -1,4 +1,4 @@
-import Router from 'next/router';
+import Link from 'next/link';
 
 import LogoTonic from '../svgs/lafoulee-tonic.svg';
 import CrossIcon from '../svgs/ic_close_black_24px.svg';
@@ -22,25 +22,21 @@ const WIDTH_LOGO_APP_HEADER = Base * 27;
 
 const LINK_MENU = [
   {
-    name: 'search',
+    href: '/',
     text: 'Chercher un event',
     Icon: SearchIcon
   },
   {
-    name: 'about',
+    href: '/about',
     text: 'À propos',
     Icon: InfoIcon
   },
   {
-    name: 'contact',
+    href: '/contact',
     text: 'Contactez nous',
     Icon: MailIcon
   }
 ];
-
-const handleMenuSelect = route => {
-  Router.push({ pathname: '/', query: { to: route } }, `/${route}`);
-};
 
 const SideMenu = ({ show, onClose }) => (
   <div className={`SideMenu ${show ? '' : 'SideMenu--hide'}`}>
@@ -53,39 +49,34 @@ const SideMenu = ({ show, onClose }) => (
         <CrossIcon fill={`#F4F5F7`} style={{ verticalAlign: 'top' }} />
       </div>
     </header>
-    <nav className={'SideMenu-Nav'}>
-      <ul className={'List'}>
-        {LINK_MENU.map(({ name, text, Icon }, i) => (
-          <li
-            key={i}
-            className={'SideMenuNav-Item List-Item Item'}
-            onClick={() => {
-              handleMenuSelect(name);
-              onClose();
-            }}
-          >
-            <span className={'SideMenuNavItem-Icon Item-Icon'}>
-              <Icon fill={`#7A9691`} style={{ verticalAlign: 'top' }} />
-            </span>
 
-            <span className={'SideMenuNavItem-Label Item-Label'}>{text}</span>
-          </li>
+    <nav className={'SideMenu-Nav'} onClick={() => onClose()}>
+      <ul className={'List'}>
+        {LINK_MENU.map(({ href, text, Icon }, i) => (
+          <Link key={i} href={href} prefetch>
+            <li className={'SideMenuNav-Item List-Item Item'}>
+              <span className={'SideMenuNavItem-Icon Item-Icon'}>
+                <Icon fill={`#7A9691`} style={{ verticalAlign: 'top' }} />
+              </span>
+
+              <span className={'SideMenuNavItem-Label Item-Label'}>{text}</span>
+            </li>
+          </Link>
         ))}
       </ul>
     </nav>
-    <footer
-      className={'SideMenu-Footer'}
-      onClick={() => {
-        handleMenuSelect('legal');
-        onClose();
-      }}
-    >
-      <div>{'La Foulée ©2018'}</div>
-      <span className={'SideMenuFooter-Link'}>{'Mentions légales'}</span>
-      <span className={'SideMenuFooter-Link'}>{'Confidentialité'}</span>
-      <span
-        className={'SideMenuFooter-Link'}
-      >{`Conditions d'utilisation`}</span>
+
+    <footer className={'SideMenu-Footer'} onClick={() => onClose()}>
+      <Link href={`/legal`} prefetch>
+        <div className={'SideMenuFooter-container'}>
+          <div>{'La Foulée ©2018'}</div>
+          <span className={'SideMenuFooter-Link'}>{'Mentions légales'}</span>
+          <span className={'SideMenuFooter-Link'}>{'Confidentialité'}</span>
+          <span
+            className={'SideMenuFooter-Link'}
+          >{`Conditions d'utilisation`}</span>
+        </div>
+      </Link>
     </footer>
 
     <style jsx>{`
@@ -147,8 +138,11 @@ const SideMenu = ({ show, onClose }) => (
       .SideMenu-Footer {
         margin-top: auto;
         font-size: ${getFontSize('s')}px;
-        padding: ${getSpacing('m')}px;
         color: #69968d;
+      }
+
+      .SideMenuFooter-container {
+        padding: ${getSpacing('m')}px;
       }
 
       .SideMenuFooter-Link {

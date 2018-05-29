@@ -20,7 +20,9 @@ const EventShort = ({ data }) => (
   <Fragment>
     <article className={`event-data`}>
       <h6 className={`title`}>{data.title}</h6>
-      <address className={'location'}>{`${data.dep}, ${data.city}`}</address>
+      <address className={'location'}>{`${data.department.code}, ${
+        data.city
+      }`}</address>
     </article>
     <Arrow style={{ fill: '#A0A7BD' }} />
     <style jsx>{`

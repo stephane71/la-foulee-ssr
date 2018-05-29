@@ -43,16 +43,8 @@ export default css`
     overflow: auto;
   }
 
-  .no-scroll {
-    overflow: hidden;
-  }
-
-  .wrapper-hidden {
-    display: none;
-  }
-
-  .wrapper-show {
-    height: 100%;
+  .VirtualizedList-List {
+    padding-bottom: ${getSpacing('m')}px;
   }
 
   *,
@@ -116,7 +108,6 @@ export default css`
     line-height: ${BaseLineHeight}px;
   }
 
-
   .Button--square,
   .Button--circle {
     padding: ${getSpacing('s')}px;
@@ -131,7 +122,7 @@ export default css`
   }
 
   .Overlay-closeButton {
-    background: #0C1715;
+    background: #0c1715;
     cursor: pointer;
   }
 
@@ -168,13 +159,13 @@ export default css`
     font-weight: 300;
     font-size: ${getFontSize('s')}px;
     text-transform: uppercase;
-    border-bottom: 1px solid #3A4F4B;
+    border-bottom: 1px solid #3a4f4b;
   }
 
   .Table-DataCell {
     font-weight: 300;
     vertical-align: text-top;
-    border-bottom: 1px solid #3A4F4B;
+    border-bottom: 1px solid #3a4f4b;
   }
 
   .Table-DataCell--bold {
@@ -188,9 +179,4 @@ export default css`
   .Table-DataCell:last-child {
     border-radius: 0 ${BaseRadius}px ${BaseRadius}px 0;
   }
-
-  .DesktopFilters .filterTrigger {
-    box-shadow: none;
-  }
-
 `;

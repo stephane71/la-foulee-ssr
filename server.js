@@ -1,39 +1,78 @@
 console.log('----------------------------------');
-console.log('---- Running local dev server ----');
+console.log('----- Running NextJS server ------');
 console.log('----------------------------------');
 
-process.env['NEXT_ENV'] = 'developpement';
+console.log('NODE_ENV', process.env.NODE_ENV);
 
+require('dotenv').config({ path: `.env.server.${process.env.LA_FOULEE_ENV}` });
+
+const AWS = require('aws-sdk');
 const express = require('express');
 const next = require('next');
 
-const dev = true;
+const port = process.env.PORT || 3000;
+const dev = process.env.NODE_ENV !== 'production';
 const dir = './src';
 
 const app = next({ dev, dir });
 const handle = app.getRequestHandler();
 const server = express();
-const APP_PAGE = '/';
 
-server.get('/_next/*', (req, res) => {
-  return handle(req, res);
-});
+const AWSConfig = {
+  secretAccessKey: process.env.secretAccessKey,
+  accessKeyId: process.env.accessKeyId,
+  region: process.env.region,
+  endpoint: process.env.DB
+};
 
-server.get('/static/*', (req, res) => {
-  return handle(req, res);
+AWS.config.update(AWSConfig);
+let dbDocClient = new AWS.DynamoDB.DocumentClient();
+
+server.get('/event/:keyword', (req, res) => {
+  console.log('Req for /event/', req.params.keyword);
+  const eventPage = '/event';
+
+  dbDocClient.query(
+    {
+      TableName: 'Events',
+      IndexName: 'KeywordIndex',
+      KeyConditionExpression: `#gsi = :gsi`,
+      ExpressionAttributeNames: {
+        '#gsi': 'keyword'
+      },
+      ExpressionAttributeValues: {
+        ':gsi': req.params.keyword
+      }
+    },
+    (err, data) => {
+      if (err) {
+        // TODO: handle error -> the keyword doesn't exist !
+        console.log(err, err.stack);
+        app.render(req, res, eventPage, { keyword: null });
+      } else {
+        // TODO: manage multiple items response => event's editions
+        app.render(req, res, eventPage, { ...data.Items[0] });
+      }
+    }
+  );
 });
 
 server.get('*', (req, res) => {
   // FIXME: doesn't serve pre-render pages
-  return app.render(req, res, APP_PAGE, {});
+  return handle(req, res);
 });
 
 app
   .prepare()
   .then(() => {
-    server.listen(3000, err => {
-      if (err) throw err;
-      console.log('> Ready on http://localhost:3000');
+    server.listen(port, err => {
+      if (err) {
+        console.log(`Error when try to run NextJS server`);
+        console.log(JSON.stringify(err));
+        throw err;
+        return;
+      }
+      console.log(`> Ready on http://localhost:${port}`);
     });
   })
   .catch(ex => {

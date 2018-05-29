@@ -12,7 +12,6 @@ import EventListDate from './EventListDate';
 
 const EVENT_LIST_ITEM_HEIGHT = 72;
 const EVENT_LIST_DATE_HEADER_HEIGHT = 96;
-const PADDING_INDEX_LOAD_MORE = 1; // should be minimum one
 
 const cache = new CellMeasurerCache({
   defaultHeight: EVENT_LIST_ITEM_HEIGHT,
@@ -28,24 +27,15 @@ export default class VirtualizedList extends React.PureComponent {
     this.onRowsRendered = this.onRowsRendered.bind(this);
   }
 
-  state = {
-    rendered: false
-  };
-
   componentWillReceiveProps(nextProps) {
-    // End loading more detection: pb -> will catch a refresh too.
-    // IF the new list is longer than the previous one
-    if (this.props.data.length < nextProps.data.length) {
-      cache.clear(this.props.data.length - 1);
+    if (this.props.data !== nextProps.data) {
+      cache.clearAll();
     }
   }
 
   render() {
     return (
-      <WindowScroller
-        onScroll={this.props.onScroll}
-        scrollElement={this.props.scrollElement}
-      >
+      <WindowScroller scrollElement={this.props.scrollElement}>
         {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => (
           <AutoSizer disableHeight>
             {({ width }) => (
@@ -64,9 +54,10 @@ export default class VirtualizedList extends React.PureComponent {
                 onScroll={onChildScroll}
                 isScrolling={isScrolling}
                 scrollTop={scrollTop}
-                className={'EventList'}
                 deferredMeasurementCache={cache}
                 rowHeight={cache.rowHeight}
+                scrollToIndex={0}
+                className={'VirtualizedList-List'}
               />
             )}
           </AutoSizer>
@@ -100,27 +91,18 @@ export default class VirtualizedList extends React.PureComponent {
         parent={parent}
         rowIndex={index}
       >
-        {index === data.length - 1 ? (
-          <div
-            className={'EventList-Item EventList-Item--loader'}
-            style={{ ...style }}
-          >
-            <Loader />
-          </div>
-        ) : (
-          <div style={{ ...style }}>
-            {(firstItemDay && (
-              <EventListDate date={data[index].date} marginTop />
-            )) ||
-              null}
-            <EventListItem
-              data={data[index]}
-              onSelectEvent={data => this.onSelectEvent(data, style.top)}
-              withBorderRadiusTop={index === 0 || firstItemDay}
-              withBorderRadiusBottom={index + 1 === data.length || lastItemDay}
-            />
-          </div>
-        )}
+        <div style={{ ...style }}>
+          {(firstItemDay && (
+            <EventListDate date={data[index].date} marginTop />
+          )) ||
+            null}
+          <EventListItem
+            data={data[index]}
+            onSelectEvent={data => this.onSelectEvent(data, style.top)}
+            withBorderRadiusTop={index === 0 || firstItemDay}
+            withBorderRadiusBottom={index + 1 === data.length || lastItemDay}
+          />
+        </div>
       </CellMeasurer>
     );
   }
@@ -130,9 +112,6 @@ export default class VirtualizedList extends React.PureComponent {
   }
 
   onRowsRendered({ startIndex, stopIndex }) {
-    if (stopIndex + PADDING_INDEX_LOAD_MORE >= this.props.data.length) {
-      this.props.onReachEndList();
-    }
     this.props.onChangeStickyDate(this.props.data[startIndex].date);
     if (this.firstRendering) {
       this.firstRendering = false;

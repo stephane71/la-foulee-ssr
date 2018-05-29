@@ -45,7 +45,7 @@ const EventDetails = ({ data }) => (
         <IconLocation style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
         <address
           className={'EventDetails-Location EventDetails-DatumLabel'}
-        >{`${data.dep}, ${data.city}`}</address>
+        >{`${data.department.name}, ${data.city}`}</address>
       </div>
 
       <div className={'EventDetails-Datum'}>
@@ -67,7 +67,7 @@ const EventDetails = ({ data }) => (
           </tr>
         </thead>
         <tbody className={'Table-Body'}>
-          {data.activities
+          {/* {data.activities
             .sort((act1, act2) => act2.value - act1.value)
             .map(({ value, time, inscriptionFee }, i) => (
               <tr className={'Table-Row'} key={i}>
@@ -77,7 +77,7 @@ const EventDetails = ({ data }) => (
                 <td className={'Table-DataCell'}>{time}</td>
                 <td className={'Table-DataCell'}>{inscriptionFee || 'NC'}</td>
               </tr>
-            ))}
+            ))} */}
         </tbody>
       </table>
     </div>
