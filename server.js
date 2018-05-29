@@ -31,17 +31,27 @@ let dbDocClient = new AWS.DynamoDB.DocumentClient();
 server.get('/event/:keyword', (req, res) => {
   console.log('Req for /event/', req.params.keyword);
   const eventPage = '/event';
-  const queryParams = { title: req.params.keyword };
 
-  dbDocClient.get(
-    { TableName: 'Events', Key: { keyword: queryParams.title } },
+  dbDocClient.query(
+    {
+      TableName: 'Events',
+      IndexName: 'KeywordIndex',
+      KeyConditionExpression: `#gsi = :gsi`,
+      ExpressionAttributeNames: {
+        '#gsi': 'keyword'
+      },
+      ExpressionAttributeValues: {
+        ':gsi': req.params.keyword
+      }
+    },
     (err, data) => {
       if (err) {
         // TODO: handle error -> the keyword doesn't exist !
         console.log(err, err.stack);
         app.render(req, res, eventPage, { keyword: null });
       } else {
-        app.render(req, res, eventPage, { ...data.Item });
+        // TODO: manage multiple items response => event's editions
+        app.render(req, res, eventPage, { ...data.Items[0] });
       }
     }
   );
