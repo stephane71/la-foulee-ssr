@@ -13,6 +13,9 @@ function formatDistance(value) {
   return `${value / 1000}km`;
 }
 
+const EVENT_COLOR = '#ebfefa';
+const ICON_COLOR = '#B7C9C6';
+
 const style = css`
   .Event {
     position: relative;
@@ -25,7 +28,7 @@ const style = css`
   }
 
   .Event-Wrapper {
-    color: #ebfefa;
+    color: ${EVENT_COLOR};
     background: ${dominant} url(/static/details-background.svg) bottom center
       no-repeat;
     border-radius: ${BORDER_RADIUS}px;
@@ -76,8 +79,6 @@ const style = css`
     font-size: ${getFontSize('l')}px;
   }
 `;
-
-const ICON_COLOR = '#B7C9C6';
 
 const Event = ({ data }) => (
   <div className={'Event Event-Wrapper'}>

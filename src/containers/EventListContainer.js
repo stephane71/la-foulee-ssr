@@ -25,7 +25,6 @@ const style = css`
     margin: 0 auto;
     z-index: 100;
     max-width: ${MAX_WIDTH}px;
-    background-color: ${APP_BACKGROUND_COLOR};
   }
 `;
 
