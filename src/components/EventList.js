@@ -1,6 +1,7 @@
 import VirtualizedList from './VirtualizedList';
 import EventListDate from './EventListDate';
 import Loader from './Loader';
+import { ScrollElementContext } from './Layout';
 
 import { getSpacing, BaseLineHeight } from '../styles-variables';
 import { APP_BACKGROUND_COLOR } from '../colors';
@@ -24,12 +25,12 @@ export default class EventList extends React.PureComponent {
   }
 
   render() {
-    const { data, event, desktop } = this.props;
+    const { data, desktop } = this.props;
 
     if (!data.length && !this.props.loading) return <div>{'Empty list !'}</div>;
 
     return (
-      <div className={'EventList prevent-scroll'}>
+      <div className={'EventList'}>
         {(!this.state.listRendered || this.props.loading) && (
           <div className={'EventList-Loading'}>
             <Loader />
@@ -40,23 +41,24 @@ export default class EventList extends React.PureComponent {
           <FixedDateHeader date={this.state.stickyDate} desktop={desktop} />
         )}
 
-        <div ref={el => (this.scrollElement = el)} className={'prevent-scroll'}>
-          <VirtualizedList
-            scrollElement={this.scrollElement}
-            data={this.props.data}
-            onSelectEvent={this.handleEventSelection}
-            onChangeStickyDate={this.handleStickyDate}
-            onListRendered={this.handleListRendered}
-          />
-        </div>
+        <ScrollElementContext.Consumer>
+          {scrollElement => (
+            <VirtualizedList
+              scrollElement={scrollElement}
+              data={this.props.data}
+              onSelectEvent={this.handleEventSelection}
+              onChangeStickyDate={this.handleStickyDate}
+              onListRendered={this.handleListRendered}
+            />
+          )}
+        </ScrollElementContext.Consumer>
 
         <style jsx>{`
           .EventList {
             padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
             -webkit-overflow-scrolling: touch;
             outline: none;
-            max-width: ${MAX_WIDTH}px;
-            margin: 0 auto;
+            height: 100%;
           }
 
           .EventList-Loading {
@@ -75,9 +77,10 @@ export default class EventList extends React.PureComponent {
 
   handleEventSelection(data, elementPosition) {
     // For transition
-    let windowPosition = elementPosition - this.scrollElement.scrollTop;
-    windowPosition += HEIGHT_APPBAR + EVENT_LIST_DATE_HEIGHT;
-    console.log('Position of the item in the window', windowPosition);
+    // let windowPosition =
+    //   elementPosition - this.context.scrollingElement.scrollTop;
+    // windowPosition += HEIGHT_APPBAR + EVENT_LIST_DATE_HEIGHT;
+    // console.log('Position of the item in the window', windowPosition);
 
     this.props.onSelectEvent(data);
   }

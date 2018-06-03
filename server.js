@@ -48,10 +48,10 @@ server.get('/event/:keyword', (req, res) => {
       if (err) {
         // TODO: handle error -> the keyword doesn't exist !
         console.log(err, err.stack);
-        app.render(req, res, eventPage, { keyword: null });
+        app.render(req, res, eventPage, { event: null });
       } else {
         // TODO: manage multiple items response => event's editions
-        app.render(req, res, eventPage, { ...data.Items[0] });
+        app.render(req, res, eventPage, { event: data.Items[0] });
       }
     }
   );

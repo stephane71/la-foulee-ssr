@@ -1,13 +1,41 @@
-const EventPage = ({ query }) => (
-  <div className={'EventPage'}>
-    {query.keyword ?
-    JSON.stringify(query) : <div>{`Cette évenement n'existe pas :(`}</div>}
+import Head from 'next/head';
+import { connect } from 'react-redux';
 
-    <style jsx>{`
-      .EventPage {
-      }
-    `}</style>
-  </div>
-);
+import Event from '../components/Event';
 
-export default EventPage;
+import { getEventStructuredData } from '../utils/structuredData';
+
+const EventPage = ({ query, event }) => {
+  event = query.keyword ? event : query.event;
+
+  return (
+    <div className={'EventPage'}>
+      <Head>
+        <title>{`${event.title} | La Foulée`}</title>
+        <script type={'application/ld+json'}>
+          {getEventStructuredData(event)}
+        </script>
+      </Head>
+
+      {event ? (
+        <Event data={event} />
+      ) : (
+        <div>{`Cette évenement n'existe pas :(`}</div>
+      )}
+
+      <style jsx>{`
+        .EventPage {
+          height: 100%;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+function mapStateToProps(state) {
+  return {
+    event: state.event
+  };
+}
+
+export default connect(mapStateToProps)(EventPage);

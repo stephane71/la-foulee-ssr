@@ -35,16 +35,11 @@ export default css`
 
   #__next {
     height: 100%;
-    overflow: auto;
-  }
-
-  .prevent-scroll {
-    height: 100%;
-    overflow: auto;
   }
 
   .VirtualizedList-List {
     padding-bottom: ${getSpacing('m')}px;
+    outline: none;
   }
 
   *,
@@ -143,6 +138,8 @@ export default css`
   .List-Item + .List-Item {
     margin-top: ${getSpacing('s')}px;
   }
+
+  /* Need to be global ? Used only in Event details page */
 
   .Table {
     width: 100%;

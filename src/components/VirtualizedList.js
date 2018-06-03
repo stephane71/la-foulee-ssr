@@ -12,6 +12,7 @@ import EventListDate from './EventListDate';
 
 const EVENT_LIST_ITEM_HEIGHT = 72;
 const EVENT_LIST_DATE_HEADER_HEIGHT = 96;
+const DEFAULT_LIST_HEIGHT = 300;
 
 const cache = new CellMeasurerCache({
   defaultHeight: EVENT_LIST_ITEM_HEIGHT,
@@ -45,7 +46,7 @@ export default class VirtualizedList extends React.PureComponent {
                 }}
                 autoHeight
                 width={width}
-                height={height}
+                height={height || DEFAULT_LIST_HEIGHT}
                 rowCount={this.props.data.length}
                 rowHeight={this.getRowHeight}
                 onRowsRendered={this.onRowsRendered}

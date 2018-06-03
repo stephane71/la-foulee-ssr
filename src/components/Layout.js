@@ -1,3 +1,4 @@
+import React from 'react';
 import moment from 'moment';
 import Router from 'next/router';
 import { connect } from 'react-redux';
@@ -24,6 +25,8 @@ import { setUserPosition, localStorageSet, toggleSearch } from '../actions';
 
 moment.locale('fr');
 
+export const ScrollElementContext = React.createContext('test');
+
 class Layout extends React.PureComponent {
   constructor(props) {
     super(props);
@@ -43,7 +46,7 @@ class Layout extends React.PureComponent {
 
   render() {
     return (
-      <div className={'root prevent-scroll'}>
+      <div className={'root'}>
         <Header
           // onClickMenu={this.handleToggleMenu}
           onClickHeaderLogo={() => Router.push('/?from=header', '/', {})}
@@ -51,8 +54,13 @@ class Layout extends React.PureComponent {
           showSearchTrigger={this.props.position}
         />
 
-        <div className={'PagesWrapper prevent-scroll'}>
-          {this.props.children}
+        <div
+          ref={e => this.setState({ scrollingElement: e })}
+          className={'ScrollWrapper'}
+        >
+          <ScrollElementContext.Provider value={this.state.scrollingElement}>
+            <div className={'PagesWrapper'}>{this.props.children}</div>
+          </ScrollElementContext.Provider>
         </div>
 
         <Overlay
@@ -74,6 +82,8 @@ class Layout extends React.PureComponent {
           .root {
             background: ${APP_BACKGROUND_COLOR};
             padding-top: ${HEIGHT_APPBAR}px;
+            overflow: auto;
+            height: 100vh;
           }
 
           .root:before {
@@ -89,8 +99,15 @@ class Layout extends React.PureComponent {
           }
 
           .PagesWrapper {
+            width: 100%;
             max-width: ${MAX_WIDTH}px;
-            margin: 0 auto;
+          }
+
+          .ScrollWrapper {
+            height: 100%;
+            overflow: auto;
+            display: flex;
+            justify-content: center;
             position: relative;
           }
         `}</style>
