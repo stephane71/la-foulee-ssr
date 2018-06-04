@@ -23,7 +23,7 @@ const Overlay = ({ show, onClick, headerPadding }) => (
 
       .Overlay-show {
         opacity: 1;
-        z-index: 10;
+        z-index: 100;
       }
     `}</style>
   </div>

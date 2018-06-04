@@ -154,7 +154,7 @@ class SearchMobile extends React.PureComponent {
             top: 0;
             width: 100%;
             max-width: ${MAX_WIDTH}px;
-            z-index: 20;
+            z-index: 100;
             left: 50%;
             transform: translate(-50%);
           }

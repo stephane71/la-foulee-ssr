@@ -45,7 +45,7 @@ class MyApp extends App {
       <Container>
         <Provider store={store}>
           <Media>
-            <Layout>
+            <Layout query={router.query || {}}>
               <Component
                 {...pageProps}
                 getEvent={this.props.getEvent}

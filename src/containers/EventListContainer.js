@@ -1,6 +1,5 @@
 import Router from 'next/router';
 import css from 'styled-jsx/css';
-
 import { connect } from 'react-redux';
 
 import EventList from '../components/EventList';
@@ -23,8 +22,9 @@ const style = css`
     right: 0;
     bottom: 0;
     margin: 0 auto;
-    z-index: 100;
+    z-index: 20;
     max-width: ${MAX_WIDTH}px;
+    overflow: auto;
   }
 `;
 

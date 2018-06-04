@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import Router from 'next/router';
+import css from 'styled-jsx/css';
 import { connect } from 'react-redux';
 
 import Header from './Header';
@@ -25,7 +26,41 @@ import { setUserPosition, localStorageSet, toggleSearch } from '../actions';
 
 moment.locale('fr');
 
-export const ScrollElementContext = React.createContext('test');
+export const ScrollElementContext = React.createContext();
+
+const style = css`
+  .root {
+    background: ${APP_BACKGROUND_COLOR};
+    padding-top: ${HEIGHT_APPBAR}px;
+    overflow: auto;
+    height: 100vh;
+  }
+
+  .root:before {
+    background: ${tonic};
+    position: absolute;
+    content: '';
+    bottom: 0;
+    left: 0;
+    right: 0;
+    clip-path: polygon(0 68%, 100% 0%, 100% 100%, 0% 100%);
+    height: calc(${Base}px * 80);
+    margin: 0 auto;
+  }
+
+  .ScrollWrapper {
+    height: 100%;
+    overflow: auto;
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+
+  .PagesWrapper {
+    width: 100%;
+    max-width: ${MAX_WIDTH}px;
+  }
+`;
 
 class Layout extends React.PureComponent {
   constructor(props) {
@@ -37,7 +72,7 @@ class Layout extends React.PureComponent {
     };
 
     this.handleClickOverlay = this.handleClickOverlay.bind(this);
-    this.handleToggleMenu = this.handleToggleMenu.bind(this);
+    // this.handleToggleMenu = this.handleToggleMenu.bind(this);
     this.handleCloseMenu = this.handleCloseMenu.bind(this);
     this.handleToggleSearch = this.handleToggleSearch.bind(this);
     this.handleSelectUserPosition = this.handleSelectUserPosition.bind(this);
@@ -52,6 +87,7 @@ class Layout extends React.PureComponent {
           onClickHeaderLogo={() => Router.push('/?from=header', '/', {})}
           onClickSearch={this.handleToggleSearch}
           showSearchTrigger={this.props.position}
+          showBackArrow={this.props.query.keyword}
         />
 
         <div
@@ -78,39 +114,7 @@ class Layout extends React.PureComponent {
           />
         )}
 
-        <style jsx>{`
-          .root {
-            background: ${APP_BACKGROUND_COLOR};
-            padding-top: ${HEIGHT_APPBAR}px;
-            overflow: auto;
-            height: 100vh;
-          }
-
-          .root:before {
-            background: ${tonic};
-            position: absolute;
-            content: '';
-            bottom: 0;
-            left: 0;
-            right: 0;
-            clip-path: polygon(0 68%, 100% 0%, 100% 100%, 0% 100%);
-            height: calc(${Base}px * 80);
-            margin: 0 auto;
-          }
-
-          .PagesWrapper {
-            width: 100%;
-            max-width: ${MAX_WIDTH}px;
-          }
-
-          .ScrollWrapper {
-            height: 100%;
-            overflow: auto;
-            display: flex;
-            justify-content: center;
-            position: relative;
-          }
-        `}</style>
+        <style jsx>{style}</style>
 
         <style global jsx>
           {GlobalStyles}
@@ -128,9 +132,9 @@ class Layout extends React.PureComponent {
     this.setState({ menu: false });
   }
 
-  handleToggleMenu() {
-    this.setState(({ menu }) => ({ menu: !menu }));
-  }
+  // handleToggleMenu() {
+  //   this.setState(({ menu }) => ({ menu: !menu }));
+  // }
 
   handleToggleSearch(toggle) {
     this.props.dispatch(toggleSearch(toggle));
