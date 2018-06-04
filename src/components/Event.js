@@ -9,6 +9,7 @@ import { MAX_WIDTH, DATE_FORMAT, BORDER_RADIUS } from '../enums';
 import { dominant } from '../colors';
 
 function formatDistance(value) {
+  if (!value) return value;
   if (value < 1000) return `${value}m`;
   return `${value / 1000}km`;
 }
@@ -80,6 +81,8 @@ const style = css`
   }
 `;
 
+const EMPTY_VALUE = '-';
+
 const Event = ({ data }) => (
   <div className={'Event Event-Wrapper'}>
     {/* HEADER */}
@@ -122,14 +125,16 @@ const Event = ({ data }) => (
         <tbody className={'Table-Body'}>
           {data.activities &&
             data.activities
-              .sort((act1, act2) => act2.value - act1.value)
-              .map(({ distance, time, inscriptionFee }, i) => (
+              .sort((act1, act2) => act2.distance - act1.distance)
+              .map(({ distance, time, inscriptionFee, title }, i) => (
                 <tr className={'Table-Row'} key={i}>
                   <td className={'Table-DataCell Table-DataCell--bold'}>
-                    {formatDistance(distance)}
+                    {formatDistance(distance) || title || EMPTY_VALUE}
                   </td>
-                  <td className={'Table-DataCell'}>{time || 'NC'}</td>
-                  <td className={'Table-DataCell'}>{inscriptionFee || 'NC'}</td>
+                  <td className={'Table-DataCell'}>{time || EMPTY_VALUE}</td>
+                  <td className={'Table-DataCell'}>
+                    {inscriptionFee || EMPTY_VALUE}
+                  </td>
                 </tr>
               ))}
         </tbody>
