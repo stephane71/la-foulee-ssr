@@ -25,7 +25,8 @@ module.exports = (phase, { defaultConfig }) => {
       ASSETS_URL: process.env.ASSETS_URL,
       API_URL: process.env.API_URL,
       IDENTITY_POOL_ID: process.env.IDENTITY_POOL_ID,
-      GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY
+      GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY,
+      GA_TRACKING_ID: process.env.GA_TRACKING_ID
     },
 
     generateBuildId: async () => {

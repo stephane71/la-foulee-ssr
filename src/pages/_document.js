@@ -5,6 +5,7 @@ import flush from 'styled-jsx/server';
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
 const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
+const GA_TRACKING_ID = publicRuntimeConfig.GA_TRACKING_ID;
 
 export default class MyDocument extends Document {
   static getInitialProps({ renderPage }) {
@@ -101,6 +102,21 @@ export default class MyDocument extends Document {
 
           <link rel="manifest" href={`/static/manifest.json?v=yya2lgM4gb`} />
           <meta name="theme-color" content="#264A43" />
+
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                      window.dataLayer = window.dataLayer || [];
+                      function gtag(){dataLayer.push(arguments);}
+                      gtag('js', new Date());
+                      gtag('config', '${GA_TRACKING_ID}', { 'send_page_view': false });
+                    `
+            }}
+          />
         </Head>
         <body>
           <Main />
