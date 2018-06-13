@@ -42,6 +42,10 @@ export default css`
     outline: none;
   }
 
+  .prevent-scroll {
+    pointer-events: none;
+  }
+
   *,
   *:after,
   *:before {

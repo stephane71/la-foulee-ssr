@@ -54,6 +54,7 @@ const style = css`
     display: flex;
     justify-content: center;
     position: relative;
+    -webkit-overflow-scrolling: touch;
   }
 
   .PagesWrapper {
@@ -86,7 +87,8 @@ class Layout extends React.PureComponent {
           // onClickMenu={this.handleToggleMenu}
           onClickHeaderLogo={() => Router.push('/?from=header', '/', {})}
           onClickSearch={this.handleToggleSearch}
-          showSearchTrigger={this.props.position}
+          // showSearchTrigger={this.props.position}
+          showSearchTrigger={true}
           showBackArrow={this.props.query.keyword}
         />
 
@@ -157,7 +159,7 @@ class Layout extends React.PureComponent {
       GEOHASH_PRECISION
     );
 
-    this.props.dispatch(setUserPosition(geohash));
+    Router.push(`/events?position=${geohash}`);
   }
 
   async handleSelectUserPosition() {
