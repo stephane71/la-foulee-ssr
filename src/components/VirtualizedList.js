@@ -1,3 +1,4 @@
+import { connect } from 'react-redux';
 import {
   CellMeasurer,
   CellMeasurerCache,
@@ -10,6 +11,8 @@ import Loader from './Loader';
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
 
+import { setEventListStartIndex } from '../actions';
+
 const EVENT_LIST_ITEM_HEIGHT = 72;
 const EVENT_LIST_DATE_HEADER_HEIGHT = 96;
 const DEFAULT_LIST_HEIGHT = 300;
@@ -19,13 +22,32 @@ const cache = new CellMeasurerCache({
   fixedWidth: true
 });
 
-export default class VirtualizedList extends React.PureComponent {
+class VirtualizedList extends React.PureComponent {
   constructor(props) {
     super(props);
+
+    this.state = {
+      listComponent: null
+    };
+
+    this.firstRendering = true;
+    this.scrollTop = props.eventListStartIndex;
 
     this.getRowHeight = this.getRowHeight.bind(this);
     this.rowRenderer = this.rowRenderer.bind(this);
     this.onRowsRendered = this.onRowsRendered.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
+  }
+
+  componentWillUnmount() {
+    this.props.dispatch(setEventListStartIndex(this.scrollTop));
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (this.state.listComponent && this.scrollTop) {
+      this.state.listComponent.scrollToPosition(this.scrollTop);
+      this.scrollTop = null;
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -36,39 +58,44 @@ export default class VirtualizedList extends React.PureComponent {
 
   render() {
     return (
-      <WindowScroller scrollElement={this.props.scrollElement}>
-        {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => (
-          <AutoSizer disableHeight>
-            {({ width }) => (
-              <List
-                ref={el => {
-                  this.listComponent = el;
-                }}
-                autoHeight
-                width={width}
-                height={height || DEFAULT_LIST_HEIGHT}
-                rowCount={this.props.data.length}
-                rowHeight={this.getRowHeight}
-                onRowsRendered={this.onRowsRendered}
-                rowRenderer={this.rowRenderer}
-                overscanRowCount={2}
-                onScroll={onChildScroll}
-                isScrolling={isScrolling}
-                scrollTop={scrollTop}
-                deferredMeasurementCache={cache}
-                rowHeight={cache.rowHeight}
-                scrollToIndex={0}
-                className={'VirtualizedList-List'}
-              />
-            )}
-          </AutoSizer>
-        )}
+      <WindowScroller
+        scrollElement={this.props.scrollElement}
+        onScroll={this.handleScroll}
+      >
+        {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => {
+          if (!height) return null;
+          return (
+            <AutoSizer disableHeight>
+              {({ width }) => {
+                if (!width) return null;
+                return (
+                  <List
+                    ref={el => {
+                      if (el) this.setState({ listComponent: el });
+                    }}
+                    autoHeight
+                    width={width}
+                    height={height || DEFAULT_LIST_HEIGHT}
+                    rowCount={this.props.data.length}
+                    rowHeight={this.getRowHeight}
+                    onRowsRendered={this.onRowsRendered}
+                    rowRenderer={this.rowRenderer}
+                    overscanRowCount={2}
+                    onScroll={onChildScroll}
+                    isScrolling={isScrolling}
+                    scrollTop={scrollTop}
+                    deferredMeasurementCache={cache}
+                    rowHeight={cache.rowHeight}
+                    className={'VirtualizedList-List'}
+                  />
+                );
+              }}
+            </AutoSizer>
+          );
+        }}
       </WindowScroller>
     );
   }
-
-  firstRendering = true;
-  listComponent = null;
 
   getRowHeight({ index }) {
     return index &&
@@ -119,4 +146,16 @@ export default class VirtualizedList extends React.PureComponent {
       this.props.onListRendered();
     }
   }
+
+  handleScroll({ scrollTop }) {
+    this.scrollTop = scrollTop;
+  }
 }
+
+function mapStateToProps(state) {
+  return {
+    eventListStartIndex: state.eventListStartIndex
+  };
+}
+
+export default connect(mapStateToProps)(VirtualizedList);
