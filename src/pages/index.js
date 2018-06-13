@@ -3,8 +3,6 @@ import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
-import EventListContainer from '../containers/EventListContainer';
-
 import HomePage from '../components/HomePage';
 import withUserPosition from '../components/withUserPosition';
 
@@ -13,19 +11,21 @@ import { getEventListStructuredData } from '../utils/structuredData';
 import { toggleSearch } from '../actions';
 import { DESKTOP } from '../enums';
 
+import { pageview } from '../utils/gtag';
+
 class Index extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {
-      city: ''
-    };
-
     this.handleSearchCityToggle = this.handleSearchCityToggle.bind(this);
   }
 
+  componentDidMount() {
+    // pageview({ title: 'Home', url: window.location.href, path: '/' });
+  }
+
   render() {
-    const { position, getEvent, getEventListAround, query } = this.props;
+    const { media } = this.props;
 
     return (
       <>
@@ -36,18 +36,10 @@ class Index extends React.PureComponent {
           </script>
         </Head>
 
-        {position ? (
-          <EventListContainer
-            getEvent={getEvent}
-            getEventListAround={getEventListAround}
-            keyword={query.keyword}
-          />
-        ) : (
-          <HomePage
-            onClick={this.handleSearchCityToggle}
-            desktop={this.props.media === DESKTOP}
-          />
-        )}
+        <HomePage
+          onClick={this.handleSearchCityToggle}
+          desktop={media === DESKTOP}
+        />
       </>
     );
   }
@@ -63,7 +55,6 @@ Index.getInitialProps = function({ store, isServer, ...context }) {
 
 function mapStateToProps(state) {
   return {
-    position: state.position,
     media: state.media
   };
 }
