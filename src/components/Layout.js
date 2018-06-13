@@ -30,22 +30,7 @@ export const ScrollElementContext = React.createContext();
 
 const style = css`
   .root {
-    background: ${APP_BACKGROUND_COLOR};
-    padding-top: ${HEIGHT_APPBAR}px;
-    overflow: auto;
-    height: 100vh;
-  }
-
-  .root:before {
-    background: ${tonic};
-    position: absolute;
-    content: '';
-    bottom: 0;
-    left: 0;
-    right: 0;
-    clip-path: polygon(0 68%, 100% 0%, 100% 100%, 0% 100%);
-    height: calc(${Base}px * 80);
-    margin: 0 auto;
+    height: 100%;
   }
 
   .ScrollWrapper {

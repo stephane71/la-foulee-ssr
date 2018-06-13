@@ -6,6 +6,7 @@ import {
   BaseFontSize,
   BaseLineHeight,
   BaseRadius,
+  Base,
   H1,
   H2,
   H3,
@@ -15,6 +16,8 @@ import {
   P,
   LISTS
 } from './styles-variables';
+import { APP_BACKGROUND_COLOR, tonic } from './colors';
+import { HEIGHT_APPBAR } from './enums';
 
 export default css`
   html,
@@ -34,7 +37,22 @@ export default css`
   }
 
   #__next {
+    background: ${APP_BACKGROUND_COLOR};
+    padding-top: ${HEIGHT_APPBAR}px;
+    overflow: auto;
     height: 100%;
+  }
+
+  #__next:before {
+    background: ${tonic};
+    position: absolute;
+    content: '';
+    bottom: 0;
+    left: 0;
+    right: 0;
+    clip-path: polygon(0 68%, 100% 0%, 100% 100%, 0% 100%);
+    height: calc(${Base}px * 80);
+    margin: 0 auto;
   }
 
   .VirtualizedList-List {
