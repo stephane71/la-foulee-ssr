@@ -15,11 +15,11 @@ import {
   SET_EVENT_LIST,
   SET_SELECTORS,
   SET_GOOGLE_MAPS_SERVICE,
-  SET_EVENT_LIST_READY_FLAG,
   SET_MEDIA_TYPE,
   SET_USER_POSITION,
   LOCAL_STORAGE_SET,
-  TOGGLE_SEARCH
+  TOGGLE_SEARCH,
+  SET_EVENT_LIST_START_INDEX
 } from './actions';
 
 function getNextMonth(month) {
@@ -32,6 +32,7 @@ function getNextMonth(month) {
   return `${monthNumber}-${year}`;
 }
 
+const EVENT_LIST_START_INDEX = 0;
 const START_MONTH = `${moment().month()}-${moment().year()}`;
 const LEGACY_SELECTORS = {
   month: START_MONTH,
@@ -49,7 +50,8 @@ const initialState = {
   eventListReady: false,
   media: null,
   position: null,
-  searching: false
+  searching: false,
+  eventListStartIndex: EVENT_LIST_START_INDEX
 };
 
 const reducer = (state = initialState, action) => {
@@ -66,8 +68,6 @@ const reducer = (state = initialState, action) => {
         [action.service]: action.value
       };
       return { ...state, googleMapsService: googleMapsService };
-    case SET_EVENT_LIST_READY_FLAG:
-      return { ...state, eventListReady: true };
     case SET_MEDIA_TYPE:
       return { ...state, media: action.media };
     case SET_USER_POSITION:
@@ -81,6 +81,9 @@ const reducer = (state = initialState, action) => {
         searching:
           action.toggle === undefined ? !state.searching : action.toggle
       };
+    case SET_EVENT_LIST_START_INDEX:
+      return { ...state, eventListStartIndex: action.index };
+
     default:
       return state;
   }
