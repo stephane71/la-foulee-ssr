@@ -13,7 +13,6 @@ import {
 import {
   SET_SELECTED_EVENT,
   SET_EVENT_LIST,
-  SET_SELECTORS,
   SET_GOOGLE_MAPS_SERVICE,
   SET_MEDIA_TYPE,
   SET_USER_POSITION,
@@ -33,16 +32,10 @@ function getNextMonth(month) {
 }
 
 const EVENT_LIST_START_INDEX = 0;
-const START_MONTH = `${moment().month()}-${moment().year()}`;
-const LEGACY_SELECTORS = {
-  month: START_MONTH,
-  dep: ''
-};
 
 const initialState = {
   event: null,
   events: [],
-  selectors: Object.assign({}, DEFAULT_SELECTOR_VALUES, LEGACY_SELECTORS),
   googleMapsService: {
     [GOOGLE_DETAILS_SERVICE]: null,
     [GOOGLE_AUTOCOMPLETE_SERVICE]: null
@@ -60,8 +53,6 @@ const reducer = (state = initialState, action) => {
       return { ...state, event: action.event };
     case SET_EVENT_LIST:
       return { ...state, events: action.events };
-    case SET_SELECTORS:
-      return { ...state, selectors: action.selectors };
     case SET_GOOGLE_MAPS_SERVICE:
       const googleMapsService = {
         ...state.googleMapsService,
