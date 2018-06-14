@@ -105,7 +105,13 @@ const Event = ({ data }) => (
       <div className={'Event-Datum'}>
         <IconAgenda style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
         <div className={'Event-DatumValue Event-DatumDate'}>
-          {moment.unix(data.date).format(DATE_FORMAT)}
+          {moment
+            .unix(data.date)
+            // WARNING: lazy fix to not have to deal with utc offset
+            // The server may have a utc offset of 0 => moment display the day before in ssr
+            // To see it add {moment().utcOffset()}
+            .add(12, 'hours')
+            .format(DATE_FORMAT)}
         </div>
       </div>
     </div>
