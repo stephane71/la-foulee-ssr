@@ -21,6 +21,8 @@ class Events extends React.PureComponent {
   }
 
   componentDidMount() {
+    Router.prefetch('/event');
+
     const { query, position } = this.props;
     this.fetchEvents(query.position, query.position !== position);
   }

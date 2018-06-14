@@ -65,6 +65,10 @@ class Layout extends React.PureComponent {
     this.handleSelectCity = this.handleSelectCity.bind(this);
   }
 
+  componentDidMount() {
+    Router.prefetch('/');
+  }
+
   render() {
     return (
       <div className={'root'}>

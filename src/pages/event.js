@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import Head from 'next/head';
 import { connect } from 'react-redux';
 
@@ -9,6 +10,8 @@ import { pageview } from '../utils/gtag';
 
 class EventPage extends React.PureComponent {
   componentDidMount() {
+    Router.prefetch('/events');
+
     // pageview({
     //   title: 'Event details',
     //   url: window.location.href,

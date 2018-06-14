@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import Head from 'next/head';
 import React from 'react';
 import { compose } from 'redux';
@@ -21,6 +22,9 @@ class Index extends React.PureComponent {
   }
 
   componentDidMount() {
+    Router.prefetch('/event');
+    Router.prefetch('/events');
+
     // pageview({ title: 'Home', url: window.location.href, path: '/' });
   }
 
