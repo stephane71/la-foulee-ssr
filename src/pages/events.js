@@ -1,14 +1,9 @@
 import Router from 'next/router';
 import Head from 'next/head';
-import dynamic from 'next/dynamic';
 import React from 'react';
 import { connect } from 'react-redux';
 
-const EventList = dynamic(import('../components/EventList'), {
-  ssr: false,
-  loading: () => null
-});
-import { ScrollElementContext } from '../components/Layout';
+import EventList from '../components/EventList';
 
 import { setSelectedEvent, setEventList, setUserPosition } from '../actions';
 import { NO_EVENT_SELECTED } from '../enums';
@@ -52,16 +47,11 @@ class Events extends React.PureComponent {
           </script>
         </Head>
 
-        <ScrollElementContext.Consumer>
-          {scrollElement => (
-            <EventList
-              data={events}
-              loading={this.state.loading}
-              onSelectEvent={this.handleEventSelection}
-              scrollElement={scrollElement}
-            />
-          )}
-        </ScrollElementContext.Consumer>
+        <EventList
+          data={events}
+          loading={this.state.loading}
+          onSelectEvent={this.handleEventSelection}
+        />
       </>
     );
   }

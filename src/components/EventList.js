@@ -1,6 +1,11 @@
 import css from 'styled-jsx/css';
+import dynamic from 'next/dynamic';
 
-import VirtualizedList from './VirtualizedList';
+const VirtualizedList = dynamic(import('./VirtualizedList'), {
+  ssr: false,
+  loading: () => null
+});
+
 import EventListDate from './EventListDate';
 import Loader from './Loader';
 import { ScrollElementContext } from './Layout';
@@ -25,11 +30,29 @@ const style = css`
     width: 100%;
     max-width: ${MAX_WIDTH}px;
     z-index: 10;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: transparent;
   }
 `;
 
-export default class EventList extends React.PureComponent {
+const FixedDateHeader = ({ date }) => (
+  <div className={'FixedDateHeader'}>
+    <EventListDate date={date} />
+    <style jsx>{`
+      .FixedDateHeader {
+        background-color: ${APP_BACKGROUND_COLOR};
+        position: fixed;
+        top: ${HEIGHT_APPBAR}px;
+        left: 0;
+        right: 0;
+        max-width: ${MAX_WIDTH}px;
+        margin: 0 auto;
+        z-index: 2;
+      }
+    `}</style>
+  </div>
+);
+
+class EventList extends React.PureComponent {
   static defaultProps = {
     loading: true
   };
@@ -54,11 +77,13 @@ export default class EventList extends React.PureComponent {
     if (!data.length && !loading) return <div>{'Empty list !'}</div>;
 
     const showLoader = !listRendered || loading;
-    if (showLoader) {
-      scrollElement.scrollTop = 0;
-      scrollElement.classList.add('prevent-scroll');
-    } else {
-      scrollElement.classList.remove('prevent-scroll');
+    if (scrollElement) {
+      if (showLoader) {
+        scrollElement.scrollTop = 0;
+        scrollElement.classList.add('prevent-scroll');
+      } else {
+        scrollElement.classList.remove('prevent-scroll');
+      }
     }
 
     return (
@@ -105,20 +130,8 @@ export default class EventList extends React.PureComponent {
   }
 }
 
-const FixedDateHeader = ({ date }) => (
-  <div className={'FixedDateHeader'}>
-    <EventListDate date={date} />
-    <style jsx>{`
-      .FixedDateHeader {
-        background-color: ${APP_BACKGROUND_COLOR};
-        position: fixed;
-        top: ${HEIGHT_APPBAR}px;
-        left: 0;
-        right: 0;
-        max-width: ${MAX_WIDTH}px;
-        margin: 0 auto;
-        z-index: 2;
-      }
-    `}</style>
-  </div>
+export default props => (
+  <ScrollElementContext.Consumer>
+    {scrollElement => <EventList {...props} scrollElement={scrollElement} />}
+  </ScrollElementContext.Consumer>
 );
