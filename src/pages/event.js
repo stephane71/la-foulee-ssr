@@ -47,6 +47,7 @@ class EventPage extends React.PureComponent {
         <style jsx>{`
           .Event {
             height: 100%;
+            overflow-y: scroll;
           }
         `}</style>
       </div>
