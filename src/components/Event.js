@@ -14,7 +14,6 @@ function formatDistance(value) {
   return `${value / 1000}km`;
 }
 
-const EVENT_COLOR = '#ebfefa';
 const ICON_COLOR = '#B7C9C6';
 
 const style = css`
@@ -26,13 +25,10 @@ const style = css`
     padding: ${getSpacing('m')}px;
     display: flex;
     flex-direction: column;
+    padding-bottom: ${getSpacing('xl')}px
   }
 
   .Event-Wrapper {
-    color: ${EVENT_COLOR};
-    background: ${dominant} url(/static/details-background.svg) bottom center
-      no-repeat;
-    border-radius: ${BORDER_RADIUS}px;
     flex: 1;
     background-size: 100%;
     box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
@@ -46,6 +42,10 @@ const style = css`
     margin-bottom: ${getSpacing('m')}px;
   }
 
+  .Event-Description {
+    white-space: pre-line;
+  }
+
   .Event-Title {
     text-transform: capitalize;
     font-family: 'Circular-Medium';
@@ -54,7 +54,15 @@ const style = css`
   }
 
   .Event-Footer {
-    margin-top: auto;
+    margin: 0 auto;
+    padding: ${getSpacing('m')}px;
+    position: fixed;
+    bottom: ${getSpacing('m')}px;
+    max-width: 100%;
+    width: 768px;
+    left: 50%;
+    text-align: center;
+    transform: translateX(-50%);
   }
 
   .Event-Datum {
@@ -79,6 +87,26 @@ const style = css`
     font-weight: 400;
     font-size: ${getFontSize('l')}px;
   }
+
+  .Button {
+    background: #264a43;
+    color: #f4f5f7;
+    text-transform: uppercase;
+    font-size: ${getFontSize('s')}px;
+    padding: ${getSpacing('s')}px ${getSpacing('m')}px;
+    text-decoration: none;
+    border-radius 24px;
+  }
+
+  .Button--fixed {
+    box-shadow: 0 10px 20px 0 rgba(38,74,67,0.05);
+  }
+
+  @media (max-width: ${MAX_WIDTH}px) {
+    .Event-Footer {
+      bottom: 0;
+    }
+  }
 `;
 
 const EMPTY_VALUE = '-';
@@ -91,7 +119,7 @@ const Event = ({ data }) => (
     </header>
 
     {/* DESCRIPTION */}
-    {data.info && <div>{data.info}</div>}
+    {data.info && <div className={'Event-Description'}>{data.info}</div>}
 
     {/* GLOBAL INFO */}
     <div>
@@ -119,18 +147,17 @@ const Event = ({ data }) => (
     {/* ACTIVITIES */}
     <div>
       <h2 className={'Event-Subtitle'}>{'Épreuves'}</h2>
-
-      <table className={'Table'}>
-        <thead className={'Table-Head'}>
-          <tr className={'Table-Row'}>
-            <th className={'Table-DataHeader'} />
-            <th className={'Table-DataHeader'}>{`Départ`}</th>
-            <th className={'Table-DataHeader'}>{`Prix`}</th>
-          </tr>
-        </thead>
-        <tbody className={'Table-Body'}>
-          {data.activities &&
-            data.activities
+      {data.activities.length ? (
+        <table className={'Table'}>
+          <thead className={'Table-Head'}>
+            <tr className={'Table-Row'}>
+              <th className={'Table-DataHeader'} />
+              <th className={'Table-DataHeader'}>{`Départ`}</th>
+              <th className={'Table-DataHeader'}>{`Prix`}</th>
+            </tr>
+          </thead>
+          <tbody className={'Table-Body'}>
+            {data.activities
               .sort((act1, act2) => act2.distance - act1.distance)
               .map(({ distance, time, inscriptionFee, title }, i) => (
                 <tr className={'Table-Row'} key={i}>
@@ -143,17 +170,19 @@ const Event = ({ data }) => (
                   </td>
                 </tr>
               ))}
-        </tbody>
-      </table>
-
-      {!data.activities && (
+          </tbody>
+        </table>
+      ) : (
         <div>{`Aucune épreuve n'a été transmise par l'organisateur`}</div>
       )}
     </div>
 
     {/* FOOTER */}
     <footer className={'Event-Footer'}>
-      {`Call to Actions: Partage / Ajout Calendrier / Site le d'organisateur`}
+      <a
+        href=""
+        className={'Button Button--fixed'}
+      >{`Site de l'organisateur`}</a>
     </footer>
 
     <style jsx>{style}</style>

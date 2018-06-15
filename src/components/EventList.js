@@ -19,7 +19,7 @@ const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
 
 const style = css`
   .EventList {
-    padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
+    //padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
     height: 100%;
   }
 
@@ -94,9 +94,9 @@ class EventList extends React.PureComponent {
           </div>
         )}
 
-        {this.state.listRendered && (
+        {/*this.state.listRendered && (
           <FixedDateHeader date={this.state.stickyDate} />
-        )}
+        )*/}
 
         <VirtualizedList
           scrollElement={scrollElement}

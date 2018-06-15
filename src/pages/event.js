@@ -8,6 +8,9 @@ import { ScrollElementContext } from '../components/Layout';
 import { getEventStructuredData } from '../utils/structuredData';
 import { pageview } from '../utils/gtag';
 
+import { getSpacing } from '../styles-variables';
+import { DESKTOP } from '../enums';
+
 class EventPage extends React.PureComponent {
   componentDidMount() {
     Router.prefetch('/events');
@@ -23,7 +26,11 @@ class EventPage extends React.PureComponent {
     let event = this.props.query.event || this.props.event;
 
     return (
-      <div className={'Event'}>
+      <div
+        className={`Event-Page ${
+          this.props.media === DESKTOP ? 'Event-Page--desktop' : ''
+        }`}
+      >
         <Head>
           <title>{`${event.title} | La Foulée`}</title>
           <script type={'application/ld+json'}>
@@ -45,9 +52,17 @@ class EventPage extends React.PureComponent {
         )}
 
         <style jsx>{`
-          .Event {
+          .Event-Page {
             height: 100%;
             overflow-y: scroll;
+            background: white;
+            -webkit-overflow-scrolling: touch;
+          }
+
+          .Event-Page--desktop {
+            border-radius: 8px;
+            margin: ${getSpacing('m')}px auto;
+            height: calc(100% - ${getSpacing('l')}px);
           }
         `}</style>
       </div>
@@ -57,7 +72,8 @@ class EventPage extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    event: state.event
+    event: state.event,
+    media: state.media
   };
 }
 
