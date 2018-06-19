@@ -1,9 +1,10 @@
 import Router from 'next/router';
 import css from 'styled-jsx/css';
+
 import LogoTonic from '../svgs/lafoulee-tonic.svg';
-import MenuIcon from '../svgs/ic_menu_black_24px.svg';
 import SearchIcon from '../svgs/ic_search_black_24px.svg';
 import ArrowBackIcon from '../svgs/ic_arrow_back_black_24px.svg';
+import HomeIcon from '../svgs/baseline-home-24px.svg';
 
 import { getSpacing } from '../styles-variables';
 import { dominant, white } from '../colors';
@@ -59,7 +60,6 @@ const style = css`
 
 const Header = ({
   onClickHeaderLogo,
-  onClickMenu,
   onClickSearch,
   showSearchTrigger,
   showBackArrow
@@ -71,14 +71,8 @@ const Header = ({
           <ArrowBackIcon style={{ fill: white, verticalAlign: 'middle' }} />
         </div>
       ) : (
-        <div className={'Header-menuWrapper'} onClick={onClickMenu}>
-          <MenuIcon
-            style={{
-              fill: white,
-              verticalAlign: 'middle',
-              visibility: 'hidden'
-            }}
-          />
+        <div className={'Header-menuWrapper'} onClick={onClickHeaderLogo}>
+          <HomeIcon style={{ fill: white, verticalAlign: 'middle' }} />
         </div>
       )}
 
