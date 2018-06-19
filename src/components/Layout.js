@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 
 import Header from './Header';
 import Overlay from './Overlay';
-// import SideMenu from './SideMenu';
 import SearchMobile from './SearchMobile';
 import GoogleMapPlacesApi from './GoogleMapPlacesApi';
 
@@ -58,7 +57,6 @@ class Layout extends React.PureComponent {
     };
 
     this.handleClickOverlay = this.handleClickOverlay.bind(this);
-    // this.handleToggleMenu = this.handleToggleMenu.bind(this);
     this.handleCloseMenu = this.handleCloseMenu.bind(this);
     this.handleToggleSearch = this.handleToggleSearch.bind(this);
     this.handleSelectUserPosition = this.handleSelectUserPosition.bind(this);
@@ -73,10 +71,8 @@ class Layout extends React.PureComponent {
     return (
       <div className={'root'}>
         <Header
-          // onClickMenu={this.handleToggleMenu}
-          onClickHeaderLogo={() => Router.push('/?from=header', '/', {})}
+          onClickHeaderLogo={() => Router.push('/')}
           onClickSearch={this.handleToggleSearch}
-          // showSearchTrigger={this.props.position}
           showSearchTrigger={true}
           showBackArrow={this.props.query.keyword}
         />
@@ -95,7 +91,6 @@ class Layout extends React.PureComponent {
           onClick={this.handleClickOverlay}
           headerPadding={this.props.searching}
         />
-        {/* <SideMenu show={this.state.menu} onClose={this.handleCloseMenu} /> */}
 
         {this.props.searching && (
           <SearchMobile
@@ -122,10 +117,6 @@ class Layout extends React.PureComponent {
   handleCloseMenu() {
     this.setState({ menu: false });
   }
-
-  // handleToggleMenu() {
-  //   this.setState(({ menu }) => ({ menu: !menu }));
-  // }
 
   handleToggleSearch(toggle) {
     this.props.dispatch(toggleSearch(toggle));
