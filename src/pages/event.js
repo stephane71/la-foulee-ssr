@@ -1,5 +1,6 @@
 import Router from 'next/router';
 import Head from 'next/head';
+import css from 'styled-jsx/css';
 import { connect } from 'react-redux';
 
 import Event from '../components/Event';
@@ -12,9 +13,30 @@ import { getSpacing } from '../styles-variables';
 import { DESKTOP } from '../enums';
 import { white } from '../colors';
 
+const style = css`
+  .Event-Page {
+    height: 100%;
+    overflow-y: scroll;
+    background: ${white};
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .Event-Page--desktop {
+    border-radius: 8px;
+    margin: ${getSpacing('m')}px auto;
+    height: calc(100% - ${getSpacing('l')}px);
+  }
+`;
+
 class EventPage extends React.PureComponent {
+  state = {
+    desktop: false
+  };
+
   componentDidMount() {
     Router.prefetch('/events');
+
+    this.setState({ desktop: this.props.media === DESKTOP });
 
     // pageview({
     //   title: 'Event details',
@@ -29,7 +51,7 @@ class EventPage extends React.PureComponent {
     return (
       <div
         className={`Event-Page ${
-          this.props.media === DESKTOP ? 'Event-Page--desktop' : ''
+          this.state.desktop ? 'Event-Page--desktop' : ''
         }`}
       >
         <Head>
@@ -52,20 +74,7 @@ class EventPage extends React.PureComponent {
           <div>{`Cette évenement n'existe pas :(`}</div>
         )}
 
-        <style jsx>{`
-          .Event-Page {
-            height: 100%;
-            overflow-y: scroll;
-            background: ${white};
-            -webkit-overflow-scrolling: touch;
-          }
-
-          .Event-Page--desktop {
-            border-radius: 8px;
-            margin: ${getSpacing('m')}px auto;
-            height: calc(100% - ${getSpacing('l')}px);
-          }
-        `}</style>
+        <style jsx>{style}</style>
       </div>
     );
   }
