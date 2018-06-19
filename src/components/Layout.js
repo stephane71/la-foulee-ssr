@@ -73,7 +73,7 @@ class Layout extends React.PureComponent {
         <Header
           onClickHeaderLogo={() => Router.push('/')}
           onClickSearch={this.handleToggleSearch}
-          showSearchTrigger={true}
+          showSearchTrigger={this.props.currentRoute !== '/'}
           showBackArrow={this.props.query.keyword}
         />
 

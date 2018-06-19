@@ -89,12 +89,11 @@ const Header = ({
         />
       </div>
 
-      {!showBackArrow &&
-        showSearchTrigger && (
-          <div className={'Header-menuWrapper'} onClick={onClickSearch}>
-            <SearchIcon style={{ fill: white, verticalAlign: 'middle' }} />
-          </div>
-        )}
+      {showSearchTrigger && (
+        <div className={'Header-menuWrapper'} onClick={onClickSearch}>
+          <SearchIcon style={{ fill: white, verticalAlign: 'middle' }} />
+        </div>
+      )}
     </div>
 
     <style jsx>{style}</style>
