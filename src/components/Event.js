@@ -180,7 +180,7 @@ const Event = ({ data }) => (
     {/* FOOTER */}
     <footer className={'Event-Footer'}>
       <a
-        href=""
+        href={''}
         className={'Button Button--fixed'}
       >{`Site de l'organisateur`}</a>
     </footer>

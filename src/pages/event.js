@@ -10,6 +10,7 @@ import { pageview } from '../utils/gtag';
 
 import { getSpacing } from '../styles-variables';
 import { DESKTOP } from '../enums';
+import { white } from '../colors';
 
 class EventPage extends React.PureComponent {
   componentDidMount() {
@@ -55,7 +56,7 @@ class EventPage extends React.PureComponent {
           .Event-Page {
             height: 100%;
             overflow-y: scroll;
-            background: white;
+            background: ${white};
             -webkit-overflow-scrolling: touch;
           }
 

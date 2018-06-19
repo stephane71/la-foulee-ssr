@@ -16,7 +16,7 @@ import {
   P,
   LISTS
 } from './styles-variables';
-import { APP_BACKGROUND_COLOR, tonic } from './colors';
+import { TABLE_BORDER_COLOR, APP_BACKGROUND_COLOR, tonic } from './colors';
 import { HEIGHT_APPBAR } from './enums';
 
 export default css`
@@ -166,13 +166,13 @@ export default css`
     font-weight: 300;
     font-size: ${getFontSize('xs')}px;
     text-transform: uppercase;
-    border-bottom: 1px solid #e7e8ea;
+    border-bottom: 1px solid ${TABLE_BORDER_COLOR};
   }
 
   .Table-DataCell {
     font-weight: 300;
     vertical-align: text-top;
-    border-bottom: 1px solid #e7e8ea;
+    border-bottom: 1px solid ${TABLE_BORDER_COLOR};
   }
 
   .Table-DataCell--bold {
