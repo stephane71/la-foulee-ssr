@@ -19,7 +19,6 @@ const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
 
 const style = css`
   .EventList {
-    padding-top: ${EVENT_LIST_DATE_HEIGHT}px;
     height: 100%;
   }
 
@@ -33,24 +32,6 @@ const style = css`
     background-color: transparent;
   }
 `;
-
-const FixedDateHeader = ({ date }) => (
-  <div className={'FixedDateHeader'}>
-    <EventListDate date={date} />
-    <style jsx>{`
-      .FixedDateHeader {
-        background-color: ${APP_BACKGROUND_COLOR};
-        position: fixed;
-        top: ${HEIGHT_APPBAR}px;
-        left: 0;
-        right: 0;
-        max-width: ${MAX_WIDTH}px;
-        margin: 0 auto;
-        z-index: 2;
-      }
-    `}</style>
-  </div>
-);
 
 class EventList extends React.PureComponent {
   static defaultProps = {
@@ -92,10 +73,6 @@ class EventList extends React.PureComponent {
           <div className={'EventList-Loading'}>
             <Loader />
           </div>
-        )}
-
-        {this.state.listRendered && (
-          <FixedDateHeader date={this.state.stickyDate} />
         )}
 
         <VirtualizedList

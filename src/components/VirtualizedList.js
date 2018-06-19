@@ -107,7 +107,7 @@ class VirtualizedList extends React.PureComponent {
   rowRenderer({ key, index, style, parent }) {
     const { data } = this.props;
 
-    const firstItemDay = index && data[index].date !== data[index - 1].date;
+    const firstItemDay = !index || data[index].date !== data[index - 1].date;
     const lastItemDay =
       data[index + 1] && data[index].date !== data[index + 1].date;
 

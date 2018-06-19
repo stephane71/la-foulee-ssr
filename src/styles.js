@@ -16,7 +16,7 @@ import {
   P,
   LISTS
 } from './styles-variables';
-import { APP_BACKGROUND_COLOR, tonic } from './colors';
+import { TABLE_BORDER_COLOR, APP_BACKGROUND_COLOR, tonic } from './colors';
 import { HEIGHT_APPBAR } from './enums';
 
 export default css`
@@ -41,18 +41,6 @@ export default css`
     padding-top: ${HEIGHT_APPBAR}px;
     overflow: auto;
     height: 100%;
-  }
-
-  #__next:before {
-    background: ${tonic};
-    position: absolute;
-    content: '';
-    bottom: 0;
-    left: 0;
-    right: 0;
-    clip-path: polygon(0 68%, 100% 0%, 100% 100%, 0% 100%);
-    height: calc(${Base}px * 80);
-    margin: 0 auto;
   }
 
   .VirtualizedList-List {
@@ -171,20 +159,20 @@ export default css`
 
   .Table-DataHeader,
   .Table-DataCell {
-    padding: ${getSpacing('xxs')}px ${getSpacing('xs')}px;
+    padding: ${getSpacing('s')}px ${getSpacing('xs')}px;
   }
 
   .Table-DataHeader {
     font-weight: 300;
-    font-size: ${getFontSize('s')}px;
+    font-size: ${getFontSize('xs')}px;
     text-transform: uppercase;
-    border-bottom: 1px solid #3a4f4b;
+    border-bottom: 1px solid ${TABLE_BORDER_COLOR};
   }
 
   .Table-DataCell {
     font-weight: 300;
     vertical-align: text-top;
-    border-bottom: 1px solid #3a4f4b;
+    border-bottom: 1px solid ${TABLE_BORDER_COLOR};
   }
 
   .Table-DataCell--bold {
