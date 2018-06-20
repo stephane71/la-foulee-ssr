@@ -5,7 +5,6 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import HomePage from '../components/HomePage';
-import withUserPosition from '../components/withUserPosition';
 
 import { getEventListStructuredData } from '../utils/structuredData';
 
@@ -63,6 +62,4 @@ function mapStateToProps(state) {
   };
 }
 
-const IndexCompose = compose(withUserPosition)(Index);
-
-export default connect(mapStateToProps)(IndexCompose);
+export default connect(mapStateToProps)(Index);
