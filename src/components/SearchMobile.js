@@ -33,24 +33,28 @@ const ListWrapper = ({ children }) => (
 const BIG_CITIES = [
   {
     value: 'Paris',
+    name: 'Paris',
     geometry: {
       location: { lat: () => 48.85661400000001, lng: () => 2.3522219000000177 }
     }
   },
   {
     value: 'Lyon',
+    name: 'Lyon',
     geometry: {
       location: { lat: () => 45.764043, lng: () => 4.835658999999964 }
     }
   },
   {
     value: 'Marseille',
+    name: 'Marseille',
     geometry: {
       location: { lat: () => 43.296482, lng: () => 5.369779999999992 }
     }
   },
   {
     value: 'Bordeaux',
+    name: 'Bordeaux',
     geometry: {
       location: { lat: () => 44.837789, lng: () => -0.5791799999999512 }
     }
@@ -109,7 +113,7 @@ class SearchMobile extends React.PureComponent {
         </div>
 
         <div className={'SearchMobile-Content'}>
-          <ListWrapper>
+          {/* <ListWrapper>
             <List
               list={[{ value: 'Votre position', Icon: IconNearMe }]}
               renderItem={({ value, Icon }) => (
@@ -128,7 +132,7 @@ class SearchMobile extends React.PureComponent {
               highlightIndex={this.state.keyboardItemSelect - 1}
               highlightIndexValidation={this.state.keyboardValidation}
             />
-          </ListWrapper>
+          </ListWrapper> */}
           <ListWrapper>
             <GoogleMapPlacesApi input={this.state.input}>
               {predictions => {
