@@ -32,10 +32,18 @@ const ListWrapper = ({ children }) => (
 
 const BIG_CITIES = [
   {
-    value: 'Paris',
-    name: 'Paris',
+    value: 'Bordeaux',
+    name: 'Bordeaux',
     geometry: {
-      location: { lat: () => 48.85661400000001, lng: () => 2.3522219000000177 }
+      location: { lat: () => 44.837789, lng: () => -0.5791799999999512 }
+    }
+  },
+
+  {
+    value: 'Lille',
+    name: 'Lille',
+    geometry: {
+      location: { lat: () => 50.656234, lng: () => 3.046963 }
     }
   },
   {
@@ -45,6 +53,7 @@ const BIG_CITIES = [
       location: { lat: () => 45.764043, lng: () => 4.835658999999964 }
     }
   },
+
   {
     value: 'Marseille',
     name: 'Marseille',
@@ -53,10 +62,10 @@ const BIG_CITIES = [
     }
   },
   {
-    value: 'Bordeaux',
-    name: 'Bordeaux',
+    value: 'Paris',
+    name: 'Paris',
     geometry: {
-      location: { lat: () => 44.837789, lng: () => -0.5791799999999512 }
+      location: { lat: () => 48.85661400000001, lng: () => 2.3522219000000177 }
     }
   }
 ];
