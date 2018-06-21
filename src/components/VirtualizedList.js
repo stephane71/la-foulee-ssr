@@ -120,10 +120,7 @@ class VirtualizedList extends React.PureComponent {
         rowIndex={index}
       >
         <div style={{ ...style }}>
-          {(firstItemDay && (
-            <EventListDate date={data[index].date} marginTop />
-          )) ||
-            null}
+          {firstItemDay && <EventListDate date={data[index].date} marginTop />}
           <EventListItem
             data={data[index]}
             onSelectEvent={data => this.onSelectEvent(data, style.top)}
@@ -140,7 +137,6 @@ class VirtualizedList extends React.PureComponent {
   }
 
   onRowsRendered({ startIndex, stopIndex }) {
-    this.props.onChangeStickyDate(this.props.data[startIndex].date);
     if (this.firstRendering) {
       this.firstRendering = false;
       this.props.onListRendered();

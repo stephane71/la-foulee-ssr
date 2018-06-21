@@ -42,11 +42,9 @@ class EventList extends React.PureComponent {
     super(props);
 
     this.state = {
-      stickyDate: this.props.data.length && this.props.data[0].date,
       listRendered: false
     };
 
-    this.handleStickyDate = this.handleStickyDate.bind(this);
     this.handleListRendered = this.handleListRendered.bind(this);
     this.handleEventSelection = this.handleEventSelection.bind(this);
   }
@@ -79,7 +77,6 @@ class EventList extends React.PureComponent {
           scrollElement={scrollElement}
           data={data}
           onSelectEvent={this.handleEventSelection}
-          onChangeStickyDate={this.handleStickyDate}
           onListRendered={this.handleListRendered}
         />
 
@@ -96,10 +93,6 @@ class EventList extends React.PureComponent {
     // console.log('Position of the item in the window', windowPosition);
 
     this.props.onSelectEvent(data);
-  }
-
-  handleStickyDate(stickyDate) {
-    this.setState({ stickyDate });
   }
 
   handleListRendered() {
