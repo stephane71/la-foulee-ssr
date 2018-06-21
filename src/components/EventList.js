@@ -8,7 +8,7 @@ const VirtualizedList = dynamic(import('./VirtualizedList'), {
 
 import EventListDate from './EventListDate';
 import Loader from './Loader';
-import { ScrollElementContext } from './Layout';
+import { ScrollElementContext, SelectedCityContext } from './Layout';
 
 import { getSpacing, BaseLineHeight } from '../styles-variables';
 import { APP_BACKGROUND_COLOR, dominant, white } from '../colors';
@@ -62,7 +62,7 @@ class EventList extends React.PureComponent {
   }
 
   render() {
-    const { data, loading, scrollElement } = this.props;
+    const { data, loading, scrollElement, city } = this.props;
     const { listRendered } = this.state;
 
     if (!data.length && !loading) return <div>{'Empty list !'}</div>;
@@ -85,12 +85,13 @@ class EventList extends React.PureComponent {
           </div>
         )}
 
-        {listRendered && (
-          <div className={'EventList-Header'}>
-            <h1 className={'EventList-HeaderTitle'}>{'City'}</h1>
-            <div>{`${data.length} événements autour de <city name>`}</div>
-          </div>
-        )}
+        {listRendered &&
+          city && (
+            <div className={'EventList-Header'}>
+              <h1 className={'EventList-HeaderTitle'}>{city.name}</h1>
+              <div>{`${data.length} événements autour de ${city.name}`}</div>
+            </div>
+          )}
 
         <VirtualizedList
           scrollElement={scrollElement}
@@ -120,7 +121,13 @@ class EventList extends React.PureComponent {
 }
 
 export default props => (
-  <ScrollElementContext.Consumer>
-    {scrollElement => <EventList {...props} scrollElement={scrollElement} />}
-  </ScrollElementContext.Consumer>
+  <SelectedCityContext.Consumer>
+    {city => (
+      <ScrollElementContext.Consumer>
+        {scrollElement => (
+          <EventList {...props} scrollElement={scrollElement} city={city} />
+        )}
+      </ScrollElementContext.Consumer>
+    )}
+  </SelectedCityContext.Consumer>
 );
