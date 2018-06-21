@@ -55,12 +55,10 @@ class EventList extends React.PureComponent {
 
     const showLoader = !listRendered || loading;
     if (scrollElement) {
-      if (showLoader) {
-        scrollElement.scrollTop = 0;
-        scrollElement.classList.add('prevent-scroll');
-      } else {
-        scrollElement.classList.remove('prevent-scroll');
-      }
+      scrollElement.scrollTop = 0;
+      showLoader
+        ? scrollElement.classList.add('prevent-scroll')
+        : scrollElement.classList.remove('prevent-scroll');
     }
 
     return (

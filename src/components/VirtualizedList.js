@@ -7,14 +7,11 @@ import {
   WindowScroller
 } from 'react-virtualized';
 
-import Loader from './Loader';
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
 import EventListHeader from './EventListHeader';
 
 import { setEventListStartIndex } from '../actions';
-
-const DEFAULT_LIST_HEIGHT = 300;
 
 const cache = new CellMeasurerCache({
   fixedWidth: true
@@ -72,7 +69,7 @@ class VirtualizedList extends React.PureComponent {
                     }}
                     autoHeight
                     width={width}
-                    height={height || DEFAULT_LIST_HEIGHT}
+                    height={height}
                     rowCount={this.props.data.length}
                     rowHeight={cache.rowHeight}
                     onRowsRendered={this.onRowsRendered}
