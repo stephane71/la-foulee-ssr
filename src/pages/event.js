@@ -3,7 +3,7 @@ import Head from 'next/head';
 import css from 'styled-jsx/css';
 import { connect } from 'react-redux';
 
-import Event from '../components/Event';
+import EventDetails from '../components/EventDetails';
 import { ScrollElementContext } from '../components/Layout';
 
 import { getEventStructuredData } from '../utils/structuredData';
@@ -14,29 +14,32 @@ import { DESKTOP } from '../enums';
 import { white } from '../colors';
 
 const style = css`
-  .Event-Page {
-    height: 100%;
-    overflow-y: scroll;
+  .EventPage {
+    min-height: 100%;
+    ${'' /* Prevent no rendering page in Safari mobile */} overflow-y: scroll;
     background: ${white};
     -webkit-overflow-scrolling: touch;
   }
 
-  .Event-Page--desktop {
-    border-radius: 8px;
-    margin: ${getSpacing('m')}px auto;
-    height: calc(100% - ${getSpacing('l')}px);
+  .EventPage--desktop {
+    overflow-y: initial;
   }
 `;
 
 class EventPage extends React.PureComponent {
+  static getInitialProps({ isServer }) {
+    return { isServer };
+  }
+
   state = {
-    desktop: false
+    desktop: false,
+    isServer: this.props.isServer
   };
 
   componentDidMount() {
     Router.prefetch('/events');
 
-    this.setState({ desktop: this.props.media === DESKTOP });
+    this.setState({ desktop: this.props.media === DESKTOP, isServer: false });
 
     // pageview({
     //   title: 'Event details',
@@ -50,8 +53,8 @@ class EventPage extends React.PureComponent {
 
     return (
       <div
-        className={`Event-Page ${
-          this.state.desktop ? 'Event-Page--desktop' : ''
+        className={`EventPage ${
+          this.state.desktop ? 'EventPage--desktop' : ''
         }`}
       >
         <Head>
@@ -69,7 +72,11 @@ class EventPage extends React.PureComponent {
         </ScrollElementContext.Consumer>
 
         {event ? (
-          <Event data={event} />
+          <EventDetails
+            data={event}
+            desktop={this.state.desktop}
+            isServer={this.state.isServer}
+          />
         ) : (
           <div>{`Cette évenement n'existe pas :(`}</div>
         )}

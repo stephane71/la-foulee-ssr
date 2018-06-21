@@ -17,45 +17,36 @@ function formatDistance(value) {
 const ICON_COLOR = '#B7C9C6';
 
 const style = css`
-  .Event {
+  .EventDetails {
     position: relative;
     width: 100%;
-    max-width: ${MAX_WIDTH}px;
-    min-height: 100%;
+    height: 100%;
     padding: ${getSpacing('m')}px;
     display: flex;
     flex-direction: column;
-    padding-bottom: ${getSpacing('xl')}px
   }
 
-  .Event-Wrapper {
-    flex: 1;
-    background-size: 100%;
-    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
-  }
-
-  .Event > div {
+  .EventDetails > div {
     margin-bottom: ${getSpacing('m')}px;
   }
 
-  .Event-Header {
+  .EventDetails-Header {
     margin-bottom: ${getSpacing('m')}px;
   }
 
-  .Event-Description {
+  .EventDetails-Description {
     white-space: pre-line;
   }
 
-  .Event-Title {
+  .EventDetails-Title {
     text-transform: capitalize;
     font-family: 'Circular-Medium';
     font-weight: 500;
     margin: 0;
   }
 
-  .Event-Footer {
+  .EventDetails-Footer--mobile {
     margin: 0 auto;
-    padding: ${getSpacing('m')}px;
     position: fixed;
     bottom: ${getSpacing('m')}px;
     max-width: 100%;
@@ -65,25 +56,33 @@ const style = css`
     transform: translateX(-50%);
   }
 
-  .Event-Datum {
+  .EventDetails-Footer--desktop {
+    margin: auto auto 0;
+  }
+
+  .EventDetails-Footer {
+    padding: ${getSpacing('m')}px;
+  }
+
+  .EventDetails-Datum {
     margin-bottom: ${getSpacing('s')}px;
   }
 
-  .Event-DatumValue {
+  .EventDetails-DatumValue {
     display: inline-block;
     vertical-align: middle;
     margin-left: ${getSpacing('xs')}px;
   }
 
-  .Event-DatumLocation {
+  .EventDetails-DatumLocation {
     font-style: inherit;
   }
 
-  .Event-DatumDate {
+  .EventDetails-DatumDate {
     text-transform: capitalize;
   }
 
-  .Event-Subtitle {
+  .EventDetails-Subtitle {
     font-weight: 400;
     font-size: ${getFontSize('l')}px;
   }
@@ -103,7 +102,7 @@ const style = css`
   }
 
   @media (max-width: ${MAX_WIDTH}px) {
-    .Event-Footer {
+    .EventDetails-Footer {
       bottom: 0;
     }
   }
@@ -111,28 +110,28 @@ const style = css`
 
 const EMPTY_VALUE = '-';
 
-const Event = ({ data }) => (
-  <div className={'Event Event-Wrapper'}>
+const EventDetails = ({ data, desktop, isServer }) => (
+  <div className={'EventDetails'}>
     {/* HEADER */}
-    <header className={`Event-Header`}>
-      <h1 className={`Event-Title`}>{data.title}</h1>
+    <header className={`EventDetails-Header`}>
+      <h1 className={`EventDetails-Title`}>{data.title}</h1>
     </header>
 
     {/* DESCRIPTION */}
-    {data.info && <div className={'Event-Description'}>{data.info}</div>}
+    {data.info && <div className={'EventDetails-Description'}>{data.info}</div>}
 
     {/* GLOBAL INFO */}
     <div>
-      <div className={'Event-Datum'}>
+      <div className={'EventDetails-Datum'}>
         <IconLocation style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
-        <address className={'Event-DatumValue Event-DatumLocation'}>{`${
-          data.department.name
-        }, ${data.city}`}</address>
+        <address
+          className={'EventDetails-DatumValue EventDetails-DatumLocation'}
+        >{`${data.department.name}, ${data.city}`}</address>
       </div>
 
-      <div className={'Event-Datum'}>
+      <div className={'EventDetails-Datum'}>
         <IconAgenda style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
-        <div className={'Event-DatumValue Event-DatumDate'}>
+        <div className={'EventDetails-DatumValue EventDetails-DatumDate'}>
           {moment
             .unix(data.date)
             // WARNING: lazy fix to not have to deal with utc offset
@@ -146,7 +145,7 @@ const Event = ({ data }) => (
 
     {/* ACTIVITIES */}
     <div>
-      <h2 className={'Event-Subtitle'}>{'Épreuves'}</h2>
+      <h2 className={'EventDetails-Subtitle'}>{'Épreuves'}</h2>
       {data.activities.length ? (
         <table className={'Table'}>
           <thead className={'Table-Head'}>
@@ -178,15 +177,23 @@ const Event = ({ data }) => (
     </div>
 
     {/* FOOTER */}
-    <footer className={'Event-Footer'}>
-      <a
-        href={''}
-        className={'Button Button--fixed'}
-      >{`Site de l'organisateur`}</a>
-    </footer>
+    {!isServer && (
+      <footer
+        className={`EventDetails-Footer ${
+          desktop
+            ? 'EventDetails-Footer--desktop'
+            : 'EventDetails-Footer--mobile'
+        }`}
+      >
+        <a
+          href={''}
+          className={'Button Button--fixed'}
+        >{`Site de l'organisateur`}</a>
+      </footer>
+    )}
 
     <style jsx>{style}</style>
   </div>
 );
 
-export default Event;
+export default EventDetails;
