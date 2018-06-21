@@ -75,10 +75,15 @@ const style = css`
   }
 
   .EventDetails-DatumLocation {
+    white-space: pre;
+  }
+
+  .EventDetails-DatumLocation > .EventDetails-DatumValue{
     font-style: inherit;
   }
 
-  .EventDetails-DatumDate {
+
+  .EventDetails-DatumDate > .EventDetails-DatumValue {
     text-transform: capitalize;
   }
 
@@ -122,16 +127,16 @@ const EventDetails = ({ data, desktop, isServer }) => (
 
     {/* GLOBAL INFO */}
     <div>
-      <div className={'EventDetails-Datum'}>
+      <div className={'EventDetails-Datum EventDetails-DatumLocation'}>
         <IconLocation style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
-        <address
-          className={'EventDetails-DatumValue EventDetails-DatumLocation'}
-        >{`${data.department.name}, ${data.city}`}</address>
+        <address className={'EventDetails-DatumValue'}>{`${data.city}\n${
+          data.department.code
+        }, ${data.department.name}`}</address>
       </div>
 
-      <div className={'EventDetails-Datum'}>
+      <div className={'EventDetails-Datum EventDetails-DatumDate'}>
         <IconAgenda style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
-        <div className={'EventDetails-DatumValue EventDetails-DatumDate'}>
+        <div className={'EventDetails-DatumValue'}>
           {moment
             .unix(data.date)
             // WARNING: lazy fix to not have to deal with utc offset
