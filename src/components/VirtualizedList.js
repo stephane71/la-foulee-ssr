@@ -10,15 +10,13 @@ import {
 import Loader from './Loader';
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
+import EventListHeader from './EventListHeader';
 
 import { setEventListStartIndex } from '../actions';
 
-const EVENT_LIST_ITEM_HEIGHT = 72;
-const EVENT_LIST_DATE_HEADER_HEIGHT = 96;
 const DEFAULT_LIST_HEIGHT = 300;
 
 const cache = new CellMeasurerCache({
-  defaultHeight: EVENT_LIST_ITEM_HEIGHT,
   fixedWidth: true
 });
 
@@ -33,7 +31,6 @@ class VirtualizedList extends React.PureComponent {
     this.firstRendering = true;
     this.scrollTop = props.eventListStartIndex;
 
-    this.getRowHeight = this.getRowHeight.bind(this);
     this.rowRenderer = this.rowRenderer.bind(this);
     this.onRowsRendered = this.onRowsRendered.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
@@ -77,7 +74,7 @@ class VirtualizedList extends React.PureComponent {
                     width={width}
                     height={height || DEFAULT_LIST_HEIGHT}
                     rowCount={this.props.data.length}
-                    rowHeight={this.getRowHeight}
+                    rowHeight={cache.rowHeight}
                     onRowsRendered={this.onRowsRendered}
                     rowRenderer={this.rowRenderer}
                     overscanRowCount={2}
@@ -97,13 +94,6 @@ class VirtualizedList extends React.PureComponent {
     );
   }
 
-  getRowHeight({ index }) {
-    return index &&
-      this.props.data[index].date !== this.props.data[index - 1].date
-      ? EVENT_LIST_ITEM_HEIGHT + EVENT_LIST_DATE_HEADER_HEIGHT
-      : EVENT_LIST_ITEM_HEIGHT;
-  }
-
   rowRenderer({ key, index, style, parent }) {
     const { data } = this.props;
 
@@ -120,6 +110,7 @@ class VirtualizedList extends React.PureComponent {
         rowIndex={index}
       >
         <div style={{ ...style }}>
+          {!index && <EventListHeader nbItems={data.length} />}
           {firstItemDay && <EventListDate date={data[index].date} marginTop />}
           <EventListItem
             data={data[index]}

@@ -6,13 +6,11 @@ const VirtualizedList = dynamic(import('./VirtualizedList'), {
   loading: () => null
 });
 
-import EventListDate from './EventListDate';
 import Loader from './Loader';
-import { ScrollElementContext, SelectedCityContext } from './Layout';
+import { ScrollElementContext } from './Layout';
 
 import { getSpacing, BaseLineHeight } from '../styles-variables';
-import { APP_BACKGROUND_COLOR, dominant, white } from '../colors';
-import { HEIGHT_APPBAR, MAX_WIDTH, BORDER_RADIUS_LIST_ITEM } from '../enums';
+import { HEIGHT_APPBAR, MAX_WIDTH } from '../enums';
 
 // See EventListDate component: line height + 2 * vertical padding
 const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
@@ -30,18 +28,6 @@ const style = css`
     max-width: ${MAX_WIDTH}px;
     z-index: 10;
     background-color: transparent;
-  }
-
-  .EventList-Header {
-    margin: ${getSpacing('s')}px;
-    padding: ${getSpacing('m')}px ${getSpacing('s')}px;
-    border-radius: ${BORDER_RADIUS_LIST_ITEM}px;
-    background-color: ${dominant};
-    color: ${white};
-  }
-
-  .EventList-HeaderTitle {
-    margin: ${getSpacing('s')}px 0;
   }
 `;
 
@@ -62,7 +48,7 @@ class EventList extends React.PureComponent {
   }
 
   render() {
-    const { data, loading, scrollElement, city } = this.props;
+    const { data, loading, scrollElement } = this.props;
     const { listRendered } = this.state;
 
     if (!data.length && !loading) return <div>{'Empty list !'}</div>;
@@ -84,14 +70,6 @@ class EventList extends React.PureComponent {
             <Loader />
           </div>
         )}
-
-        {listRendered &&
-          city && (
-            <div className={'EventList-Header'}>
-              <h1 className={'EventList-HeaderTitle'}>{city.name}</h1>
-              <div>{`${data.length} événements autour de ${city.name}`}</div>
-            </div>
-          )}
 
         <VirtualizedList
           scrollElement={scrollElement}
@@ -121,13 +99,7 @@ class EventList extends React.PureComponent {
 }
 
 export default props => (
-  <SelectedCityContext.Consumer>
-    {city => (
-      <ScrollElementContext.Consumer>
-        {scrollElement => (
-          <EventList {...props} scrollElement={scrollElement} city={city} />
-        )}
-      </ScrollElementContext.Consumer>
-    )}
-  </SelectedCityContext.Consumer>
+  <ScrollElementContext.Consumer>
+    {scrollElement => <EventList {...props} scrollElement={scrollElement} />}
+  </ScrollElementContext.Consumer>
 );
