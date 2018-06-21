@@ -11,8 +11,8 @@ import Loader from './Loader';
 import { ScrollElementContext } from './Layout';
 
 import { getSpacing, BaseLineHeight } from '../styles-variables';
-import { APP_BACKGROUND_COLOR } from '../colors';
-import { HEIGHT_APPBAR, MAX_WIDTH } from '../enums';
+import { APP_BACKGROUND_COLOR, dominant, white } from '../colors';
+import { HEIGHT_APPBAR, MAX_WIDTH, BORDER_RADIUS_LIST_ITEM } from '../enums';
 
 // See EventListDate component: line height + 2 * vertical padding
 const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
@@ -30,6 +30,18 @@ const style = css`
     max-width: ${MAX_WIDTH}px;
     z-index: 10;
     background-color: transparent;
+  }
+
+  .EventList-Header {
+    margin: ${getSpacing('s')}px;
+    padding: ${getSpacing('m')}px ${getSpacing('s')}px;
+    border-radius: ${BORDER_RADIUS_LIST_ITEM}px;
+    background-color: ${dominant};
+    color: ${white};
+  }
+
+  .EventList-HeaderTitle {
+    margin: ${getSpacing('s')}px 0;
   }
 `;
 
@@ -70,6 +82,13 @@ class EventList extends React.PureComponent {
         {showLoader && (
           <div className={'EventList-Loading'}>
             <Loader />
+          </div>
+        )}
+
+        {listRendered && (
+          <div className={'EventList-Header'}>
+            <h1 className={'EventList-HeaderTitle'}>{'City'}</h1>
+            <div>{`${data.length} événements autour de <city name>`}</div>
           </div>
         )}
 

@@ -3,12 +3,13 @@
 // read here https://github.com/kesne/babel-plugin-inline-react-svg/issues/31#issuecomment-342264348
 import React, { Fragment } from 'react';
 
-import { getSpacing, getFontSize } from '../styles-variables';
-import { white, SECONDARY_COLOR } from '../colors';
 import Arrow from '../svgs/arrow_right_black_24px.svg';
 
+import { getSpacing, getFontSize } from '../styles-variables';
+import { white, SECONDARY_COLOR } from '../colors';
+import { BORDER_RADIUS_LIST_ITEM } from '../enums';
+
 const EVENT_ITEM_TITLE_COLOR = '#516E69';
-const BORDER_RADIUS_LIST_ITEM = 10;
 
 /*
   WARNING !!
