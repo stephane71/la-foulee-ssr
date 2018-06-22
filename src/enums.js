@@ -24,3 +24,4 @@ export const USER_POSITION_KEY = 'userPosition';
 
 export const GOOGLE_DETAILS_SERVICE = 'details';
 export const GOOGLE_AUTOCOMPLETE_SERVICE = 'autocomplete';
+export const GOOGLE_GEOCODING_SERVICE = 'geocoding';

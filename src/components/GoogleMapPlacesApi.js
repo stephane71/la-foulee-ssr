@@ -4,7 +4,11 @@ import { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import { setGoogleMapsService } from '../actions';
-import { GOOGLE_DETAILS_SERVICE, GOOGLE_AUTOCOMPLETE_SERVICE } from '../enums';
+import {
+  GOOGLE_DETAILS_SERVICE,
+  GOOGLE_AUTOCOMPLETE_SERVICE,
+  GOOGLE_GEOCODING_SERVICE
+} from '../enums';
 
 const { publicRuntimeConfig } = getConfig();
 const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
@@ -46,6 +50,13 @@ class GoogleMapPlacesApi extends React.PureComponent {
         setGoogleMapsService(
           GOOGLE_DETAILS_SERVICE,
           new google.maps.places.PlacesService(new google.maps.Map(''))
+        )
+      );
+
+      this.props.dispatch(
+        setGoogleMapsService(
+          GOOGLE_GEOCODING_SERVICE,
+          new google.maps.Geocoder()
         )
       );
     };
