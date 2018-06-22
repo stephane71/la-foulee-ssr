@@ -59,6 +59,9 @@ class Layout extends React.PureComponent {
 
   componentDidMount() {
     Router.prefetch('/');
+
+    const { city } = this.props.query;
+    if (city) this.setState({ city: { name: city } });
   }
 
   render() {
