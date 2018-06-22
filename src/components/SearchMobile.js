@@ -104,7 +104,7 @@ class SearchMobile extends React.PureComponent {
             <IconArrowBack fill={'#fff'} style={{ verticalAlign: 'top' }} />
           </div>
           <Input
-            placeholder={'Rechercher une ville'}
+            placeholder={'Sélectionner une ville'}
             onChange={this.handleLocationInputUpdate}
             reset={!this.state.input}
             focus={true}
