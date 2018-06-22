@@ -135,7 +135,7 @@ class Layout extends React.PureComponent {
     );
 
     this.setState({ city });
-    Router.push(`/events?position=${geohash}`);
+    Router.push(`/events?position=${geohash}&city=${city.name}`);
   }
 
   async handleSelectUserPosition() {
