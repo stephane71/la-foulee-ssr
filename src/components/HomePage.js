@@ -1,6 +1,17 @@
-import Button from './Button';
+import css from 'styled-jsx/css';
 
-import { getSpacing } from '../styles-variables';
+import { getSpacing, getFontSize } from '../styles-variables';
+
+const style = css`
+  .HomePage {
+    text-align: center;
+    padding: 0 ${getSpacing('m')}px;
+  }
+
+  .HomePage-descriptionText {
+    padding: 0 ${getSpacing('l')}px;
+  }
+`;
 
 export class HomePage extends React.PureComponent {
   render() {
@@ -9,27 +20,15 @@ export class HomePage extends React.PureComponent {
         <h3>{'Bienvenue !'}</h3>
         <div className={'HomePage-descriptionText'}>
           <p>
-            {`La Foulée vous permet de rechercher et trouver l'évenement de course
-            qui pieds qui vous conviens.`}
+            {`Recherchez un événement de course à pieds autour de chez vous !`}
           </p>
         </div>
-        <div className={'HomePage-callToAction'}>
-          <Button onClick={this.props.onClick}>{'Rechercher'}</Button>
-        </div>
-        <style jsx>{`
-          .HomePage {
-            text-align: center;
-            padding: 0 ${getSpacing('m')}px;
-          }
 
-          .HomePage-descriptionText {
-            padding: 0 ${getSpacing('l')}px;
-          }
+        <button className={'Button Button--fixed'} onClick={this.props.onClick}>
+          {'Rechercher'}
+        </button>
 
-          .HomePage-callToAction {
-            padding: 0 ${getSpacing('l')}px;
-          }
-        `}</style>
+        <style jsx>{style}</style>
       </div>
     );
   }

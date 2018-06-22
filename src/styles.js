@@ -16,7 +16,7 @@ import {
   P,
   LISTS
 } from './styles-variables';
-import { TABLE_BORDER_COLOR, APP_BACKGROUND_COLOR, tonic } from './colors';
+import { TABLE_BORDER_COLOR, APP_BACKGROUND_COLOR, dominant } from './colors';
 import { HEIGHT_APPBAR } from './enums';
 
 export default css`
@@ -111,6 +111,21 @@ export default css`
   button {
     font-size: ${BaseFontSize}px;
     line-height: ${BaseLineHeight}px;
+  }
+
+  .Button {
+    background: ${dominant};
+    color: #F4F5F7;
+    text-transform: uppercase;
+    font-size: ${getFontSize('s')}px;
+    padding: ${getSpacing('s')}px ${getSpacing('m')}px;
+    text-decoration: none;
+    border-radius 24px;
+    outline: none;
+  }
+
+  .Button--fixed {
+    box-shadow: 0 10px 20px 0 rgba(38,74,67,0.05);
   }
 
   .Button--square,

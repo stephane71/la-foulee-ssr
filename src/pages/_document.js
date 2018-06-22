@@ -2,6 +2,8 @@ import Document, { Head, Main, NextScript } from 'next/document';
 import getConfig from 'next/config';
 import flush from 'styled-jsx/server';
 
+import { dominant } from '../colors';
+
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
 const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
@@ -25,7 +27,7 @@ export default class MyDocument extends Document {
           <meta name="mobile-web-app-capable" content="yes" />
           <meta
             name="apple-mobile-web-app-status-bar-style"
-            content="#264A43"
+            content={dominant}
           />
           <meta name="apple-mobile-web-app-title" content="La Foulée" />
 
@@ -101,7 +103,7 @@ export default class MyDocument extends Document {
           />
 
           <link rel="manifest" href={`/static/manifest.json?v=yya2lgM4gb`} />
-          <meta name="theme-color" content="#264A43" />
+          <meta name="theme-color" content={dominant} />
 
           <script
             async

@@ -5,9 +5,15 @@ import { connect } from 'react-redux';
 
 import EventList from '../components/EventList';
 
-import { setSelectedEvent, setEventList, setUserPosition } from '../actions';
+import {
+  setSelectedEvent,
+  setEventList,
+  setUserPosition,
+  toggleSearch
+} from '../actions';
 import { NO_EVENT_SELECTED } from '../enums';
 import { getEventListStructuredData } from '../utils/structuredData';
+import { getSpacing } from '../styles-variables';
 
 class Events extends React.PureComponent {
   constructor(props) {
@@ -18,6 +24,7 @@ class Events extends React.PureComponent {
     };
 
     this.handleEventSelection = this.handleEventSelection.bind(this);
+    this.handleSearchCityToggle = this.handleSearchCityToggle.bind(this);
   }
 
   componentDidMount() {
@@ -37,8 +44,7 @@ class Events extends React.PureComponent {
     const { getEventListAround, query } = this.props;
     const { events } = this.props;
 
-    // Router redicrect to home instead
-    if (!query.position) return <div>{'No query to fetch events'}</div>;
+    const { position, city } = query;
 
     return (
       <>
@@ -49,13 +55,42 @@ class Events extends React.PureComponent {
           </script>
         </Head>
 
-        <EventList
-          data={events}
-          loading={this.state.loading}
-          onSelectEvent={this.handleEventSelection}
-        />
+        {position && city ? (
+          <EventList
+            data={events}
+            loading={this.state.loading}
+            onSelectEvent={this.handleEventSelection}
+          />
+        ) : (
+          <div className={'Events-NoQuery'}>
+            <h3>{'Choisissez une ville'}</h3>
+            <p>
+              {`Nous avons besoins qu'une ville soit sélectionnée pour vous proposer des évènements !`}
+            </p>
+            <button
+              className={'Button Button--fixed'}
+              onClick={this.handleSearchCityToggle}
+            >
+              {'Sélectionner une ville'}
+            </button>
+            <style jsx>{`
+              .Events-NoQuery {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                padding: ${getSpacing('m')}px;
+                margin-top: ${getSpacing('l')}px;
+                text-align: center;
+              }
+            `}</style>
+          </div>
+        )}
       </>
     );
+  }
+
+  handleSearchCityToggle() {
+    this.props.dispatch(toggleSearch());
   }
 
   handleEventSelection(event) {

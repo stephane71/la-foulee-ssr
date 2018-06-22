@@ -13,7 +13,7 @@ const Overlay = ({ show, onClick, headerPadding }) => (
         right: 0;
         bottom: 0;
         background-color: rgba(0, 0, 0, 0.6);
-        transition: opacity 0.3s ease-out;
+        // transition: opacity 0.3s ease-out;
         z-index: -1;
       }
 

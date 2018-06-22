@@ -13,19 +13,13 @@ import getUserLocation from '../utils/getUserLocation';
 import Geohash, { GEOHASH_PRECISION } from '../utils/geohash';
 
 import GlobalStyles from '../styles';
-import {
-  HEIGHT_APPBAR,
-  USER_POSITION_KEY,
-  MAX_WIDTH,
-  GOOGLE_DETAILS_SERVICE
-} from '../enums';
-import { APP_BACKGROUND_COLOR, tonic } from '../colors';
-import { Base } from '../styles-variables';
+import { USER_POSITION_KEY, MAX_WIDTH, GOOGLE_DETAILS_SERVICE } from '../enums';
 import { setUserPosition, localStorageSet, toggleSearch } from '../actions';
 
 moment.locale('fr');
 
 export const ScrollElementContext = React.createContext();
+export const SelectedCityContext = React.createContext();
 
 const style = css`
   .root {
@@ -82,7 +76,9 @@ class Layout extends React.PureComponent {
           className={'ScrollWrapper'}
         >
           <ScrollElementContext.Provider value={this.state.scrollingElement}>
-            <div className={'PagesWrapper'}>{this.props.children}</div>
+            <SelectedCityContext.Provider value={this.state.city}>
+              <div className={'PagesWrapper'}>{this.props.children}</div>
+            </SelectedCityContext.Provider>
           </ScrollElementContext.Provider>
         </div>
 
@@ -130,7 +126,6 @@ class Layout extends React.PureComponent {
           _city.placeId
         );
 
-    this.setState({ city });
     this.handleToggleSearch();
 
     const geohash = Geohash.encode(
@@ -139,7 +134,8 @@ class Layout extends React.PureComponent {
       GEOHASH_PRECISION
     );
 
-    Router.push(`/events?position=${geohash}`);
+    this.setState({ city });
+    Router.push(`/events?position=${geohash}&city=${city.name}`);
   }
 
   async handleSelectUserPosition() {

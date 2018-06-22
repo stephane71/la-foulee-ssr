@@ -32,27 +32,40 @@ const ListWrapper = ({ children }) => (
 
 const BIG_CITIES = [
   {
-    value: 'Paris',
+    value: 'Bordeaux',
+    name: 'Bordeaux',
     geometry: {
-      location: { lat: () => 48.85661400000001, lng: () => 2.3522219000000177 }
+      location: { lat: () => 44.837789, lng: () => -0.5791799999999512 }
+    }
+  },
+
+  {
+    value: 'Lille',
+    name: 'Lille',
+    geometry: {
+      location: { lat: () => 50.656234, lng: () => 3.046963 }
     }
   },
   {
     value: 'Lyon',
+    name: 'Lyon',
     geometry: {
       location: { lat: () => 45.764043, lng: () => 4.835658999999964 }
     }
   },
+
   {
     value: 'Marseille',
+    name: 'Marseille',
     geometry: {
       location: { lat: () => 43.296482, lng: () => 5.369779999999992 }
     }
   },
   {
-    value: 'Bordeaux',
+    value: 'Paris',
+    name: 'Paris',
     geometry: {
-      location: { lat: () => 44.837789, lng: () => -0.5791799999999512 }
+      location: { lat: () => 48.85661400000001, lng: () => 2.3522219000000177 }
     }
   }
 ];
@@ -91,7 +104,7 @@ class SearchMobile extends React.PureComponent {
             <IconArrowBack fill={'#fff'} style={{ verticalAlign: 'top' }} />
           </div>
           <Input
-            placeholder={'Rechercher une ville'}
+            placeholder={'Sélectionner une ville'}
             onChange={this.handleLocationInputUpdate}
             reset={!this.state.input}
             focus={true}
@@ -109,7 +122,7 @@ class SearchMobile extends React.PureComponent {
         </div>
 
         <div className={'SearchMobile-Content'}>
-          <ListWrapper>
+          {/* <ListWrapper>
             <List
               list={[{ value: 'Votre position', Icon: IconNearMe }]}
               renderItem={({ value, Icon }) => (
@@ -128,7 +141,7 @@ class SearchMobile extends React.PureComponent {
               highlightIndex={this.state.keyboardItemSelect - 1}
               highlightIndexValidation={this.state.keyboardValidation}
             />
-          </ListWrapper>
+          </ListWrapper> */}
           <ListWrapper>
             <GoogleMapPlacesApi input={this.state.input}>
               {predictions => {

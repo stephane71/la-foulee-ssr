@@ -78,10 +78,9 @@ const style = css`
     white-space: pre;
   }
 
-  .EventDetails-DatumLocation > .EventDetails-DatumValue{
+  .EventDetails-DatumLocation > .EventDetails-DatumValue {
     font-style: inherit;
   }
-
 
   .EventDetails-DatumDate > .EventDetails-DatumValue {
     text-transform: capitalize;
@@ -90,20 +89,6 @@ const style = css`
   .EventDetails-Subtitle {
     font-weight: 400;
     font-size: ${getFontSize('l')}px;
-  }
-
-  .Button {
-    background: #264a43;
-    color: #f4f5f7;
-    text-transform: uppercase;
-    font-size: ${getFontSize('s')}px;
-    padding: ${getSpacing('s')}px ${getSpacing('m')}px;
-    text-decoration: none;
-    border-radius 24px;
-  }
-
-  .Button--fixed {
-    box-shadow: 0 10px 20px 0 rgba(38,74,67,0.05);
   }
 
   @media (max-width: ${MAX_WIDTH}px) {
