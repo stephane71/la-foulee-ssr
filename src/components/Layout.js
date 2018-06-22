@@ -13,7 +13,12 @@ import getUserLocation from '../utils/getUserLocation';
 import Geohash, { GEOHASH_PRECISION } from '../utils/geohash';
 
 import GlobalStyles from '../styles';
-import { USER_POSITION_KEY, MAX_WIDTH, GOOGLE_DETAILS_SERVICE } from '../enums';
+import {
+  USER_POSITION_KEY,
+  MAX_WIDTH,
+  GOOGLE_DETAILS_SERVICE,
+  GOOGLE_GEOCODING_SERVICE
+} from '../enums';
 import { setUserPosition, localStorageSet, toggleSearch } from '../actions';
 
 moment.locale('fr');
@@ -143,9 +148,30 @@ class Layout extends React.PureComponent {
 
   async handleSelectUserPosition() {
     this.handleToggleSearch();
-    const geohash = await getUserLocation();
-    this.props.dispatch(setUserPosition(geohash));
-    this.props.dispatch(localStorageSet(USER_POSITION_KEY, geohash));
+
+    const location = await getUserLocation();
+    const geohash = Geohash.encode(
+      location.lat,
+      location.lng,
+      GEOHASH_PRECISION
+    );
+
+    this.props.googleMapsServiceGeocoding.geocode(
+      { location },
+      (results, status) => {
+        if (status === google.maps.GeocoderStatus.OK) {
+          const city = results.find(({ types }) => types.includes('locality'));
+          const cityName = city.formatted_address.split(',')[0];
+
+          this.setState({
+            city: { name: cityName }
+          });
+          this.props.dispatch(setUserPosition(geohash));
+
+          Router.push(`/events?position=${geohash}&city=${cityName}`);
+        }
+      }
+    );
   }
 }
 
@@ -153,7 +179,9 @@ function mapStateToProps(state) {
   return {
     searching: state.searching,
     position: state.position,
-    googleMapsServiceDetails: state.googleMapsService[GOOGLE_DETAILS_SERVICE]
+    googleMapsServiceDetails: state.googleMapsService[GOOGLE_DETAILS_SERVICE],
+    googleMapsServiceGeocoding:
+      state.googleMapsService[GOOGLE_GEOCODING_SERVICE]
   };
 }
 
