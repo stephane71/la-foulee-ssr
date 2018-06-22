@@ -122,7 +122,7 @@ class SearchMobile extends React.PureComponent {
         </div>
 
         <div className={'SearchMobile-Content'}>
-          {/* <ListWrapper>
+          <ListWrapper>
             <List
               list={[{ value: 'Votre position', Icon: IconNearMe }]}
               renderItem={({ value, Icon }) => (
@@ -141,7 +141,7 @@ class SearchMobile extends React.PureComponent {
               highlightIndex={this.state.keyboardItemSelect - 1}
               highlightIndexValidation={this.state.keyboardValidation}
             />
-          </ListWrapper> */}
+          </ListWrapper>
           <ListWrapper>
             <GoogleMapPlacesApi input={this.state.input}>
               {predictions => {
