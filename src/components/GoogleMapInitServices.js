@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import getConfig from 'next/config';
+import { connect } from 'react-redux';
 
 import { setGoogleMapsService } from '../actions';
 import {
@@ -17,22 +18,24 @@ class GoogleMapInitServices extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    const { dispatch } = this.props;
+
     window.initService = async () => {
-      this.props.dispatch(
+      dispatch(
         setGoogleMapsService(
           GOOGLE_AUTOCOMPLETE_SERVICE,
           new google.maps.places.AutocompleteService()
         )
       );
 
-      this.props.dispatch(
+      dispatch(
         setGoogleMapsService(
           GOOGLE_DETAILS_SERVICE,
           new google.maps.places.PlacesService(new google.maps.Map(''))
         )
       );
 
-      this.props.dispatch(
+      dispatch(
         setGoogleMapsService(
           GOOGLE_GEOCODING_SERVICE,
           new google.maps.Geocoder()
@@ -54,4 +57,4 @@ class GoogleMapInitServices extends React.PureComponent {
   }
 }
 
-export default GoogleMapInitServices;
+export default connect()(GoogleMapInitServices);
