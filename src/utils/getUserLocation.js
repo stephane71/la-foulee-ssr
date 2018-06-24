@@ -8,7 +8,6 @@ export default function getUserLocation() {
           lng: position.coords.longitude
         }),
       error => {
-        console.error(error);
         reject(error);
       }
     );

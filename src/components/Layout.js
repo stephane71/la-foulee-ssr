@@ -8,9 +8,10 @@ import Header from './Header';
 import Overlay from './Overlay';
 import SearchMobile from './SearchMobile';
 import withGoogleMaps from './withGoogleMaps';
+import LayoutError from './LayoutError';
 
 import getUserLocation from '../utils/getUserLocation';
-import Geohash, { GEOHASH_PRECISION } from '../utils/geohash';
+import getGeohash from '../utils/geohash';
 
 import GlobalStyles from '../styles';
 import { USER_POSITION_KEY, MAX_WIDTH } from '../enums';
@@ -20,10 +21,6 @@ moment.locale('fr');
 
 export const ScrollElementContext = React.createContext();
 export const SelectedCityContext = React.createContext();
-
-function getGeohash({ lat, lng }) {
-  return Geohash.encode(lat, lng, GEOHASH_PRECISION);
-}
 
 const style = css`
   .root {
@@ -51,7 +48,8 @@ class Layout extends React.PureComponent {
 
     this.state = {
       // scrollingElement: null,
-      city: null
+      city: null,
+      error: null
     };
 
     this.handleClickOverlay = this.handleClickOverlay.bind(this);
@@ -92,7 +90,9 @@ class Layout extends React.PureComponent {
         >
           <ScrollElementContext.Provider value={scrollingElement}>
             <SelectedCityContext.Provider value={city}>
-              <div className={'PagesWrapper'}>{children}</div>
+              <div className={'PagesWrapper'}>
+                {this.state.error ? <LayoutError /> : children}
+              </div>
             </SelectedCityContext.Provider>
           </ScrollElementContext.Provider>
         </div>
@@ -131,10 +131,15 @@ class Layout extends React.PureComponent {
   async handleSelectCity(_city = {}) {
     this.handleToggleSearch();
 
-    const city = _city.location
-      ? _city
-      : await this.props.getDetails(_city.placeId);
-    const geohash = getGeohash(city.location);
+    let city, geohash;
+    try {
+      city = _city.location
+        ? _city
+        : await this.props.getDetails(_city.placeId);
+      geohash = getGeohash(city.location);
+    } catch (error) {
+      this.setState({ error });
+    }
 
     this.setState({ city });
     Router.push(`/events?position=${geohash}&city=${city.name}`);
@@ -143,9 +148,14 @@ class Layout extends React.PureComponent {
   async handleSelectUserPosition() {
     this.handleToggleSearch();
 
-    const location = await getUserLocation();
-    const cityName = await this.props.reverseGeocoding(location);
-    const geohash = getGeohash(location);
+    let location, cityName, geohash;
+    try {
+      location = await getUserLocation();
+      cityName = await this.props.reverseGeocoding(location);
+      geohash = getGeohash(location);
+    } catch (error) {
+      this.setState({ error });
+    }
 
     this.props.dispatch(setUserPosition(geohash));
     this.setState({ city: { name: cityName } });
