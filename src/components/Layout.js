@@ -7,24 +7,23 @@ import { connect } from 'react-redux';
 import Header from './Header';
 import Overlay from './Overlay';
 import SearchMobile from './SearchMobile';
-import GoogleMapPlacesApi from './GoogleMapPlacesApi';
+import withGoogleMaps from './withGoogleMaps';
 
 import getUserLocation from '../utils/getUserLocation';
 import Geohash, { GEOHASH_PRECISION } from '../utils/geohash';
 
 import GlobalStyles from '../styles';
-import {
-  USER_POSITION_KEY,
-  MAX_WIDTH,
-  GOOGLE_DETAILS_SERVICE,
-  GOOGLE_GEOCODING_SERVICE
-} from '../enums';
-import { setUserPosition, localStorageSet, toggleSearch } from '../actions';
+import { USER_POSITION_KEY, MAX_WIDTH } from '../enums';
+import { setUserPosition, toggleSearch } from '../actions';
 
 moment.locale('fr');
 
 export const ScrollElementContext = React.createContext();
 export const SelectedCityContext = React.createContext();
+
+function getGeohash({ lat, lng }) {
+  return Geohash.encode(lat, lng, GEOHASH_PRECISION);
+}
 
 const style = css`
   .root {
@@ -51,12 +50,11 @@ class Layout extends React.PureComponent {
     super(props);
 
     this.state = {
-      menu: false,
+      // scrollingElement: null,
       city: null
     };
 
     this.handleClickOverlay = this.handleClickOverlay.bind(this);
-    this.handleCloseMenu = this.handleCloseMenu.bind(this);
     this.handleToggleSearch = this.handleToggleSearch.bind(this);
     this.handleSelectUserPosition = this.handleSelectUserPosition.bind(this);
     this.handleSelectCity = this.handleSelectCity.bind(this);
@@ -69,34 +67,43 @@ class Layout extends React.PureComponent {
     if (city) this.setState({ city: { name: city } });
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.query !== this.props.query) {
+      this.setState({ city: { name: nextProps.query.city } });
+    }
+  }
+
   render() {
+    const { currentRoute, query, children, searching } = this.props;
+    const { scrollingElement, city } = this.state;
+
     return (
       <div className={'root'}>
         <Header
           onClickHeaderLogo={() => Router.push('/')}
           onClickSearch={this.handleToggleSearch}
-          showSearchTrigger={this.props.currentRoute !== '/'}
-          showBackArrow={this.props.query.keyword}
+          showSearchTrigger={currentRoute !== '/'}
+          showBackArrow={query.keyword}
         />
 
         <div
           ref={e => this.setState({ scrollingElement: e })}
           className={'ScrollWrapper'}
         >
-          <ScrollElementContext.Provider value={this.state.scrollingElement}>
-            <SelectedCityContext.Provider value={this.state.city}>
-              <div className={'PagesWrapper'}>{this.props.children}</div>
+          <ScrollElementContext.Provider value={scrollingElement}>
+            <SelectedCityContext.Provider value={city}>
+              <div className={'PagesWrapper'}>{children}</div>
             </SelectedCityContext.Provider>
           </ScrollElementContext.Provider>
         </div>
 
         <Overlay
-          show={this.state.menu || this.props.searching}
+          show={searching}
           onClick={this.handleClickOverlay}
-          headerPadding={this.props.searching}
+          headerPadding={searching}
         />
 
-        {this.props.searching && (
+        {searching && (
           <SearchMobile
             onSelectAround={this.handleSelectUserPosition}
             onSelectCity={this.handleSelectCity}
@@ -114,33 +121,20 @@ class Layout extends React.PureComponent {
   }
 
   handleClickOverlay() {
-    this.handleCloseMenu();
-    this.handleToggleSearch(false);
-  }
-
-  handleCloseMenu() {
-    this.setState({ menu: false });
+    this.handleToggleSearch();
   }
 
   handleToggleSearch(toggle) {
     this.props.dispatch(toggleSearch(toggle));
   }
 
-  async handleSelectCity(_city) {
-    const city = _city.geometry
-      ? _city
-      : await GoogleMapPlacesApi.getDetails(
-          this.props.googleMapsServiceDetails,
-          _city.placeId
-        );
-
+  async handleSelectCity(_city = {}) {
     this.handleToggleSearch();
 
-    const geohash = Geohash.encode(
-      city.geometry.location.lat(),
-      city.geometry.location.lng(),
-      GEOHASH_PRECISION
-    );
+    const city = _city.location
+      ? _city
+      : await this.props.getDetails(_city.placeId);
+    const geohash = getGeohash(city.location);
 
     this.setState({ city });
     Router.push(`/events?position=${geohash}&city=${city.name}`);
@@ -150,39 +144,21 @@ class Layout extends React.PureComponent {
     this.handleToggleSearch();
 
     const location = await getUserLocation();
-    const geohash = Geohash.encode(
-      location.lat,
-      location.lng,
-      GEOHASH_PRECISION
-    );
+    const cityName = await this.props.reverseGeocoding(location);
+    const geohash = getGeohash(location);
 
-    this.props.googleMapsServiceGeocoding.geocode(
-      { location },
-      (results, status) => {
-        if (status === google.maps.GeocoderStatus.OK) {
-          const city = results.find(({ types }) => types.includes('locality'));
-          const cityName = city.formatted_address.split(',')[0];
-
-          this.setState({
-            city: { name: cityName }
-          });
-          this.props.dispatch(setUserPosition(geohash));
-
-          Router.push(`/events?position=${geohash}&city=${cityName}`);
-        }
-      }
-    );
+    this.props.dispatch(setUserPosition(geohash));
+    this.setState({ city: { name: cityName } });
+    Router.push(`/events?position=${geohash}&city=${cityName}`);
   }
 }
 
 function mapStateToProps(state) {
   return {
-    searching: state.searching,
-    position: state.position,
-    googleMapsServiceDetails: state.googleMapsService[GOOGLE_DETAILS_SERVICE],
-    googleMapsServiceGeocoding:
-      state.googleMapsService[GOOGLE_GEOCODING_SERVICE]
+    searching: state.searching
   };
 }
 
-export default connect(mapStateToProps)(Layout);
+const LayoutWithGoogleMaps = withGoogleMaps(Layout);
+
+export default connect(mapStateToProps)(LayoutWithGoogleMaps);

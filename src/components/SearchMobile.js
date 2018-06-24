@@ -1,14 +1,16 @@
 import dynamic from 'next/dynamic';
 import debounce from 'lodash.debounce';
+import css from 'styled-jsx/css';
 
 import { dominant, white, SECONDARY_COLOR } from '../colors';
 import { HEIGHT_APPBAR, BORDER_RADIUS, MAX_WIDTH } from '../enums';
-import { getSpacing, getFontSize } from '../styles-variables';
+import { getSpacing } from '../styles-variables';
 
 import Input, { KEYBOARD_NAV_UP, KEYBOARD_NAV_DOWN } from './Input';
 import List from './List';
 
-const GoogleMapPlacesApi = dynamic(import('./GoogleMapPlacesApi'), {
+import GoogleMapsAutocomplete from './GoogleMapsAutocomplete';
+const GoogleMapInitServices = dynamic(import('./GoogleMapInitServices'), {
   ssr: false,
   loading: () => null
 });
@@ -30,43 +32,66 @@ const ListWrapper = ({ children }) => (
   </div>
 );
 
+const style = css`
+  .SearchMobile {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    max-width: ${MAX_WIDTH}px;
+    z-index: 100;
+    left: 50%;
+    transform: translate(-50%);
+  }
+
+  .SearchMobile-Header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: ${getSpacing('s')}px ${getSpacing('m')}px;
+    background-color: ${dominant};
+    height: ${HEIGHT_APPBAR}px;
+  }
+
+  .SearchMobile-Content {
+    padding: ${getSpacing('s')}px;
+  }
+
+  .Search-Icon--paddingRight {
+    padding-right: ${getSpacing('s')}px;
+  }
+
+  .Search-Icon--paddingLeft {
+    padding-left: ${getSpacing('s')}px;
+  }
+`;
+
 const BIG_CITIES = [
   {
     value: 'Bordeaux',
     name: 'Bordeaux',
-    geometry: {
-      location: { lat: () => 44.837789, lng: () => -0.5791799999999512 }
-    }
+    location: { lat: 44.837789, lng: -0.5791799999999512 }
   },
 
   {
     value: 'Lille',
     name: 'Lille',
-    geometry: {
-      location: { lat: () => 50.656234, lng: () => 3.046963 }
-    }
+    location: { lat: 50.656234, lng: 3.046963 }
   },
   {
     value: 'Lyon',
     name: 'Lyon',
-    geometry: {
-      location: { lat: () => 45.764043, lng: () => 4.835658999999964 }
-    }
+    location: { lat: 45.764043, lng: 4.835658999999964 }
   },
 
   {
     value: 'Marseille',
     name: 'Marseille',
-    geometry: {
-      location: { lat: () => 43.296482, lng: () => 5.369779999999992 }
-    }
+    location: { lat: 43.296482, lng: 5.369779999999992 }
   },
   {
     value: 'Paris',
     name: 'Paris',
-    geometry: {
-      location: { lat: () => 48.85661400000001, lng: () => 2.3522219000000177 }
-    }
+    location: { lat: 48.85661400000001, lng: 2.3522219000000177 }
   }
 ];
 
@@ -96,12 +121,13 @@ class SearchMobile extends React.PureComponent {
   render() {
     return (
       <div className={'SearchMobile'}>
+        <GoogleMapInitServices />
         <div className={'SearchMobile-Header'}>
           <div
             className={'Search-Icon--paddingRight'}
             onClick={() => this.props.onLeave()}
           >
-            <IconArrowBack fill={'#fff'} style={{ verticalAlign: 'top' }} />
+            <IconArrowBack fill={white} style={{ verticalAlign: 'top' }} />
           </div>
           <Input
             placeholder={'Sélectionner une ville'}
@@ -116,7 +142,7 @@ class SearchMobile extends React.PureComponent {
               className={'Search-Icon--paddingLeft'}
               onClick={this.handleInputReset}
             >
-              <IconCross fill={'#fff'} style={{ verticalAlign: 'top' }} />
+              <IconCross fill={white} style={{ verticalAlign: 'top' }} />
             </div>
           )}
         </div>
@@ -142,8 +168,9 @@ class SearchMobile extends React.PureComponent {
               highlightIndexValidation={this.state.keyboardValidation}
             />
           </ListWrapper>
+
           <ListWrapper>
-            <GoogleMapPlacesApi input={this.state.input}>
+            <GoogleMapsAutocomplete input={this.state.input}>
               {predictions => {
                 const data = this.state.input ? predictions : BIG_CITIES;
                 this.nbItems = data.length + 1;
@@ -157,42 +184,11 @@ class SearchMobile extends React.PureComponent {
                   />
                 );
               }}
-            </GoogleMapPlacesApi>
+            </GoogleMapsAutocomplete>
           </ListWrapper>
         </div>
 
-        <style jsx>{`
-          .SearchMobile {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            max-width: ${MAX_WIDTH}px;
-            z-index: 100;
-            left: 50%;
-            transform: translate(-50%);
-          }
-
-          .SearchMobile-Header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: ${getSpacing('s')}px ${getSpacing('m')}px;
-            background-color: ${dominant};
-            height: ${HEIGHT_APPBAR}px;
-          }
-
-          .SearchMobile-Content {
-            padding: ${getSpacing('s')}px;
-          }
-
-          .Search-Icon--paddingRight {
-            padding-right: ${getSpacing('s')}px;
-          }
-
-          .Search-Icon--paddingLeft {
-            padding-left: ${getSpacing('s')}px;
-          }
-        `}</style>
+        <style jsx>{style}</style>
       </div>
     );
   }
