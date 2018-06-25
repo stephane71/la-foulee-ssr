@@ -3,7 +3,6 @@ export const SET_EVENT_LIST = 'SET_EVENT_LIST';
 export const SET_GOOGLE_MAPS_SERVICE = 'SET_GOOGLE_MAPS_SERVICE';
 export const SET_MEDIA_TYPE = 'SET_MEDIA_TYPE';
 export const SET_USER_POSITION = 'SET_USER_POSITION';
-export const LOCAL_STORAGE_SET = 'LOCAL_STORAGE_SET';
 export const TOGGLE_SEARCH = 'TOGGLE_SEARCH';
 export const SET_EVENT_LIST_START_INDEX = 'SET_EVENT_LIST_START_INDEX';
 
@@ -40,14 +39,6 @@ export function setUserPosition(position) {
   return {
     type: SET_USER_POSITION,
     position
-  };
-}
-
-export function localStorageSet(key, value) {
-  return {
-    type: LOCAL_STORAGE_SET,
-    key,
-    value
   };
 }
 

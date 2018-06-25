@@ -1,22 +1,13 @@
 import moment from 'moment';
-import store from 'store';
 import { createStore } from 'redux';
 
-import {
-  LOCATION_FILTER,
-  DATE_FILTER,
-  DISTANCE_FILTER,
-  DEFAULT_SELECTOR_VALUES,
-  GOOGLE_DETAILS_SERVICE,
-  GOOGLE_AUTOCOMPLETE_SERVICE
-} from './enums';
+import { GOOGLE_DETAILS_SERVICE, GOOGLE_AUTOCOMPLETE_SERVICE } from './enums';
 import {
   SET_SELECTED_EVENT,
   SET_EVENT_LIST,
   SET_GOOGLE_MAPS_SERVICE,
   SET_MEDIA_TYPE,
   SET_USER_POSITION,
-  LOCAL_STORAGE_SET,
   TOGGLE_SEARCH,
   SET_EVENT_LIST_START_INDEX
 } from './actions';
@@ -40,7 +31,6 @@ const initialState = {
     [GOOGLE_DETAILS_SERVICE]: null,
     [GOOGLE_AUTOCOMPLETE_SERVICE]: null
   },
-  eventListReady: false,
   media: null,
   position: null,
   searching: false,
@@ -63,9 +53,6 @@ const reducer = (state = initialState, action) => {
       return { ...state, media: action.media };
     case SET_USER_POSITION:
       return { ...state, position: action.position };
-    case LOCAL_STORAGE_SET:
-      store.set(action.key, action.value);
-      return state;
     case TOGGLE_SEARCH:
       return {
         ...state,
