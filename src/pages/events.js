@@ -20,7 +20,7 @@ class Events extends React.PureComponent {
     super(props);
 
     this.state = {
-      loading: true
+      loading: false
     };
 
     this.handleEventSelection = this.handleEventSelection.bind(this);
@@ -31,7 +31,9 @@ class Events extends React.PureComponent {
     Router.prefetch('/event');
 
     const { query, position } = this.props;
-    this.fetchEvents(query.position, query.position !== position);
+    if (query.position !== position) {
+      this.fetchEvents(query.position);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -65,7 +67,7 @@ class Events extends React.PureComponent {
           <div className={'Events-NoQuery'}>
             <h3>{'Choisissez une ville'}</h3>
             <p>
-              {`Nous avons besoins qu'une ville soit sélectionnée pour vous proposer des évènements !`}
+              {`Nous avons besoins qu'une ville soit sélectionnée pour vous proposer des événements !`}
             </p>
             <button
               className={'Button Button--fixed'}
@@ -109,13 +111,13 @@ class Events extends React.PureComponent {
     // pageview({ title: 'Event details', url: window.location.href, path });
   }
 
-  async fetchEvents(position, fetchCondition = true) {
-    if (fetchCondition) {
-      this.setState({ loading: true });
-      const { events } = await this.props.getEventListAround(position);
-      this.props.dispatch(setUserPosition(position));
-      this.props.dispatch(setEventList(events));
-    }
+  async fetchEvents(position) {
+    this.setState({ loading: true });
+
+    const { events } = await this.props.getEventListAround(position);
+    this.props.dispatch(setUserPosition(position));
+    this.props.dispatch(setEventList(events));
+
     this.setState({ loading: false });
   }
 }

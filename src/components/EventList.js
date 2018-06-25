@@ -51,8 +51,7 @@ class EventList extends React.PureComponent {
     const { data, loading, scrollElement } = this.props;
     const { listRendered } = this.state;
 
-    if (!data.length && !loading) return <div>{'Empty list !'}</div>;
-
+    // Loading state of this component depends on the parent & the child
     const showLoader = !listRendered || loading;
     if (scrollElement) {
       scrollElement.scrollTop = 0;
@@ -60,6 +59,9 @@ class EventList extends React.PureComponent {
         ? scrollElement.classList.add('prevent-scroll')
         : scrollElement.classList.remove('prevent-scroll');
     }
+
+    if (!data.length && !showLoader)
+      return <div>{`Aucun événements n'a été trouvé :(`}</div>;
 
     return (
       <div className={'EventList'}>

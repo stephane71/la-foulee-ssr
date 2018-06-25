@@ -15,7 +15,7 @@ import getGeohash from '../utils/geohash';
 
 import GlobalStyles from '../styles';
 import { USER_POSITION_KEY, MAX_WIDTH } from '../enums';
-import { setUserPosition, toggleSearch } from '../actions';
+import { toggleSearch } from '../actions';
 
 moment.locale('fr');
 
@@ -68,6 +68,12 @@ class Layout extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.query !== this.props.query) {
       this.setState({ city: { name: nextProps.query.city } });
+    }
+    if (
+      nextProps.currentRoute !== this.props.currentRoute ||
+      nextProps.currentRoute === '/'
+    ) {
+      this.setState({ error: null });
     }
   }
 
@@ -139,6 +145,7 @@ class Layout extends React.PureComponent {
       geohash = getGeohash(city.location);
     } catch (error) {
       this.setState({ error });
+      return;
     }
 
     this.setState({ city });
@@ -155,9 +162,9 @@ class Layout extends React.PureComponent {
       geohash = getGeohash(location);
     } catch (error) {
       this.setState({ error });
+      return;
     }
 
-    this.props.dispatch(setUserPosition(geohash));
     this.setState({ city: { name: cityName } });
     Router.push(`/events?position=${geohash}&city=${cityName}`);
   }
