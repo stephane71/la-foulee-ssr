@@ -123,7 +123,12 @@ class Events extends React.PureComponent {
       path
     );
 
-    // pageview({ title: 'Event list', url: window.location.href, path });
+    event({
+      action: 'Select Event',
+      category: 'Event',
+      label: 'Select an event in the list',
+      value: event.keyword
+    });
   }
 
   async fetchEvents(position) {

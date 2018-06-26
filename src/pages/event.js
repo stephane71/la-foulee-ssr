@@ -76,6 +76,7 @@ class EventPage extends React.PureComponent {
             data={event}
             desktop={this.state.desktop}
             isServer={this.state.isServer}
+            onClickOrgaLink={this.handleClickOrgaLink}
           />
         ) : (
           <div>{`Cette évenement n'existe pas :(`}</div>
@@ -84,6 +85,15 @@ class EventPage extends React.PureComponent {
         <style jsx>{style}</style>
       </div>
     );
+  }
+
+  handleClickOrgaLink(href = '') {
+    event({
+      action: 'Orga Link',
+      category: 'Event',
+      label: 'Click on orga link',
+      value: href
+    });
   }
 }
 
