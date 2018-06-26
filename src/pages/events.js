@@ -109,17 +109,17 @@ class Events extends React.PureComponent {
     this.props.dispatch(toggleSearch());
   }
 
-  handleEventSelection(event) {
-    if (event === NO_EVENT_SELECTED) {
+  handleEventSelection(selectedEvent) {
+    if (selectedEvent === NO_EVENT_SELECTED) {
       Router.back();
       return;
     }
 
-    this.props.dispatch(setSelectedEvent(event));
+    this.props.dispatch(setSelectedEvent(selectedEvent));
 
-    const path = `/event/${event.keyword}`;
+    const path = `/event/${selectedEvent.keyword}`;
     Router.push(
-      { pathname: '/event', query: { keyword: event.keyword } },
+      { pathname: '/event', query: { keyword: selectedEvent.keyword } },
       path
     );
 
@@ -127,7 +127,7 @@ class Events extends React.PureComponent {
       action: 'Select Event',
       category: 'Event',
       label: 'Select an event in the list',
-      value: event.keyword
+      value: selectedEvent.keyword
     });
   }
 
