@@ -162,6 +162,13 @@ class Layout extends React.PureComponent {
 
     this.setState({ city });
     Router.push(`/events?position=${geohash}&city=${city.name}`);
+
+    event({
+      action: 'Select City',
+      category: 'Search',
+      label: _city.location ? 'Preselected city' : 'Searched city',
+      value: city.name
+    });
   }
 
   async handleSelectUserPosition() {
@@ -179,6 +186,13 @@ class Layout extends React.PureComponent {
 
     this.setState({ city: { name: cityName } });
     Router.push(`/events?position=${geohash}&city=${cityName}`);
+
+    event({
+      action: 'Select City',
+      category: 'Search',
+      label: 'User position',
+      value: cityName
+    });
   }
 }
 
