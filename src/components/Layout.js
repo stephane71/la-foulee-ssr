@@ -12,6 +12,7 @@ import LayoutError from './LayoutError';
 
 import getUserLocation from '../utils/getUserLocation';
 import getGeohash from '../utils/geohash';
+import { event } from '../utils/gtag';
 
 import GlobalStyles from '../styles';
 import { USER_POSITION_KEY, MAX_WIDTH } from '../enums';
@@ -52,6 +53,7 @@ class Layout extends React.PureComponent {
       error: null
     };
 
+    this.handleClickSearch = this.handleClickSearch.bind(this);
     this.handleClickOverlay = this.handleClickOverlay.bind(this);
     this.handleToggleSearch = this.handleToggleSearch.bind(this);
     this.handleSelectUserPosition = this.handleSelectUserPosition.bind(this);
@@ -85,7 +87,7 @@ class Layout extends React.PureComponent {
       <div className={'root'}>
         <Header
           onClickHeaderLogo={() => Router.push('/')}
-          onClickSearch={this.handleToggleSearch}
+          onClickSearch={this.handleClickSearch}
           showSearchTrigger={currentRoute !== '/'}
           showBackArrow={query.keyword}
         />
@@ -124,6 +126,16 @@ class Layout extends React.PureComponent {
         </style>
       </div>
     );
+  }
+
+  handleClickSearch() {
+    event({
+      action: 'Trigger Search',
+      category: 'Search',
+      label: 'From header icon'
+    });
+
+    this.handleToggleSearch();
   }
 
   handleClickOverlay() {

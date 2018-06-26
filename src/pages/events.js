@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import EventList from '../components/EventList';
 
-import { pageview } from '../utils/gtag';
+import { pageview, event } from '../utils/gtag';
 import { getEventListStructuredData } from '../utils/structuredData';
 
 import {
@@ -100,6 +100,12 @@ class Events extends React.PureComponent {
   }
 
   handleSearchCityToggle() {
+    event({
+      action: 'Trigger Search',
+      category: 'Search',
+      label: 'From events page'
+    });
+
     this.props.dispatch(toggleSearch());
   }
 
