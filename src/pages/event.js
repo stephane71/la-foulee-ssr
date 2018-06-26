@@ -41,11 +41,11 @@ class EventPage extends React.PureComponent {
 
     this.setState({ desktop: this.props.media === DESKTOP, isServer: false });
 
-    // pageview({
-    //   title: 'Event details',
-    //   url: window.location.href,
-    //   path: `/event/${this.props.query.event.keyword}`
-    // });
+    pageview({
+      title: 'Event details',
+      url: window.location.href,
+      path: this.props.path
+    });
   }
 
   render() {
@@ -76,6 +76,7 @@ class EventPage extends React.PureComponent {
             data={event}
             desktop={this.state.desktop}
             isServer={this.state.isServer}
+            onClickOrgaLink={this.handleClickOrgaLink}
           />
         ) : (
           <div>{`Cette évenement n'existe pas :(`}</div>
@@ -84,6 +85,15 @@ class EventPage extends React.PureComponent {
         <style jsx>{style}</style>
       </div>
     );
+  }
+
+  handleClickOrgaLink(href = '') {
+    event({
+      action: 'Orga Link',
+      category: 'Event',
+      label: 'Click on orga link',
+      value: href
+    });
   }
 }
 

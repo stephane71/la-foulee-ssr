@@ -100,7 +100,7 @@ const style = css`
 
 const EMPTY_VALUE = '-';
 
-const EventDetails = ({ data, desktop, isServer }) => (
+const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
   <div className={'EventDetails'}>
     {/* HEADER */}
     <header className={`EventDetails-Header`}>
@@ -176,7 +176,9 @@ const EventDetails = ({ data, desktop, isServer }) => (
         }`}
       >
         <a
+          onClick={() => onClickOrgaLink('not set')}
           href={''}
+          target={'_blank'}
           className={'Button Button--fixed'}
         >{`Site de l'organisateur`}</a>
       </footer>

@@ -12,6 +12,7 @@ import LayoutError from './LayoutError';
 
 import getUserLocation from '../utils/getUserLocation';
 import getGeohash from '../utils/geohash';
+import { event } from '../utils/gtag';
 
 import GlobalStyles from '../styles';
 import { USER_POSITION_KEY, MAX_WIDTH } from '../enums';
@@ -52,6 +53,7 @@ class Layout extends React.PureComponent {
       error: null
     };
 
+    this.handleClickSearch = this.handleClickSearch.bind(this);
     this.handleClickOverlay = this.handleClickOverlay.bind(this);
     this.handleToggleSearch = this.handleToggleSearch.bind(this);
     this.handleSelectUserPosition = this.handleSelectUserPosition.bind(this);
@@ -84,8 +86,8 @@ class Layout extends React.PureComponent {
     return (
       <div className={'root'}>
         <Header
-          onClickHeaderLogo={() => Router.push('/')}
-          onClickSearch={this.handleToggleSearch}
+          onClickHeaderLogo={this.handleHomeRedirect}
+          onClickSearch={this.handleClickSearch}
           showSearchTrigger={currentRoute !== '/'}
           showBackArrow={query.keyword}
         />
@@ -126,6 +128,26 @@ class Layout extends React.PureComponent {
     );
   }
 
+  handleHomeRedirect() {
+    event({
+      action: 'Redirect',
+      category: 'Home',
+      label: 'Redirect Home from logo or house icon'
+    });
+
+    Router.push('/');
+  }
+
+  handleClickSearch() {
+    event({
+      action: 'Trigger Search',
+      category: 'Search',
+      label: 'From header icon'
+    });
+
+    this.handleToggleSearch();
+  }
+
   handleClickOverlay() {
     this.handleToggleSearch();
   }
@@ -150,6 +172,13 @@ class Layout extends React.PureComponent {
 
     this.setState({ city });
     Router.push(`/events?position=${geohash}&city=${city.name}`);
+
+    event({
+      action: 'Select City',
+      category: 'Search',
+      label: _city.location ? 'Preselected city' : 'Searched city',
+      value: city.name
+    });
   }
 
   async handleSelectUserPosition() {
@@ -167,6 +196,13 @@ class Layout extends React.PureComponent {
 
     this.setState({ city: { name: cityName } });
     Router.push(`/events?position=${geohash}&city=${cityName}`);
+
+    event({
+      action: 'Select City',
+      category: 'Search',
+      label: 'User position',
+      value: cityName
+    });
   }
 }
 

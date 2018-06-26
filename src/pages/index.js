@@ -11,7 +11,7 @@ import { getEventListStructuredData } from '../utils/structuredData';
 import { toggleSearch } from '../actions';
 import { DESKTOP } from '../enums';
 
-import { pageview } from '../utils/gtag';
+import { pageview, event } from '../utils/gtag';
 
 class Index extends React.PureComponent {
   constructor(props) {
@@ -24,7 +24,11 @@ class Index extends React.PureComponent {
     Router.prefetch('/event');
     Router.prefetch('/events');
 
-    // pageview({ title: 'Home', url: window.location.href, path: '/' });
+    pageview({
+      title: 'Home',
+      url: window.location.href,
+      path: this.props.path
+    });
   }
 
   render() {
@@ -48,6 +52,12 @@ class Index extends React.PureComponent {
   }
 
   handleSearchCityToggle() {
+    event({
+      action: 'Trigger Search',
+      category: 'Search',
+      label: 'From index page'
+    });
+
     this.props.dispatch(toggleSearch());
   }
 }
