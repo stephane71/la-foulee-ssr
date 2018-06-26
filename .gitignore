@@ -6,6 +6,5 @@ config.*
 .serverless
 .next
 src/out
-.ebextensions/**
 *.pem
 *.crt
