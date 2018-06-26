@@ -86,7 +86,7 @@ class Layout extends React.PureComponent {
     return (
       <div className={'root'}>
         <Header
-          onClickHeaderLogo={() => Router.push('/')}
+          onClickHeaderLogo={this.handleHomeRedirect}
           onClickSearch={this.handleClickSearch}
           showSearchTrigger={currentRoute !== '/'}
           showBackArrow={query.keyword}
@@ -126,6 +126,16 @@ class Layout extends React.PureComponent {
         </style>
       </div>
     );
+  }
+
+  handleHomeRedirect() {
+    event({
+      action: 'Redirect',
+      category: 'Home',
+      label: 'Redirect Home from logo or house icon'
+    });
+
+    Router.push('/');
   }
 
   handleClickSearch() {
