@@ -41,11 +41,11 @@ class EventPage extends React.PureComponent {
 
     this.setState({ desktop: this.props.media === DESKTOP, isServer: false });
 
-    // pageview({
-    //   title: 'Event details',
-    //   url: window.location.href,
-    //   path: `/event/${this.props.query.event.keyword}`
-    // });
+    pageview({
+      title: 'Event details',
+      url: window.location.href,
+      path: this.props.path
+    });
   }
 
   render() {

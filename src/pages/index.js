@@ -24,7 +24,11 @@ class Index extends React.PureComponent {
     Router.prefetch('/event');
     Router.prefetch('/events');
 
-    // pageview({ title: 'Home', url: window.location.href, path: '/' });
+    pageview({
+      title: 'Home',
+      url: window.location.href,
+      path: this.props.path
+    });
   }
 
   render() {

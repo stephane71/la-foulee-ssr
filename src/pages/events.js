@@ -5,6 +5,9 @@ import { connect } from 'react-redux';
 
 import EventList from '../components/EventList';
 
+import { pageview } from '../utils/gtag';
+import { getEventListStructuredData } from '../utils/structuredData';
+
 import {
   setSelectedEvent,
   setEventList,
@@ -12,7 +15,6 @@ import {
   toggleSearch
 } from '../actions';
 import { NO_EVENT_SELECTED } from '../enums';
-import { getEventListStructuredData } from '../utils/structuredData';
 import { getSpacing } from '../styles-variables';
 
 class Events extends React.PureComponent {
@@ -34,6 +36,12 @@ class Events extends React.PureComponent {
     if (query.position !== position) {
       this.fetchEvents(query.position);
     }
+
+    pageview({
+      title: 'Event list',
+      url: window.location.href,
+      path: this.props.path
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -108,7 +116,8 @@ class Events extends React.PureComponent {
       { pathname: '/event', query: { keyword: event.keyword } },
       path
     );
-    // pageview({ title: 'Event details', url: window.location.href, path });
+
+    // pageview({ title: 'Event list', url: window.location.href, path });
   }
 
   async fetchEvents(position) {

@@ -51,6 +51,7 @@ class MyApp extends App {
                 getEvent={this.props.getEvent}
                 getEventListAround={this.props.getEventListAround}
                 query={router.query || {}}
+                path={router.asPath}
               />
             </Layout>
           </Media>
