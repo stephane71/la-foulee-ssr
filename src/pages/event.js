@@ -1,5 +1,6 @@
 import Router from 'next/router';
 import Head from 'next/head';
+import getConfig from 'next/config';
 import css from 'styled-jsx/css';
 import { connect } from 'react-redux';
 
@@ -12,6 +13,9 @@ import { pageview } from '../utils/gtag';
 import { getSpacing } from '../styles-variables';
 import { DESKTOP } from '../enums';
 import { white } from '../colors';
+
+const { publicRuntimeConfig } = getConfig();
+const APP_URL = publicRuntimeConfig.APP_URL;
 
 const style = css`
   .EventPage {
@@ -50,6 +54,7 @@ class EventPage extends React.PureComponent {
 
   render() {
     let event = this.props.query.event || this.props.event;
+    let { path } = this.props;
 
     return (
       <div
@@ -59,6 +64,7 @@ class EventPage extends React.PureComponent {
       >
         <Head>
           <title>{`${event.title} | La Foulée`}</title>
+          <link rel={'canonical'} href={`${APP_URL}${path}`} />
           <script type={'application/ld+json'}>
             {getEventStructuredData(event)}
           </script>

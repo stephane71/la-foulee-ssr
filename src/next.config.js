@@ -16,12 +16,20 @@ console.log(
   process.env.LA_FOULEE_ENV
 );
 
+const LOCAL_APP_URL = 'http://localhost:3000';
+const DEV_APP_URL = 'https://dev.la-foulee.com';
+const APP_URL = 'https://www.la-foulee.com';
+
 module.exports = (phase, { defaultConfig }) => {
   // useFileSystemPublicRoutes: false,
   // assetPrefix: isProd ? `https://quelquechose.la-foulee.com` : '',
 
   return {
     publicRuntimeConfig: {
+      APP_URL:
+        process.env.TYPE_ENV === 'local'
+          ? LOCAL_APP_URL
+          : process.env.LA_FOULEE_ENV === 'dev' ? DEV_APP_URL : APP_URL,
       ASSETS_URL: process.env.ASSETS_URL,
       API_URL: process.env.API_URL,
       IDENTITY_POOL_ID: process.env.IDENTITY_POOL_ID,

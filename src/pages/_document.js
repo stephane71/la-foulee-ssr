@@ -20,6 +20,10 @@ export default class MyDocument extends Document {
     return (
       <html>
         <Head>
+          <meta name="charset" content="utf-8" />
+          {/* meta: title / description / robots */}
+
+          {/* --- */}
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"

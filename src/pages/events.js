@@ -1,5 +1,6 @@
 import Router from 'next/router';
 import Head from 'next/head';
+import getConfig from 'next/config';
 import React from 'react';
 import { connect } from 'react-redux';
 
@@ -16,6 +17,9 @@ import {
 } from '../actions';
 import { NO_EVENT_SELECTED } from '../enums';
 import { getSpacing } from '../styles-variables';
+
+const { publicRuntimeConfig } = getConfig();
+const APP_URL = publicRuntimeConfig.APP_URL;
 
 class Events extends React.PureComponent {
   constructor(props) {
@@ -51,17 +55,16 @@ class Events extends React.PureComponent {
   }
 
   render() {
-    const { getEventListAround, query } = this.props;
-    const { events } = this.props;
-
+    const { getEventListAround, query, path, events } = this.props;
     const { position, city } = query;
 
     return (
       <>
         <Head>
           <title>{`La Foulée | liste des evénement`}</title>
+          <link rel={'canonical'} href={`${APP_URL}${path}`} />
           <script type={'application/ld+json'}>
-            {getEventListStructuredData()}
+            {getEventListStructuredData(events)}
           </script>
         </Head>
 

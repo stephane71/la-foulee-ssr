@@ -1,17 +1,23 @@
 import Router from 'next/router';
 import Head from 'next/head';
+import getConfig from 'next/config';
 import React from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import HomePage from '../components/HomePage';
 
-import { getEventListStructuredData } from '../utils/structuredData';
+import {
+  getWebApplicationStructuredData,
+  getOrganizationStructuredData
+} from '../utils/structuredData';
+import { pageview, event } from '../utils/gtag';
 
 import { toggleSearch } from '../actions';
 import { DESKTOP } from '../enums';
 
-import { pageview, event } from '../utils/gtag';
+const { publicRuntimeConfig } = getConfig();
+const APP_URL = publicRuntimeConfig.APP_URL;
 
 class Index extends React.PureComponent {
   constructor(props) {
@@ -38,8 +44,12 @@ class Index extends React.PureComponent {
       <>
         <Head>
           <title>{`La Foulée | rechercher un evénement`}</title>
+          <link rel={'canonical'} href={APP_URL} />
           <script type={'application/ld+json'}>
-            {getEventListStructuredData()}
+            {getWebApplicationStructuredData()}
+          </script>
+          <script type={'application/ld+json'}>
+            {getOrganizationStructuredData()}
           </script>
         </Head>
 
