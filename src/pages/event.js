@@ -63,7 +63,7 @@ class EventPage extends React.PureComponent {
         }`}
       >
         <Head>
-          <title>{`${event.title} | La Foulée`}</title>
+          <title>{`${event.title} | La Foulée`}</title>
           <link rel={'canonical'} href={`${APP_URL}${path}`} />
           <script type={'application/ld+json'}>
             {getEventStructuredData(event)}

@@ -61,7 +61,9 @@ class Events extends React.PureComponent {
     return (
       <>
         <Head>
-          <title>{`La Foulée | liste des evénement`}</title>
+          <title>{`La Foulée | liste des evénements${
+            city ? ` autour de ${city}` : ''
+          }`}</title>
           <link rel={'canonical'} href={`${APP_URL}${path}`} />
           <script type={'application/ld+json'}>
             {getEventListStructuredData(events)}

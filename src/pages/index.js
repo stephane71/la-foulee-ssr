@@ -43,7 +43,7 @@ class Index extends React.PureComponent {
     return (
       <>
         <Head>
-          <title>{`La Foulée | rechercher un evénement`}</title>
+          <title>{`La Foulée | simplifier l'accès aux événements sportifs`}</title>
           <link rel={'canonical'} href={APP_URL} />
           <script type={'application/ld+json'}>
             {getWebApplicationStructuredData()}
