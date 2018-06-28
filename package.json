@@ -4,27 +4,27 @@
   "description": "",
   "main": "handler.js",
   "dependencies": {
-    "aws-api-gateway-client": "^0.2.12",
-    "aws-sdk": "^2.238.1",
-    "babel-plugin-inline-react-svg": "^0.5.2",
+    "aws-api-gateway-client": "^0.2.14",
+    "aws-sdk": "^2.265.1",
+    "babel-plugin-inline-react-svg": "^0.5.3",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "lodash.debounce": "^4.0.8",
     "lodash.round": "^4.0.4",
-    "moment": "^2.22.1",
+    "moment": "^2.22.2",
     "next": "^6.1.0",
     "next-redux-wrapper": "^2.0.0-beta.6",
     "path-to-regexp": "^2.2.1",
-    "react": "^16.3.2",
-    "react-dom": "^16.3.2",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
     "react-redux": "^5.0.7",
-    "react-virtualized": "^9.19.1",
+    "react-virtualized": "^9.20.0",
     "redux": "^3.7.2",
     "store": "^2.0.12"
   },
   "devDependencies": {
-    "cross-env": "^5.1.5",
-    "webpack-bundle-analyzer": "^2.11.3"
+    "cross-env": "^5.2.0",
+    "webpack-bundle-analyzer": "^2.13.1"
   },
   "scripts": {
     "start": "NODE_ENV=$NODE_ENV LA_FOULEE_ENV=$LA_FOULEE_ENV TYPE_ENV=$TYPE_ENV node server.js",
