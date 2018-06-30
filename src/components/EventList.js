@@ -1,10 +1,7 @@
 import css from 'styled-jsx/css';
 import dynamic from 'next/dynamic';
 
-const VirtualizedList = dynamic(import('./VirtualizedList'), {
-  ssr: false,
-  loading: () => null
-});
+import VirtualizedList from './VirtualizedList';
 
 import Loader from './Loader';
 import { ScrollElementContext } from './Layout';
@@ -31,33 +28,36 @@ const style = css`
   }
 `;
 
-class EventList extends React.PureComponent {
-  static defaultProps = {
-    loading: true
-  };
-
+class EventList extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      listRendered: false
+      listRendering: true
     };
 
-    this.handleListRendered = this.handleListRendered.bind(this);
     this.handleEventSelection = this.handleEventSelection.bind(this);
+    this.handleListRendering = this.handleListRendering.bind(this);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!nextProps.loading && this.props.loading) {
+      this.props.scrollElement.scrollTop = 0;
+    }
   }
 
   render() {
     const { data, loading, scrollElement } = this.props;
-    const { listRendered } = this.state;
+    const { listRendering } = this.state;
 
-    // Loading state of this component depends on the parent & the child
-    const showLoader = !listRendered || loading;
+    const showLoader = listRendering || loading;
+
     if (scrollElement) {
-      scrollElement.scrollTop = 0;
-      showLoader
-        ? scrollElement.classList.add('prevent-scroll')
-        : scrollElement.classList.remove('prevent-scroll');
+      if (showLoader) {
+        scrollElement.classList.add('prevent-scroll');
+      } else {
+        scrollElement.classList.remove('prevent-scroll');
+      }
     }
 
     if (!data.length && !showLoader)
@@ -71,12 +71,14 @@ class EventList extends React.PureComponent {
           </div>
         )}
 
-        <VirtualizedList
-          scrollElement={scrollElement}
-          data={data}
-          onSelectEvent={this.handleEventSelection}
-          onListRendered={this.handleListRendered}
-        />
+        {scrollElement && (
+          <VirtualizedList
+            scrollElement={scrollElement}
+            data={data}
+            onSelectEvent={this.handleEventSelection}
+            onListRendering={this.handleListRendering}
+          />
+        )}
 
         <style jsx>{style}</style>
       </div>
@@ -93,8 +95,8 @@ class EventList extends React.PureComponent {
     this.props.onSelectEvent(data);
   }
 
-  handleListRendered() {
-    this.setState({ listRendered: true });
+  handleListRendering(rendering) {
+    this.setState({ listRendering: rendering });
   }
 }
 
