@@ -1,6 +1,7 @@
 import Router from 'next/router';
 import Head from 'next/head';
 import getConfig from 'next/config';
+import Error from 'next/error';
 import css from 'styled-jsx/css';
 import { connect } from 'react-redux';
 
@@ -10,8 +11,7 @@ import { ScrollElementContext } from '../components/Layout';
 import { getEventStructuredData } from '../utils/structuredData';
 import { pageview } from '../utils/gtag';
 
-import { getSpacing } from '../styles-variables';
-import { DESKTOP } from '../enums';
+import { DESKTOP, NO_EVENT_SELECTED } from '../enums';
 import { white } from '../colors';
 
 const { publicRuntimeConfig } = getConfig();
@@ -31,8 +31,23 @@ const style = css`
 `;
 
 class EventPage extends React.PureComponent {
-  static getInitialProps({ isServer }) {
-    return { isServer };
+  static async getInitialProps({ isServer, req, res }) {
+    let event = NO_EVENT_SELECTED;
+    if (req) {
+      const getEvent = require('../server/getEvent');
+
+      try {
+        event = (await getEvent(req.params.keyword)) || NO_EVENT_SELECTED;
+        if (!event) res.statusCode = 404;
+      } catch (e) {
+        res.statusCode = 404;
+      }
+    }
+
+    return {
+      isServer,
+      eventServerSide: event
+    };
   }
 
   state = {
@@ -53,15 +68,15 @@ class EventPage extends React.PureComponent {
   }
 
   render() {
-    let event = this.props.query.event || this.props.event;
-    let { path } = this.props;
+    const { desktop, isServer } = this.state;
+    const { path, eventServerSide, eventStored } = this.props;
+
+    let event = eventServerSide || eventStored;
+
+    if (!event) return <Error statusCode={404} />;
 
     return (
-      <div
-        className={`EventPage ${
-          this.state.desktop ? 'EventPage--desktop' : ''
-        }`}
-      >
+      <div className={`EventPage ${desktop ? 'EventPage--desktop' : ''}`}>
         <Head>
           <title>{`${event.title} | La Foulée`}</title>
           <link rel={'canonical'} href={`${APP_URL}${path}`} />
@@ -77,16 +92,12 @@ class EventPage extends React.PureComponent {
           }}
         </ScrollElementContext.Consumer>
 
-        {event ? (
-          <EventDetails
-            data={event}
-            desktop={this.state.desktop}
-            isServer={this.state.isServer}
-            onClickOrgaLink={this.handleClickOrgaLink}
-          />
-        ) : (
-          <div>{`Cette évenement n'existe pas :(`}</div>
-        )}
+        <EventDetails
+          data={event}
+          desktop={desktop}
+          isServer={isServer}
+          onClickOrgaLink={this.handleClickOrgaLink}
+        />
 
         <style jsx>{style}</style>
       </div>
@@ -105,7 +116,7 @@ class EventPage extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    event: state.event,
+    eventStored: state.event,
     media: state.media
   };
 }

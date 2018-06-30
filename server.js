@@ -29,32 +29,7 @@ AWS.config.update(AWSConfig);
 let dbDocClient = new AWS.DynamoDB.DocumentClient();
 
 server.get('/event/:keyword', (req, res) => {
-  console.log('Req for /event/', req.params.keyword);
-  const eventPage = '/event';
-
-  dbDocClient.query(
-    {
-      TableName: 'Events',
-      IndexName: 'KeywordIndex',
-      KeyConditionExpression: `#gsi = :gsi`,
-      ExpressionAttributeNames: {
-        '#gsi': 'keyword'
-      },
-      ExpressionAttributeValues: {
-        ':gsi': req.params.keyword
-      }
-    },
-    (err, data) => {
-      if (err) {
-        // TODO: handle error -> the keyword doesn't exist !
-        console.log(err, err.stack);
-        app.render(req, res, eventPage, { event: null });
-      } else {
-        // TODO: manage multiple items response => event's editions
-        app.render(req, res, eventPage, { event: data.Items[0] });
-      }
-    }
-  );
+  app.render(req, res, '/event');
 });
 
 server.get('*', (req, res) => {
