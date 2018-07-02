@@ -26,6 +26,11 @@ const style = css`
     z-index: 10;
     background-color: transparent;
   }
+
+  .EventList-Empty {
+    text-align: center;
+    padding: ${getSpacing('xxl')}px ${getSpacing('l')}px;
+  }
 `;
 
 class EventList extends React.Component {
@@ -61,9 +66,6 @@ class EventList extends React.Component {
       }
     }
 
-    if (!data.length && !showLoader)
-      return <div>{`Aucun événements n'a été trouvé :(`}</div>;
-
     return (
       <div className={'EventList'}>
         {showLoader && (
@@ -72,13 +74,19 @@ class EventList extends React.Component {
           </div>
         )}
 
-        {scrollElement && (
-          <VirtualizedList
-            scrollElement={scrollElement}
-            data={data}
-            onSelectEvent={this.handleEventSelection}
-            onListRendering={this.handleListRendering}
-          />
+        {!data.length && !showLoader ? (
+          <div
+            className={'EventList-Empty'}
+          >{`Aucun événements n'a été trouvé dans cette zone :(`}</div>
+        ) : (
+          scrollElement && (
+            <VirtualizedList
+              scrollElement={scrollElement}
+              data={data}
+              onSelectEvent={this.handleEventSelection}
+              onListRendering={this.handleListRendering}
+            />
+          )
         )}
 
         <style jsx>{style}</style>
