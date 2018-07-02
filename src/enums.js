@@ -25,3 +25,9 @@ export const USER_POSITION_KEY = 'userPosition';
 export const GOOGLE_DETAILS_SERVICE = 'details';
 export const GOOGLE_AUTOCOMPLETE_SERVICE = 'autocomplete';
 export const GOOGLE_GEOCODING_SERVICE = 'geocoding';
+
+//POSITION ERRORS
+export const UNKNOWN_ERROR = 'UNKNOWN_ERROR';
+export const PERMISSION_DENIED = 'PERMISSION_DENIED';
+export const POSITION_UNAVAILABLE = 'POSITION_UNAVAILABLE';
+export const TIMEOUT = 'TIMEOUT';

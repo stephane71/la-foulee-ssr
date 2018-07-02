@@ -99,7 +99,11 @@ class Layout extends React.PureComponent {
           <ScrollElementContext.Provider value={scrollingElement}>
             <SelectedCityContext.Provider value={city}>
               <div className={'PagesWrapper'}>
-                {this.state.error ? <LayoutError /> : children}
+                {this.state.error ? (
+                  <LayoutError error={this.state.error} />
+                ) : (
+                  children
+                )}
               </div>
             </SelectedCityContext.Provider>
           </ScrollElementContext.Provider>
@@ -157,6 +161,7 @@ class Layout extends React.PureComponent {
   }
 
   async handleSelectCity(_city = {}) {
+    this.setState({ error: null });
     this.handleToggleSearch();
 
     let city, geohash;
@@ -182,6 +187,7 @@ class Layout extends React.PureComponent {
   }
 
   async handleSelectUserPosition() {
+    this.setState({ error: null });
     this.handleToggleSearch();
 
     let location, cityName, geohash;
