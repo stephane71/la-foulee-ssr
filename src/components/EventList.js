@@ -43,6 +43,7 @@ class EventList extends React.Component {
   componentWillReceiveProps(nextProps) {
     if (!nextProps.loading && this.props.loading) {
       this.props.scrollElement.scrollTop = 0;
+      this.setState({ listRendering: false });
     }
   }
 

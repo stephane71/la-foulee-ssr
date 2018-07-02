@@ -6,7 +6,6 @@ console.log('NODE_ENV', process.env.NODE_ENV);
 
 require('dotenv').config({ path: `.env.server.${process.env.LA_FOULEE_ENV}` });
 
-const AWS = require('aws-sdk');
 const express = require('express');
 const next = require('next');
 
@@ -17,16 +16,6 @@ const dir = './src';
 const app = next({ dev, dir });
 const handle = app.getRequestHandler();
 const server = express();
-
-const AWSConfig = {
-  secretAccessKey: process.env.secretAccessKey,
-  accessKeyId: process.env.accessKeyId,
-  region: process.env.region,
-  endpoint: process.env.DB
-};
-
-AWS.config.update(AWSConfig);
-let dbDocClient = new AWS.DynamoDB.DocumentClient();
 
 server.get('/event/:keyword', (req, res) => {
   app.render(req, res, '/event');
