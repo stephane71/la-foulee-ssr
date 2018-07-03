@@ -5,8 +5,8 @@ module.exports = function(keyword) {
   const AWSConfig = {
     secretAccessKey: process.env.secretAccessKey,
     accessKeyId: process.env.accessKeyId,
-    region: process.env.region,
-    endpoint: process.env.DB
+    region: 'eu-west-3',
+    endpoint: 'https://dynamodb.eu-west-3.amazonaws.com'
   };
 
   AWS.config.update(AWSConfig);
@@ -17,7 +17,7 @@ module.exports = function(keyword) {
   return new Promise((resolve, reject) => {
     dbDocClient.query(
       {
-        TableName: 'Events',
+        TableName: process.env.EVENTS_TABLE,
         IndexName: 'KeywordIndex',
         KeyConditionExpression: `#gsi = :gsi`,
         ExpressionAttributeNames: {

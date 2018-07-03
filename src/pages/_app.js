@@ -63,10 +63,6 @@ class MyApp extends App {
   nextExportBuffer = null;
 }
 
-export default compose(
-  withRedux(makeStore, {
-    debug: process.env.NODE_ENV === 'dev'
-  }),
-  withCredentials,
-  withEventAPI
-)(MyApp);
+export default compose(withRedux(makeStore), withCredentials, withEventAPI)(
+  MyApp
+);

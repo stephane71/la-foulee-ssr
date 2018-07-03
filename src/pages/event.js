@@ -38,8 +38,19 @@ class EventPage extends React.PureComponent {
 
       try {
         event = (await getEvent(req.params.keyword)) || NO_EVENT_SELECTED;
-        if (!event) res.statusCode = 404;
+        if (!event) {
+          console.log(
+            '[La Foulee] EventPage | getInitialProps: No event found for',
+            req.params.keyword
+          );
+          res.statusCode = 404;
+        }
       } catch (e) {
+        console.log(
+          '[La Foulee] EventPage | getInitialProps: An error occurred when fetching the event',
+          req.params.keyword
+        );
+        console.log(JSON.stringify(e));
         res.statusCode = 404;
       }
     }
