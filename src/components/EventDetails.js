@@ -136,7 +136,7 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
     {/* ACTIVITIES */}
     <div>
       <h2 className={'EventDetails-Subtitle'}>{'Épreuves'}</h2>
-      {data.activities.length ? (
+      {data.activities && data.activities.length ? (
         <table className={'Table'}>
           <thead className={'Table-Head'}>
             <tr className={'Table-Row'}>
