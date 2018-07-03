@@ -27,7 +27,7 @@ module.exports = (phase, { defaultConfig }) => {
   return {
     publicRuntimeConfig: {
       APP_URL:
-        process.env.TYPE_ENV === 'local'
+        process.env.NODE_ENV === 'local'
           ? LOCAL_APP_URL
           : process.env.LA_FOULEE_ENV === 'dev' ? DEV_APP_URL : APP_URL,
       ASSETS_URL: process.env.ASSETS_URL,
