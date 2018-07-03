@@ -15,7 +15,7 @@ const GIPHY_KEY = publicRuntimeConfig.GIPHY_KEY;
 
 const ERROR_TO_TAG = {
   [UNKNOWN_ERROR]: 'sorry',
-  [PERMISSION_DENIED]: 'rejected',
+  [PERMISSION_DENIED]: 'please',
   [POSITION_UNAVAILABLE]: 'sorry',
   [TIMEOUT]: 'sorry'
 };
@@ -24,7 +24,7 @@ const GLOBAL_ERROR_MESSAGE =
   'Un problème est apparu, nous allons faire le maximum pour le corriger!';
 const ERROR_TO_MESSAGE = {
   [UNKNOWN_ERROR]: GLOBAL_ERROR_MESSAGE,
-  [PERMISSION_DENIED]: `Vous n'avez pas autoriser La Foulée à accéder à votre position !`,
+  [PERMISSION_DENIED]: `Nous avons besoin de votre position !`,
   [POSITION_UNAVAILABLE]: GLOBAL_ERROR_MESSAGE,
   [TIMEOUT]: GLOBAL_ERROR_MESSAGE
 };
@@ -42,7 +42,7 @@ const styleLayoutError = css`
   }
 `;
 
-const GIPHY_API_URL = 'https://api.giphy.com/v1/gifs/random?tag=sorry&rating=r';
+const GIPHY_API_URL = 'https://api.giphy.com/v1/gifs/random?rating=r';
 
 // Prevent Network problem by fetch a default gif from server
 class LayoutError extends React.PureComponent {
