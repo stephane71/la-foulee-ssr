@@ -1,4 +1,9 @@
-require('dotenv').config({ path: `.env.${process.env.LA_FOULEE_ENV}` });
+const ENV_FILE =
+  process.env.NODE_ENV === 'local'
+    ? `.env.local`
+    : `.env.${process.env.LA_FOULEE_ENV}`;
+require('dotenv').config({ path: ENV_FILE });
+
 const webpack = require('webpack');
 const { PHASE_PRODUCTION_BUILD } = require('next/constants');
 
