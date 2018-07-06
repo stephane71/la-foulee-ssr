@@ -31,8 +31,8 @@
     "build": "NODE_ENV=$NODE_ENV LA_FOULEE_ENV=$LA_FOULEE_ENV next build src",
     "local:dev": "NODE_ENV=local LA_FOULEE_ENV=dev npm run build && NODE_ENV=local LA_FOULEE_ENV=dev npm start",
     "local:production": "NODE_ENV=production LA_FOULEE_ENV=dev npm run build && NODE_ENV=production LA_FOULEE_ENV=dev npm start",
-    "create-zip:dev": "zip ../la-foulee-ssr -r * .[^.]* -x node_modules/**\\* .git/**\\* *.production *.local *.DS_Store -D",
-    "create-zip:production": "zip ../la-foulee-ssr -r * .[^.]* -x node_modules/**\\* .git/**\\* *.dev *.local *.DS_Store -D",
+    "create-zip:dev": "zip ../la-foulee-ssr -r * .[^.]* -x node_modules/**\\* .gitignore .git/**\\* *.production *.local *.DS_Store -D",
+    "create-zip:production": "zip ../la-foulee-ssr -r * .[^.]* -x node_modules/**\\* .gitignore .git/**\\* *.dev *.local *.DS_Store -D",
     "analyze": "cross-env ANALYZE=1 NODE_ENV=dev LA_FOULEE_ENV=dev npm run build"
   },
   "author": "",
