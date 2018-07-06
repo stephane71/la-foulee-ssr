@@ -17,6 +17,14 @@ const app = next({ dev, dir });
 const handle = app.getRequestHandler();
 const server = express();
 
+server.get('/sw.js', (req, res) => {
+  var options = {
+    root: __dirname + '/src/static/',
+    dotfiles: 'deny'
+  };
+  res.sendFile('sw.js', options);
+});
+
 server.get('/event/:keyword', (req, res) => {
   app.render(req, res, '/event');
 });
