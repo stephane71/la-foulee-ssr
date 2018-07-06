@@ -61,7 +61,7 @@ class Events extends React.PureComponent {
     return (
       <>
         <Head>
-          <title>{`La Foulée | liste des evénements${
+          <title>{`La Foulée | Liste des evénements${
             city ? ` autour de ${city}` : ''
           }`}</title>
           <link rel={'canonical'} href={`${APP_URL}${path}`} />

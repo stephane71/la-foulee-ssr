@@ -14,7 +14,13 @@ function formatDistance(value) {
   return `${value / 1000}km`;
 }
 
+function getOrgaLink({ keyword, webSite }) {
+  if (webSite.length) return webSite[0];
+  return `https://www.google.com/search?q=${keyword.replace(/\-/g, '+')}`;
+}
+
 const ICON_COLOR = '#B7C9C6';
+const EMPTY_VALUE = '-';
 
 const style = css`
   .EventDetails {
@@ -22,6 +28,7 @@ const style = css`
     width: 100%;
     height: 100%;
     padding: ${getSpacing('m')}px;
+    padding-bottom: ${getSpacing('xl')}px;
     display: flex;
     flex-direction: column;
   }
@@ -97,8 +104,6 @@ const style = css`
     }
   }
 `;
-
-const EMPTY_VALUE = '-';
 
 const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
   <div className={'EventDetails'}>
@@ -176,8 +181,8 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
         }`}
       >
         <a
-          onClick={() => onClickOrgaLink('not set')}
-          href={''}
+          onClick={() => onClickOrgaLink(data.keyword)}
+          href={getOrgaLink(data)}
           target={'_blank'}
           className={'Button Button--fixed'}
         >{`Site de l'organisateur`}</a>

@@ -9,7 +9,7 @@ import EventDetails from '../components/EventDetails';
 import { ScrollElementContext } from '../components/Layout';
 
 import { getEventStructuredData } from '../utils/structuredData';
-import { pageview } from '../utils/gtag';
+import { pageview, event } from '../utils/gtag';
 
 import { DESKTOP, NO_EVENT_SELECTED } from '../enums';
 import { white } from '../colors';
@@ -61,10 +61,15 @@ class EventPage extends React.PureComponent {
     };
   }
 
-  state = {
-    desktop: false,
-    isServer: this.props.isServer
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      desktop: false,
+      isServer: this.props.isServer
+    };
+
+    this.handleClickOrgaLink = this.handleClickOrgaLink.bind(this);
+  }
 
   componentDidMount() {
     Router.prefetch('/events');
