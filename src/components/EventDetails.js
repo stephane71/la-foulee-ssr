@@ -14,7 +14,7 @@ function formatDistance(value) {
   return `${value / 1000}km`;
 }
 
-function getOrgaLink({ keyword, webSite }) {
+function getOrgaLink({ keyword, webSite = [] }) {
   if (webSite.length) return webSite[0];
   return `https://www.google.com/search?q=${keyword.replace(/\-/g, '+')}`;
 }
