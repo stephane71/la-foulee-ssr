@@ -1,13 +1,16 @@
 import React from 'react';
+import getConfig from 'next/config';
 
 import CheckIcon from '../svgs/ic_check_black_24px.svg';
 
 import { SECONDARY_COLOR, white } from '../colors';
 import { getSpacing, BaseRadius } from '../styles-variables';
 
+const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
+const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
+
 const POWERED_BY_GOOGLE_LOGO_WIDTH = 144;
 const POWERED_BY_GOOGLE_LOGO_HEIGHT = 18;
-
 const ITEM_COLOR = '#727d7b';
 
 const List = ({
@@ -64,7 +67,7 @@ const List = ({
         <li className={'ListItem-container ListItem-container--googleLogo'}>
           <img
             className={'ListItem-googleLogo'}
-            src={'/static/powered_by_google.png'}
+            src={`${ASSETS_URL}/powered_by_google.png`}
           />
         </li>
       )}

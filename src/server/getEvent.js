@@ -12,8 +12,6 @@ module.exports = function(keyword) {
   AWS.config.update(AWSConfig);
   let dbDocClient = new AWS.DynamoDB.DocumentClient();
 
-  const eventPage = '/event';
-
   return new Promise((resolve, reject) => {
     dbDocClient.query(
       {
