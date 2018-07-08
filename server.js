@@ -8,6 +8,7 @@ require('dotenv').config({ path: `.env.server.${process.env.LA_FOULEE_ENV}` });
 
 const express = require('express');
 const next = require('next');
+const getSitemap = require('./internals/getSitemap');
 
 const port = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -23,6 +24,20 @@ server.get('/sw.js', (req, res) => {
     dotfiles: 'deny'
   };
   res.sendFile('sw.js', options);
+});
+
+server.get('/robots.txt', (req, res) => {
+  var options = {
+    root: __dirname + '/src/static/',
+    dotfiles: 'deny'
+  };
+  res.sendFile('robots.txt', options);
+});
+
+server.get('/sitemap.txt', async (req, res) => {
+  const sitemap = await getSitemap();
+  res.set('Content-Type', 'text/plain; charset=UTF-8');
+  res.status(200).send(sitemap);
 });
 
 server.get('/event/:keyword', (req, res) => {
