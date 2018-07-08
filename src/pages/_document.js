@@ -23,6 +23,10 @@ export default class MyDocument extends Document {
           <meta name="charset" content="utf-8" />
           {/* meta: title / description / robots */}
 
+          {process.env.NODE_ENV !== 'production' && (
+            <meta name={'robots'} content={'noindex, nofollow'} />
+          )}
+
           {/* --- */}
           <meta
             name="viewport"
