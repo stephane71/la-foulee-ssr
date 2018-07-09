@@ -159,7 +159,7 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
               .map(({ distance, time, inscriptionFee, title }, i) => (
                 <tr className={'Table-Row'} key={i}>
                   <td className={'Table-DataCell Table-DataCell--bold'}>
-                    {formatDistance(distance) || title || EMPTY_VALUE}
+                    {formatDistance(distance) || EMPTY_VALUE}
                   </td>
                   <td className={'Table-DataCell'}>{time || EMPTY_VALUE}</td>
                   <td className={'Table-DataCell'}>

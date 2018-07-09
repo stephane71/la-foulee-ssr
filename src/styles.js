@@ -184,10 +184,6 @@ export default css`
     border-bottom: 1px solid ${TABLE_BORDER_COLOR};
   }
 
-  .Table-Row {
-    text-align: center;
-  }
-
   .Table-DataCell {
     font-weight: 300;
     vertical-align: text-top;
