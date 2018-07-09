@@ -1,4 +1,3 @@
-require('dotenv').config({ path: './internals/.env' });
 const AWS = require('aws-sdk');
 
 const AWSConfig = {

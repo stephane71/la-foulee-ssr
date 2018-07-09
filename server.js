@@ -35,9 +35,19 @@ server.get('/robots.txt', (req, res) => {
 });
 
 server.get('/sitemap.txt', async (req, res) => {
-  const sitemap = await getSitemap();
-  res.set('Content-Type', 'text/plain; charset=UTF-8');
-  res.status(200).send(sitemap);
+  // FIXME: S3 access when build on prod env
+  // const sitemap = await getSitemap();
+  // res.set('Content-Type', 'text/plain; charset=UTF-8');
+  // res.status(200).send(sitemap);
+
+  //Idea: update the sitemap any time an item has been added in DynamoDB table
+  // Use DynaoDB Stream + Lambda
+
+  var options = {
+    root: __dirname + '/src/static/',
+    dotfiles: 'deny'
+  };
+  res.sendFile('sitemap.txt', options);
 });
 
 server.get('/event/:keyword', (req, res) => {
