@@ -14,9 +14,12 @@ function formatDistance(value) {
   return `${value / 1000}km`;
 }
 
-function getOrgaLink({ keyword, webSite = [] }) {
+function getOrgaLink({ keyword, webSite = [], date }) {
   if (webSite.length) return webSite[0];
-  return `https://www.google.com/search?q=${keyword.replace(/\-/g, '+')}`;
+  return `https://www.google.com/search?q=${keyword.replace(
+    /\-/g,
+    '+'
+  )} ${moment.unix(date).year()}`;
 }
 
 const ICON_COLOR = '#B7C9C6';
