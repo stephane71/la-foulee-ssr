@@ -156,14 +156,14 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
           <tbody className={'Table-Body'}>
             {data.activities
               .sort((act1, act2) => act2.distance - act1.distance)
-              .map(({ distance, time, inscriptionFee, title }, i) => (
+              .map(({ distance, time, price, title }, i) => (
                 <tr className={'Table-Row'} key={i}>
                   <td className={'Table-DataCell Table-DataCell--bold'}>
                     {formatDistance(distance) || EMPTY_VALUE}
                   </td>
                   <td className={'Table-DataCell'}>{time || EMPTY_VALUE}</td>
                   <td className={'Table-DataCell'}>
-                    {inscriptionFee || EMPTY_VALUE}
+                    {price ? `${price}€` : EMPTY_VALUE}
                   </td>
                 </tr>
               ))}
