@@ -18,6 +18,7 @@ import { DESKTOP } from '../enums';
 
 const { publicRuntimeConfig } = getConfig();
 const APP_URL = publicRuntimeConfig.APP_URL;
+const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 
 class Index extends React.PureComponent {
   constructor(props) {
@@ -40,11 +41,15 @@ class Index extends React.PureComponent {
   render() {
     const { media } = this.props;
 
+    const title = `Simplifier l'accès aux événements sportifs`;
+    const description = `La Foulée simplifie la recherche d'un événement sportif. Trouvez les événements autour de vous et partagez les infos essentielles en un click !`;
+    const imageTwitter = `${ASSETS_URL}/android-chrome-512x512.png`;
+    const imageFB = `${ASSETS_URL}/glyph.dominant.144x144%402x.png`;
+
     return (
       <>
         <Head>
-          <title
-          >{`La Foulée | Simplifier l'accès aux événements sportifs`}</title>
+          <title>{`La Foulée | ${title}`}</title>
           <link rel={'canonical'} href={APP_URL} />
           <script type={'application/ld+json'}>
             {getWebApplicationStructuredData()}
@@ -52,6 +57,19 @@ class Index extends React.PureComponent {
           <script type={'application/ld+json'}>
             {getOrganizationStructuredData()}
           </script>
+
+          {/* TWITTER */}
+          <meta name={'twitter:card'} content={'summary'} />
+          <meta name={'twitter:site'} content={'@_LaFoulee'} />
+          <meta name={'twitter:title'} content={title} />
+          <meta name={'twitter:description'} content={description} />
+          <meta name={'twitter:image'} content={imageTwitter} />
+
+          {/* OPEN GRAPH */}
+          <meta property={'og:url'} content={APP_URL} />
+          <meta property={'og:title'} content={title} />
+          <meta property={'og:description'} content={description} />
+          <meta property={'og:image'} content={imageFB} />
         </Head>
 
         <HomePage

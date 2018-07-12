@@ -3,6 +3,7 @@ import Head from 'next/head';
 import getConfig from 'next/config';
 import Error from 'next/error';
 import css from 'styled-jsx/css';
+import moment from 'moment';
 import { connect } from 'react-redux';
 
 import EventDetails from '../components/EventDetails';
@@ -16,6 +17,7 @@ import { white } from '../colors';
 
 const { publicRuntimeConfig } = getConfig();
 const APP_URL = publicRuntimeConfig.APP_URL;
+const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 
 const style = css`
   .EventPage {
@@ -91,14 +93,35 @@ class EventPage extends React.PureComponent {
 
     if (!event) return <Error statusCode={404} />;
 
+    let eventDateMeta = moment.unix(event.date).format('dddd DD/MM/YYYY');
+    eventDateMeta = eventDateMeta[0].toUpperCase() + eventDateMeta.slice(1);
+    const description = `${eventDateMeta} à ${event.city} (${
+      event.department.code
+    })`;
+    const imageTwitter = `${ASSETS_URL}/android-chrome-512x512.png`;
+    const imageFB = `${ASSETS_URL}/glyph.dominant.144x144%402x.png`;
+
     return (
       <div className={`EventPage ${desktop ? 'EventPage--desktop' : ''}`}>
         <Head>
-          <title>{`La Foulée | ${event.title}`}</title>
+          <title>{`La Foulée | ${event.title}`}</title>
           <link rel={'canonical'} href={`${APP_URL}${path}`} />
           <script type={'application/ld+json'}>
             {getEventStructuredData(event)}
           </script>
+
+          {/* TWITTER */}
+          <meta name={'twitter:card'} content={'summary'} />
+          <meta name={'twitter:site'} content={'@_LaFoulee'} />
+          <meta name={'twitter:title'} content={event.title} />
+          <meta name={'twitter:description'} content={description} />
+          <meta name={'twitter:image'} content={imageTwitter} />
+
+          {/* OPEN GRAPH */}
+          <meta property={'og:url'} content={`${APP_URL}${path}`} />
+          <meta property={'og:title'} content={event.title} />
+          <meta property={'og:description'} content={description} />
+          <meta property={'og:image'} content={imageFB} />
         </Head>
 
         <ScrollElementContext.Consumer>

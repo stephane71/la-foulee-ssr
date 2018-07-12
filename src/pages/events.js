@@ -2,6 +2,7 @@ import Router from 'next/router';
 import Head from 'next/head';
 import getConfig from 'next/config';
 import React from 'react';
+import moment from 'moment';
 import { connect } from 'react-redux';
 
 import EventList from '../components/EventList';
@@ -20,6 +21,7 @@ import { getSpacing } from '../styles-variables';
 
 const { publicRuntimeConfig } = getConfig();
 const APP_URL = publicRuntimeConfig.APP_URL;
+const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 
 class Events extends React.PureComponent {
   constructor(props) {
@@ -58,12 +60,21 @@ class Events extends React.PureComponent {
     const { getEventListAround, query, path, events } = this.props;
     const { position, city } = query;
 
+    const imageTwitter = `${ASSETS_URL}/android-chrome-512x512.png`;
+    const imageFB = `${ASSETS_URL}/glyph.dominant.144x144%402x.png`;
+    const title = `Tous les evénements${city ? ` autour de ${city}` : ''}`;
+    const description = `Retrouvez les ${
+      events.length
+    } evénements autour de ${city} ${
+      events.length
+        ? `à partir du ${moment.unix(events[0].date).format('dddd DD/MM/YYYY')}`
+        : ''
+    }`;
+
     return (
       <>
         <Head>
-          <title>{`La Foulée | Liste des evénements${
-            city ? ` autour de ${city}` : ''
-          }`}</title>
+          <title>{`La Foulée | ${title}`}</title>
           {process.env.NODE_ENV === 'production' && (
             <meta name={'robots'} content={`noindex, follow`} />
           )}
@@ -71,6 +82,19 @@ class Events extends React.PureComponent {
           <script type={'application/ld+json'}>
             {getEventListStructuredData(events)}
           </script>
+
+          {/* TWITTER */}
+          <meta name={'twitter:card'} content={'summary'} />
+          <meta name={'twitter:site'} content={'@_LaFoulee'} />
+          <meta name={'twitter:title'} content={title} />
+          <meta name={'twitter:description'} content={description} />
+          <meta name={'twitter:image'} content={imageTwitter} />
+
+          {/* OPEN GRAPH */}
+          <meta property={'og:url'} content={`${APP_URL}${path}`} />
+          <meta property={'og:title'} content={event.title} />
+          <meta property={'og:description'} content={description} />
+          <meta property={'og:image'} content={imageFB} />
         </Head>
 
         {position && city ? (

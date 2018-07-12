@@ -21,7 +21,13 @@ export default class MyDocument extends Document {
       <html>
         <Head>
           <meta name="charset" content="utf-8" />
-          {/* meta: title / description / robots */}
+          {/* OPEN GRAPH */}
+          <meta property={'og:site_name'} content={'La Foulée'} />
+          <meta property={'og:type'} content={'website'} />
+          <meta property={'og:locale'} content={'fr_FR'} />
+
+          {/* FB */}
+          {/* <meta property={'fb:app_id'} content={FB_ID} /> */}
 
           {process.env.NODE_ENV !== 'production' && (
             <meta name={'robots'} content={'noindex, nofollow'} />
