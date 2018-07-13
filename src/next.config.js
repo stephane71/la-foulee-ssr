@@ -37,6 +37,7 @@ module.exports = (phase, { defaultConfig }) => {
           : process.env.LA_FOULEE_ENV === 'dev' ? DEV_APP_URL : APP_URL,
       ASSETS_URL: process.env.ASSETS_URL,
       API_URL: process.env.API_URL,
+      AWS_API_REGION: process.env.AWS_API_REGION,
       IDENTITY_POOL_ID: process.env.IDENTITY_POOL_ID,
       GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY,
       GA_TRACKING_ID: process.env.GA_TRACKING_ID,

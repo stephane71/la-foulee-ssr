@@ -4,11 +4,12 @@ import getConfig from 'next/config';
 import { getEventArgs, getAroundEventListArgs } from '../api';
 
 const { publicRuntimeConfig } = getConfig();
+const { API_URL, AWS_API_REGION } = publicRuntimeConfig;
 
 function getAPIGatewayClient(credentials) {
   return apigClientFactory.newClient({
-    invokeUrl: publicRuntimeConfig.API_URL,
-    region: 'eu-west-1',
+    invokeUrl: API_URL,
+    region: AWS_API_REGION,
     accessKey: credentials.accessKeyId,
     secretKey: credentials.secretAccessKey,
     sessionToken: credentials.sessionToken
