@@ -41,7 +41,8 @@ module.exports = (phase, { defaultConfig }) => {
       IDENTITY_POOL_ID: process.env.IDENTITY_POOL_ID,
       GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY,
       GA_TRACKING_ID: process.env.GA_TRACKING_ID,
-      GIPHY_KEY: process.env.GIPHY_KEY
+      GIPHY_KEY: process.env.GIPHY_KEY,
+      FB_APP_ID: process.env.FB_APP_ID
     },
 
     generateBuildId: async () => {

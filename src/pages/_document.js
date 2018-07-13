@@ -6,8 +6,7 @@ import { dominant } from '../colors';
 
 const { serverRuntimeConfig, publicRuntimeConfig } = getConfig();
 
-const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
-const GA_TRACKING_ID = publicRuntimeConfig.GA_TRACKING_ID;
+const { ASSETS_URL, GA_TRACKING_ID, FB_APP_ID } = publicRuntimeConfig;
 
 export default class MyDocument extends Document {
   static getInitialProps({ renderPage }) {
@@ -27,7 +26,9 @@ export default class MyDocument extends Document {
           <meta property={'og:locale'} content={'fr_FR'} />
 
           {/* FB */}
-          {/* <meta property={'fb:app_id'} content={FB_ID} /> */}
+          {process.env.NODE_ENV === 'production' && (
+            <meta property={'fb:app_id'} content={FB_APP_ID} />
+          )}
 
           {process.env.NODE_ENV !== 'production' && (
             <meta name={'robots'} content={'noindex, nofollow'} />
