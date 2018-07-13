@@ -6,6 +6,7 @@ import moment from 'moment';
 import { connect } from 'react-redux';
 
 import EventList from '../components/EventList';
+import JSONLD from '../components/JSONLD';
 
 import { pageview, event } from '../utils/gtag';
 import { getEventListStructuredData } from '../utils/structuredData';
@@ -79,9 +80,8 @@ class Events extends React.PureComponent {
             <meta name={'robots'} content={`noindex, follow`} />
           )}
           <link rel={'canonical'} href={`${APP_URL}${path}`} />
-          <script type={'application/ld+json'}>
-            {getEventListStructuredData(events)}
-          </script>
+
+          <JSONLD data={getEventListStructuredData(events)} />
 
           {/* TWITTER */}
           <meta name={'twitter:card'} content={'summary'} />

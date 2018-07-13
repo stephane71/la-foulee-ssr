@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 
 import EventDetails from '../components/EventDetails';
 import { ScrollElementContext } from '../components/Layout';
+import JSONLD from '../components/JSONLD';
 
 import { getEventStructuredData } from '../utils/structuredData';
 import { pageview, event } from '../utils/gtag';
@@ -106,9 +107,8 @@ class EventPage extends React.PureComponent {
         <Head>
           <title>{`La Foulée | ${event.title}`}</title>
           <link rel={'canonical'} href={`${APP_URL}${path}`} />
-          <script type={'application/ld+json'}>
-            {getEventStructuredData(event)}
-          </script>
+
+          <JSONLD data={getEventStructuredData(event)} />
 
           {/* TWITTER */}
           <meta name={'twitter:card'} content={'summary'} />

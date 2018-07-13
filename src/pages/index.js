@@ -6,6 +6,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 
 import HomePage from '../components/HomePage';
+import JSONLD from '../components/JSONLD';
 
 import {
   getWebApplicationStructuredData,
@@ -51,12 +52,9 @@ class Index extends React.PureComponent {
         <Head>
           <title>{`La Foulée | ${title}`}</title>
           <link rel={'canonical'} href={APP_URL} />
-          <script type={'application/ld+json'}>
-            {getWebApplicationStructuredData()}
-          </script>
-          <script type={'application/ld+json'}>
-            {getOrganizationStructuredData()}
-          </script>
+
+          <JSONLD data={getWebApplicationStructuredData()} />
+          <JSONLD data={getOrganizationStructuredData()} />
 
           {/* TWITTER */}
           <meta name={'twitter:card'} content={'summary'} />
