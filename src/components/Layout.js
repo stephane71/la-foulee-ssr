@@ -178,6 +178,21 @@ class Layout extends React.PureComponent {
       `/events?position=${location.geohash}&city=${location.city.name}`
     );
     this.props.dispatch(setSearchingGeohash(false));
+
+    let label;
+    if (city) {
+      label = city.location ? 'Preselected city' : 'Searched city';
+    } else {
+      label = 'User position';
+    }
+
+    console.log('trigger event Google Analytics', label);
+    event({
+      action: 'Select City',
+      category: 'Search',
+      label,
+      value: location.city.name
+    });
   }
 
   async getLocationFromCity(_city = {}) {
