@@ -26,10 +26,12 @@ const DEV_APP_URL = 'https://dev.la-foulee.com';
 const APP_URL = 'https://www.la-foulee.com';
 
 module.exports = (phase, { defaultConfig }) => {
-  // useFileSystemPublicRoutes: false,
-  // assetPrefix: isProd ? `https://quelquechose.la-foulee.com` : '',
+  // useFileSystemPublicRoutes: false
 
   return {
+    assetPrefix:
+      process.env.NODE_ENV === 'production' ? process.env.ASSETS_URL : '',
+
     publicRuntimeConfig: {
       APP_URL:
         process.env.NODE_ENV === 'local'
