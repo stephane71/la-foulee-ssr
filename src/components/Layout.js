@@ -16,7 +16,7 @@ import { event } from '../utils/gtag';
 
 import GlobalStyles from '../styles';
 import { USER_POSITION_KEY, MAX_WIDTH } from '../enums';
-import { toggleSearch } from '../actions';
+import { toggleSearch, setSearchingGeohash } from '../actions';
 
 moment.locale('fr');
 
@@ -159,6 +159,7 @@ class Layout extends React.PureComponent {
   }
 
   async handleSelectLocation(city = null) {
+    this.props.dispatch(setSearchingGeohash(true));
     this.setState({ error: null });
     this.handleToggleSearch();
 
@@ -176,6 +177,7 @@ class Layout extends React.PureComponent {
     Router.push(
       `/events?position=${location.geohash}&city=${location.city.name}`
     );
+    this.props.dispatch(setSearchingGeohash(false));
   }
 
   async getLocationFromCity(_city = {}) {

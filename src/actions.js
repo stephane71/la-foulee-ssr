@@ -5,6 +5,7 @@ export const SET_MEDIA_TYPE = 'SET_MEDIA_TYPE';
 export const SET_USER_POSITION = 'SET_USER_POSITION';
 export const TOGGLE_SEARCH = 'TOGGLE_SEARCH';
 export const SET_EVENT_LIST_START_INDEX = 'SET_EVENT_LIST_START_INDEX';
+export const SET_SEARCHING_GEOHASH = 'SET_SEARCHING_GEOHASH';
 
 export function setSelectedEvent(event) {
   return {
@@ -53,5 +54,12 @@ export function setEventListStartIndex(index) {
   return {
     type: SET_EVENT_LIST_START_INDEX,
     index
+  };
+}
+
+export function setSearchingGeohash(searching) {
+  return {
+    type: SET_SEARCHING_GEOHASH,
+    searching
   };
 }

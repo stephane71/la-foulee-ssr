@@ -55,6 +55,9 @@ class Events extends React.PureComponent {
     if (nextProps.query.position !== this.props.query.position) {
       this.fetchEvents(nextProps.query.position);
     }
+    if (nextProps.searchingGeohash && !this.props.searchingGeohash) {
+      this.setState({ loading: true });
+    }
   }
 
   render() {
@@ -167,6 +170,7 @@ class Events extends React.PureComponent {
     this.setState({ loading: true });
 
     const { events } = await this.props.getEventListAround(position);
+
     this.props.dispatch(setUserPosition(position));
     this.props.dispatch(setEventList(events));
 
@@ -181,7 +185,8 @@ Events.getInitialProps = function({ store, isServer, ...context }) {
 function mapStateToProps(state) {
   return {
     position: state.position,
-    events: state.events
+    events: state.events,
+    searchingGeohash: state.searchingGeohash
   };
 }
 
