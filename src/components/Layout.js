@@ -64,6 +64,17 @@ class Layout extends React.PureComponent {
 
     const { city } = this.props.query;
     if (city) this.setState({ city: { name: city } });
+
+    Router.beforePopState(({ url, as, options }) => {
+      if (this.props.searching) {
+        this.handleToggleSearch();
+        // This solution works when the user goes back in history
+        // Unfortunately we can not know if he goes back or forward
+        // history.go(1);
+        // return false;
+      }
+      return true;
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -186,7 +197,6 @@ class Layout extends React.PureComponent {
       label = 'User position';
     }
 
-    console.log('trigger event Google Analytics', label);
     event({
       action: 'Select City',
       category: 'Search',
