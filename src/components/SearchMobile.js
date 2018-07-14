@@ -116,6 +116,7 @@ class SearchMobile extends React.PureComponent {
       this
     );
     this.handleKeyboardValidation = this.handleKeyboardValidation.bind(this);
+    this.handleClickUserPosition = this.handleClickUserPosition.bind(this);
   }
 
   render() {
@@ -163,7 +164,7 @@ class SearchMobile extends React.PureComponent {
                   <span>{value}</span>
                 </div>
               )}
-              onClick={this.props.onSelectAround}
+              onClick={this.handleClickUserPosition}
               highlightIndex={this.state.keyboardItemSelect - 1}
               highlightIndexValidation={this.state.keyboardValidation}
             />
@@ -177,7 +178,7 @@ class SearchMobile extends React.PureComponent {
                 return (
                   <List
                     list={data}
-                    onClick={this.props.onSelectCity}
+                    onClick={this.props.onSelectLocation}
                     highlightIndex={this.state.keyboardItemSelect - 2}
                     highlightIndexValidation={this.state.keyboardValidation}
                     poweredByGoogle={this.state.input}
@@ -216,6 +217,10 @@ class SearchMobile extends React.PureComponent {
 
   handleKeyboardValidation() {
     this.setState({ keyboardValidation: true });
+  }
+
+  handleClickUserPosition() {
+    this.props.onSelectLocation();
   }
 }
 

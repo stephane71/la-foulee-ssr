@@ -56,8 +56,7 @@ class Layout extends React.PureComponent {
     this.handleClickSearch = this.handleClickSearch.bind(this);
     this.handleClickOverlay = this.handleClickOverlay.bind(this);
     this.handleToggleSearch = this.handleToggleSearch.bind(this);
-    this.handleSelectUserPosition = this.handleSelectUserPosition.bind(this);
-    this.handleSelectCity = this.handleSelectCity.bind(this);
+    this.handleSelectLocation = this.handleSelectLocation.bind(this);
   }
 
   componentDidMount() {
@@ -117,8 +116,7 @@ class Layout extends React.PureComponent {
 
         {searching && (
           <SearchMobile
-            onSelectAround={this.handleSelectUserPosition}
-            onSelectCity={this.handleSelectCity}
+            onSelectLocation={this.handleSelectLocation}
             onLeave={this.handleToggleSearch}
           />
         )}
@@ -160,55 +158,42 @@ class Layout extends React.PureComponent {
     this.props.dispatch(toggleSearch(toggle));
   }
 
-  async handleSelectCity(_city = {}) {
+  async handleSelectLocation(city = null) {
     this.setState({ error: null });
     this.handleToggleSearch();
 
-    let city, geohash;
+    let location;
     try {
-      city = _city.location
-        ? _city
-        : await this.props.getDetails(_city.placeId);
-      geohash = getGeohash(city.location);
+      location = city
+        ? await this.getLocationFromCity(city)
+        : await this.getLocationFromUser();
     } catch (error) {
       this.setState({ error });
       return;
     }
 
-    this.setState({ city });
-    Router.push(`/events?position=${geohash}&city=${city.name}`);
-
-    event({
-      action: 'Select City',
-      category: 'Search',
-      label: _city.location ? 'Preselected city' : 'Searched city',
-      value: city.name
-    });
+    this.setState({ city: location.city });
+    Router.push(
+      `/events?position=${location.geohash}&city=${location.city.name}`
+    );
   }
 
-  async handleSelectUserPosition() {
-    this.setState({ error: null });
-    this.handleToggleSearch();
+  async getLocationFromCity(_city = {}) {
+    let city = _city.location
+      ? _city
+      : await this.props.getDetails(_city.placeId);
+    let geohash = getGeohash(city.location);
 
-    let location, cityName, geohash;
-    try {
-      location = await getUserLocation();
-      cityName = await this.props.reverseGeocoding(location);
-      geohash = getGeohash(location);
-    } catch (error) {
-      this.setState({ error });
-      return;
-    }
+    return { city, geohash };
+  }
 
-    this.setState({ city: { name: cityName } });
-    Router.push(`/events?position=${geohash}&city=${cityName}`);
+  async getLocationFromUser() {
+    let location = await getUserLocation();
 
-    event({
-      action: 'Select City',
-      category: 'Search',
-      label: 'User position',
-      value: cityName
-    });
+    let cityName = await this.props.reverseGeocoding(location);
+    let geohash = getGeohash(location);
+
+    return { city: { name: cityName }, geohash };
   }
 }
 
