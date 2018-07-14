@@ -19,7 +19,7 @@ export default class MyDocument extends Document {
     return (
       <html>
         <Head>
-          <meta name="charset" content="utf-8" />
+          <meta name={'charset'} content={'utf-8'} />
           {/* OPEN GRAPH */}
           <meta property={'og:site_name'} content={'La Foulée'} />
           <meta property={'og:type'} content={'website'} />
@@ -36,89 +36,91 @@ export default class MyDocument extends Document {
 
           {/* --- */}
           <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+            name={'viewport'}
+            content={
+              'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0'
+            }
           />
-          <meta name="mobile-web-app-capable" content="yes" />
+          <meta name={'mobile-web-app-capable'} content={'yes'} />
           <meta
-            name="apple-mobile-web-app-status-bar-style"
+            name={'apple-mobile-web-app-status-bar-style'}
             content={dominant}
           />
-          <meta name="apple-mobile-web-app-title" content="La Foulée" />
+          <meta name={'apple-mobile-web-app-title'} content={'La Foulée'} />
 
           {/* ICONS */}
           <link
-            rel="apple-touch-icon"
-            sizes="180x180"
-            href={`${ASSETS_URL}/apple-touch-icon.png?v=yya2lgM4gb`}
+            rel={'shortcut icon'}
+            type={'image/x-icon'}
+            href={`${ASSETS_URL}/favicon.ico`}
           />
           <link
-            rel="icon"
-            type="image/png"
-            sizes="32x32"
-            href={`${ASSETS_URL}/favicon-32x32.png?v=yya2lgM4gb`}
+            rel={'icon'}
+            type={'image/png'}
+            sizes={'16x16'}
+            href={`${ASSETS_URL}/favicon-16x16.png`}
           />
           <link
-            rel="icon"
-            type="image/png"
-            sizes="16x16"
-            href={`${ASSETS_URL}/favicon-16x16.png?v=yya2lgM4gb`}
+            rel={'icon'}
+            type={'image/png'}
+            sizes={'32x32'}
+            href={`${ASSETS_URL}/favicon-32x32.png`}
           />
           <link
-            rel="mask-icon"
-            href={`${ASSETS_URL}/safari-pinned-tab.svg?v=yya2lgM4gb`}
-            color="#5bbad5"
+            rel={'apple-touch-icon'}
+            sizes={'180x180'}
+            href={`${ASSETS_URL}/apple-touch-icon.png`}
           />
           <link
-            rel="shortcut icon"
-            href={`${ASSETS_URL}/favicon.ico?v=yya2lgM4gb`}
+            rel={'mask-icon'}
+            href={`${ASSETS_URL}/safari-pinned-tab.svg`}
+            color={'#5bbad5'}
           />
 
-          {/* FONTS */}
-          <link
-            rel="preload"
-            as="font"
-            type="font/woff"
+          {/* FONTS: Circular Bold */}
+          {/* <link
+            rel={'preload'}
+            as={'font'}
+            type={'font/woff'}
+            crossOrigin={'anonymous'}
             href={`${ASSETS_URL}/fonts/lineto-circular-bold.woff`}
-            crossOrigin="anonymous"
           />
           <link
-            rel="preload"
-            as="font"
-            type="font/woff2"
+            rel={'preload'}
+            as={'font'}
+            type={'font/woff2'}
+            crossOrigin={'anonymous'}
             href={`${ASSETS_URL}/fonts/lineto-circular-bold.woff2`}
-            crossOrigin="anonymous"
           />
-
           <link
-            rel="stylesheet"
-            type="text/css"
+            rel={'stylesheet'}
+            type={'text/css'}
             href={`${ASSETS_URL}/style/circular-bold.css`}
-          />
+          /> */}
 
+          {/* FONTS: Circular Medium */}
           <link
-            rel="preload"
-            as="font"
-            type="font/woff"
+            rel={'preload'}
+            as={'font'}
+            type={'font/woff'}
+            crossOrigin={'anonymous'}
             href={`${ASSETS_URL}/fonts/circular-medium.woff`}
-            crossOrigin="anonymous"
           />
           <link
-            rel="preload"
-            as="font"
-            type="font/woff2"
+            rel={'preload'}
+            as={'font'}
+            type={'font/woff2'}
+            crossOrigin={'anonymous'}
             href={`${ASSETS_URL}/fonts/circular-medium.woff2`}
-            crossOrigin="anonymous"
           />
-
           <link
-            rel="stylesheet"
-            type="text/css"
+            rel={'stylesheet'}
+            type={'text/css'}
             href={`${ASSETS_URL}/style/circular-medium.css`}
           />
 
-          <link rel="manifest" href={`/static/manifest.json?v=yya2lgM4gb`} />
-          <meta name="theme-color" content={dominant} />
+          <link rel={'manifest'} href={`/static/manifest.json?v=yya2lgM4gb`} />
+          <meta name={'theme-color'} content={dominant} />
 
           <script
             async
