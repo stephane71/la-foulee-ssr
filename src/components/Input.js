@@ -48,6 +48,7 @@ class Input extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     if (this.props.reset !== nextProps.reset && nextProps.reset) {
       this.setState({ value: DEFAULT_VALUE });
+      this.textInput.focus();
     }
     if (this.props.value !== nextProps.value) {
       this.setState({ value: nextProps.value || DEFAULT_VALUE });
