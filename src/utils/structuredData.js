@@ -27,7 +27,8 @@ export const getOrganizationStructuredData = function() {
     legalName: 'La Foulée',
     description: `La Foulée facilite l'accès au événements sportifs. Les organisateurs bénéficient d'une fiche dédié à leurs evénements et du référencement sur les moteurs de recherche. Les sportifs profitent d'une plateforme qui leurs permets parcourir l'ensemble des événements.`,
     url: APP_URL,
-    logo: `${ASSETS_URL}/android-chrome-192x192.png`
+    logo: `${ASSETS_URL}/android-chrome-192x192.png`,
+    sameAs: ['https://twitter.com/_LaFoulee']
   };
   return JSON.stringify(jsonLD);
 };
