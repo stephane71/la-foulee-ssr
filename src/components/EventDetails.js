@@ -1,5 +1,6 @@
 import moment from 'moment';
 import css from 'styled-jsx/css';
+// import getConfig from 'next/config';
 
 import IconLocation from '../svgs/ic_location_on_white_24px.svg';
 import IconAgenda from '../svgs/ic_event_white_24px.svg';
@@ -7,6 +8,9 @@ import IconAgenda from '../svgs/ic_event_white_24px.svg';
 import { getSpacing, getFontSize } from '../styles-variables';
 import { MAX_WIDTH, DATE_FORMAT, BORDER_RADIUS } from '../enums';
 import { dominant } from '../colors';
+
+// const { publicRuntimeConfig } = getConfig();
+// const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
 
 function formatDistance(value) {
   if (!value) return value;
@@ -20,6 +24,20 @@ function getOrgaLink({ keyword, webSite = [], date }) {
     /\-/g,
     '+'
   )} ${moment.unix(date).year()}`;
+}
+
+// function buildGoogleMapStaticImage({ city, department }, desktop) {
+//   const mobileSize = '300x100';
+//   const desktopSize = '600x200';
+//   const BASE_URL = `https://maps.googleapis.com/maps/api/staticmap?size=${
+//     desktop ? desktopSize : mobileSize
+//   }&zoom=11&key=${GOOGLE_PLACES_API_KEY}`;
+//   return `${BASE_URL}&center=${encodeURI(city)},${department.isoCode}`;
+// }
+
+function buildGoogleMapURL({ place_id, city }) {
+  const BASE_URL = 'https://www.google.com/maps/search/?api=1';
+  return `${BASE_URL}&query_place_id=${place_id}&query=${encodeURI(city)}`;
 }
 
 const ICON_COLOR = '#B7C9C6';
@@ -86,6 +104,7 @@ const style = css`
 
   .EventDetails-DatumLocation {
     white-space: pre;
+    color: initial;
   }
 
   .EventDetails-DatumLocation > .EventDetails-DatumValue {
@@ -120,12 +139,14 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
 
     {/* GLOBAL INFO */}
     <div>
-      <div className={'EventDetails-Datum EventDetails-DatumLocation'}>
-        <IconLocation style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
-        <address className={'EventDetails-DatumValue'}>{`${data.city}\n${
-          data.department.code
-        }, ${data.department.name}`}</address>
-      </div>
+      <a target={'_blank'} href={buildGoogleMapURL(data)}>
+        <div className={'EventDetails-Datum EventDetails-DatumLocation'}>
+          <IconLocation style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
+          <address className={'EventDetails-DatumValue'}>{`${data.city}\n${
+            data.department.code
+          }, ${data.department.name}`}</address>
+        </div>
+      </a>
 
       <div className={'EventDetails-Datum EventDetails-DatumDate'}>
         <IconAgenda style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
