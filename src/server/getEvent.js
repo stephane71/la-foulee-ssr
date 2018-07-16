@@ -3,10 +3,10 @@ module.exports = function(keyword) {
   const AWS = eval("require('aws-sdk')");
 
   const AWSConfig = {
-    secretAccessKey: process.env.secretAccessKey,
-    accessKeyId: process.env.accessKeyId,
-    region: 'eu-west-3',
-    endpoint: 'https://dynamodb.eu-west-3.amazonaws.com'
+    secretAccessKey: process.env.DB_SAK,
+    accessKeyId: process.env.DB_AK,
+    region: process.env.DB_REGION,
+    endpoint: process.env.DB_ENDPOINT
   };
 
   AWS.config.update(AWSConfig);
@@ -27,7 +27,6 @@ module.exports = function(keyword) {
       },
       (err, data) => {
         if (err) {
-          console.log(err, err.stack);
           reject(err);
           return;
         }

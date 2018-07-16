@@ -1,10 +1,11 @@
 import Router from 'next/router';
 import Head from 'next/head';
 import getConfig from 'next/config';
-import Error from 'next/error';
 import css from 'styled-jsx/css';
 import moment from 'moment';
 import { connect } from 'react-redux';
+
+import CustomError from './_error';
 
 import EventDetails from '../components/EventDetails';
 import { ScrollElementContext } from '../components/Layout';
@@ -14,6 +15,7 @@ import { getEventStructuredData } from '../utils/structuredData';
 import { pageview, event } from '../utils/gtag';
 
 import { DESKTOP, NO_EVENT_SELECTED } from '../enums';
+import { EVENT_NOT_FOUND } from '../errors';
 import { white } from '../colors';
 
 const { publicRuntimeConfig } = getConfig();
@@ -38,22 +40,27 @@ class EventPage extends React.PureComponent {
     let event = NO_EVENT_SELECTED;
     if (req) {
       const getEvent = require('../server/getEvent');
+      const { keyword } = req.params;
 
       try {
-        event = (await getEvent(req.params.keyword)) || NO_EVENT_SELECTED;
+        if (keyword) event = (await getEvent(keyword)) || NO_EVENT_SELECTED;
         if (!event) {
+          console.log('--- [La Foulee] ---');
           console.log(
-            '[La Foulee] EventPage | getInitialProps: No event found for',
-            req.params.keyword
+            'EventPage | getInitialProps: No event found for "',
+            keyword,
+            '"'
           );
           res.statusCode = 404;
         }
       } catch (e) {
+        console.log('--- [La Foulee] ---');
         console.log(
-          '[La Foulee] EventPage | getInitialProps: An error occurred when fetching the event',
-          req.params.keyword
+          'EventPage | getInitialProps: An error occurred when fetching the event',
+          keyword
         );
-        console.log(JSON.stringify(e));
+        console.log('--- Error ---');
+        console.log(e);
         res.statusCode = 404;
       }
     }
@@ -90,10 +97,11 @@ class EventPage extends React.PureComponent {
     const { desktop, isServer } = this.state;
     const { path, eventServerSide, eventStored } = this.props;
 
-    let event = eventServerSide || eventStored;
+    const event = eventServerSide || eventStored;
 
-    if (!event) return <Error statusCode={404} />;
+    if (!event) return <CustomError statusCode={EVENT_NOT_FOUND} />;
 
+    /** METAs:start **/
     let eventDateMeta = moment.unix(event.date).format('dddd DD/MM/YYYY');
     eventDateMeta = eventDateMeta[0].toUpperCase() + eventDateMeta.slice(1);
     const description = `${eventDateMeta} à ${event.city} (${
@@ -101,6 +109,7 @@ class EventPage extends React.PureComponent {
     })`;
     const imageTwitter = `${ASSETS_URL}/android-chrome-512x512.png`;
     const imageFB = `${ASSETS_URL}/glyph.dominant.144x144%402x.png`;
+    /** METAs:end **/
 
     return (
       <div className={`EventPage ${desktop ? 'EventPage--desktop' : ''}`}>
