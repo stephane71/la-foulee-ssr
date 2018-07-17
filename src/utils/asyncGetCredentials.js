@@ -21,6 +21,7 @@ export default async function asyncGetCredentials(clearCache = false) {
       { region: 'eu-west-1' }
     );
 
+    // Clear the cognito identity id
     if (clearCache) cognitoIdentityCredentials.clearCachedId();
 
     cognitoIdentityCredentials.get(err => {
