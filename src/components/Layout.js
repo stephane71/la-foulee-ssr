@@ -98,8 +98,8 @@ class Layout extends React.PureComponent {
         <Header
           onClickHeaderLogo={this.handleHomeRedirect}
           onClickSearch={this.handleClickSearch}
-          showSearchTrigger={currentRoute !== '/'}
           showBackArrow={query.keyword}
+          isHomeRoute={currentRoute === '/'}
         />
 
         <div

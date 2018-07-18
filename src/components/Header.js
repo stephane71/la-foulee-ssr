@@ -30,7 +30,7 @@ const style = css`
     background-color: ${dominant};
   }
 
-  .Header-content {
+  .Header-Content {
     padding: 0 ${getSpacing(`s`)}px;
     height: 100%;
     display: flex;
@@ -39,11 +39,11 @@ const style = css`
     margin: 0 auto;
   }
 
-  .Header-menuWrapper {
+  .Header-SideIcon {
     padding: 0 ${getSpacing(`s`)}px;
   }
 
-  .Header-menuWrapper:hover {
+  .Header-SideIcon:hover {
     cursor: pointer;
   }
 
@@ -58,23 +58,26 @@ const style = css`
   }
 `;
 
+const IconStyle = { fill: white, verticalAlign: 'middle' };
+
 const Header = ({
   onClickHeaderLogo,
   onClickSearch,
-  showSearchTrigger,
-  showBackArrow
+  showBackArrow,
+  isHomeRoute
 }) => (
   <div className={'Header'}>
-    <div className={'Header-content'}>
-      {showBackArrow ? (
-        <div className={'Header-menuWrapper'} onClick={() => Router.back()}>
-          <ArrowBackIcon style={{ fill: white, verticalAlign: 'middle' }} />
-        </div>
-      ) : (
-        <div className={'Header-menuWrapper'} onClick={onClickHeaderLogo}>
-          <HomeIcon style={{ fill: white, verticalAlign: 'middle' }} />
-        </div>
-      )}
+    <div className={'Header-Content'}>
+      <div
+        className={`Header-SideIcon ${isHomeRoute ? 'hidden' : ''}`}
+        onClick={showBackArrow ? () => Router.back() : onClickHeaderLogo}
+      >
+        {showBackArrow ? (
+          <ArrowBackIcon style={IconStyle} />
+        ) : (
+          <HomeIcon style={IconStyle} />
+        )}
+      </div>
 
       <div className={'Header-svgWrapper'} onClick={onClickHeaderLogo}>
         <LogoTonic
@@ -83,9 +86,9 @@ const Header = ({
         />
       </div>
 
-      {showSearchTrigger && (
-        <div className={'Header-menuWrapper'} onClick={onClickSearch}>
-          <SearchIcon style={{ fill: white, verticalAlign: 'middle' }} />
+      {!isHomeRoute && (
+        <div className={'Header-SideIcon'} onClick={onClickSearch}>
+          <SearchIcon style={IconStyle} />
         </div>
       )}
     </div>

@@ -52,6 +52,10 @@ export default css`
     pointer-events: none;
   }
 
+  .hidden {
+    visibility: hidden;
+  }
+
   *,
   *:after,
   *:before {
