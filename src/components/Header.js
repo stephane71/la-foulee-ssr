@@ -1,6 +1,8 @@
 import Router from 'next/router';
 import css from 'styled-jsx/css';
 
+import IconWrapper from './IconWrapper';
+
 import LogoTonic from '../svgs/lafoulee-tonic.svg';
 import SearchIcon from '../svgs/ic_search_black_24px.svg';
 import ArrowBackIcon from '../svgs/ic_arrow_back_black_24px.svg';
@@ -10,6 +12,9 @@ import { getSpacing } from '../styles-variables';
 import { dominant, white } from '../colors';
 import { ICON_SIZE, HEIGHT_APPBAR, MAX_WIDTH } from '../enums';
 
+SearchIcon = IconWrapper(SearchIcon);
+ArrowBackIcon = IconWrapper(ArrowBackIcon);
+HomeIcon = IconWrapper(HomeIcon);
 /*
  * This calculation is based on this pattern:
  *  | Icon | Logo | Icon |
@@ -58,8 +63,6 @@ const style = css`
   }
 `;
 
-const IconStyle = { fill: white, verticalAlign: 'middle' };
-
 const Header = ({
   onClickHeaderLogo,
   onClickSearch,
@@ -72,11 +75,7 @@ const Header = ({
         className={`Header-SideIcon ${isHomeRoute ? 'hidden' : ''}`}
         onClick={showBackArrow ? () => Router.back() : onClickHeaderLogo}
       >
-        {showBackArrow ? (
-          <ArrowBackIcon style={IconStyle} />
-        ) : (
-          <HomeIcon style={IconStyle} />
-        )}
+        {showBackArrow ? <ArrowBackIcon /> : <HomeIcon />}
       </div>
 
       <div className={'Header-svgWrapper'} onClick={onClickHeaderLogo}>
@@ -88,7 +87,7 @@ const Header = ({
 
       {!isHomeRoute && (
         <div className={'Header-SideIcon'} onClick={onClickSearch}>
-          <SearchIcon style={IconStyle} />
+          <SearchIcon />
         </div>
       )}
     </div>
