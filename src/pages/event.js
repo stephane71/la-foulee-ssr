@@ -145,6 +145,7 @@ class EventPage extends React.PureComponent {
           desktop={desktop}
           isServer={isServer}
           onClickOrgaLink={this.handleClickOrgaLink}
+          path={path}
         />
 
         <style jsx>{style}</style>

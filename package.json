@@ -7,6 +7,7 @@
     "aws-api-gateway-client": "^0.2.15",
     "aws-sdk": "^2.275.1",
     "babel-plugin-inline-react-svg": "^0.5.3",
+    "clipboard": "^2.0.1",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "lodash.debounce": "^4.0.8",

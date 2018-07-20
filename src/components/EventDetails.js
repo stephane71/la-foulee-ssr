@@ -1,15 +1,22 @@
 import moment from 'moment';
 import css from 'styled-jsx/css';
-// import getConfig from 'next/config';
+import getConfig from 'next/config';
 
 import IconWrapper from './IconWrapper';
+import Share from './Share';
+import Button from './Button';
 
-import IconLocation from '../svgs/ic_location_on_white_24px.svg';
-import IconAgenda from '../svgs/ic_event_white_24px.svg';
+import IconLocation from '../svgs/outline-location_on-24px.svg';
+import IconAgenda from '../svgs/outline-event-24px.svg';
 
+import { APP_COLOR, APP_BACKGROUND_COLOR } from '../colors';
 import { getSpacing, getFontSize } from '../styles-variables';
-import { MAX_WIDTH, DATE_FORMAT, BORDER_RADIUS } from '../enums';
-import { dominant } from '../colors';
+import {
+  MAX_WIDTH,
+  DATE_FORMAT,
+  FACEBOOK_SHARE,
+  TWITTER_SHARE
+} from '../enums';
 
 IconLocation = IconWrapper(IconLocation);
 IconAgenda = IconWrapper(IconAgenda);
@@ -34,16 +41,20 @@ function getOrgaLink({ keyword, webSite = [], date }) {
 //   const BASE_URL = `https://maps.googleapis.com/maps/api/staticmap?size=${
 //     desktop ? desktopSize : mobileSize
 //   }&zoom=11&key=${GOOGLE_PLACES_API_KEY}`;
-//   return `${BASE_URL}&center=${encodeURI(city)},${department.isoCode}`;
+//   return `${BASE_URL}&center=${encodeURIComponent(city)},${department.isoCode}`;
 // }
 
 function buildGoogleMapURL({ place_id, city }) {
   const BASE_URL = 'https://www.google.com/maps/search/?api=1';
-  return `${BASE_URL}&query_place_id=${place_id}&query=${encodeURI(city)}`;
+  return `${BASE_URL}&query_place_id=${place_id}&query=${encodeURIComponent(
+    city
+  )}`;
 }
 
-// const { publicRuntimeConfig } = getConfig();
+const { publicRuntimeConfig } = getConfig();
+const APP_URL = publicRuntimeConfig.APP_URL;
 // const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
+
 const ICON_COLOR = '#B7C9C6';
 const EMPTY_VALUE = '-';
 
@@ -107,12 +118,32 @@ const style = css`
   }
 
   .EventDetails-DatumLocation {
-    white-space: pre;
-    color: initial;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 
-  .EventDetails-DatumLocation > .EventDetails-DatumValue {
+  .EventDetails-DatumLocation:hover {
+    background-color: ${APP_BACKGROUND_COLOR};
+  }
+
+  .EventDetails-DatumLocationMain {
+    white-space: pre;
+    color: ${APP_COLOR};
+  }
+
+  .EventDetails-DatumLocationMain > .EventDetails-DatumValue {
     font-style: inherit;
+  }
+
+  .EventDetails-DatumLocationAction {
+    color: ${APP_COLOR};
+    text-decoration-color: ${APP_COLOR};
+  }
+
+  .EventDetails-DatumLocationExtraText {
+    padding-right: ${getSpacing('xs')}px;
   }
 
   .EventDetails-DatumDate > .EventDetails-DatumValue {
@@ -122,6 +153,13 @@ const style = css`
   .EventDetails-Subtitle {
     font-weight: 400;
     font-size: ${getFontSize('l')}px;
+    margin: 0;
+  }
+
+  .EventDetails-Share {
+    padding: ${getSpacing('s')}px 0;
+    display: flex;
+    flex-direction: row;
   }
 
   @media (max-width: ${MAX_WIDTH}px) {
@@ -131,24 +169,28 @@ const style = css`
   }
 `;
 
-const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
+const EventDetails = ({ data, desktop, isServer, onClickOrgaLink, path }) => (
   <div className={'EventDetails'}>
     {/* HEADER */}
     <header className={`EventDetails-Header`}>
       <h1 className={`EventDetails-Title`}>{data.title}</h1>
     </header>
 
-    {/* DESCRIPTION */}
-    {data.info && <div className={'EventDetails-Description'}>{data.info}</div>}
-
     {/* GLOBAL INFO */}
     <div>
-      <a target={'_blank'} href={buildGoogleMapURL(data)}>
+      <a
+        target={'_blank'}
+        href={buildGoogleMapURL(data)}
+        className={'EventDetails-DatumLocationAction'}
+      >
         <div className={'EventDetails-Datum EventDetails-DatumLocation'}>
-          <IconLocation fill={ICON_COLOR} />
-          <address className={'EventDetails-DatumValue'}>{`${data.city}\n${
-            data.department.code
-          }, ${data.department.name}`}</address>
+          <div className={'EventDetails-DatumLocationMain'}>
+            <IconLocation fill={ICON_COLOR} />
+            <address className={'EventDetails-DatumValue'}>{`${data.city}\n${
+              data.department.code
+            }, ${data.department.name}`}</address>
+          </div>
+          <div className={'EventDetails-DatumLocationExtraText'}>{'carte'}</div>
         </div>
       </a>
 
@@ -166,9 +208,28 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
       </div>
     </div>
 
+    {/* SHARE */}
+    <h2 className={'EventDetails-Subtitle'}>{'Partager cet événement'}</h2>
+
+    <div className={'EventDetails-Share'}>
+      <Share dest={FACEBOOK_SHARE} url={`${APP_URL}${path}`} margin={false} />
+      <Share dest={TWITTER_SHARE} url={`${APP_URL}${path}`} />
+      <Button
+        theme={'light'}
+        size={'s'}
+        marginLeft
+        target={`${APP_URL}${path}`}
+      >
+        {'Copier le lien'}
+      </Button>
+    </div>
+
+    {/* DESCRIPTION */}
+    {data.info && <div className={'EventDetails-Description'}>{data.info}</div>}
+
     {/* ACTIVITIES */}
     <div>
-      <h2 className={'EventDetails-Subtitle'}>{'Épreuves'}</h2>
+      {/* <h2 className={'EventDetails-Subtitle'}>{'Épreuves'}</h2> */}
       {data.activities && data.activities.length ? (
         <table className={'Table'}>
           <thead className={'Table-Head'}>
@@ -212,7 +273,9 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
           onClick={() => onClickOrgaLink(data.keyword)}
           href={getOrgaLink(data)}
           target={'_blank'}
-          className={'Button Button--fixed'}
+          className={
+            'Button Button--fixed Button-Theme--dominant Button-Size--m'
+          }
         >{`Site de l'organisateur`}</a>
       </footer>
     )}
