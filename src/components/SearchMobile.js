@@ -8,6 +8,7 @@ import { getSpacing } from '../styles-variables';
 
 import Input, { KEYBOARD_NAV_UP, KEYBOARD_NAV_DOWN } from './Input';
 import List from './List';
+import IconWrapper from './IconWrapper';
 
 import GoogleMapsAutocomplete from './GoogleMapsAutocomplete';
 const GoogleMapInitServices = dynamic(import('./GoogleMapInitServices'), {
@@ -18,6 +19,10 @@ const GoogleMapInitServices = dynamic(import('./GoogleMapInitServices'), {
 import IconArrowBack from '../svgs/ic_arrow_back_black_24px.svg';
 import IconCross from '../svgs/baseline-clear-24px.svg';
 import IconNearMe from '../svgs/baseline-near_me-24px.svg';
+
+IconArrowBack = IconWrapper(IconArrowBack);
+IconCross = IconWrapper(IconCross);
+IconNearMe = IconWrapper(IconNearMe);
 
 const ListWrapper = ({ children }) => (
   <div className={`ListWrapper`}>
@@ -128,7 +133,7 @@ class SearchMobile extends React.PureComponent {
             className={'Search-Icon--paddingRight'}
             onClick={() => this.props.onLeave()}
           >
-            <IconArrowBack fill={white} style={{ verticalAlign: 'top' }} />
+            <IconArrowBack fill={white} />
           </div>
           <Input
             placeholder={'Sélectionner une ville'}
@@ -143,7 +148,7 @@ class SearchMobile extends React.PureComponent {
               className={'Search-Icon--paddingLeft'}
               onClick={this.handleInputReset}
             >
-              <IconCross fill={white} style={{ verticalAlign: 'top' }} />
+              <IconCross fill={white} />
             </div>
           )}
         </div>
@@ -154,14 +159,8 @@ class SearchMobile extends React.PureComponent {
               list={[{ value: 'Votre position', Icon: IconNearMe }]}
               renderItem={({ value, Icon }) => (
                 <div>
-                  <Icon
-                    style={{
-                      fill: SECONDARY_COLOR,
-                      verticalAlign: 'top',
-                      marginRight: getSpacing('s')
-                    }}
-                  />
-                  <span>{value}</span>
+                  <Icon fill={SECONDARY_COLOR} />
+                  <span style={{ paddingLeft: getSpacing('xs') }}>{value}</span>
                 </div>
               )}
               onClick={this.handleClickUserPosition}

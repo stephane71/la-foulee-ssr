@@ -1,6 +1,8 @@
 import Router from 'next/router';
 import css from 'styled-jsx/css';
 
+import IconWrapper from './IconWrapper';
+
 import LogoTonic from '../svgs/lafoulee-tonic.svg';
 import SearchIcon from '../svgs/ic_search_black_24px.svg';
 import ArrowBackIcon from '../svgs/ic_arrow_back_black_24px.svg';
@@ -10,6 +12,9 @@ import { getSpacing } from '../styles-variables';
 import { dominant, white } from '../colors';
 import { ICON_SIZE, HEIGHT_APPBAR, MAX_WIDTH } from '../enums';
 
+SearchIcon = IconWrapper(SearchIcon);
+ArrowBackIcon = IconWrapper(ArrowBackIcon);
+HomeIcon = IconWrapper(HomeIcon);
 /*
  * This calculation is based on this pattern:
  *  | Icon | Logo | Icon |
@@ -30,7 +35,7 @@ const style = css`
     background-color: ${dominant};
   }
 
-  .Header-content {
+  .Header-Content {
     padding: 0 ${getSpacing(`s`)}px;
     height: 100%;
     display: flex;
@@ -39,11 +44,11 @@ const style = css`
     margin: 0 auto;
   }
 
-  .Header-menuWrapper {
+  .Header-SideIcon {
     padding: 0 ${getSpacing(`s`)}px;
   }
 
-  .Header-menuWrapper:hover {
+  .Header-SideIcon:hover {
     cursor: pointer;
   }
 
@@ -61,20 +66,17 @@ const style = css`
 const Header = ({
   onClickHeaderLogo,
   onClickSearch,
-  showSearchTrigger,
-  showBackArrow
+  showBackArrow,
+  isHomeRoute
 }) => (
   <div className={'Header'}>
-    <div className={'Header-content'}>
-      {showBackArrow ? (
-        <div className={'Header-menuWrapper'} onClick={() => Router.back()}>
-          <ArrowBackIcon style={{ fill: white, verticalAlign: 'middle' }} />
-        </div>
-      ) : (
-        <div className={'Header-menuWrapper'} onClick={onClickHeaderLogo}>
-          <HomeIcon style={{ fill: white, verticalAlign: 'middle' }} />
-        </div>
-      )}
+    <div className={'Header-Content'}>
+      <div
+        className={`Header-SideIcon ${isHomeRoute ? 'hidden' : ''}`}
+        onClick={showBackArrow ? () => Router.back() : onClickHeaderLogo}
+      >
+        {showBackArrow ? <ArrowBackIcon /> : <HomeIcon />}
+      </div>
 
       <div className={'Header-svgWrapper'} onClick={onClickHeaderLogo}>
         <LogoTonic
@@ -83,9 +85,9 @@ const Header = ({
         />
       </div>
 
-      {showSearchTrigger && (
-        <div className={'Header-menuWrapper'} onClick={onClickSearch}>
-          <SearchIcon style={{ fill: white, verticalAlign: 'middle' }} />
+      {!isHomeRoute && (
+        <div className={'Header-SideIcon'} onClick={onClickSearch}>
+          <SearchIcon />
         </div>
       )}
     </div>

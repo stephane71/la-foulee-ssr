@@ -2,6 +2,8 @@ import moment from 'moment';
 import css from 'styled-jsx/css';
 // import getConfig from 'next/config';
 
+import IconWrapper from './IconWrapper';
+
 import IconLocation from '../svgs/ic_location_on_white_24px.svg';
 import IconAgenda from '../svgs/ic_event_white_24px.svg';
 
@@ -9,8 +11,8 @@ import { getSpacing, getFontSize } from '../styles-variables';
 import { MAX_WIDTH, DATE_FORMAT, BORDER_RADIUS } from '../enums';
 import { dominant } from '../colors';
 
-// const { publicRuntimeConfig } = getConfig();
-// const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
+IconLocation = IconWrapper(IconLocation);
+IconAgenda = IconWrapper(IconAgenda);
 
 function formatDistance(value) {
   if (!value) return value;
@@ -40,6 +42,8 @@ function buildGoogleMapURL({ place_id, city }) {
   return `${BASE_URL}&query_place_id=${place_id}&query=${encodeURI(city)}`;
 }
 
+// const { publicRuntimeConfig } = getConfig();
+// const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
 const ICON_COLOR = '#B7C9C6';
 const EMPTY_VALUE = '-';
 
@@ -141,7 +145,7 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
     <div>
       <a target={'_blank'} href={buildGoogleMapURL(data)}>
         <div className={'EventDetails-Datum EventDetails-DatumLocation'}>
-          <IconLocation style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
+          <IconLocation fill={ICON_COLOR} />
           <address className={'EventDetails-DatumValue'}>{`${data.city}\n${
             data.department.code
           }, ${data.department.name}`}</address>
@@ -149,7 +153,7 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
       </a>
 
       <div className={'EventDetails-Datum EventDetails-DatumDate'}>
-        <IconAgenda style={{ fill: ICON_COLOR, verticalAlign: 'middle' }} />
+        <IconAgenda fill={ICON_COLOR} />
         <div className={'EventDetails-DatumValue'}>
           {moment
             .unix(data.date)
