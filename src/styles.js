@@ -16,8 +16,17 @@ import {
   P,
   LISTS
 } from './styles-variables';
-import { TABLE_BORDER_COLOR, APP_BACKGROUND_COLOR, dominant } from './colors';
+import {
+  APP_COLOR,
+  TABLE_BORDER_COLOR,
+  APP_BACKGROUND_COLOR,
+  dominant,
+  white,
+  getColor
+} from './colors';
 import { HEIGHT_APPBAR } from './enums';
+
+const BUTTON_BORDER_RADIUS = 24;
 
 export default css`
   html,
@@ -33,7 +42,7 @@ export default css`
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto',
       'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans',
       'Helvetica Neue', sans-serif;
-    color: #3a3d42;
+    color: ${APP_COLOR};
   }
 
   #__next {
@@ -118,36 +127,51 @@ export default css`
   }
 
   .Button {
-    background: ${dominant};
-    color: #F4F5F7;
-    text-transform: uppercase;
-    font-size: ${getFontSize('s')}px;
-    padding: ${getSpacing('s')}px ${getSpacing('m')}px;
     text-decoration: none;
-    border-radius 24px;
+    border-radius ${BUTTON_BORDER_RADIUS}px;
     outline: none;
   }
 
-  .Button--fixed {
-    box-shadow: 0 10px 20px 0 rgba(38,74,67,0.05);
+  .Button:hover {
+    cursor: pointer;
   }
 
-  .Button--square,
-  .Button--circle {
+  .Button:active {
+    background-color: ${getColor('lightGrey', 'tonic')};
+  }
+
+  .Button-Theme--light {
+    background: ${white};
+    color: ${getColor('darkGrey', 'tonic')};
+    border: 1px solid ${getColor('darkGrey', 'tonic')};
+  }
+
+  .Button-Theme--dominant {
+    text-transform: uppercase;
+    background: ${dominant};
+    color: ${white};
+  }
+
+  .Button-Size--s {
+    font-size: ${getFontSize('xs')}px;
+    padding: ${getSpacing('xs')}px ${getSpacing('s')}px;
+  }
+
+  .Button-Size--m {
+    font-size: ${getFontSize('s')}px;
+    padding: ${getSpacing('s')}px ${getSpacing('m')}px;
+  }
+
+  .Button--fixed {
+    box-shadow: 0 10px 20px 0 rgba(38, 74, 67, 0.05);
+  }
+
+  .Button--square{
     padding: ${getSpacing('s')}px;
   }
 
   .Button--flat {
     background: none;
-  }
-
-  .Button--circle {
-    border-radius: 50%;
-  }
-
-  .Overlay-closeButton {
-    background: #0c1715;
-    cursor: pointer;
   }
 
   .List {
