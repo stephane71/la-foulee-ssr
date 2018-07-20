@@ -185,9 +185,7 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink, path }) => (
       >
         <div className={'EventDetails-Datum EventDetails-DatumLocation'}>
           <div className={'EventDetails-DatumLocationMain'}>
-            <IconLocation
-              style={{ fill: ICON_COLOR, verticalAlign: 'middle' }}
-            />
+            <IconLocation fill={ICON_COLOR} />
             <address className={'EventDetails-DatumValue'}>{`${data.city}\n${
               data.department.code
             }, ${data.department.name}`}</address>
