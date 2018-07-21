@@ -17,6 +17,7 @@ import { pageview, event } from '../utils/gtag';
 import { DESKTOP, NO_EVENT_SELECTED } from '../enums';
 import { EVENT_NOT_FOUND } from '../errors';
 import { white } from '../colors';
+import { setSelectedEvent } from '../actions';
 
 const { publicRuntimeConfig } = getConfig();
 const APP_URL = publicRuntimeConfig.APP_URL;
@@ -82,6 +83,11 @@ class EventPage extends React.PureComponent {
   }
 
   componentDidMount() {
+    const { eventServerSide, eventStored } = this.props;
+    if (eventServerSide && !eventStored) {
+      this.props.dispatch(setSelectedEvent(eventServerSide));
+    }
+
     Router.prefetch('/events');
 
     this.setState({ desktop: this.props.media === DESKTOP, isServer: false });
