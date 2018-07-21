@@ -2,7 +2,7 @@ import css from 'styled-jsx/css';
 
 import IconWrapper from './IconWrapper';
 
-import IconLocation from '../svgs/ic_location_on_white_24px.svg';
+import IconLocation from '../svgs/baseline-location_on-24px.svg';
 
 import { getSpacing } from '../styles-variables';
 import { dominant, white, getColor } from '../colors';
