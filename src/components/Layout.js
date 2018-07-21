@@ -9,6 +9,7 @@ import Overlay from './Overlay';
 import SearchMobile from './SearchMobile';
 import withGoogleMaps from './withGoogleMaps';
 import LayoutError from './LayoutError';
+import Loader from './Loader';
 
 import getUserLocation from '../utils/getUserLocation';
 import getGeohash from '../utils/geohash';
@@ -40,6 +41,16 @@ const style = css`
   .PagesWrapper {
     width: 100%;
     max-width: ${MAX_WIDTH}px;
+  }
+
+  .LoaderWrapper {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: ${MAX_WIDTH}px;
+    z-index: 10;
+    background-color: transparent;
   }
 `;
 
@@ -90,7 +101,13 @@ class Layout extends React.PureComponent {
   }
 
   render() {
-    const { currentRoute, query, children, searching } = this.props;
+    const {
+      currentRoute,
+      query,
+      children,
+      searching,
+      searchingGeohash
+    } = this.props;
     const { scrollingElement, city } = this.state;
 
     return (
@@ -104,7 +121,9 @@ class Layout extends React.PureComponent {
 
         <div
           ref={e => this.setState({ scrollingElement: e })}
-          className={'ScrollWrapper'}
+          className={`ScrollWrapper ${
+            searchingGeohash ? 'prevent-scroll' : ''
+          }`}
         >
           <ScrollElementContext.Provider value={scrollingElement}>
             <SelectedCityContext.Provider value={city}>
@@ -130,6 +149,12 @@ class Layout extends React.PureComponent {
             onSelectLocation={this.handleSelectLocation}
             onLeave={this.handleToggleSearch}
           />
+        )}
+
+        {searchingGeohash && (
+          <div className={'LoaderWrapper'}>
+            <Loader />
+          </div>
         )}
 
         <style jsx>{style}</style>
@@ -226,7 +251,8 @@ class Layout extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    searching: state.searching
+    searching: state.searching,
+    searchingGeohash: state.searchingGeohash
   };
 }
 
