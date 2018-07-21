@@ -54,7 +54,10 @@ class Events extends React.PureComponent {
   componentWillReceiveProps(nextProps) {
     if (nextProps.query.position !== this.props.query.position) {
       this.fetchEvents(nextProps.query.position);
+    } else {
+      this.setState({ loading: false });
     }
+
     if (nextProps.searchingGeohash && !this.props.searchingGeohash) {
       this.setState({ loading: true });
     }
