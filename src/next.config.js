@@ -1,5 +1,5 @@
 const ENV_FILE =
-  process.env.NODE_ENV === 'local'
+  process.env.LA_FOULEE_ENV === 'local'
     ? `.env.local`
     : `.env.${process.env.LA_FOULEE_ENV}`;
 require('dotenv').config({ path: ENV_FILE });
@@ -21,22 +21,17 @@ console.log(
   process.env.LA_FOULEE_ENV
 );
 
-const LOCAL_APP_URL = 'http://localhost:3000';
-const DEV_APP_URL = 'https://dev.la-foulee.com';
-const APP_URL = 'https://www.la-foulee.com';
+const assetPrefix =
+  process.env.NODE_ENV === 'production' && process.env.LA_FOULEE_ENV !== 'local'
+    ? process.env.ASSETS_URL
+    : '';
 
 module.exports = (phase, { defaultConfig }) => {
-  // useFileSystemPublicRoutes: false
-
   return {
-    assetPrefix:
-      process.env.NODE_ENV === 'production' ? process.env.ASSETS_URL : '',
+    assetPrefix,
 
     publicRuntimeConfig: {
-      APP_URL:
-        process.env.NODE_ENV === 'local'
-          ? LOCAL_APP_URL
-          : process.env.LA_FOULEE_ENV === 'dev' ? DEV_APP_URL : APP_URL,
+      APP_URL: process.env.APP_URL,
       ASSETS_URL: process.env.ASSETS_URL,
       API_URL: process.env.API_URL,
       AWS_API_REGION: process.env.AWS_API_REGION,

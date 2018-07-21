@@ -4,7 +4,8 @@ console.log('----------------------------------');
 
 console.log('NODE_ENV', process.env.NODE_ENV);
 
-require('dotenv').config({ path: `.env.server.${process.env.LA_FOULEE_ENV}` });
+const env = process.env.LA_FOULEE_ENV === 'local' ? 'dev' : process.env.LA_FOULEE_ENV
+require('dotenv').config({ path: `.env.server.${env}` });
 
 const express = require('express');
 const next = require('next');

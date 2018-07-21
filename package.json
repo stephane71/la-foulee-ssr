@@ -30,8 +30,8 @@
   "scripts": {
     "start": "NODE_ENV=$NODE_ENV LA_FOULEE_ENV=$LA_FOULEE_ENV node server.js",
     "build": "NODE_ENV=$NODE_ENV LA_FOULEE_ENV=$LA_FOULEE_ENV next build src",
-    "local:dev": "NODE_ENV=local LA_FOULEE_ENV=dev npm run build && NODE_ENV=local LA_FOULEE_ENV=dev npm start",
-    "local:production": "NODE_ENV=production LA_FOULEE_ENV=dev npm run build && NODE_ENV=production LA_FOULEE_ENV=dev npm start",
+    "local:dev": "NODE_ENV=dev LA_FOULEE_ENV=local npm run build && NODE_ENV=dev LA_FOULEE_ENV=local npm start",
+    "local:production": "NODE_ENV=production LA_FOULEE_ENV=local npm run build && NODE_ENV=production LA_FOULEE_ENV=local npm start",
     "create-zip:dev": "zip ../la-foulee-ssr -r * .[^.]* -x node_modules/**\\* internals/sitemapBuilder.js internals/.env .gitignore .git/**\\* *.production *.local *.DS_Store -D",
     "create-zip:production": "zip ../la-foulee-ssr -r * .[^.]* -x node_modules/**\\* internals/sitemapBuilder.js internals/.env .gitignore .git/**\\* *.dev *.local *.DS_Store -D",
     "analyze": "cross-env ANALYZE=1 NODE_ENV=dev LA_FOULEE_ENV=dev npm run build"
