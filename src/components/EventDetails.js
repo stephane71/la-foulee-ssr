@@ -5,6 +5,7 @@ import getConfig from 'next/config';
 import IconWrapper from './IconWrapper';
 import Share from './Share';
 import Button from './Button';
+import withClipboard from './withClipboard';
 
 import IconLocation from '../svgs/outline-location_on-24px.svg';
 import IconAgenda from '../svgs/outline-event-24px.svg';
@@ -20,6 +21,8 @@ import {
 
 IconLocation = IconWrapper(IconLocation);
 IconAgenda = IconWrapper(IconAgenda);
+
+const ButtonWithClipboard = withClipboard(Button);
 
 function formatDistance(value) {
   if (!value) return value;
@@ -214,14 +217,14 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink, path }) => (
     <div className={'EventDetails-Share'}>
       <Share dest={FACEBOOK_SHARE} url={`${APP_URL}${path}`} margin={false} />
       <Share dest={TWITTER_SHARE} url={`${APP_URL}${path}`} />
-      <Button
+      <ButtonWithClipboard
         theme={'light'}
         size={'s'}
         marginLeft
         target={`${APP_URL}${path}`}
       >
         {'Copier le lien'}
-      </Button>
+      </ButtonWithClipboard>
     </div>
 
     {/* DESCRIPTION */}

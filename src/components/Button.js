@@ -1,23 +1,6 @@
-import ClipboardJS from 'clipboard';
-
 import { getSpacing } from '../styles-variables';
 
 class Button extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.button = React.createRef();
-  }
-
-  componentDidMount() {
-    if (this.props.target) {
-      this.button.current.setAttribute(
-        'data-clipboard-text',
-        this.props.target
-      );
-      new ClipboardJS('.CopyButton');
-    }
-  }
-
   render() {
     const {
       children,
@@ -25,15 +8,13 @@ class Button extends React.PureComponent {
       theme,
       size = 'm',
       marginLeft = false,
-      target
+      forwardedRef
     } = this.props;
 
     return (
       <button
-        ref={this.button}
-        className={`Button Button-Theme--${theme} Button-Size--${size} ${
-          target ? 'CopyButton' : ''
-        }`}
+        ref={forwardedRef}
+        className={`Button Button-Theme--${theme} Button-Size--${size}`}
         onClick={onClick}
       >
         {children}
@@ -47,4 +28,7 @@ class Button extends React.PureComponent {
   }
 }
 
-export default Button;
+// export default Button;
+export default React.forwardRef((props, ref) => {
+  return <Button {...props} forwardedRef={ref} />;
+});
