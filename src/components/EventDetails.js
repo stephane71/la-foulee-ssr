@@ -7,17 +7,6 @@ import EventDetailsFooter from './EventDetailsFooter';
 
 import { getSpacing, getFontSize } from '../styles-variables';
 
-// function buildGoogleMapStaticImage({ city, department }, desktop) {
-//   const mobileSize = '300x100';
-//   const desktopSize = '600x200';
-//   const BASE_URL = `https://maps.googleapis.com/maps/api/staticmap?size=${
-//     desktop ? desktopSize : mobileSize
-//   }&zoom=11&key=${GOOGLE_PLACES_API_KEY}`;
-//   return `${BASE_URL}&center=${encodeURIComponent(city)},${department.isoCode}`;
-// }
-
-// const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
-
 const style = css`
   .EventDetails {
     position: relative;
@@ -64,7 +53,11 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink, path }) => (
 
     {/* GLOBAL INFO */}
     <div className={'EventDetails-Info'}>
-      <EventDetailsGlobalInfo data={data} />
+      <EventDetailsGlobalInfo
+        data={data}
+        desktop={desktop}
+        isServer={isServer}
+      />
     </div>
 
     {/* SHARE */}

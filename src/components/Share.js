@@ -1,5 +1,8 @@
-import Facebook from '../svgs/facebook.svg';
-import Twitter from '../svgs/twitter.svg';
+import FacebookIcon from '../svgs/facebook.svg';
+import TwitterIcon from '../svgs/twitter.svg';
+
+// import FacebookIcon from '../svgs/facebook-f-brands.svg';
+// import TwitterIcon from '../svgs/twitter-brands.svg';
 
 import { facebook, twitter } from '../utils/shareLinks';
 
@@ -20,9 +23,9 @@ function getSharedLink({ dest, url }) {
 function getImage(dest) {
   switch (dest) {
     case FACEBOOK_SHARE:
-      return Facebook;
+      return FacebookIcon;
     case TWITTER_SHARE:
-      return Twitter;
+      return TwitterIcon;
     default:
       return '';
   }
@@ -32,6 +35,8 @@ function handleShareWindow(dest, url) {
   window.open(getSharedLink({ dest, url }), 'sharer', 'width=626,height=436');
 }
 
+// Based on the height of the button ButtonWithClipboard
+// see EventDetailsShare component
 const ICON_SIZE = 42;
 
 const Share = ({ dest, url, margin = true }) => {
@@ -39,7 +44,7 @@ const Share = ({ dest, url, margin = true }) => {
 
   return (
     <div className={'Share'} onClick={() => handleShareWindow(dest, url)}>
-      <ShareSVG />
+      <ShareSVG height={'100%'} width={'100%'} />
       <style jsx>{`
         .Share {
           height: ${ICON_SIZE}px;

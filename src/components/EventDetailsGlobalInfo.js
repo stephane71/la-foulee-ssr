@@ -1,4 +1,5 @@
 import css from 'styled-jsx/css';
+// import getConfig from 'next/config';
 import moment from 'moment';
 
 import IconWrapper from './IconWrapper';
@@ -20,6 +21,18 @@ function buildGoogleMapURL({ place_id, city }) {
   )}`;
 }
 
+// function buildGoogleMapStaticImage({ city, department }, desktop) {
+//   const mobileSize = '300x100';
+//   const desktopSize = '600x200';
+//
+//   const BASE_URL = `https://maps.googleapis.com/maps/api/staticmap?size=${
+//     desktop ? desktopSize : mobileSize
+//   }&zoom=12&key=${GOOGLE_PLACES_API_KEY}`;
+//   return `${BASE_URL}&center=${encodeURIComponent(city)},${department.isoCode}`;
+// }
+
+// const { publicRuntimeConfig } = getConfig();
+// const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
 const ICON_COLOR = '#B7C9C6';
 
 const style = css`
@@ -67,8 +80,21 @@ const style = css`
   }
 `;
 
-const EventDetailsGlobalInfo = ({ data }) => (
+const EventDetailsGlobalInfo = ({ data, desktop, isServer }) => (
   <div>
+    <div className={'EventDetails-Datum EventDetails-DatumDate'}>
+      <IconAgenda fill={ICON_COLOR} />
+      <div className={'EventDetails-DatumValue'}>
+        {moment
+          .unix(data.date)
+          // WARNING: lazy fix to not have to deal with utc offset
+          // The server may have a utc offset of 0 => moment display the day before in ssr
+          // To see it add {moment().utcOffset()}
+          .add(12, 'hours')
+          .format(DATE_FORMAT)}
+      </div>
+    </div>
+
     <a
       target={'_blank'}
       href={buildGoogleMapURL(data)}
@@ -83,20 +109,12 @@ const EventDetailsGlobalInfo = ({ data }) => (
         </div>
         <div className={'EventDetails-DatumLocationExtraText'}>{'carte'}</div>
       </div>
+      {/* <div>
+        {!isServer && (
+          <img src={buildGoogleMapStaticImage(data, desktop)} width={'100%'} />
+        )}
+      </div> */}
     </a>
-
-    <div className={'EventDetails-Datum EventDetails-DatumDate'}>
-      <IconAgenda fill={ICON_COLOR} />
-      <div className={'EventDetails-DatumValue'}>
-        {moment
-          .unix(data.date)
-          // WARNING: lazy fix to not have to deal with utc offset
-          // The server may have a utc offset of 0 => moment display the day before in ssr
-          // To see it add {moment().utcOffset()}
-          .add(12, 'hours')
-          .format(DATE_FORMAT)}
-      </div>
-    </div>
 
     <style jsx>{style}</style>
   </div>
