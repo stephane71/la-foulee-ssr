@@ -140,6 +140,13 @@ export default css`
     background-color: ${getColor('lightGrey', 'tonic')};
   }
 
+  .Button-Theme--none {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    background: ${white};
+  }
+
   .Button-Theme--light {
     background: ${white};
     color: ${getColor('darkGrey', 'tonic')};

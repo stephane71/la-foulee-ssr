@@ -6,15 +6,16 @@ class Button extends React.PureComponent {
       children,
       onClick,
       theme,
-      size = 'm',
+      size,
       marginLeft = false,
       forwardedRef
     } = this.props;
 
+    const buttonSize = size ? `Button-Size--${size}` : '';
     return (
       <button
         ref={forwardedRef}
-        className={`Button Button-Theme--${theme} Button-Size--${size}`}
+        className={`Button Button-Theme--${theme} ${buttonSize}`}
         onClick={onClick}
       >
         {children}
@@ -28,7 +29,6 @@ class Button extends React.PureComponent {
   }
 }
 
-// export default Button;
 export default React.forwardRef((props, ref) => {
   return <Button {...props} forwardedRef={ref} />;
 });
