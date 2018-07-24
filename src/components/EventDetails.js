@@ -62,8 +62,10 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink, path }) => (
 
     {/* SHARE */}
     <div className={'EventDetails-ShareEvent'}>
-      <h2 className={'EventDetails-Subtitle'}>{'Partager cet événement'}</h2>
-      <EventDetailsShare data={data} path={path} />
+      {/* <h2 className={'EventDetails-Subtitle'}>{'Partager cet événement'}</h2> */}
+      {!isServer && (
+        <EventDetailsShare data={data} path={path} desktop={desktop} />
+      )}
     </div>
 
     {/* DESCRIPTION */}

@@ -3,3 +3,8 @@ export const facebook = url =>
 
 export const twitter = url =>
   `https://twitter.com/home?status=${encodeURIComponent(url)}`;
+
+export const whatsapp = url =>
+  `whatsapp://send?text=${encodeURIComponent(url)}`;
+
+export const mailto = url => `mailto:?body=${encodeURIComponent(url)}`;

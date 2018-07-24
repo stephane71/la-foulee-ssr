@@ -34,3 +34,6 @@ export const TIMEOUT = 'TIMEOUT';
 
 export const FACEBOOK_SHARE = 'FACEBOOK_SHARE';
 export const TWITTER_SHARE = 'TWITTER_SHARE';
+export const LINK_SHARE = 'LINK_SHARE';
+export const WHATSAPP = 'WHATSAPP';
+export const MAILTO = 'MAILTO';

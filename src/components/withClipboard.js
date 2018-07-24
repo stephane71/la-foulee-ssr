@@ -1,7 +1,7 @@
 import ClipboardJS from 'clipboard';
 
 import { getSpacing } from '../styles-variables';
-import { getColor, white, dominant } from '../colors';
+import { getColor, white } from '../colors';
 import { BORDER_RADIUS, HEIGHT_APPBAR } from '../enums';
 
 const InfoCopied = () => (
@@ -13,6 +13,7 @@ const InfoCopied = () => (
         background-color: ${getColor('darkGrey', 'tonic')};
         color: ${white};
         border-radius: ${BORDER_RADIUS}px;
+        // animation: 0.1s linear appear;
       }
 
       .InfoCopied-Layout {
@@ -20,6 +21,15 @@ const InfoCopied = () => (
         top: ${HEIGHT_APPBAR + 10}px;
         left: 50%;
         transform: translateX(-50%);
+      }
+
+      @keyframes appear {
+        from {
+          bottom: 30%;
+        }
+        to {
+          bottom: 50%;
+        }
       }
     `}</style>
   </div>
