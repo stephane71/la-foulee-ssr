@@ -4,6 +4,7 @@ import EventDetailsGlobalInfo from './EventDetailsGlobalInfo';
 import EventDetailsShare from './EventDetailsShare';
 import EventDetailsActivities from './EventDetailsActivities';
 import EventDetailsFooter from './EventDetailsFooter';
+import { SHARE_ICON_HEIGHT } from './Share';
 
 import { getSpacing, getFontSize } from '../styles-variables';
 
@@ -24,6 +25,10 @@ const style = css`
 
   .EventDetails-Header {
     margin-bottom: ${getSpacing('m')}px;
+  }
+
+  .EventDetails-ShareEvent {
+    height: ${SHARE_ICON_HEIGHT}px;
   }
 
   .EventDetails-Description {

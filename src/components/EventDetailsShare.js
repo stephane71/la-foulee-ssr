@@ -45,8 +45,8 @@ const EventDetailsShare = ({ data, path, desktop }) => {
       <Share dest={TWITTER_SHARE} url={url} />
       {!desktop && <Share dest={WHATSAPP} url={url} />}
       <Share dest={MAILTO} url={url} />
-      <ButtonWithClipboard theme={'none'} target={`${APP_URL}${path}`}>
-        <Share dest={LINK_SHARE} url={url} lockOnClick />
+      <ButtonWithClipboard theme={'none'} target={url}>
+        <Share dest={LINK_SHARE} lockOnClick />
       </ButtonWithClipboard>
 
       <style jsx>{style}</style>

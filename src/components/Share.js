@@ -59,6 +59,7 @@ function handleShareWindow(dest, url) {
 // Based on the height of the button ButtonWithClipboard
 // see EventDetailsShare component
 const ICON_SIZE = 42;
+export const SHARE_ICON_HEIGHT = ICON_SIZE + getSpacing('xs');
 
 const Share = ({ dest, url, margin = true, lockOnClick }) => {
   const ShareSVG = getImage(dest);
