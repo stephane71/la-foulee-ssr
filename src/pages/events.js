@@ -93,13 +93,13 @@ class Events extends React.PureComponent {
           <meta name={'twitter:card'} content={'summary'} />
           <meta name={'twitter:site'} content={'@_LaFoulee'} />
           <meta name={'twitter:title'} content={title} />
-          <meta name={'twitter:description'} content={description} />
+          {/* <meta name={'twitter:description'} content={description} /> */}
           <meta name={'twitter:image'} content={imageTwitter} />
 
           {/* OPEN GRAPH */}
           <meta property={'og:url'} content={`${APP_URL}${path}`} />
-          <meta property={'og:title'} content={event.title} />
-          <meta property={'og:description'} content={description} />
+          <meta property={'og:title'} content={title} />
+          {/* <meta property={'og:description'} content={description} /> */}
           <meta property={'og:image'} content={imageFB} />
         </Head>
 
