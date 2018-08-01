@@ -48,8 +48,8 @@ class MyApp extends App {
             <Layout query={router.query || {}} currentRoute={router.asPath}>
               <Component
                 {...pageProps}
-                getEvent={this.props.getEvent}
                 getEventListAround={this.props.getEventListAround}
+                postNewsletterEmail={this.props.postNewsletterEmail}
                 query={router.query || {}}
                 path={router.asPath}
               />
@@ -63,6 +63,8 @@ class MyApp extends App {
   nextExportBuffer = null;
 }
 
-export default compose(withRedux(makeStore), withCredentials, withEventAPI)(
-  MyApp
-);
+export default compose(
+  withRedux(makeStore),
+  withCredentials,
+  withEventAPI
+)(MyApp);

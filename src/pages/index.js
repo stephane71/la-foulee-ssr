@@ -71,6 +71,7 @@ class Index extends React.PureComponent {
         </Head>
 
         <HomePage
+          postNewsletterEmail={this.props.postNewsletterEmail}
           onClick={this.handleSearchCityToggle}
           desktop={media === DESKTOP}
         />

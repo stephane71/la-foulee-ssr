@@ -1,6 +1,7 @@
 import css from 'styled-jsx/css';
 
 import IconWrapper from './IconWrapper';
+import NewsletterForm from './NewsletterForm';
 
 import IconLocation from '../svgs/baseline-location_on-24px.svg';
 
@@ -47,6 +48,11 @@ export class HomePage extends React.PureComponent {
             </div>
           </h1>
           <InputHome onClick={onClick} />
+        </div>
+        <div className={`HomePage-Main `}>
+          <NewsletterForm
+            postNewsletterEmail={this.props.postNewsletterEmail}
+          />
         </div>
 
         <style jsx>{style}</style>

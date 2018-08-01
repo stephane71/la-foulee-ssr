@@ -35,6 +35,9 @@ const withCredentials = WrappedComponent => {
 
     async getCredentials(clearCache) {
       let credentials;
+
+      if (!this.needsRefresh()) return this.credentials;
+
       try {
         credentials = await asyncGetCredentials(clearCache);
         this.credentials = credentials;

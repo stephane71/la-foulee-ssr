@@ -1,14 +1,25 @@
 import apigClientFactory from 'aws-api-gateway-client';
 import getConfig from 'next/config';
 
-import { getEventArgs, getAroundEventListArgs } from '../api';
+import { getAroundEventListArgs, postNewsletterEmailArgs } from '../api';
 
 const { publicRuntimeConfig } = getConfig();
-const { API_URL, AWS_API_REGION } = publicRuntimeConfig;
+const {
+  EVENT_API_URL,
+  NEWSLETTER_API_URL,
+  AWS_API_REGION
+} = publicRuntimeConfig;
 
-function getAPIGatewayClient(credentials) {
+const EVENT_API = 'event';
+const NEWSLETTER_API = 'newsletter';
+const API_NAME_TO_URL = {
+  [EVENT_API]: EVENT_API_URL,
+  [NEWSLETTER_API]: NEWSLETTER_API_URL
+};
+
+function getAPIGatewayClient(name, credentials) {
   return apigClientFactory.newClient({
-    invokeUrl: API_URL,
+    invokeUrl: API_NAME_TO_URL[name],
     region: AWS_API_REGION,
     accessKey: credentials.accessKeyId,
     secretKey: credentials.secretAccessKey,
@@ -29,41 +40,41 @@ const withEventAPI = WrappedComponent => {
     constructor(...args) {
       super(...args);
 
-      this.getAPI = this.getAPI.bind(this);
-      this.getEvent = this.getEvent.bind(this);
       this.getEventListAround = this.getEventListAround.bind(this);
+      this.postNewsletterEmail = this.postNewsletterEmail.bind(this);
     }
 
     render() {
       return (
         <WrappedComponent
-          getEvent={this.getEvent}
           getEventListAround={this.getEventListAround}
+          postNewsletterEmail={this.postNewsletterEmail}
           {...this.props}
         />
       );
     }
 
-    api = null;
+    api = {};
 
-    async getAPI() {
-      if (!this.api || this.props.credentialsNeedsRefresh()) {
+    async getAPI(name) {
+      let api = this.api[name];
+      if (!api || this.props.credentialsNeedsRefresh()) {
         let credentials = await this.props.getCredentials();
-        this.api = getAPIGatewayClient(credentials);
+        this.api[name] = getAPIGatewayClient(name, credentials);
       }
 
-      return this.api;
-    }
-
-    async getEvent(strideID) {
-      let api = await this.getAPI();
-      const args = getEventArgs(strideID);
-      return await api.invokeApi(...args).then(res => res.data);
+      return this.api[name];
     }
 
     async getEventListAround(geohash) {
-      let api = await this.getAPI();
+      let api = await this.getAPI(EVENT_API);
       const args = getAroundEventListArgs(geohash);
+      return await api.invokeApi(...args).then(res => res.data);
+    }
+
+    async postNewsletterEmail(email) {
+      let api = await this.getAPI(NEWSLETTER_API);
+      const args = postNewsletterEmailArgs(email);
       return await api.invokeApi(...args).then(res => res.data);
     }
   };

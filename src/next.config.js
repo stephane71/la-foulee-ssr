@@ -33,7 +33,8 @@ module.exports = (phase, { defaultConfig }) => {
     publicRuntimeConfig: {
       APP_URL: process.env.APP_URL,
       ASSETS_URL: process.env.ASSETS_URL,
-      API_URL: process.env.API_URL,
+      EVENT_API_URL: process.env.EVENT_API_URL,
+      NEWSLETTER_API_URL: process.env.NEWSLETTER_API_URL,
       AWS_API_REGION: process.env.AWS_API_REGION,
       IDENTITY_POOL_ID: process.env.IDENTITY_POOL_ID,
       GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY,
