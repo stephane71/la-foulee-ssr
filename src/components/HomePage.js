@@ -22,6 +22,7 @@ const style = css`
     padding: 0 ${getSpacing('s')}px;
     padding-top: ${getSpacing('l')}px;
     margin: 0 auto;
+    margin-bottom: ${getSpacing('m')}px;
     max-width: 600px;
   }
 
@@ -30,6 +31,22 @@ const style = css`
     font-family: Circular-Medium;
     text-align: left;
     margin-top: 0;
+  }
+
+  .HomePage-Newsletter {
+    padding: ${getSpacing('m')}px;
+    padding-bottom: ${getSpacing('l')}px;
+    max-width: 600px;
+    margin: 0 auto;
+    margin-top: ${getSpacing('xl')}px;
+  }
+
+  .HomePage-Newsletter--theme {
+    background-color: ${getColor('darkGrey', 'tonic')};
+    color: ${white};
+  }
+
+  .HomePage-NewsletterDescription {
   }
 `;
 
@@ -49,7 +66,12 @@ export class HomePage extends React.PureComponent {
           </h1>
           <InputHome onClick={onClick} />
         </div>
-        <div className={`HomePage-Main `}>
+
+        <div className={`HomePage-Newsletter HomePage-Newsletter--theme`}>
+          <h2>{`Ce n'est que le commencement`}</h2>
+          <p
+            className={'HomePage-NewsletterDescription'}
+          >{`Inscrivez vous à la newsletter et découvrez l'ambition du projet.`}</p>
           <NewsletterForm
             postNewsletterEmail={this.props.postNewsletterEmail}
           />

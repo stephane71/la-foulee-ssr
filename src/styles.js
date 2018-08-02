@@ -45,6 +45,11 @@ export default css`
     color: ${APP_COLOR};
   }
 
+  input {
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+
   #__next {
     background: ${APP_BACKGROUND_COLOR};
     padding-top: ${HEIGHT_APPBAR}px;

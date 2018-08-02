@@ -1,20 +1,37 @@
 import React from 'react';
 import css from 'styled-jsx/css';
 
-import axios from 'axios';
+import { getFontSize, getSpacing } from '../styles-variables';
+import { getColor, white } from '../colors';
 
 const style = css`
   .NewsletterForm-Form {
+    display: flex;
   }
 
-  .NewsletterForm-Label {
-    display: block;
+  .NewsletterForm-Form > div:first-child {
+    width: 100%;
   }
 
   .NewsletterForm-InputText {
+    outline: 0;
+    text-decoration: none;
+    border: none;
+    font-size: ${getFontSize('s')}px;
+    padding: ${getSpacing('s')}px ${getSpacing('m')}px;
+    margin: 0;
+    border-right: 1px solid ${getColor('darkGrey', 'tonic')};
+    width: 100%;
   }
 
   .NewsletterForm-InputSubmit {
+    background-color: ${getColor('medium')};
+    color: ${white};
+    font-size: ${getFontSize('s')}px;
+    padding: ${getSpacing('s')}px ${getSpacing('m')}px;
+    border: none;
+    cursor: pointer;
+    margin: 0;
   }
 `;
 
@@ -30,27 +47,25 @@ export class NewsletterForm extends React.PureComponent {
 
   render() {
     return (
-      <>
-        <form onSubmit={this.handleSubmit} className={'NewsletterForm-Form'}>
-          <label className={'NewsletterForm-Label'}>
-            {'Inscrivez-vous à la newsletter !'}
-          </label>
+      <form onSubmit={this.handleSubmit} className={'NewsletterForm-Form'}>
+        <div>
           <input
             type={'text'}
             value={this.state.value}
             onChange={this.handleChange}
-            placeholder={'e-mail'}
+            placeholder={'E-MAIL'}
             className={'NewsletterForm-InputText'}
           />
-
+        </div>
+        <div>
           <input
             type={'submit'}
             value={'Envoyer'}
             className={'NewsletterForm-InputSubmit'}
           />
-          <style jsx>{style}</style>
-        </form>
-      </>
+        </div>
+        <style jsx>{style}</style>
+      </form>
     );
   }
 
