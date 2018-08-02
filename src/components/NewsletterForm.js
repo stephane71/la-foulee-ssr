@@ -39,13 +39,14 @@ export class NewsletterForm extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = { value: '' };
+    this.state = { value: '', sent: false };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   render() {
+    if (this.state.sent) return <div>{'Merci pour votre inscription !'}</div>;
     return (
       <form onSubmit={this.handleSubmit} className={'NewsletterForm-Form'}>
         <div>
@@ -81,6 +82,8 @@ export class NewsletterForm extends React.PureComponent {
     } catch (e) {
       console.error(e);
     }
+
+    this.setState({ sent: true });
   }
 }
 
