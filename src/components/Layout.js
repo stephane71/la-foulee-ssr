@@ -33,6 +33,7 @@ const style = css`
     width: 100%;
     max-width: ${MAX_WIDTH}px;
     margin: 0 auto;
+    overflow: auto;
     -webkit-overflow-scrolling: touch;
   }
 
