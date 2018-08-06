@@ -2,9 +2,7 @@ import css from 'styled-jsx/css';
 import dynamic from 'next/dynamic';
 
 import VirtualizedList from './VirtualizedList';
-
 import Loader from './Loader';
-import { ScrollElementContext } from './Layout';
 
 import { getSpacing, BaseLineHeight } from '../styles-variables';
 import { HEIGHT_APPBAR, MAX_WIDTH } from '../enums';
@@ -47,7 +45,6 @@ class EventList extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (!nextProps.loading && this.props.loading) {
-      this.props.scrollElement.scrollTop = 0;
       this.setState({ listRendering: false });
     }
   }
@@ -57,14 +54,6 @@ class EventList extends React.Component {
     const { listRendering } = this.state;
 
     const showLoader = listRendering || loading;
-
-    if (scrollElement) {
-      if (showLoader) {
-        scrollElement.classList.add('prevent-scroll');
-      } else {
-        scrollElement.classList.remove('prevent-scroll');
-      }
-    }
 
     return (
       <div className={'EventList'}>
@@ -79,14 +68,11 @@ class EventList extends React.Component {
             className={'EventList-Empty'}
           >{`Aucun événements n'a été trouvé dans cette zone :(`}</div>
         ) : (
-          scrollElement && (
-            <VirtualizedList
-              scrollElement={scrollElement}
-              data={data}
-              onSelectEvent={this.handleEventSelection}
-              onListRendering={this.handleListRendering}
-            />
-          )
+          <VirtualizedList
+            data={data}
+            onSelectEvent={this.handleEventSelection}
+            onListRendering={this.handleListRendering}
+          />
         )}
 
         <style jsx>{style}</style>
@@ -109,8 +95,4 @@ class EventList extends React.Component {
   }
 }
 
-export default props => (
-  <ScrollElementContext.Consumer>
-    {scrollElement => <EventList {...props} scrollElement={scrollElement} />}
-  </ScrollElementContext.Consumer>
-);
+export default EventList;

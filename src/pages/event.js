@@ -8,7 +8,6 @@ import { connect } from 'react-redux';
 import CustomError from './_error';
 
 import EventDetails from '../components/EventDetails';
-import { ScrollElementContext } from '../components/Layout';
 import JSONLD from '../components/JSONLD';
 
 import { getEventStructuredData } from '../utils/structuredData';
@@ -26,9 +25,7 @@ const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 const style = css`
   .EventPage {
     min-height: 100%;
-    ${'' /* Prevent no rendering page in Safari mobile */} overflow-y: scroll;
     background: ${white};
-    -webkit-overflow-scrolling: touch;
   }
 
   .EventPage--desktop {
@@ -138,13 +135,6 @@ class EventPage extends React.PureComponent {
           <meta property={'og:description'} content={description} />
           <meta property={'og:image'} content={imageFB} />
         </Head>
-
-        <ScrollElementContext.Consumer>
-          {scrollElement => {
-            if (scrollElement) scrollElement.scrollTop = 0;
-            return null;
-          }}
-        </ScrollElementContext.Consumer>
 
         <EventDetails
           data={event}

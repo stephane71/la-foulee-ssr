@@ -23,6 +23,7 @@ class VirtualizedList extends React.PureComponent {
 
     this.initPositionSet = false;
     this.renderingNewList = true;
+    this.list = null;
 
     this.refList = this.refList.bind(this);
     this.rowRenderer = this.rowRenderer.bind(this);
@@ -36,53 +37,44 @@ class VirtualizedList extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.data !== nextProps.data) {
+      // Reset position => scroll to top
+      this.props.dispatch(setEventListStartIndex(0));
+      this.list.scrollToPosition(0);
+      // Inform parent we are rendering
       this.renderingNewList = true;
       this.props.onListRendering(true);
-
+      // Needed for List component to trigger a render
       cache.clearAll();
     }
   }
 
   render() {
-    const { scrollElement, data } = this.props;
+    const { data } = this.props;
 
     if (!data.length) return null;
 
     return (
-      <WindowScroller
-        scrollElement={scrollElement}
-        onScroll={this.handleScroll}
-      >
-        {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => {
-          if (!height) return null;
+      <AutoSizer>
+        {({ width, height }) => {
+          if (!width) return null;
           return (
-            <AutoSizer disableHeight>
-              {({ width }) => {
-                if (!width) return null;
-                return (
-                  <List
-                    ref={this.refList}
-                    autoHeight
-                    width={width}
-                    height={height}
-                    rowCount={data.length}
-                    rowHeight={cache.rowHeight}
-                    onRowsRendered={this.onRowsRendered}
-                    rowRenderer={this.rowRenderer}
-                    overscanRowCount={2}
-                    onScroll={onChildScroll}
-                    isScrolling={isScrolling}
-                    scrollTop={scrollTop}
-                    deferredMeasurementCache={cache}
-                    rowHeight={cache.rowHeight}
-                    className={'VirtualizedList-List'}
-                  />
-                );
-              }}
-            </AutoSizer>
+            <List
+              ref={this.refList}
+              width={width}
+              height={height}
+              rowCount={data.length}
+              rowHeight={cache.rowHeight}
+              onRowsRendered={this.onRowsRendered}
+              rowRenderer={this.rowRenderer}
+              overscanRowCount={2}
+              onScroll={this.handleScroll}
+              deferredMeasurementCache={cache}
+              rowHeight={cache.rowHeight}
+              className={'VirtualizedList-List'}
+            />
           );
         }}
-      </WindowScroller>
+      </AutoSizer>
     );
   }
 
@@ -90,6 +82,7 @@ class VirtualizedList extends React.PureComponent {
     if (list && !this.initPositionSet) {
       list.scrollToPosition(this.props.initScrollPosition);
       this.initPositionSet = true;
+      this.list = list;
     }
   }
 

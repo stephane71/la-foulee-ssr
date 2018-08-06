@@ -21,7 +21,6 @@ import { toggleSearch, setSearchingGeohash } from '../actions';
 
 moment.locale('fr');
 
-export const ScrollElementContext = React.createContext();
 export const SelectedCityContext = React.createContext();
 
 const style = css`
@@ -29,18 +28,12 @@ const style = css`
     height: 100%;
   }
 
-  .ScrollWrapper {
-    height: 100%;
-    overflow: auto;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    -webkit-overflow-scrolling: touch;
-  }
-
   .PagesWrapper {
+    height: 100%;
     width: 100%;
     max-width: ${MAX_WIDTH}px;
+    margin: 0 auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .LoaderWrapper {
@@ -59,7 +52,6 @@ class Layout extends React.PureComponent {
     super(props);
 
     this.state = {
-      // scrollingElement: null,
       city: null,
       error: null
     };
@@ -119,24 +111,15 @@ class Layout extends React.PureComponent {
           isHomeRoute={currentRoute === '/'}
         />
 
-        <div
-          ref={e => this.setState({ scrollingElement: e })}
-          className={`ScrollWrapper ${
-            searchingGeohash ? 'prevent-scroll' : ''
-          }`}
-        >
-          <ScrollElementContext.Provider value={scrollingElement}>
-            <SelectedCityContext.Provider value={city}>
-              <div className={'PagesWrapper'}>
-                {this.state.error ? (
-                  <LayoutError error={this.state.error} />
-                ) : (
-                  children
-                )}
-              </div>
-            </SelectedCityContext.Provider>
-          </ScrollElementContext.Provider>
-        </div>
+        <SelectedCityContext.Provider value={city}>
+          <div className={'PagesWrapper'}>
+            {this.state.error ? (
+              <LayoutError error={this.state.error} />
+            ) : (
+              children
+            )}
+          </div>
+        </SelectedCityContext.Provider>
 
         <Overlay
           show={searching}
