@@ -37,6 +37,7 @@ class VirtualizedList extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (this.props.data !== nextProps.data) {
+      this.props.dispatch(setEventListStartIndex(0));
       // Inform parent we are rendering
       this.renderingNewList = true;
       this.props.onListRendering(true);
@@ -65,6 +66,7 @@ class VirtualizedList extends React.PureComponent {
               rowRenderer={this.rowRenderer}
               overscanRowCount={2}
               onScroll={this.handleScroll}
+              scrollTop={this.props.initScrollPosition}
               deferredMeasurementCache={cache}
               rowHeight={cache.rowHeight}
               className={'VirtualizedList-List'}
@@ -77,7 +79,6 @@ class VirtualizedList extends React.PureComponent {
 
   refList(list) {
     if (list && !this.initPositionSet) {
-      list.scrollToPosition(this.props.initScrollPosition);
       this.initPositionSet = true;
       this.list = list;
     }
@@ -121,8 +122,9 @@ class VirtualizedList extends React.PureComponent {
       this.renderingNewList = false;
       this.props.onListRendering(false);
 
-      this.props.dispatch(setEventListStartIndex(0));
-      if (this.list) this.list.scrollToPosition(0);
+      if (this.list) {
+        this.list.forceUpdate();
+      }
     }
   }
 
