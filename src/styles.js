@@ -35,6 +35,9 @@ export default css`
     margin: 0;
     font-size: ${BaseFontSize}px;
     line-height: ${BaseLineHeight}px;
+		-moz-osx-font-smoothing: grayscale;
+		-webkit-font-smoothing: antialiased;
+}
   }
 
   body,
