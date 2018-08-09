@@ -74,29 +74,29 @@ const BIG_CITIES = [
   {
     value: 'Bordeaux',
     name: 'Bordeaux',
-    location: { lat: 44.837789, lng: -0.5791799999999512 }
+    placeId: 'ChIJgcpR9-gnVQ0RiXo5ewOGY3k'
   },
 
   {
     value: 'Lille',
     name: 'Lille',
-    location: { lat: 50.656234, lng: 3.046963 }
+    placeId: 'ChIJEW4ls3nVwkcRYGNkgT7xCgQ'
   },
   {
     value: 'Lyon',
     name: 'Lyon',
-    location: { lat: 45.764043, lng: 4.835658999999964 }
+    placeId: 'ChIJl4foalHq9EcR8CG75CqrCAQ'
   },
 
   {
     value: 'Marseille',
     name: 'Marseille',
-    location: { lat: 43.296482, lng: 5.369779999999992 }
+    placeId: 'ChIJM1PaREO_yRIRIAKX_aUZCAQ'
   },
   {
     value: 'Paris',
     name: 'Paris',
-    location: { lat: 48.85661400000001, lng: 2.3522219000000177 }
+    placeId: 'ChIJD7fiBh9u5kcRYJSMaMOCCwQ'
   }
 ];
 

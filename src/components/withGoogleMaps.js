@@ -54,7 +54,7 @@ const withGoogleMaps = WrappedComponent => {
               const city = results.find(({ types }) =>
                 types.includes('locality')
               );
-              resolve(city.formatted_address.split(',')[0]);
+              resolve({ ...city, placeId: city.place_id });
             } else reject(status);
           }
         );
