@@ -37,7 +37,6 @@ export default css`
     line-height: ${BaseLineHeight}px;
 		-moz-osx-font-smoothing: grayscale;
 		-webkit-font-smoothing: antialiased;
-}
   }
 
   body,
