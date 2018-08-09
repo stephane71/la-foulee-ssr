@@ -82,9 +82,6 @@ class Layout extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.query !== this.props.query) {
-      this.setState({ city: { name: nextProps.query.city } });
-    }
     if (
       nextProps.currentRoute !== this.props.currentRoute ||
       nextProps.currentRoute === '/'
@@ -94,13 +91,7 @@ class Layout extends React.PureComponent {
   }
 
   render() {
-    const {
-      currentRoute,
-      query,
-      children,
-      searching,
-      searchingGeohash
-    } = this.props;
+    const { currentRoute, query, children, searching } = this.props;
     const { scrollingElement, city } = this.state;
 
     return (
@@ -133,12 +124,6 @@ class Layout extends React.PureComponent {
             onSelectLocation={this.handleSelectLocation}
             onLeave={this.handleToggleSearch}
           />
-        )}
-
-        {searchingGeohash && (
-          <div className={'LoaderWrapper'}>
-            <Loader />
-          </div>
         )}
 
         <style jsx>{style}</style>
@@ -199,6 +184,9 @@ class Layout extends React.PureComponent {
     );
     this.props.dispatch(setSearchingGeohash(false));
 
+    /*
+     * Google Analytics
+     */
     let label;
     if (city) {
       label = city.location ? 'Preselected city' : 'Searched city';
@@ -235,8 +223,7 @@ class Layout extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    searching: state.searching,
-    searchingGeohash: state.searchingGeohash
+    searching: state.searching
   };
 }
 
