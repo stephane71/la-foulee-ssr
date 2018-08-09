@@ -21,33 +21,63 @@ const style = css`
   }
 `;
 
-const EventListHeader = ({ city, nbItems }) => {
-  if (!city) return null;
+class EventListHeader extends React.PureComponent {
+  constructor(props) {
+    super(props);
 
-  const photoRef = city.photos
-    ? city.photos[0].getUrl({
-        maxWidth: 800,
-        maxHeight: 400
-      })
-    : null;
+    this.state = {
+      photo: this.getPhoto(props.city),
+      previousPhoto: null
+    };
+  }
 
-  return (
-    <div
-      className={`EventListHeader ${photoRef ? 'EventListHeader-Image' : ''}`}
-    >
-      <h1 className={'EventListHeader-Title'}>{city.name}</h1>
-      <div>{`${nbItems} événements autour de ${city.name}`}</div>
+  componentWillReceiveProps(nextProps) {
+    if (this.props.city !== nextProps.city) {
+      const photo = this.getPhoto(nextProps.city);
 
-      <style jsx>{style}</style>
-      <style jsx>{`
-        .EventListHeader-Image {
-          background: url(${photoRef}) center center no-repeat, ${dominant};
-          background-size: cover;
-        }
-      `}</style>
-    </div>
-  );
-};
+      this.setState({ previousPhoto: this.state.photo, photo });
+    }
+  }
+
+  render() {
+    const { photo, previousPhoto } = this.state;
+    const { city, nbItems } = this.props;
+
+    if (!city) return null;
+
+    const backgroundCurrent = photo
+      ? `url(${photo}) center center no-repeat,`
+      : '';
+    const backgroundPrevious = previousPhoto
+      ? `url(${previousPhoto}) center center no-repeat,`
+      : '';
+
+    return (
+      <div className={`EventListHeader EventListHeader-Image`}>
+        <h1 className={'EventListHeader-Title'}>{city.name}</h1>
+        <div>{`${nbItems} événements autour de ${city.name}`}</div>
+
+        <style jsx>{style}</style>
+        <style jsx>{`
+          .EventListHeader-Image {
+            background: ${backgroundCurrent} ${photo ? backgroundPrevious : ''}
+              ${dominant};
+            background-size: cover;
+          }
+        `}</style>
+      </div>
+    );
+  }
+
+  getPhoto(city) {
+    return city.photos
+      ? city.photos[0].getUrl({
+          maxWidth: 800,
+          maxHeight: 400
+        })
+      : null;
+  }
+}
 
 export default props => (
   <SelectedCityContext.Consumer>
