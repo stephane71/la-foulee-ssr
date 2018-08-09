@@ -168,20 +168,18 @@ class Layout extends React.PureComponent {
     this.setState({ error: null });
     this.handleToggleSearch();
 
-    let location;
+    let cityDetails;
     try {
-      location = city
-        ? await this.getLocationFromCity(city)
-        : await this.getLocationFromUser();
+      cityDetails = await this.getCityDetails(city);
     } catch (error) {
       this.setState({ error });
       return;
     }
 
-    this.setState({ city: location.city });
-    Router.push(
-      `/events?position=${location.geohash}&city=${location.city.name}`
-    );
+    let geohash = getGeohash(cityDetails.location);
+
+    this.setState({ city: cityDetails });
+    Router.push(`/events?position=${geohash}&city=${cityDetails.name}`);
     this.props.dispatch(setSearchingGeohash(false));
 
     /*
@@ -189,7 +187,7 @@ class Layout extends React.PureComponent {
      */
     let label;
     if (city) {
-      label = city.location ? 'Preselected city' : 'Searched city';
+      label = city.placeId ? 'Preselected city' : 'Searched city';
     } else {
       label = 'User position';
     }
@@ -198,26 +196,17 @@ class Layout extends React.PureComponent {
       action: 'Select City',
       category: 'Search',
       label,
-      value: location.city.name
+      value: cityDetails.name
     });
   }
 
-  async getLocationFromCity(_city = {}) {
-    let city = _city.location
-      ? _city
-      : await this.props.getDetails(_city.placeId);
-    let geohash = getGeohash(city.location);
+  async getCityDetails(_city = null) {
+    if (!_city) {
+      let location = await getUserLocation();
+      _city = await this.props.reverseGeocoding(location);
+    }
 
-    return { city, geohash };
-  }
-
-  async getLocationFromUser() {
-    let location = await getUserLocation();
-
-    let cityName = await this.props.reverseGeocoding(location);
-    let geohash = getGeohash(location);
-
-    return { city: { name: cityName }, geohash };
+    return this.props.getDetails(_city.placeId);
   }
 }
 
