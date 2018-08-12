@@ -54,6 +54,7 @@ class Layout extends React.PureComponent {
 
     this.state = {
       city: null,
+      cityMap: {},
       error: null
     };
 
@@ -82,6 +83,13 @@ class Layout extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
+    if (nextProps.query !== this.props.query) {
+      const cityName = nextProps.query.city;
+      const cityCache = this.state.cityMap[cityName];
+
+      const city = cityCache ? cityCache : { name: cityName };
+      this.setState({ city });
+    }
     if (
       nextProps.currentRoute !== this.props.currentRoute ||
       nextProps.currentRoute === '/'
@@ -92,7 +100,7 @@ class Layout extends React.PureComponent {
 
   render() {
     const { currentRoute, query, children, searching } = this.props;
-    const { scrollingElement, city } = this.state;
+    const { city } = this.state;
 
     return (
       <div className={'root'}>
@@ -178,7 +186,10 @@ class Layout extends React.PureComponent {
 
     let geohash = getGeohash(cityDetails.location);
 
-    this.setState({ city: cityDetails });
+    this.setState({
+      city: cityDetails,
+      cityMap: { ...this.state.cityMap, [cityDetails.name]: cityDetails }
+    });
     Router.push(`/events?position=${geohash}&city=${cityDetails.name}`);
     this.props.dispatch(setSearchingGeohash(false));
 
