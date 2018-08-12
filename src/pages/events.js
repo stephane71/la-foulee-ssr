@@ -15,7 +15,8 @@ import {
   setSelectedEvent,
   setEventList,
   setUserPosition,
-  toggleSearch
+  toggleSearch,
+  setInitialCity
 } from '../actions';
 import { NO_EVENT_SELECTED } from '../enums';
 import { getSpacing } from '../styles-variables';
@@ -25,6 +26,24 @@ const APP_URL = publicRuntimeConfig.APP_URL;
 const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 
 class Events extends React.PureComponent {
+  static async getInitialProps({ isServer, req, store, ...context }) {
+    let city = null;
+    if (isServer) {
+      const getPredicitons = require('../server/getPredicitons');
+      const getCity = require('../server/getCity');
+
+      if (req.query) {
+        let predictions = await getPredicitons(req.query.city);
+        if (predictions.length) {
+          city = await getCity(predictions[0]);
+          store.dispatch(setInitialCity(city));
+        }
+      }
+    }
+
+    return {};
+  }
+
   constructor(props) {
     super(props);
 
@@ -180,10 +199,6 @@ class Events extends React.PureComponent {
     this.setState({ loading: false });
   }
 }
-
-Events.getInitialProps = function({ store, isServer, ...context }) {
-  return {};
-};
 
 function mapStateToProps(state) {
   return {

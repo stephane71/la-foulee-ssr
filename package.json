@@ -4,6 +4,7 @@
   "description": "",
   "main": "handler.js",
   "dependencies": {
+    "@google/maps": "^0.5.5",
     "aws-api-gateway-client": "^0.2.15",
     "aws-sdk": "^2.275.1",
     "babel-plugin-inline-react-svg": "^0.5.3",

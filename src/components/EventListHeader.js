@@ -70,12 +70,15 @@ class EventListHeader extends React.PureComponent {
   }
 
   getPhoto(city) {
-    return city.photos
-      ? city.photos[0].getUrl({
-          maxWidth: 800,
-          maxHeight: 400
-        })
-      : null;
+    if (city.photos) {
+      return city.photos[0].photo_url
+        ? city.photos[0].photo_url
+        : city.photos[0].getUrl({
+            maxWidth: 800,
+            maxHeight: 400
+          });
+    }
+    return null;
   }
 }
 

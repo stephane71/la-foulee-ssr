@@ -10,7 +10,8 @@ import {
   SET_USER_POSITION,
   TOGGLE_SEARCH,
   SET_EVENT_LIST_START_INDEX,
-  SET_SEARCHING_GEOHASH
+  SET_SEARCHING_GEOHASH,
+  SET_INITIAL_CITY
 } from './actions';
 
 function getNextMonth(month) {
@@ -36,7 +37,8 @@ const initialState = {
   position: null,
   searching: false,
   searchingGeohash: false,
-  eventListStartIndex: EVENT_LIST_START_INDEX
+  eventListStartIndex: EVENT_LIST_START_INDEX,
+  initialCity: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -65,6 +67,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, eventListStartIndex: action.index };
     case SET_SEARCHING_GEOHASH:
       return { ...state, searchingGeohash: action.searching };
+    case SET_INITIAL_CITY:
+      return { ...state, initialCity: action.city };
 
     default:
       return state;

@@ -53,8 +53,10 @@ class Layout extends React.PureComponent {
     super(props);
 
     this.state = {
-      city: null,
-      cityMap: {},
+      city: props.initialCity,
+      cityMap: {
+        [props.initialCity.name]: props.initialCity
+      },
       error: null
     };
 
@@ -66,9 +68,6 @@ class Layout extends React.PureComponent {
 
   componentDidMount() {
     Router.prefetch('/');
-
-    const { city } = this.props.query;
-    if (city) this.setState({ city: { name: city } });
 
     Router.beforePopState(({ url, as, options }) => {
       if (this.props.searching) {
@@ -223,7 +222,8 @@ class Layout extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    searching: state.searching
+    searching: state.searching,
+    initialCity: state.initialCity
   };
 }
 
