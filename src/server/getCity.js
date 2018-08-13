@@ -7,7 +7,7 @@ const BASE_URL_GOOGLE_PHOTO =
 function getUrl(ref) {
   return `${BASE_URL_GOOGLE_PHOTO}?photoreference=${ref}&key=${
     process.env.SERVER_GOOGLE_PLACES_API_KEY
-  }&maxheight=${MAX_WIDTH}&maxwidth=${MAX_HEIGHT}`;
+  }&maxheight=${MAX_HEIGHT}&maxwidth=${MAX_WIDTH}`;
 }
 
 module.exports = function({ place_id }) {

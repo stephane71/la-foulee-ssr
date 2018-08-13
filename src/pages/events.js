@@ -33,10 +33,17 @@ class Events extends React.PureComponent {
       const getCity = require('../server/getCity');
 
       if (req.query) {
-        let predictions = await getPredicitons(req.query.city);
-        if (predictions.length) {
-          city = await getCity(predictions[0]);
-          store.dispatch(setInitialCity(city));
+        try {
+          let predictions = await getPredicitons(req.query.city);
+          if (predictions.length) {
+            city = await getCity(predictions[0]);
+            store.dispatch(setInitialCity(city));
+          }
+        } catch (e) {
+          console.log(
+            '[La Foulée] Events:getInitialProps | Error when try to fetch initial city'
+          );
+          console.log(e);
         }
       }
     }

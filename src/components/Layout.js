@@ -53,10 +53,12 @@ class Layout extends React.PureComponent {
     super(props);
 
     this.state = {
-      city: props.initialCity,
-      cityMap: {
-        [props.initialCity.name]: props.initialCity
-      },
+      city: props.initialCity || { name: props.query.city },
+      cityMap: props.initialCity
+        ? {
+            [props.initialCity.name]: props.initialCity
+          }
+        : {},
       error: null
     };
 
