@@ -18,7 +18,11 @@ import {
   toggleSearch,
   setInitialCity
 } from '../actions';
-import { NO_EVENT_SELECTED } from '../enums';
+import {
+  NO_EVENT_SELECTED,
+  MAX_WIDTH_CITY_PHOTO,
+  MAX_HEIGHT_CITY_PHOTO
+} from '../enums';
 import { getSpacing } from '../styles-variables';
 
 const { publicRuntimeConfig } = getConfig();
@@ -36,7 +40,10 @@ class Events extends React.PureComponent {
         try {
           let predictions = await getPredicitons(req.query.city);
           if (predictions.length) {
-            city = await getCity(predictions[0]);
+            city = await getCity(predictions[0], {
+              maxWidth: MAX_WIDTH_CITY_PHOTO,
+              maxHeight: MAX_HEIGHT_CITY_PHOTO
+            });
             store.dispatch(setInitialCity(city));
           }
         } catch (e) {

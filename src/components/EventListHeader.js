@@ -3,7 +3,11 @@ import css from 'styled-jsx/css';
 import { SelectedCityContext } from './Layout';
 
 import { getSpacing } from '../styles-variables';
-import { BORDER_RADIUS_LIST_ITEM } from '../enums';
+import {
+  BORDER_RADIUS_LIST_ITEM,
+  MAX_WIDTH_CITY_PHOTO,
+  MAX_HEIGHT_CITY_PHOTO
+} from '../enums';
 import { dominant, white } from '../colors';
 
 const style = css`
@@ -74,8 +78,8 @@ class EventListHeader extends React.PureComponent {
       return city.photos[0].photo_url
         ? city.photos[0].photo_url
         : city.photos[0].getUrl({
-            maxWidth: 800,
-            maxHeight: 400
+            maxWidth: MAX_WIDTH_CITY_PHOTO,
+            maxHeight: MAX_HEIGHT_CITY_PHOTO
           });
     }
     return null;

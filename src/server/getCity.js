@@ -1,16 +1,14 @@
 const REQ_PLACE_OK = 'OK';
-const MAX_WIDTH = 800;
-const MAX_HEIGHT = 400;
 const BASE_URL_GOOGLE_PHOTO =
   'https://maps.googleapis.com/maps/api/place/photo';
 
-function getUrl(ref) {
+function getUrl(ref, { maxWidth, maxHeight }) {
   return `${BASE_URL_GOOGLE_PHOTO}?photoreference=${ref}&key=${
     process.env.SERVER_GOOGLE_PLACES_API_KEY
-  }&maxheight=${MAX_HEIGHT}&maxwidth=${MAX_WIDTH}`;
+  }&maxheight=${maxHeight}&maxwidth=${maxWidth}`;
 }
 
-module.exports = function({ place_id }) {
+module.exports = function({ place_id }, { maxWidth, maxHeight }) {
   // WARNING: see https://arunoda.me/blog/ssr-and-server-only-modules
   const GoogleMaps = eval("require('@google/maps')");
 
@@ -30,7 +28,7 @@ module.exports = function({ place_id }) {
       if (data.photos)
         data.photos = data.photos.map(({ photo_reference, ...photo }) => ({
           ...photo,
-          photo_url: getUrl(photo_reference)
+          photo_url: getUrl(photo_reference, { maxWidth, maxHeight })
         }));
 
       return data;

@@ -37,3 +37,6 @@ export const TWITTER_SHARE = 'TWITTER_SHARE';
 export const LINK_SHARE = 'LINK_SHARE';
 export const WHATSAPP = 'WHATSAPP';
 export const MAILTO = 'MAILTO';
+
+export const MAX_WIDTH_CITY_PHOTO = 800;
+export const MAX_HEIGHT_CITY_PHOTO = 400;
