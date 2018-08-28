@@ -22,7 +22,8 @@ console.log(
 );
 
 const assetPrefix =
-  process.env.NODE_ENV === 'production' && process.env.LA_FOULEE_ENV !== 'local'
+  process.env.NODE_ENV === 'production' &&
+  process.env.LA_FOULEE_ENV === 'production'
     ? process.env.ASSETS_URL
     : '';
 
