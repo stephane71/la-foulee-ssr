@@ -1,4 +1,3 @@
-import moment from 'moment';
 import { createStore } from 'redux';
 
 import { GOOGLE_DETAILS_SERVICE, GOOGLE_AUTOCOMPLETE_SERVICE } from './enums';

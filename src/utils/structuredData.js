@@ -53,7 +53,10 @@ export const getEventStructuredData = function(event, { description, path }) {
     '@type': 'Event',
     url: `${APP_URL}${path}`,
     name: event.title,
-    startDate: moment.unix(event.date).format('YYYY-MM-DD'),
+    startDate: moment
+      .unix(event.date)
+      .utc()
+      .format('YYYY-MM-DD'),
     description: description,
     location: {
       '@type': 'Place',

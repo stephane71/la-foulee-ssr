@@ -9,7 +9,10 @@ function getOrgaLink({ keyword, webSite = [], date }) {
   return `https://www.google.com/search?q=${keyword.replace(
     /\-/g,
     '+'
-  )} ${moment.unix(date).year()}`;
+  )} ${moment
+    .unix(date)
+    .utc()
+    .year()}`;
 }
 
 const style = css`

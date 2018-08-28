@@ -87,10 +87,7 @@ const EventDetailsGlobalInfo = ({ data, desktop, isServer }) => (
       <div className={'EventDetails-DatumValue'}>
         {moment
           .unix(data.date)
-          // WARNING: lazy fix to not have to deal with utc offset
-          // The server may have a utc offset of 0 => moment display the day before in ssr
-          // To see it add {moment().utcOffset()}
-          .add(12, 'hours')
+          .utc()
           .format(DATE_FORMAT)}
       </div>
     </div>

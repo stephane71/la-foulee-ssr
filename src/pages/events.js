@@ -107,7 +107,10 @@ class Events extends React.PureComponent {
       events.length
     } evénements autour de ${city} ${
       events.length
-        ? `à partir du ${moment.unix(events[0].date).format('dddd DD/MM/YYYY')}`
+        ? `à partir du ${moment
+            .unix(events[0].date)
+            .utc()
+            .format('dddd DD/MM/YYYY')}`
         : ''
     }`;
 
@@ -188,7 +191,10 @@ class Events extends React.PureComponent {
 
     this.props.dispatch(setSelectedEvent(selectedEvent));
 
-    const year = moment.unix(selectedEvent.date).year();
+    const year = moment
+      .unix(selectedEvent.date)
+      .utc()
+      .year();
     const path = `/event/${selectedEvent.keyword}/${year}`;
 
     Router.push(

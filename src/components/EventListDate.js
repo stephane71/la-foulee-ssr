@@ -6,15 +6,24 @@ import { dominant } from '../colors';
 import { DATE_FORMAT } from '../enums';
 
 function getWeeklyDay(date) {
-  return moment.unix(date).format('dddd');
+  return moment
+    .unix(date)
+    .utc()
+    .format('dddd');
 }
 
 function getDate(date) {
-  return moment.unix(date).format('D MMMM');
+  return moment
+    .unix(date)
+    .utc()
+    .format('D MMMM');
 }
 
 function getDateSemantic(date) {
-  return moment.unix(date).format('YYYY-MM-DD');
+  return moment
+    .unix(date)
+    .utc()
+    .format('YYYY-MM-DD');
 }
 
 const EventListDate = ({ date, marginTop }) => (

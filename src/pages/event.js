@@ -106,8 +106,10 @@ class EventPage extends React.PureComponent {
     if (!event) return <CustomError statusCode={EVENT_NOT_FOUND} />;
 
     /** METAs:start **/
-    let eventDateMeta = moment.unix(event.date).format('dddd DD/MM/YYYY');
-    eventDateMeta = eventDateMeta[0].toUpperCase() + eventDateMeta.slice(1);
+    const eventDateMeta = moment
+      .unix(event.date)
+      .utc()
+      .format('dddd DD/MM/YYYY');
     const description = `Retrouvez toutes les informations sur l'évènement '${
       event.title
     }' le ${eventDateMeta} à ${event.city} (${
