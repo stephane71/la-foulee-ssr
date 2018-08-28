@@ -43,7 +43,7 @@ class Index extends React.PureComponent {
     const { media } = this.props;
 
     const title = `Simplifier l'accès aux événements sportifs`;
-    const description = `La Foulée simplifie la recherche d'un événement sportif. Trouvez les événements autour de vous et partagez les infos essentielles en un click !`;
+    const description = `La Foulée simplifie la recherche d'un événement de course à pied. Trouvez les événements autour de vous et partagez les infos essentielles en un click !`;
     const imageTwitter = `${ASSETS_URL}/android-chrome-512x512.png`;
     const imageFB = `${ASSETS_URL}/glyph.dominant.144x144%402x.png`;
 
@@ -52,6 +52,7 @@ class Index extends React.PureComponent {
         <Head>
           <title>{`La Foulée | ${title}`}</title>
           <link rel={'canonical'} href={APP_URL} />
+          <meta name={'description'} content={description} />
 
           <JSONLD data={getWebApplicationStructuredData()} />
           <JSONLD data={getOrganizationStructuredData()} />

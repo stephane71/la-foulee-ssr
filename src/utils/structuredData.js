@@ -47,16 +47,14 @@ export const getEventListStructuredData = function(events) {
   return JSON.stringify(jsonLD);
 };
 
-export const getEventStructuredData = function(event) {
+export const getEventStructuredData = function(event, { description, path }) {
   const jsonLD = {
     '@context': 'http://schema.org',
     '@type': 'Event',
-    url: `${APP_URL}/event/${event.keyword}`,
+    url: `${APP_URL}${path}`,
     name: event.title,
     startDate: moment.unix(event.date).format('YYYY-MM-DD'),
-    description: `Évenement: ${event.title}, city: ${
-      event.city
-    }, date: ${moment.unix(event.date).format('DD/MM/YYYY')} | La Foulée`,
+    description: description,
     location: {
       '@type': 'Place',
       name: event.city,
