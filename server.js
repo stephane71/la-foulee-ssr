@@ -4,7 +4,8 @@ console.log('----------------------------------');
 
 console.log('NODE_ENV', process.env.NODE_ENV);
 
-const env = process.env.LA_FOULEE_ENV === 'local' ? 'dev' : process.env.LA_FOULEE_ENV
+const env =
+  process.env.LA_FOULEE_ENV === 'local' ? 'dev' : process.env.LA_FOULEE_ENV;
 require('dotenv').config({ path: `.env.server.${env}` });
 
 const express = require('express');
@@ -49,6 +50,10 @@ server.get('/sitemap.txt', async (req, res) => {
     dotfiles: 'deny'
   };
   res.sendFile('sitemap.txt', options);
+});
+
+server.get('/event/:keyword/:edition', (req, res) => {
+  app.render(req, res, '/event');
 });
 
 server.get('/event/:keyword', (req, res) => {

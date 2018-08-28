@@ -38,10 +38,11 @@ class EventPage extends React.PureComponent {
     let event = NO_EVENT_SELECTED;
     if (req) {
       const getEvent = require('../server/getEvent');
-      const { keyword } = req.params;
+      const { keyword, edition } = req.params;
 
       try {
-        if (keyword) event = (await getEvent(keyword)) || NO_EVENT_SELECTED;
+        if (keyword)
+          event = (await getEvent(keyword, edition)) || NO_EVENT_SELECTED;
         if (!event) {
           console.log('--- [La Foulee] ---');
           console.log(
