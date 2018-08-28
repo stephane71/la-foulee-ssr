@@ -188,7 +188,9 @@ class Events extends React.PureComponent {
 
     this.props.dispatch(setSelectedEvent(selectedEvent));
 
-    const path = `/event/${selectedEvent.keyword}`;
+    const year = moment.unix(selectedEvent.date).year();
+    const path = `/event/${selectedEvent.keyword}/${year}`;
+
     Router.push(
       { pathname: '/event', query: { keyword: selectedEvent.keyword } },
       path
