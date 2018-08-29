@@ -1,9 +1,10 @@
-import moment from 'moment';
+import moment from 'moment-timezone';
 import getConfig from 'next/config';
 
 const { publicRuntimeConfig } = getConfig();
 const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 const APP_URL = publicRuntimeConfig.APP_URL;
+const DATE_FORMAT = 'YYYY-MM-DD';
 
 export const getWebApplicationStructuredData = function() {
   const jsonLD = {
@@ -48,26 +49,73 @@ export const getEventListStructuredData = function(events) {
 };
 
 export const getEventStructuredData = function(event, { description, path }) {
-  const jsonLD = {
-    '@context': 'http://schema.org',
-    '@type': 'Event',
-    url: `${APP_URL}${path}`,
-    name: event.title,
-    startDate: moment
-      .unix(event.date)
-      .utc()
-      .format('YYYY-MM-DD'),
-    description: description,
-    location: {
-      '@type': 'Place',
-      name: event.city,
-      address: {
-        '@type': 'PostalAddress',
-        addressLocality: event.city,
-        postalCode: event.department.code,
-        addressCountry: 'FR'
-      }
+  const url = `${APP_URL}${path}`;
+  const startDate = moment
+    .unix(event.date)
+    .utc()
+    .format(DATE_FORMAT);
+  const location = {
+    '@type': 'Place',
+    name: event.city,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: event.city,
+      postalCode: event.department.code,
+      addressCountry: 'FR'
     }
   };
+
+  let jsonLD = {
+    '@context': 'http://schema.org',
+    '@type': 'Event',
+    url,
+    name: event.title,
+    startDate,
+    description: description,
+    location
+  };
+
+  if (event.activities) {
+    jsonLD = {
+      ...jsonLD,
+      subEvents: getEventActivitiesStructuredData(event.activities, {
+        location,
+        startDate,
+        url
+      })
+    };
+  }
+
   return JSON.stringify(jsonLD);
+};
+
+export const getEventActivitiesStructuredData = function(
+  activities,
+  { location, startDate, url }
+) {
+  return activities.map(({ distance, info, price, time, title }) => {
+    let dateFormat = DATE_FORMAT;
+    let start = startDate;
+
+    if (time) {
+      start = `${start} ${time.split(' ')[0]}`;
+      dateFormat = `${dateFormat} HH:mm`;
+    }
+    console.log(start, dateFormat);
+
+    return {
+      '@context': 'http://schema.org',
+      '@type': 'Event',
+      url,
+      name: title,
+      // WARNING: hard coded Time Zone !
+      startDate: moment(start, dateFormat, 'Europe/Paris').format(),
+      location,
+      offers: {
+        '@type': 'Offer',
+        price,
+        priceCurrency: 'EUR'
+      }
+    };
+  });
 };
