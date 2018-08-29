@@ -110,7 +110,7 @@ export const getEventActivitiesStructuredData = function(
       url,
       name: title,
       // WARNING: hard coded Time Zone !
-      startDate: moment(start, dateFormat, 'Europe/Paris').format(),
+      startDate: moment.tz(start, dateFormat, 'America/Toronto').format(),
       location,
       offers: {
         '@type': 'Offer',
