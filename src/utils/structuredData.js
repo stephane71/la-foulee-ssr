@@ -101,7 +101,6 @@ export const getEventActivitiesStructuredData = function(
       start = `${start} ${time.split(' ')[0]}`;
       dateFormat = `${dateFormat} HH:mm`;
     }
-    console.log(start, dateFormat);
 
     return {
       '@context': 'http://schema.org',
