@@ -9,6 +9,7 @@ const withCredentials = WrappedComponent => {
       this.getCredentials = this.getCredentials.bind(this);
 
       this.credentials = null;
+      this.fetching = null;
     }
 
     static displayName = `withCredentials(${WrappedComponent.displayName ||
@@ -17,6 +18,12 @@ const withCredentials = WrappedComponent => {
 
     static getInitialProps(context) {
       return WrappedComponent.getInitialProps(context);
+    }
+
+    componentDidMount() {
+      // Needed to fetch credentials when the api is not call
+      // Ex: all pages that do not required an api call ! Event details / Home
+      this.getCredentials();
     }
 
     render() {
@@ -33,7 +40,7 @@ const withCredentials = WrappedComponent => {
       return !this.credentials || this.credentials.needsRefresh();
     }
 
-    async getCredentials(clearCache) {
+    async getCredentialsSongleton(clearCache) {
       let credentials;
 
       if (!this.needsRefresh()) return this.credentials;
@@ -51,9 +58,19 @@ const withCredentials = WrappedComponent => {
             '-withCredentials:getCredentials: clear cache id & try again'
           );
           // Warning!: becarefull of the recursive loop with the condition on 'clearCache'
-          return this.getCredentials(true);
+          return this.getCredentialsSongleton(true);
         }
       }
+      return credentials;
+    }
+
+    async getCredentials(clearCache) {
+      if (!this.fetching)
+        this.fetching = this.getCredentialsSongleton(clearCache);
+
+      let credentials = await this.fetching;
+      this.fetching = null;
+
       return credentials;
     }
   };
