@@ -96,9 +96,9 @@ export const getEventActivitiesStructuredData = function(
   return activities.map(({ distance, info, price, time, title }) => {
     let dateFormat = DATE_FORMAT;
     let start = startDate;
-    let timeSplit = time.split(' ');
 
     if (time) {
+      let timeSplit = time.split(' ');
       let departureTime = timeSplit[timeSplit.length === 1 ? 0 : 1];
       start = `${start} ${departureTime}`;
       dateFormat = `${dateFormat} HH:mm`;
