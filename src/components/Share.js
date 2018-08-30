@@ -1,3 +1,4 @@
+import React from 'react';
 // import FacebookIcon from '../svgs/facebook.svg';
 // import TwitterIcon from '../svgs/twitter.svg';
 
