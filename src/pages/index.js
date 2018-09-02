@@ -54,9 +54,6 @@ class Index extends React.PureComponent {
           <link rel={'canonical'} href={APP_URL} />
           <meta name={'description'} content={description} />
 
-          <JSONLD data={getWebApplicationStructuredData()} />
-          <JSONLD data={getOrganizationStructuredData()} />
-
           {/* TWITTER */}
           <meta name={'twitter:card'} content={'summary'} />
           <meta name={'twitter:site'} content={'@_LaFoulee'} />
@@ -76,6 +73,9 @@ class Index extends React.PureComponent {
           onClick={this.handleSearchCityToggle}
           desktop={media === DESKTOP}
         />
+
+        <JSONLD data={getWebApplicationStructuredData()} />
+        <JSONLD data={getOrganizationStructuredData()} />
       </>
     );
   }

@@ -126,8 +126,6 @@ class EventPage extends React.PureComponent {
           <link rel={'canonical'} href={`${APP_URL}${path}`} />
           <meta name={'description'} content={description} />
 
-          <JSONLD data={getEventStructuredData(event, { description, path })} />
-
           {/* TWITTER */}
           <meta name={'twitter:card'} content={'summary'} />
           <meta name={'twitter:site'} content={'@_LaFoulee'} />
@@ -149,6 +147,8 @@ class EventPage extends React.PureComponent {
           onClickOrgaLink={this.handleClickOrgaLink}
           path={path}
         />
+
+        <JSONLD data={getEventStructuredData(event, { description, path })} />
 
         <style jsx>{style}</style>
       </div>
