@@ -34,10 +34,21 @@ export const getOrganizationStructuredData = function() {
     '@context': 'http://schema.org',
     '@type': 'Organization',
     legalName: 'La Foulée',
-    description: `La Foulée facilite l'accès au événements sportifs. Les organisateurs bénéficient d'une fiche dédié à leurs evénements et du référencement sur les moteurs de recherche. Les sportifs profitent d'une plateforme qui leurs permets parcourir l'ensemble des événements.`,
+    description: `La Foulée facilite l'accès aux événements de courses à pieds. Retrouvez le calendrier complet et les informations essentielles pour chaque évènement: liste des courses, heure de départ, prix, site de l'organisateur`,
     url: APP_URL,
     logo: `${ASSETS_URL}/android-chrome-192x192.png`,
-    sameAs: ['https://twitter.com/_LaFoulee']
+    contactPoint: {
+      '@type': 'ContactPoint',
+      areaServed: 'France',
+      contactType: 'customer support',
+      availableLanguage: ['French', 'English'],
+      // TODO
+      telephone: ''
+    },
+    sameAs: [
+      'https://twitter.com/_LaFoulee',
+      'https://www.instagram.com/_lafoulee'
+    ]
   };
   return JSON.stringify(jsonLD);
 };
