@@ -1,10 +1,18 @@
 import moment from 'moment-timezone';
 import getConfig from 'next/config';
 
+import formatDistance from '../utils/formatDistance';
+
 const { publicRuntimeConfig } = getConfig();
 const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 const APP_URL = publicRuntimeConfig.APP_URL;
 const DATE_FORMAT = 'YYYY-MM-DD';
+
+const getDate = ts =>
+  moment
+    .unix(ts)
+    .utc()
+    .format(DATE_FORMAT);
 
 export const getWebApplicationStructuredData = function() {
   const jsonLD = {
@@ -50,10 +58,7 @@ export const getEventListStructuredData = function(events) {
 
 export const getEventStructuredData = function(event, { description, path }) {
   const url = `${APP_URL}${path}`;
-  const startDate = moment
-    .unix(event.date)
-    .utc()
-    .format(DATE_FORMAT);
+  const startDate = getDate(event.date);
   const location = {
     '@type': 'Place',
     name: event.city,
@@ -69,11 +74,18 @@ export const getEventStructuredData = function(event, { description, path }) {
     '@context': 'http://schema.org',
     '@type': 'Event',
     url,
-    name: event.title,
+    description,
+    location,
     startDate,
-    description: description,
-    location
+    endDate: event.endDate ? getDate(event.endDate) : startDate,
+    name: event.title,
+    eventStatus: 'EventScheduled'
+    // image:
   };
+
+  if (event.organisateur) {
+    jsonLD = { ...jsonLD, organizer: getEventOrganizerStructuredData(event) };
+  }
 
   if (event.activities) {
     jsonLD = {
@@ -89,34 +101,48 @@ export const getEventStructuredData = function(event, { description, path }) {
   return JSON.stringify(jsonLD);
 };
 
-export const getEventActivitiesStructuredData = function(
+const getEventOrganizerStructuredData = function({ organisateur, website }) {
+  return {
+    '@type': 'Organization',
+    name: organisateur,
+    url: website && website.length ? event.website[0] : ''
+  };
+};
+
+const getEventActivitiesStructuredData = function(
   activities,
   { location, startDate, url }
 ) {
-  return activities.map(({ distance, info, price, time, title }) => {
-    let dateFormat = DATE_FORMAT;
-    let start = startDate;
-
+  return activities.map(({ distance, info, price, time, title }, i) => {
     if (time) {
       let timeSplit = time.split(' ');
       let departureTime = timeSplit[timeSplit.length === 1 ? 0 : 1];
-      start = `${start} ${departureTime}`;
-      dateFormat = `${dateFormat} HH:mm`;
+
+      // WARNING: hard coded Time Zone !
+      startDate = moment
+        .tz(
+          `${startDate} ${departureTime}`,
+          `${DATE_FORMAT} HH:mm`,
+          'Europe/Paris'
+        )
+        .format();
     }
+
+    const namePrefix = formatDistance(distance) || `Course ${i}`;
 
     return {
       '@context': 'http://schema.org',
       '@type': 'Event',
       url,
-      name: title,
-      // WARNING: hard coded Time Zone !
-      startDate: moment.tz(start, dateFormat, 'Europe/Paris').format(),
       location,
+      name: `${namePrefix} | ${title}`,
+      startDate,
       offers: {
         '@type': 'Offer',
         price,
         priceCurrency: 'EUR'
-      }
+      },
+      eventStatus: 'EventScheduled'
     };
   });
 };
