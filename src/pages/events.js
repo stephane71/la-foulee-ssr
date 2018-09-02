@@ -129,8 +129,6 @@ class Events extends React.PureComponent {
           )}
           <link rel={'canonical'} href={`${APP_URL}${path}`} />
 
-          <JSONLD data={getEventListStructuredData(events)} />
-
           {/* TWITTER */}
           <meta name={'twitter:card'} content={'summary'} />
           <meta name={'twitter:site'} content={'@_LaFoulee'} />
@@ -160,6 +158,8 @@ class Events extends React.PureComponent {
             onSelectEvent={this.handleEventSelection}
           />
         )}
+
+        <JSONLD data={getEventListStructuredData(events)} />
       </>
     );
   }

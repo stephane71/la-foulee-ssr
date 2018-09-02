@@ -2,6 +2,7 @@ import moment from 'moment-timezone';
 import getConfig from 'next/config';
 
 import formatDistance from '../utils/formatDistance';
+import getEventDescription from '../utils/getEventDescription';
 
 const { publicRuntimeConfig } = getConfig();
 const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
@@ -26,7 +27,7 @@ export const getWebApplicationStructuredData = function() {
     operatingSystem: 'any'
   };
 
-  return JSON.stringify(jsonLD);
+  return jsonLD;
 };
 
 export const getOrganizationStructuredData = function() {
@@ -50,21 +51,25 @@ export const getOrganizationStructuredData = function() {
       'https://www.instagram.com/_lafoulee'
     ]
   };
-  return JSON.stringify(jsonLD);
+  return jsonLD;
 };
 
 export const getEventListStructuredData = function(events) {
   const jsonLD = {
     '@context': 'http://schema.org',
     '@type': 'ItemList',
-    itemListElement: events.map(({ keyword }, i) => ({
+    itemListElement: events.map((event, i) => ({
       '@type': 'ListItem',
       position: i,
-      url: `${APP_URL}/event/${keyword}`
+      url: `${APP_URL}/event/${event.keyword}`,
+      item: getEventStructuredData(event, {
+        description: getEventDescription(event),
+        path: `/event/${event.keywpord}`
+      })
     }))
   };
 
-  return JSON.stringify(jsonLD);
+  return jsonLD;
 };
 
 export const getEventStructuredData = function(event, { description, path }) {
@@ -109,7 +114,7 @@ export const getEventStructuredData = function(event, { description, path }) {
     };
   }
 
-  return JSON.stringify(jsonLD);
+  return jsonLD;
 };
 
 const getEventOrganizerStructuredData = function({ organisateur, website }) {
