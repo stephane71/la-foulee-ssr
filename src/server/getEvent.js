@@ -39,7 +39,7 @@ module.exports = function(keyword, edition) {
         items = items.filter(
           ({ date }) => moment.unix(date).format('YYYY') === edition
         );
-      } else {
+      } else if (items.length > 1) {
         items = items
           .filter(({ date }) => date >= moment().unix())
           .sort((eventA, eventB) => eventA.date - eventB.date);
