@@ -1,3 +1,4 @@
+import React from 'react';
 import Router from 'next/router';
 import css from 'styled-jsx/css';
 

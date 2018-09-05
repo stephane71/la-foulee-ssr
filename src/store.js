@@ -1,6 +1,10 @@
 import { createStore } from 'redux';
 
-import { GOOGLE_DETAILS_SERVICE, GOOGLE_AUTOCOMPLETE_SERVICE } from './enums';
+import {
+  GOOGLE_DETAILS_SERVICE,
+  GOOGLE_AUTOCOMPLETE_SERVICE,
+  GOOGLE_GEOCODING_SERVICE
+} from './enums';
 import {
   SET_SELECTED_EVENT,
   SET_EVENT_LIST,
@@ -30,7 +34,8 @@ const initialState = {
   events: [],
   googleMapsService: {
     [GOOGLE_DETAILS_SERVICE]: null,
-    [GOOGLE_AUTOCOMPLETE_SERVICE]: null
+    [GOOGLE_AUTOCOMPLETE_SERVICE]: null,
+    [GOOGLE_GEOCODING_SERVICE]: null
   },
   media: null,
   position: null,

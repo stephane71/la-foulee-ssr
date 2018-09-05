@@ -1,3 +1,4 @@
+import React from 'react';
 import GlyphLaFoulee from '../svgs/lafoulee-glyph-tonic.svg';
 
 import { getSpacing } from '../styles-variables';
