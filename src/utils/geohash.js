@@ -69,6 +69,6 @@ Geohash.encode = function(lat, lon, precision) {
 
 const GEOHASH_PRECISION = 4;
 
-export default function({ lat, lng }) {
+module.exports = function({ lat, lng }) {
   return Geohash.encode(lat, lng, GEOHASH_PRECISION);
-}
+};

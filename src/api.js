@@ -1,4 +1,4 @@
-export function getAroundEventListArgs(geohash) {
+function getAroundEventListArgs(geohash) {
   const params = {
     geohash
   };
@@ -11,7 +11,7 @@ export function getAroundEventListArgs(geohash) {
   return [params, pathTemplate, method, additionalParams, body];
 }
 
-export function postNewsletterEmailArgs(email) {
+function postNewsletterEmailArgs(email) {
   const params = {};
   // Template syntax follows url-template https://www.npmjs.com/package/url-template
   const pathTemplate = `/newsletter/subscribe`;
@@ -21,3 +21,8 @@ export function postNewsletterEmailArgs(email) {
 
   return [params, pathTemplate, method, additionalParams, body];
 }
+
+module.exports = {
+  getAroundEventListArgs,
+  postNewsletterEmailArgs
+};
