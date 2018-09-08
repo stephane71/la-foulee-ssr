@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import EventList from '../components/EventList';
 import JSONLD from '../components/JSONLD';
+import { SelectedCityContext } from '../components/Layout';
 
 import { pageview, event } from '../utils/gtag';
 import { getEventListStructuredData } from '../utils/structuredData';
@@ -27,7 +28,7 @@ const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 function getEventListDescription(events, city) {
   return `Retrouvez les ${
     events.length
-  } evénements de courses à pieds autour de ${city} ${
+  } evénements de courses à pieds autour de ${city.name} ${
     events.length
       ? `à partir du ${moment
           .unix(events[0].date)
@@ -37,9 +38,20 @@ function getEventListDescription(events, city) {
   }`;
 }
 
+function getHeadData(events, city) {
+  return {
+    imageTwitter: `${ASSETS_URL}/android-chrome-512x512.png`,
+    imageFB: `${ASSETS_URL}/glyph.dominant.144x144%402x.png`,
+    title: `Tous les evénements${city ? ` autour de ${city.name}` : ''}`,
+    description: getEventListDescription(events, city)
+  };
+}
+
 class Events extends React.PureComponent {
   static async getInitialProps({ isServer, res, store, query, ...context }) {
     let city = null;
+    let initialCity = null;
+
     if (isServer) {
       if (res.statusCode === 404) {
         return { error: { code: 404 } };
@@ -55,9 +67,10 @@ class Events extends React.PureComponent {
       store.dispatch(setEventList(events));
 
       query.city = city.place_id;
+      initialCity = city;
     }
 
-    return {};
+    return { initialCity };
   }
 
   constructor(props) {
@@ -103,45 +116,51 @@ class Events extends React.PureComponent {
   }
 
   render() {
-    const { getEventListAround, query, path, events, error } = this.props;
-    const { position, city } = query;
-
-    const imageTwitter = `${ASSETS_URL}/android-chrome-512x512.png`;
-    const imageFB = `${ASSETS_URL}/glyph.dominant.144x144%402x.png`;
-    const title = `Tous les evénements${city ? ` autour de ${city}` : ''}`;
-    const description = `Retrouvez les ${
-      events.length
-    } evénements autour de ${city} ${
-      events.length
-        ? `à partir du ${moment
-            .unix(events[0].date)
-            .utc()
-            .format('dddd DD/MM/YYYY')}`
-        : ''
-    }`;
+    const {
+      getEventListAround,
+      query,
+      path,
+      events,
+      error,
+      initialCity
+    } = this.props;
+    const { position } = query;
 
     return (
       <>
-        <Head>
-          <title>{`La Foulée | ${title}`}</title>
-          {process.env.NODE_ENV === 'production' && (
-            <meta name={'robots'} content={`noindex, follow`} />
-          )}
-          <link rel={'canonical'} href={`${APP_URL}${path}`} />
+        <SelectedCityContext.Consumer>
+          {city => {
+            city = city || initialCity;
+            const { imageTwitter, imageFB, title, description } = getHeadData(
+              events,
+              city
+            );
 
-          {/* TWITTER */}
-          <meta name={'twitter:card'} content={'summary'} />
-          <meta name={'twitter:site'} content={'@_LaFoulee'} />
-          <meta name={'twitter:title'} content={title} />
-          {/* <meta name={'twitter:description'} content={description} /> */}
-          <meta name={'twitter:image'} content={imageTwitter} />
+            return (
+              <Head>
+                <title>{`La Foulée | ${title}`}</title>
+                {process.env.NODE_ENV === 'production' && (
+                  <meta name={'robots'} content={`noindex, follow`} />
+                )}
+                <link rel={'canonical'} href={`${APP_URL}${path}`} />
+                <meta name={'description'} content={description} />
 
-          {/* OPEN GRAPH */}
-          <meta property={'og:url'} content={`${APP_URL}${path}`} />
-          <meta property={'og:title'} content={title} />
-          {/* <meta property={'og:description'} content={description} /> */}
-          <meta property={'og:image'} content={imageFB} />
-        </Head>
+                {/* TWITTER */}
+                <meta name={'twitter:card'} content={'summary'} />
+                <meta name={'twitter:site'} content={'@_LaFoulee'} />
+                <meta name={'twitter:title'} content={title} />
+                <meta name={'twitter:description'} content={description} />
+                <meta name={'twitter:image'} content={imageTwitter} />
+
+                {/* OPEN GRAPH */}
+                <meta property={'og:url'} content={`${APP_URL}${path}`} />
+                <meta property={'og:title'} content={`title`} />
+                <meta property={'og:description'} content={description} />
+                <meta property={'og:image'} content={imageFB} />
+              </Head>
+            );
+          }}
+        </SelectedCityContext.Consumer>
 
         {/* Maybe a global error page instead ? */}
         {error &&
