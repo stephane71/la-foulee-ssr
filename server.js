@@ -10,7 +10,11 @@ require('dotenv').config({ path: `.env.server.${env}` });
 
 const express = require('express');
 const next = require('next');
+
 const getSitemap = require('./internals/getSitemap');
+const getCity = require('./src/server/getCity');
+const getEvents = require('./src/server/getEvents');
+const getGeohash = require('./src/server/getGeohash');
 
 const port = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== 'production';
@@ -58,6 +62,31 @@ server.get('/event/:keyword/:edition', (req, res) => {
 
 server.get('/event/:keyword', (req, res) => {
   app.render(req, res, '/event');
+});
+
+server.get('/events/:city', async (req, res) => {
+  let position = null;
+  let city = null;
+  let events = [];
+
+  try {
+    city = await getCity(req.params.city);
+    if (!city) res.statusCode = 404;
+    else {
+      position = getGeohash(city);
+      events = await getEvents(position);
+    }
+  } catch (e) {
+    console.log(
+      `[La Foulée] - Error - Server:'/events/${
+        req.params.city
+      }' | Error when try to fetch city or events`
+    );
+    console.log(e);
+    res.statusCode = 500;
+  }
+
+  app.render(req, res, '/events', { ...req.query, events, city, position });
 });
 
 server.get('*', (req, res) => {

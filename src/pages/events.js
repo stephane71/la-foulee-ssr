@@ -16,43 +16,45 @@ import {
   setEventList,
   setUserPosition,
   toggleSearch,
-  setInitialCity
+  addCity
 } from '../actions';
-import {
-  NO_EVENT_SELECTED,
-  MAX_WIDTH_CITY_PHOTO,
-  MAX_HEIGHT_CITY_PHOTO
-} from '../enums';
-import { getSpacing } from '../styles-variables';
+import { NO_EVENT_SELECTED } from '../enums';
 
 const { publicRuntimeConfig } = getConfig();
 const APP_URL = publicRuntimeConfig.APP_URL;
 const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 
+function getEventListDescription(events, city) {
+  return `Retrouvez les ${
+    events.length
+  } evénements de courses à pieds autour de ${city} ${
+    events.length
+      ? `à partir du ${moment
+          .unix(events[0].date)
+          .utc()
+          .format('dddd DD/MM/YYYY')}`
+      : ''
+  }`;
+}
+
 class Events extends React.PureComponent {
-  static async getInitialProps({ isServer, req, store, ...context }) {
+  static async getInitialProps({ isServer, res, store, query, ...context }) {
     let city = null;
     if (isServer) {
-      const getPredicitons = require('../server/getPredicitons');
-      const getCity = require('../server/getCity');
-
-      if (req.query) {
-        try {
-          let predictions = await getPredicitons(req.query.city);
-          if (predictions.length) {
-            city = await getCity(predictions[0], {
-              maxWidth: MAX_WIDTH_CITY_PHOTO,
-              maxHeight: MAX_HEIGHT_CITY_PHOTO
-            });
-            store.dispatch(setInitialCity(city));
-          }
-        } catch (e) {
-          console.log(
-            '[La Foulée] Events:getInitialProps | Error when try to fetch initial city'
-          );
-          console.log(e);
-        }
+      if (res.statusCode === 404) {
+        return { error: { code: 404 } };
       }
+      if (res.statusCode !== 200) {
+        return { error: { code: 500 } };
+      }
+
+      const { city, position, events } = query;
+
+      store.dispatch(addCity(city));
+      store.dispatch(setUserPosition(position));
+      store.dispatch(setEventList(events));
+
+      query.city = city.place_id;
     }
 
     return {};
@@ -68,6 +70,10 @@ class Events extends React.PureComponent {
     this.handleEventSelection = this.handleEventSelection.bind(this);
     this.handleSearchCityToggle = this.handleSearchCityToggle.bind(this);
   }
+
+  static defaultProps = {
+    error: null
+  };
 
   componentDidMount() {
     Router.prefetch('/event');
@@ -97,7 +103,7 @@ class Events extends React.PureComponent {
   }
 
   render() {
-    const { getEventListAround, query, path, events } = this.props;
+    const { getEventListAround, query, path, events, error } = this.props;
     const { position, city } = query;
 
     const imageTwitter = `${ASSETS_URL}/android-chrome-512x512.png`;
@@ -139,35 +145,20 @@ class Events extends React.PureComponent {
           <meta property={'og:image'} content={imageFB} />
         </Head>
 
-        {position && city ? (
+        {/* Maybe a global error page instead ? */}
+        {error &&
+          error.code === 500 && (
+            <div>{'Sorry...! We have a problem here :('}</div>
+          )}
+
+        {error && error.code === 404 && <div>{'List unknown'}</div>}
+
+        {!error && (
           <EventList
             data={events}
             loading={this.state.loading}
             onSelectEvent={this.handleEventSelection}
           />
-        ) : (
-          <div className={'Events-NoQuery'}>
-            <h3>{'Choisissez une ville'}</h3>
-            <p>
-              {`Nous avons besoins qu'une ville soit sélectionnée pour vous proposer des événements !`}
-            </p>
-            <button
-              className={'Button Button--fixed'}
-              onClick={this.handleSearchCityToggle}
-            >
-              {'Sélectionner une ville'}
-            </button>
-            <style jsx>{`
-              .Events-NoQuery {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                padding: ${getSpacing('m')}px;
-                margin-top: ${getSpacing('l')}px;
-                text-align: center;
-              }
-            `}</style>
-          </div>
         )}
       </>
     );

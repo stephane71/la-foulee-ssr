@@ -6,7 +6,7 @@ export const SET_USER_POSITION = 'SET_USER_POSITION';
 export const TOGGLE_SEARCH = 'TOGGLE_SEARCH';
 export const SET_EVENT_LIST_START_INDEX = 'SET_EVENT_LIST_START_INDEX';
 export const SET_SEARCHING_GEOHASH = 'SET_SEARCHING_GEOHASH';
-export const SET_INITIAL_CITY = 'SET_INITIAL_CITY';
+export const ADD_CITY = 'ADD_CITY';
 
 export function setSelectedEvent(event) {
   return {
@@ -65,9 +65,9 @@ export function setSearchingGeohash(searching) {
   };
 }
 
-export function setInitialCity(city) {
+export function addCity(city) {
   return {
-    type: SET_INITIAL_CITY,
+    type: ADD_CITY,
     city
   };
 }

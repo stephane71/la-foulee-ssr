@@ -1,6 +1,12 @@
+import dynamic from 'next/dynamic';
 import { connect } from 'react-redux';
 
 import { GOOGLE_DETAILS_SERVICE, GOOGLE_GEOCODING_SERVICE } from '../enums';
+
+const GoogleMapInitServices = dynamic(import('./GoogleMapInitServices'), {
+  ssr: false,
+  loading: () => null
+});
 
 const withGoogleMaps = WrappedComponent => {
   class GoogleMaps extends React.Component {
@@ -17,11 +23,15 @@ const withGoogleMaps = WrappedComponent => {
 
     render() {
       return (
-        <WrappedComponent
-          getDetails={this.getDetails}
-          reverseGeocoding={this.reverseGeocoding}
-          {...this.props}
-        />
+        <>
+          <GoogleMapInitServices />
+
+          <WrappedComponent
+            getDetails={this.getDetails}
+            reverseGeocoding={this.reverseGeocoding}
+            {...this.props}
+          />
+        </>
       );
     }
 

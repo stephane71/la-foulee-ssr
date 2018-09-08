@@ -2,6 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import Router from 'next/router';
 import css from 'styled-jsx/css';
+import slug from 'slug';
 import { connect } from 'react-redux';
 
 import Header from './Header';
@@ -16,8 +17,8 @@ import getGeohash from '../utils/geohash';
 import { event } from '../utils/gtag';
 
 import GlobalStyles from '../styles';
-import { USER_POSITION_KEY, MAX_WIDTH } from '../enums';
-import { toggleSearch, setSearchingGeohash } from '../actions';
+import { MAX_WIDTH } from '../enums';
+import { toggleSearch, setSearchingGeohash, addCity } from '../actions';
 
 moment.locale('fr');
 
@@ -52,13 +53,10 @@ class Layout extends React.PureComponent {
   constructor(props) {
     super(props);
 
+    const { query, cityMap } = props;
+
     this.state = {
-      city: props.initialCity || { name: props.query.city },
-      cityMap: props.initialCity
-        ? {
-            [props.initialCity.name]: props.initialCity
-          }
-        : {},
+      city: query.city ? cityMap[query.city] : {},
       error: null
     };
 
@@ -84,12 +82,13 @@ class Layout extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.query !== this.props.query) {
-      const cityName = nextProps.query.city;
-      const cityCache = this.state.cityMap[cityName];
-
-      const city = cityCache ? cityCache : { name: cityName };
-      this.setState({ city });
+    if (
+      nextProps.query.city &&
+      nextProps.query.city !== this.props.query.city
+    ) {
+      this.getCityDetails(nextProps.query.city).then(city =>
+        this.setState({ city })
+      );
     }
     if (
       nextProps.currentRoute !== this.props.currentRoute ||
@@ -101,7 +100,7 @@ class Layout extends React.PureComponent {
 
   render() {
     const { currentRoute, query, children, searching } = this.props;
-    const { city } = this.state;
+    const { city, error } = this.state;
 
     return (
       <div className={'root'}>
@@ -114,11 +113,7 @@ class Layout extends React.PureComponent {
 
         <SelectedCityContext.Provider value={city}>
           <div className={'PagesWrapper'}>
-            {this.state.error ? (
-              <LayoutError error={this.state.error} />
-            ) : (
-              children
-            )}
+            {error ? <LayoutError error={error} /> : children}
           </div>
         </SelectedCityContext.Provider>
 
@@ -177,22 +172,18 @@ class Layout extends React.PureComponent {
     this.setState({ error: null });
     this.handleToggleSearch();
 
-    let cityDetails;
-    try {
-      cityDetails = await this.getCityDetails(city);
-    } catch (error) {
-      this.setState({ error });
-      return;
-    }
+    const cityDetails = await this.getCityDetails(city && city.placeId);
+    const geohash = getGeohash(cityDetails.location);
 
-    let geohash = getGeohash(cityDetails.location);
-
-    this.setState({
-      city: cityDetails,
-      cityMap: { ...this.state.cityMap, [cityDetails.name]: cityDetails }
-    });
-    Router.push(`/events?position=${geohash}&city=${cityDetails.name}`);
     this.props.dispatch(setSearchingGeohash(false));
+
+    Router.push(
+      {
+        pathname: '/events',
+        query: { position: geohash, city: cityDetails.place_id }
+      },
+      `/events/${slug(cityDetails.name, { lower: true })}`
+    );
 
     /*
      * Google Analytics
@@ -212,20 +203,34 @@ class Layout extends React.PureComponent {
     });
   }
 
-  async getCityDetails(_city = null) {
-    if (!_city) {
-      let location = await getUserLocation();
-      _city = await this.props.reverseGeocoding(location);
+  async getCityDetails(placeId) {
+    let cityDetails;
+
+    cityDetails = this.props.cityMap[placeId];
+    if (!cityDetails) {
+      try {
+        if (!placeId) {
+          const location = await getUserLocation();
+          const city = await this.props.reverseGeocoding(location);
+          placeId = city.place_id;
+        }
+        cityDetails = await this.props.getDetails(placeId);
+      } catch (error) {
+        console.log(error);
+        this.setState({ error });
+        return;
+      }
+      this.props.dispatch(addCity(cityDetails));
     }
 
-    return this.props.getDetails(_city.placeId);
+    return cityDetails;
   }
 }
 
 function mapStateToProps(state) {
   return {
     searching: state.searching,
-    initialCity: state.initialCity
+    cityMap: state.cityMap
   };
 }
 

@@ -1,36 +1,40 @@
-const REQ_PLACE_OK = 'OK';
-const BASE_URL_GOOGLE_PHOTO =
-  'https://maps.googleapis.com/maps/api/place/photo';
+const slug = require('slug');
 
-function getUrl(ref, { maxWidth, maxHeight }) {
-  return `${BASE_URL_GOOGLE_PHOTO}?photoreference=${ref}&key=${
-    process.env.SERVER_GOOGLE_PLACES_API_KEY
-  }&maxheight=${maxHeight}&maxwidth=${maxWidth}`;
-}
+const getGMapsPredicitons = require('./getGMapsPredicitons');
+const getGMapsCityDetails = require('./getGMapsCityDetails');
 
-module.exports = function({ place_id }, { maxWidth, maxHeight }) {
-  // WARNING: see https://arunoda.me/blog/ssr-and-server-only-modules
-  const GoogleMaps = eval("require('@google/maps')");
+const MAX_WIDTH_CITY_PHOTO = 800;
+const MAX_HEIGHT_CITY_PHOTO = 400;
 
-  const googleMapsClient = GoogleMaps.createClient({
-    key: process.env.SERVER_GOOGLE_PLACES_API_KEY,
-    Promise: Promise
+const NO_CITY_FOUND = null;
+
+module.exports = async function(city) {
+  let predictions = await getGMapsPredicitons(city);
+  if (!predictions.length) {
+    console.log(`[La Foulée] getCity: no predicitions for ${city}`);
+    return NO_CITY_FOUND;
+  }
+
+  predictions = predictions.filter(
+    ({ terms }) => slug(terms[0].value, { lower: true }) === city
+  );
+  if (!predictions.length) {
+    console.log(`[La Foulée] getCity: no predicitons match city arg: ${city}`);
+    return NO_CITY_FOUND;
+  }
+
+  city = await getGMapsCityDetails(predictions[0], {
+    maxWidth: MAX_WIDTH_CITY_PHOTO,
+    maxHeight: MAX_HEIGHT_CITY_PHOTO
   });
+  if (!city) {
+    console.log(
+      `[La Foulée] getCity: no city details found for ${
+        predictions[0].place_id
+      }`
+    );
+    return NO_CITY_FOUND;
+  }
 
-  return googleMapsClient
-    .place({
-      placeid: place_id,
-      sessiontoken: ''
-    })
-    .asPromise()
-    .then(data => (data.json.status === REQ_PLACE_OK ? data.json.result : null))
-    .then(data => {
-      if (data.photos)
-        data.photos = data.photos.map(({ photo_reference, ...photo }) => ({
-          ...photo,
-          photo_url: getUrl(photo_reference, { maxWidth, maxHeight })
-        }));
-
-      return data;
-    });
+  return city;
 };

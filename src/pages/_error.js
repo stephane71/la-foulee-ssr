@@ -23,7 +23,6 @@ export default class Error extends React.Component {
         return DEFAULT_ERROR;
       case EVENT_NOT_FOUND:
         return `404 - Nous ne connaissons pas cet évenement.`;
-        break;
       default:
         return DEFAULT_ERROR;
     }
