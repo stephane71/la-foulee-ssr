@@ -16,7 +16,7 @@ import {
   setEventList,
   setUserPosition,
   toggleSearch,
-  setInitialCity
+  addCity
 } from '../actions';
 import { NO_EVENT_SELECTED } from '../enums';
 
@@ -38,16 +38,23 @@ function getEventListDescription(events, city) {
 }
 
 class Events extends React.PureComponent {
-  static async getInitialProps({ isServer, req, res, store, ...context }) {
+  static async getInitialProps({ isServer, res, store, query, ...context }) {
     let city = null;
     if (isServer) {
       if (res.statusCode === 404) {
         return { error: { code: 404 } };
       }
-
-      if (context.query.city) {
-        store.dispatch(setInitialCity(context.query.city));
+      if (res.statusCode !== 200) {
+        return { error: { code: 500 } };
       }
+
+      const { city, position, events } = query;
+
+      store.dispatch(addCity(city));
+      store.dispatch(setUserPosition(position));
+      store.dispatch(setEventList(events));
+
+      query.city = city.place_id;
     }
 
     return {};
@@ -138,9 +145,15 @@ class Events extends React.PureComponent {
           <meta property={'og:image'} content={imageFB} />
         </Head>
 
-        {error && error.code === 404 ? (
-          <div>{'List unknown'}</div>
-        ) : (
+        {/* Maybe a global error page instead ? */}
+        {error &&
+          error.code === 500 && (
+            <div>{'Sorry...! We have a problem here :('}</div>
+          )}
+
+        {error && error.code === 404 && <div>{'List unknown'}</div>}
+
+        {!error && (
           <EventList
             data={events}
             loading={this.state.loading}

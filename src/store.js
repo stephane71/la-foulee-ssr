@@ -10,7 +10,7 @@ import {
   TOGGLE_SEARCH,
   SET_EVENT_LIST_START_INDEX,
   SET_SEARCHING_GEOHASH,
-  SET_INITIAL_CITY
+  ADD_CITY
 } from './actions';
 
 function getNextMonth(month) {
@@ -37,7 +37,8 @@ const initialState = {
   searching: false,
   searchingGeohash: false,
   eventListStartIndex: EVENT_LIST_START_INDEX,
-  initialCity: null
+  city: null,
+  cityMap: {}
 };
 
 const reducer = (state = initialState, action) => {
@@ -66,8 +67,9 @@ const reducer = (state = initialState, action) => {
       return { ...state, eventListStartIndex: action.index };
     case SET_SEARCHING_GEOHASH:
       return { ...state, searchingGeohash: action.searching };
-    case SET_INITIAL_CITY:
-      return { ...state, initialCity: action.city };
+    case ADD_CITY:
+      const city = action.city;
+      return { ...state, cityMap: { ...state.cityMap, [city.place_id]: city } };
 
     default:
       return state;
