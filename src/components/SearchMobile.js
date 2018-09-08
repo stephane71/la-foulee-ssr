@@ -1,4 +1,3 @@
-import dynamic from 'next/dynamic';
 import debounce from 'lodash.debounce';
 import css from 'styled-jsx/css';
 
@@ -11,10 +10,6 @@ import List from './List';
 import IconWrapper from './IconWrapper';
 
 import GoogleMapsAutocomplete from './GoogleMapsAutocomplete';
-const GoogleMapInitServices = dynamic(import('./GoogleMapInitServices'), {
-  ssr: false,
-  loading: () => null
-});
 
 import IconArrowBack from '../svgs/ic_arrow_back_black_24px.svg';
 import IconCross from '../svgs/baseline-clear-24px.svg';
@@ -127,7 +122,6 @@ class SearchMobile extends React.PureComponent {
   render() {
     return (
       <div className={'SearchMobile'}>
-        <GoogleMapInitServices />
         <div className={'SearchMobile-Header'}>
           <div
             className={'Search-Icon--paddingRight'}
