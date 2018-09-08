@@ -43,8 +43,7 @@ export const getOrganizationStructuredData = function() {
       areaServed: 'France',
       contactType: 'customer support',
       availableLanguage: ['French', 'English'],
-      // TODO
-      telephone: ''
+      telephone: '+33662461643'
     },
     sameAs: [
       'https://twitter.com/_LaFoulee',
@@ -58,14 +57,10 @@ export const getEventListStructuredData = function(events) {
   const jsonLD = {
     '@context': 'http://schema.org',
     '@type': 'ItemList',
-    itemListElement: events.map((event, i) => ({
+    itemListElement: events.map(({ keyword, date }, i) => ({
       '@type': 'ListItem',
       position: i,
-      url: `${APP_URL}/event/${event.keyword}`,
-      item: getEventStructuredData(event, {
-        description: getEventDescription(event),
-        path: `/event/${event.keywpord}`
-      })
+      url: `${APP_URL}/event/${keyword}/${moment.unix(date).year()}`
     }))
   };
 
