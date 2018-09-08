@@ -2,7 +2,6 @@ import Router from 'next/router';
 import Head from 'next/head';
 import getConfig from 'next/config';
 import css from 'styled-jsx/css';
-import moment from 'moment';
 import { connect } from 'react-redux';
 
 import CustomError from './_error';
@@ -10,6 +9,7 @@ import CustomError from './_error';
 import EventDetails from '../components/EventDetails';
 import JSONLD from '../components/JSONLD';
 
+import getEventDescription from '../utils/getEventDescription';
 import { getEventStructuredData } from '../utils/structuredData';
 import { pageview, event } from '../utils/gtag';
 
@@ -106,15 +106,7 @@ class EventPage extends React.PureComponent {
     if (!event) return <CustomError statusCode={EVENT_NOT_FOUND} />;
 
     /** METAs:start **/
-    const eventDateMeta = moment
-      .unix(event.date)
-      .utc()
-      .format('dddd DD/MM/YYYY');
-    const description = `Retrouvez toutes les informations sur l'évènement '${
-      event.title
-    }' le ${eventDateMeta} à ${event.city} (${
-      event.department.code
-    }): épreuves, départs, tarifs, site de l'organisateur`;
+    const description = getEventDescription(event);
     const imageTwitter = `${ASSETS_URL}/android-chrome-512x512.png`;
     const imageFB = `${ASSETS_URL}/glyph.dominant.144x144%402x.png`;
     /** METAs:end **/
@@ -125,8 +117,6 @@ class EventPage extends React.PureComponent {
           <title>{`La Foulée | ${event.title}`}</title>
           <link rel={'canonical'} href={`${APP_URL}${path}`} />
           <meta name={'description'} content={description} />
-
-          <JSONLD data={getEventStructuredData(event, { description, path })} />
 
           {/* TWITTER */}
           <meta name={'twitter:card'} content={'summary'} />
@@ -149,6 +139,8 @@ class EventPage extends React.PureComponent {
           onClickOrgaLink={this.handleClickOrgaLink}
           path={path}
         />
+
+        <JSONLD data={getEventStructuredData(event, { description, path })} />
 
         <style jsx>{style}</style>
       </div>

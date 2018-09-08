@@ -74,7 +74,7 @@ class EventListHeader extends React.PureComponent {
   }
 
   getPhoto(city) {
-    if (city.photos) {
+    if (city && city.photos) {
       return city.photos[0].photo_url
         ? city.photos[0].photo_url
         : city.photos[0].getUrl({

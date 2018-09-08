@@ -17,9 +17,8 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <html>
+      <html lang={'fr-fr'}>
         <Head>
-          <meta name={'charset'} content={'utf-8'} />
           {/* OPEN GRAPH */}
           <meta property={'og:site_name'} content={'La Foulée'} />
           <meta property={'og:type'} content={'website'} />
@@ -34,7 +33,7 @@ export default class MyDocument extends Document {
             <meta name={'robots'} content={'noindex, nofollow'} />
           )}
 
-          {/* --- */}
+          {/* Global METAs */}
           <meta
             name={'viewport'}
             content={
@@ -47,6 +46,8 @@ export default class MyDocument extends Document {
             content={dominant}
           />
           <meta name={'apple-mobile-web-app-title'} content={'La Foulée'} />
+          <meta name={'application-name'} content={'La Foulée'} />
+          <meta name={'theme-color'} content={dominant} />
 
           {/* ICONS */}
           <link
@@ -120,7 +121,6 @@ export default class MyDocument extends Document {
           />
 
           <link rel={'manifest'} href={`/static/manifest.json?v=yya2lgM4gb`} />
-          <meta name={'theme-color'} content={dominant} />
 
           <script
             async

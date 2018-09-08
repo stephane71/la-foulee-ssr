@@ -2,7 +2,7 @@ const JSONLD = ({ data }) => (
   <script
     type={'application/ld+json'}
     dangerouslySetInnerHTML={{
-      __html: data
+      __html: JSON.stringify(data)
     }}
   />
 );
