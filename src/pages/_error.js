@@ -4,11 +4,11 @@ import { getSpacing, getFontSize } from '../styles-variables';
 
 const FS_ENORMOUS = 100;
 
-const Error = () => (
+const Error = ({ code }) => (
   <div className={'Error'}>
     <h1>{'Oups !'}</h1>
     <h3>{'La page que vous recherchez semble introuvable.'}</h3>
-    <h6>{'Code erreur: 404'}</h6>
+    <h6>{`Code erreur: ${code || '404'}`}</h6>
     <div className={'ErrorRedirectionMessage'}>
       <p>
         {`Vous pouvez utiliser le lien suivant pour être redirigé:\n`}

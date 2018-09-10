@@ -5,6 +5,8 @@ import React from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
+import CustomError from './_error';
+
 import EventList from '../components/EventList';
 import JSONLD from '../components/JSONLD';
 import EventListNotFoundError from '../components/EventListNotFoundError';
@@ -130,15 +132,12 @@ class Events extends React.PureComponent {
     if (error) {
       return (
         <>
-          {/* Maybe a global error page instead ? */}
-          {error.code === 500 && (
-            <div>{'Sorry...! We have a problem here :('}</div>
-          )}
-
-          {error.code === 404 && (
+          {error.code === 404 ? (
             <EventListNotFoundError
               onTriggerSearch={() => dispatch(toggleSearch())}
             />
+          ) : (
+            <CustomError code={error.code} />
           )}
         </>
       );
