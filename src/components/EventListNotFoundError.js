@@ -13,7 +13,6 @@ const EventListNotFoundError = ({ onTriggerSearch }) => (
     <style jsx>{`
       .EventListNotFoundError {
         padding: ${getSpacing('m')}px ${getSpacing('s')}px;
-        width: 80%;
       }
 
       .EventListNotFoundError > p {
