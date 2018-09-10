@@ -139,9 +139,6 @@ class Events extends React.PureComponent {
             return (
               <Head>
                 <title>{`La Foulée | ${title}`}</title>
-                {process.env.NODE_ENV === 'production' && (
-                  <meta name={'robots'} content={`noindex, follow`} />
-                )}
                 <link rel={'canonical'} href={`${APP_URL}${path}`} />
                 <meta name={'description'} content={description} />
 
