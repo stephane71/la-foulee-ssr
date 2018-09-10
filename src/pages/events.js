@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import EventList from '../components/EventList';
 import JSONLD from '../components/JSONLD';
+import EventListNotFoundError from '../components/EventListNotFoundError';
 import { SelectedCityContext } from '../components/Layout';
 
 import { pageview, event } from '../utils/gtag';
@@ -81,7 +82,6 @@ class Events extends React.PureComponent {
     };
 
     this.handleEventSelection = this.handleEventSelection.bind(this);
-    this.handleSearchCityToggle = this.handleSearchCityToggle.bind(this);
   }
 
   static defaultProps = {
@@ -122,9 +122,27 @@ class Events extends React.PureComponent {
       path,
       events,
       error,
-      initialCity
+      initialCity,
+      dispatch
     } = this.props;
     const { position } = query;
+
+    if (error) {
+      return (
+        <>
+          {/* Maybe a global error page instead ? */}
+          {error.code === 500 && (
+            <div>{'Sorry...! We have a problem here :('}</div>
+          )}
+
+          {error.code === 404 && (
+            <EventListNotFoundError
+              onTriggerSearch={() => dispatch(toggleSearch())}
+            />
+          )}
+        </>
+      );
+    }
 
     return (
       <>
@@ -159,35 +177,15 @@ class Events extends React.PureComponent {
           }}
         </SelectedCityContext.Consumer>
 
-        {/* Maybe a global error page instead ? */}
-        {error &&
-          error.code === 500 && (
-            <div>{'Sorry...! We have a problem here :('}</div>
-          )}
-
-        {error && error.code === 404 && <div>{'List unknown'}</div>}
-
-        {!error && (
-          <EventList
-            data={events}
-            loading={this.state.loading}
-            onSelectEvent={this.handleEventSelection}
-          />
-        )}
+        <EventList
+          data={events}
+          loading={this.state.loading}
+          onSelectEvent={this.handleEventSelection}
+        />
 
         <JSONLD data={getEventListStructuredData(events)} />
       </>
     );
-  }
-
-  handleSearchCityToggle() {
-    event({
-      action: 'Trigger Search',
-      category: 'Search',
-      label: 'From events page'
-    });
-
-    this.props.dispatch(toggleSearch());
   }
 
   handleEventSelection(selectedEvent) {
