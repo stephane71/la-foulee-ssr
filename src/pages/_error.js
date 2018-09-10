@@ -1,30 +1,36 @@
-import React from 'react';
+import Link from 'next/link';
 
-import EventNotFoundError from '../components/NotFoundError';
+import { getSpacing, getFontSize } from '../styles-variables';
 
-import { PAGE_NOT_FOUND, EVENT_NOT_FOUND } from '../errors';
+const FS_ENORMOUS = 100;
 
-export default class Error extends React.Component {
-  static getInitialProps({ res, err }) {
-    const statusCode = res ? res.statusCode : err ? err.statusCode : null;
-    return { statusCode };
-  }
+const Error = () => (
+  <div className={'Error'}>
+    <h1>{'Oups !'}</h1>
+    <h3>{'La page que vous recherchez semble introuvable.'}</h3>
+    <h6>{'Code erreur: 404'}</h6>
+    <div className={'ErrorRedirectionMessage'}>
+      <p>
+        {`Vous pouvez utiliser le lien suivant pour être redirigé:\n`}
+        <Link href={'/'}>
+          <a>{`Page d'accueil`}</a>
+        </Link>
+      </p>
+    </div>
+    <style jsx>{`
+      .Error {
+        padding: ${getSpacing('m')}px ${getSpacing('s')}px;
+      }
 
-  render() {
-    const { statusCode } = this.props;
+      .Error > h1 {
+        font-size: ${FS_ENORMOUS}px;
+      }
 
-    return <EventNotFoundError title={this.getError(statusCode)} />;
-  }
+      .ErrorRedirectionMessage > p {
+        white-space: pre-line;
+      }
+    `}</style>
+  </div>
+);
 
-  getError(error) {
-    const DEFAULT_ERROR = `404 - Cette page n'existe pas`;
-    switch (error) {
-      case PAGE_NOT_FOUND:
-        return DEFAULT_ERROR;
-      case EVENT_NOT_FOUND:
-        return `404 - Nous ne connaissons pas cet évenement.`;
-      default:
-        return DEFAULT_ERROR;
-    }
-  }
-}
+export default Error;
