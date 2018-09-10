@@ -14,7 +14,6 @@ import { getEventStructuredData } from '../utils/structuredData';
 import { pageview, event } from '../utils/gtag';
 
 import { DESKTOP, NO_EVENT_SELECTED } from '../enums';
-import { EVENT_NOT_FOUND } from '../errors';
 import { white } from '../colors';
 import { setSelectedEvent } from '../actions';
 
@@ -103,7 +102,7 @@ class EventPage extends React.PureComponent {
 
     const event = eventServerSide || eventStored;
 
-    if (!event) return <CustomError statusCode={EVENT_NOT_FOUND} />;
+    if (!event) return <CustomError />;
 
     /** METAs:start **/
     const description = getEventDescription(event);
