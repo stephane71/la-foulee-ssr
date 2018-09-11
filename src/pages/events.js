@@ -202,7 +202,10 @@ class Events extends React.PureComponent {
     const path = `/event/${selectedEvent.keyword}/${year}`;
 
     Router.push(
-      { pathname: '/event', query: { keyword: selectedEvent.keyword } },
+      {
+        pathname: '/event',
+        query: { keyword: selectedEvent.keyword, edition: year }
+      },
       path
     );
 

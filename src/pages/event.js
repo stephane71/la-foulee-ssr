@@ -2,6 +2,7 @@ import Router from 'next/router';
 import Head from 'next/head';
 import getConfig from 'next/config';
 import css from 'styled-jsx/css';
+import moment from 'moment';
 import { connect } from 'react-redux';
 
 import CustomError from './_error';
@@ -33,11 +34,14 @@ const style = css`
 `;
 
 class EventPage extends React.PureComponent {
-  static async getInitialProps({ isServer, req, res }) {
+  static async getInitialProps({ isServer, req, res, query }) {
     let event = NO_EVENT_SELECTED;
+    let noEdition = false;
+
     if (req) {
       const getEvent = require('../server/getEvent');
       const { keyword, edition } = req.params;
+      noEdition = !edition;
 
       try {
         if (keyword)
@@ -65,7 +69,8 @@ class EventPage extends React.PureComponent {
 
     return {
       isServer,
-      eventServerSide: event
+      eventServerSide: event,
+      noEdition
     };
   }
 
@@ -98,13 +103,19 @@ class EventPage extends React.PureComponent {
 
   render() {
     const { desktop, isServer } = this.state;
-    const { path, eventServerSide, eventStored } = this.props;
+    const { path, eventServerSide, eventStored, noEdition } = this.props;
 
     const event = eventServerSide || eventStored;
 
     if (!event) return <CustomError />;
 
+    const year = moment
+      .unix(event.date)
+      .utc()
+      .year();
+
     /** METAs:start **/
+    const canonical = `${APP_URL}${path}${noEdition ? `/${year}` : ''}`;
     const description = getEventDescription(event);
     const imageTwitter = `${ASSETS_URL}/android-chrome-512x512.png`;
     const imageFB = `${ASSETS_URL}/glyph.dominant.144x144%402x.png`;
@@ -114,7 +125,7 @@ class EventPage extends React.PureComponent {
       <div className={`EventPage ${desktop ? 'EventPage--desktop' : ''}`}>
         <Head>
           <title>{`La Foulée | ${event.title}`}</title>
-          <link rel={'canonical'} href={`${APP_URL}${path}`} />
+          <link rel={'canonical'} href={canonical} />
           <meta name={'description'} content={description} />
 
           {/* TWITTER */}
