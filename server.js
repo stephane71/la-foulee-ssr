@@ -49,7 +49,8 @@ server.get('/robots.txt', (req, res) => {
   res.sendFile('robots.txt', options);
 });
 
-server.get('/sitemap.txt', async (req, res) => {
+// TODO: update new sitemap files name
+server.get('/sitemap/:sitemap', async (req, res) => {
   // FIXME: S3 access when build on prod env
   // const sitemap = await getSitemap();
   // res.set('Content-Type', 'text/plain; charset=UTF-8');
@@ -62,7 +63,7 @@ server.get('/sitemap.txt', async (req, res) => {
     root: __dirname + '/src/static/',
     dotfiles: 'deny'
   };
-  res.sendFile('sitemap.txt', options);
+  res.sendFile(req.params.sitemap, options);
 });
 
 server.get('/event/:keyword/:edition', (req, res) => {
