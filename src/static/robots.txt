@@ -1,4 +1,4 @@
 User-agent : *
 Allow : /
 
-Sitemap : https://www.la-foulee.com/sitemap.txt
+Sitemap : https://www.la-foulee.com/sitemap/sitemap_index.xml
