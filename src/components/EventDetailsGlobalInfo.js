@@ -45,6 +45,7 @@ const style = css`
     display: inline-block;
     vertical-align: middle;
     margin-left: ${getSpacing('xs')}px;
+    font-style: normal;
   }
 
   .EventDetails-DatumLocation {
@@ -55,12 +56,8 @@ const style = css`
   }
 
   .EventDetails-DatumLocationMain {
-    white-space: pre;
     color: ${APP_COLOR};
-  }
-
-  .EventDetails-DatumLocationMain > .EventDetails-DatumValue {
-    font-style: inherit;
+    display: flex;
   }
 
   .EventDetails-DatumDate > .EventDetails-DatumValue {
@@ -88,10 +85,14 @@ const EventDetailsGlobalInfo = ({ data, desktop, isServer }) => (
     <a target={'_blank'} href={buildGoogleMapURL(data)}>
       <div className={'EventDetails-Datum EventDetails-DatumLocation'}>
         <div className={'EventDetails-DatumLocationMain'}>
-          <IconLocation fill={ICON_COLOR} />
-          <address className={'EventDetails-DatumValue'}>{`${data.city}\n${
-            data.department.code
-          }, ${data.department.name}`}</address>
+          <div>
+            <IconLocation fill={ICON_COLOR} />
+          </div>
+          <div>
+            <address className={'EventDetails-DatumValue'}>{`${data.city}, ${
+              data.department.name
+            }`}</address>
+          </div>
         </div>
       </div>
       <div>
