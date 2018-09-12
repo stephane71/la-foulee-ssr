@@ -33,8 +33,8 @@ function buildGoogleMapStaticImage({ city, department }, desktop) {
 
 const { publicRuntimeConfig } = getConfig();
 const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
-
 const ICON_COLOR = '#B7C9C6';
+const MOBILE_LOCATION_MAP_HEIGHT = 100;
 
 const style = css`
   .EventDetails-Datum {
@@ -64,9 +64,17 @@ const style = css`
     text-transform: capitalize;
   }
 
-  .EventDetails-DatumMap {
+  .EventDetails-LocationMap {
+    width: 100%;
+    height: 100%;
     border-radius: ${BORDER_RADIUS}px;
+  }
+
+  .EventDetails-LocationMapContainer {
+    height: ${MOBILE_LOCATION_MAP_HEIGHT}px;
     border: 1px solid ${ICON_COLOR};
+    border-radius: ${BORDER_RADIUS}px;
+    background-color: ${ICON_COLOR};
   }
 `;
 
@@ -95,12 +103,11 @@ const EventDetailsGlobalInfo = ({ data, desktop, isServer }) => (
           </div>
         </div>
       </div>
-      <div>
+      <div className={'EventDetails-LocationMapContainer'}>
         {!isServer && (
           <img
-            className={'EventDetails-DatumMap'}
+            className={'EventDetails-LocationMap'}
             src={buildGoogleMapStaticImage(data, desktop)}
-            width={'100%'}
           />
         )}
       </div>
