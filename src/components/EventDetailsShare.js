@@ -9,7 +9,6 @@ import Button from './Button';
 import {
   FACEBOOK_SHARE,
   TWITTER_SHARE,
-  LINK_SHARE,
   WHATSAPP,
   MAILTO,
   ICON_SIZE

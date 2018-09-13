@@ -7,7 +7,6 @@ import IconWrapper from './IconWrapper';
 
 import FacebookIcon from '../svgs/facebook-f-brands.svg';
 import TwitterIcon from '../svgs/twitter-brands.svg';
-import LinkIcon from '../svgs/link-solid.svg';
 import WhatsappIcon from '../svgs/whatsapp-brands.svg';
 import MailtoIcon from '../svgs/envelope-solid.svg';
 
@@ -17,7 +16,6 @@ import { getSpacing } from '../styles-variables';
 import {
   FACEBOOK_SHARE,
   TWITTER_SHARE,
-  LINK_SHARE,
   WHATSAPP,
   MAILTO,
   ICON_SIZE
@@ -29,8 +27,6 @@ function getSharedLink({ dest, url }) {
       return facebook(url);
     case TWITTER_SHARE:
       return twitter(url);
-    case LINK_SHARE:
-      return url;
     case WHATSAPP:
       return whatsapp(url);
     case MAILTO:
@@ -46,8 +42,6 @@ function getImage(dest) {
       return FacebookIcon;
     case TWITTER_SHARE:
       return TwitterIcon;
-    case LINK_SHARE:
-      return LinkIcon;
     case WHATSAPP:
       return WhatsappIcon;
     case MAILTO:
