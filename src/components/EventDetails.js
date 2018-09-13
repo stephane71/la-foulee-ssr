@@ -4,9 +4,11 @@ import EventDetailsGlobalInfo from './EventDetailsGlobalInfo';
 import EventDetailsShare from './EventDetailsShare';
 import EventDetailsActivities from './EventDetailsActivities';
 import EventDetailsFooter from './EventDetailsFooter';
-import { SHARE_ICON_HEIGHT } from './Share';
 
 import { getSpacing, getFontSize } from '../styles-variables';
+import { getColor } from '../colors';
+
+const ICON_COLOR = getColor('light');
 
 const style = css`
   .EventDetails {
@@ -27,14 +29,6 @@ const style = css`
     margin-bottom: ${getSpacing('m')}px;
   }
 
-  .EventDetails-ShareEvent {
-    height: ${SHARE_ICON_HEIGHT}px;
-  }
-
-  .EventDetails-Description {
-    white-space: pre-line;
-  }
-
   .EventDetails-Title {
     text-transform: capitalize;
     font-family: 'Circular-Medium';
@@ -43,13 +37,12 @@ const style = css`
   }
 
   .EventDetails-Subtitle {
-    font-weight: 400;
     font-size: ${getFontSize('l')}px;
     margin: 0;
   }
 `;
 
-const EventDetails = ({ data, desktop, isServer, onClickOrgaLink, path }) => (
+const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
   <div className={'EventDetails'}>
     {/* HEADER */}
     <header className={`EventDetails-Header`}>
@@ -57,24 +50,24 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink, path }) => (
     </header>
 
     {/* GLOBAL INFO */}
-    <div className={'EventDetails-Info'}>
+    <div className={'EventDetails-GlobalInfo'}>
       <EventDetailsGlobalInfo
         data={data}
         desktop={desktop}
         isServer={isServer}
+        iconColor={ICON_COLOR}
       />
     </div>
 
     {/* SHARE */}
     <div className={'EventDetails-ShareEvent'}>
-      {/* <h2 className={'EventDetails-Subtitle'}>{'Partager cet événement'}</h2> */}
-      {!isServer && (
-        <EventDetailsShare data={data} path={path} desktop={desktop} />
-      )}
+      <EventDetailsShare
+        data={data}
+        desktop={desktop}
+        isServer={isServer}
+        iconColor={ICON_COLOR}
+      />
     </div>
-
-    {/* DESCRIPTION */}
-    {data.info && <div className={'EventDetails-Description'}>{data.info}</div>}
 
     {/* ACTIVITIES */}
     <div className={'EventDetails-Activities'}>

@@ -1,3 +1,7 @@
+import css from 'styled-jsx/css';
+
+import IconWrapper from './IconWrapper';
+
 // import FacebookIcon from '../svgs/facebook.svg';
 // import TwitterIcon from '../svgs/twitter.svg';
 
@@ -15,7 +19,8 @@ import {
   TWITTER_SHARE,
   LINK_SHARE,
   WHATSAPP,
-  MAILTO
+  MAILTO,
+  ICON_SIZE
 } from '../enums';
 
 function getSharedLink({ dest, url }) {
@@ -56,33 +61,28 @@ function handleShareWindow(dest, url) {
   window.open(getSharedLink({ dest, url }), 'sharer', 'width=626,height=436');
 }
 
-// Based on the height of the button ButtonWithClipboard
-// see EventDetailsShare component
-const ICON_SIZE = 42;
-export const SHARE_ICON_HEIGHT = ICON_SIZE + getSpacing('xs');
+const style = css`
+  .Share {
+    height: ${ICON_SIZE}px;
+    width: ${ICON_SIZE}px;
+    margin-right: ${getSpacing('m')}px;
+  }
 
-const Share = ({ dest, url, margin = true, lockOnClick }) => {
-  const ShareSVG = getImage(dest);
+  .Share:hover {
+    cursor: pointer;
+  }
+`;
 
-  const onClick = lockOnClick
-    ? {}
-    : { onClick: () => handleShareWindow(dest, url) };
+const Share = ({ dest, url, iconColor }) => {
+  const ShareSVG = IconWrapper(getImage(dest));
 
   return (
-    <div className={'Share'} {...onClick}>
-      <ShareSVG height={'100%'} width={'100%'} />
-      <style jsx>{`
-        .Share {
-          height: ${ICON_SIZE}px;
-          width: ${ICON_SIZE}px;
-          margin-left: ${margin ? getSpacing('xs') : 0}px;
-          padding: ${getSpacing('xs')}px;
-        }
-
-        .Share:hover {
-          cursor: pointer;
-        }
-      `}</style>
+    <div className={'Share'} onClick={() => handleShareWindow(dest, url)}>
+      <ShareSVG
+        fill={iconColor}
+        style={{ width: ICON_SIZE, height: ICON_SIZE, verticalAlign: 'top' }}
+      />
+      <style jsx>{style}</style>
     </div>
   );
 };

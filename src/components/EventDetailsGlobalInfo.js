@@ -4,8 +4,8 @@ import moment from 'moment';
 
 import IconWrapper from './IconWrapper';
 
-import IconLocation from '../svgs/outline-location_on-24px.svg';
-import IconAgenda from '../svgs/outline-event-24px.svg';
+import IconLocation from '../svgs/baseline-location_on-24px.svg';
+import IconAgenda from '../svgs/baseline-event-24px.svg';
 
 import { getSpacing } from '../styles-variables';
 import { APP_COLOR, APP_BACKGROUND_COLOR } from '../colors';
@@ -33,7 +33,6 @@ function buildGoogleMapStaticImage({ city, department }, desktop) {
 
 const { publicRuntimeConfig } = getConfig();
 const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
-const ICON_COLOR = '#B7C9C6';
 const MOBILE_LOCATION_MAP_HEIGHT = 100;
 
 const style = css`
@@ -53,6 +52,7 @@ const style = css`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: ${getSpacing('m')}px;
   }
 
   .EventDetails-DatumLocationMain {
@@ -69,19 +69,12 @@ const style = css`
     height: 100%;
     border-radius: ${BORDER_RADIUS}px;
   }
-
-  .EventDetails-LocationMapContainer {
-    height: ${MOBILE_LOCATION_MAP_HEIGHT}px;
-    border: 1px solid ${ICON_COLOR};
-    border-radius: ${BORDER_RADIUS}px;
-    background-color: ${ICON_COLOR};
-  }
 `;
 
-const EventDetailsGlobalInfo = ({ data, desktop, isServer }) => (
+const EventDetailsGlobalInfo = ({ data, desktop, isServer, iconColor }) => (
   <div>
     <div className={'EventDetails-Datum EventDetails-DatumDate'}>
-      <IconAgenda fill={ICON_COLOR} />
+      <IconAgenda fill={iconColor} />
       <div className={'EventDetails-DatumValue'}>
         {moment
           .unix(data.date)
@@ -94,7 +87,7 @@ const EventDetailsGlobalInfo = ({ data, desktop, isServer }) => (
       <div className={'EventDetails-Datum EventDetails-DatumLocation'}>
         <div className={'EventDetails-DatumLocationMain'}>
           <div>
-            <IconLocation fill={ICON_COLOR} />
+            <IconLocation fill={iconColor} />
           </div>
           <div>
             <address className={'EventDetails-DatumValue'}>{`${data.city}, ${
@@ -114,6 +107,15 @@ const EventDetailsGlobalInfo = ({ data, desktop, isServer }) => (
     </a>
 
     <style jsx>{style}</style>
+
+    <style jsx>{`
+      .EventDetails-LocationMapContainer {
+        height: ${MOBILE_LOCATION_MAP_HEIGHT}px;
+        border: 1px solid ${iconColor};
+        border-radius: ${BORDER_RADIUS}px;
+        background-color: ${iconColor};
+      }
+    `}</style>
   </div>
 );
 
