@@ -10,6 +10,7 @@ import { getSpacing, getFontSize } from '../styles-variables';
 import { getColor } from '../colors';
 
 const ICON_COLOR = getColor('light');
+const MAP_MOBILE_HEIGHT = 100;
 
 const style = css`
   .EventDetails {
@@ -45,6 +46,10 @@ const style = css`
     font-size: ${getFontSize('l')}px;
     margin: 0;
   }
+
+  .EventDetails-StaticMap {
+    height: ${MAP_MOBILE_HEIGHT}px;
+  }
 `;
 
 const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
@@ -68,6 +73,7 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
         desktop={desktop}
         color={ICON_COLOR}
         isServer={isServer}
+        dimensions={{ height: MAP_MOBILE_HEIGHT }}
       />
     </div>
 

@@ -6,12 +6,12 @@ import EventDetailsActivities from './EventDetailsActivities';
 import EventDetailsOrgaLink from './EventDetailsOrgaLink';
 import StaticMap from './StaticMap';
 
-import { DESKTOP_STATIC_MAP } from '../utils/buildGoogleMapStaticImage';
-
 import { getSpacing, getFontSize } from '../styles-variables';
 import { getColor, TABLE_BORDER_COLOR } from '../colors';
 
 const ICON_COLOR = getColor('light');
+const MAP_DESKTOP_WIDTH = 300;
+const MAP_DESKTOP_HEIGHT = 350;
 
 const EventDetailsStyle = css`
   .EventDetails-Header {
@@ -53,9 +53,9 @@ const style = css`
   }
 
   .EventDetailsDesktop-Right {
+    width: ${MAP_DESKTOP_WIDTH}px;
     display: flex;
     flex-direction: column;
-    width: ${DESKTOP_STATIC_MAP.width}px;
   }
 
   .EventDetailsDesktop-Right > div {
@@ -69,6 +69,11 @@ const style = css`
 
   .EventDetailsDesktop-Activities {
     padding-top: ${getSpacing('m')}px;
+  }
+
+  .EventDetailsDesktop-StaticMap {
+    width: ${MAP_DESKTOP_WIDTH}px;
+    height: ${MAP_DESKTOP_HEIGHT}px;
   }
 `;
 
@@ -115,6 +120,7 @@ const EventDetailsDesktop = ({ data, desktop, isServer, onClickOrgaLink }) => (
           desktop={desktop}
           color={ICON_COLOR}
           isServer={isServer}
+          dimensions={{ width: MAP_DESKTOP_WIDTH, height: MAP_DESKTOP_HEIGHT }}
         />
       </div>
 
