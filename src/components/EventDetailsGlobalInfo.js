@@ -1,5 +1,4 @@
 import css from 'styled-jsx/css';
-import getConfig from 'next/config';
 import moment from 'moment';
 
 import IconWrapper from './IconWrapper';
@@ -8,8 +7,8 @@ import IconLocation from '../svgs/baseline-location_on-24px.svg';
 import IconAgenda from '../svgs/baseline-event-24px.svg';
 
 import { getSpacing } from '../styles-variables';
-import { APP_COLOR, APP_BACKGROUND_COLOR } from '../colors';
-import { DATE_FORMAT, BORDER_RADIUS } from '../enums';
+import { APP_COLOR } from '../colors';
+import { DATE_FORMAT } from '../enums';
 
 IconLocation = IconWrapper(IconLocation);
 IconAgenda = IconWrapper(IconAgenda);
@@ -21,61 +20,37 @@ function buildGoogleMapURL({ place_id, city }) {
   )}`;
 }
 
-function buildGoogleMapStaticImage({ city, department }, desktop) {
-  const mobileSize = '300x100';
-  const desktopSize = '600x200';
-
-  const BASE_URL = `https://maps.googleapis.com/maps/api/staticmap?size=${
-    desktop ? desktopSize : mobileSize
-  }&zoom=11&key=${GOOGLE_PLACES_API_KEY}`;
-  return `${BASE_URL}&center=${encodeURIComponent(city)},${department.isoCode}`;
-}
-
-const { publicRuntimeConfig } = getConfig();
-const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
-const MOBILE_LOCATION_MAP_HEIGHT = 100;
-
 const style = css`
-  .EventDetails-Datum {
-    margin-bottom: ${getSpacing('s')}px;
-  }
-
-  .EventDetails-DatumValue {
+  .GlobalInfo-DatumValue {
     display: inline-block;
     vertical-align: middle;
     margin-left: ${getSpacing('xs')}px;
     font-style: normal;
   }
 
-  .EventDetails-DatumLocation {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: ${getSpacing('m')}px;
-  }
-
-  .EventDetails-DatumLocationMain {
-    color: ${APP_COLOR};
+  .GlobalInfo-Location {
     display: flex;
   }
 
-  .EventDetails-DatumDate > .EventDetails-DatumValue {
+  .GlobalInfo-Date {
+    margin-bottom: ${getSpacing('s')}px;
+  }
+
+  .GlobalInfo-Date > .GlobalInfo-DatumValue {
     text-transform: capitalize;
   }
 
-  .EventDetails-LocationMap {
-    width: 100%;
-    height: 100%;
-    border-radius: ${BORDER_RADIUS}px;
+  .GlobalInfo-MapLink {
+    color: ${APP_COLOR};
+    text-decoration: none;
   }
 `;
 
-const EventDetailsGlobalInfo = ({ data, desktop, isServer, iconColor }) => (
+const EventDetailsGlobalInfo = ({ data, iconColor }) => (
   <div>
-    <div className={'EventDetails-Datum EventDetails-DatumDate'}>
+    <div className={'GlobalInfo-Date'}>
       <IconAgenda fill={iconColor} />
-      <div className={'EventDetails-DatumValue'}>
+      <div className={'GlobalInfo-DatumValue'}>
         {moment
           .unix(data.date)
           .utc()
@@ -83,39 +58,20 @@ const EventDetailsGlobalInfo = ({ data, desktop, isServer, iconColor }) => (
       </div>
     </div>
 
-    <a target={'_blank'} href={buildGoogleMapURL(data)}>
-      <div className={'EventDetails-Datum EventDetails-DatumLocation'}>
-        <div className={'EventDetails-DatumLocationMain'}>
-          <div>
-            <IconLocation fill={iconColor} />
-          </div>
-          <div>
-            <address className={'EventDetails-DatumValue'}>{`${data.city}, ${
-              data.department.name
-            }`}</address>
-          </div>
-        </div>
-      </div>
-      <div className={'EventDetails-LocationMapContainer'}>
-        {!isServer && (
-          <img
-            className={'EventDetails-LocationMap'}
-            src={buildGoogleMapStaticImage(data, desktop)}
-          />
-        )}
+    <a
+      className={'GlobalInfo-MapLink'}
+      target={'_blank'}
+      href={buildGoogleMapURL(data)}
+    >
+      <div className={'GlobalInfo-Location'}>
+        <IconLocation fill={iconColor} />
+        <address className={'GlobalInfo-DatumValue'}>{`${data.city}, ${
+          data.department.name
+        }`}</address>
       </div>
     </a>
 
     <style jsx>{style}</style>
-
-    <style jsx>{`
-      .EventDetails-LocationMapContainer {
-        height: ${MOBILE_LOCATION_MAP_HEIGHT}px;
-        border: 1px solid ${iconColor};
-        border-radius: ${BORDER_RADIUS}px;
-        background-color: ${iconColor};
-      }
-    `}</style>
   </div>
 );
 

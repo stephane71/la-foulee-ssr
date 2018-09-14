@@ -1,6 +1,6 @@
 import formatDistance from '../utils/formatDistance';
 
-const EMPTY_VALUE = '-';
+const EMPTY_VALUE = '   -';
 
 const EventDetailsActivities = ({ data }) => {
   if (!data.activities || !data.activities.length) return null;

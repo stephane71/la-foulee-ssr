@@ -16,38 +16,14 @@ function getOrgaLink({ keyword, webSite = [], date }) {
 }
 
 const style = css`
-  .EventDetails-Footer--mobile {
-    margin: 0 auto;
-    position: fixed;
-    bottom: ${getSpacing('m')}px;
-    max-width: 100%;
-    width: 768px;
-    left: 50%;
+  .EventDetailsOrgaLink {
+    padding: ${getSpacing('s')}px;
     text-align: center;
-    transform: translateX(-50%);
-  }
-
-  .EventDetails-Footer--desktop {
-    margin: auto auto 0;
-  }
-
-  .EventDetails-Footer {
-    padding: ${getSpacing('m')}px;
-  }
-
-  @media (max-width: ${MAX_WIDTH}px) {
-    .EventDetails-Footer {
-      bottom: 0;
-    }
   }
 `;
 
-const EventDetailsFooter = ({ data, desktop, onClickOrgaLink }) => (
-  <footer
-    className={`EventDetails-Footer ${
-      desktop ? 'EventDetails-Footer--desktop' : 'EventDetails-Footer--mobile'
-    }`}
-  >
+const EventDetailsOrgaLink = ({ data, desktop, onClickOrgaLink }) => (
+  <div className={`EventDetailsOrgaLink`}>
     <a
       onClick={() => onClickOrgaLink(data.keyword)}
       href={getOrgaLink(data)}
@@ -56,7 +32,7 @@ const EventDetailsFooter = ({ data, desktop, onClickOrgaLink }) => (
     >{`Site de l'organisateur`}</a>
 
     <style jsx>{style}</style>
-  </footer>
+  </div>
 );
 
-export default EventDetailsFooter;
+export default EventDetailsOrgaLink;

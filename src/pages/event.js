@@ -1,13 +1,23 @@
 import Router from 'next/router';
 import Head from 'next/head';
 import getConfig from 'next/config';
+import dynamic from 'next/dynamic';
 import css from 'styled-jsx/css';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
 import CustomError from './_error';
 
-import EventDetails from '../components/EventDetails';
+const EventDetailsMobile = dynamic(import('../components/EventDetails'), {
+  loading: () => null
+});
+const EventDetailsDesktop = dynamic(
+  import('../components/EventDetailsDesktop'),
+  {
+    loading: () => null
+  }
+);
+
 import JSONLD from '../components/JSONLD';
 
 import getEventDescription from '../utils/getEventDescription';
@@ -17,6 +27,7 @@ import { pageview, event } from '../utils/gtag';
 import { DESKTOP, NO_EVENT_SELECTED } from '../enums';
 import { white } from '../colors';
 import { setSelectedEvent } from '../actions';
+import { getSpacing } from '../styles-variables';
 
 const { publicRuntimeConfig } = getConfig();
 const APP_URL = publicRuntimeConfig.APP_URL;
@@ -24,7 +35,6 @@ const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 
 const style = css`
   .EventPage {
-    min-height: 100%;
     background: ${white};
   }
 
@@ -142,12 +152,25 @@ class EventPage extends React.PureComponent {
           <meta property={'og:image'} content={imageFB} />
         </Head>
 
-        <EventDetails
-          data={event}
-          desktop={desktop}
-          isServer={isServer}
-          onClickOrgaLink={this.handleClickOrgaLink}
-        />
+        {!isServer &&
+          !desktop && (
+            <EventDetailsMobile
+              data={event}
+              desktop={desktop}
+              isServer={isServer}
+              onClickOrgaLink={this.handleClickOrgaLink}
+            />
+          )}
+
+        {!isServer &&
+          desktop && (
+            <EventDetailsDesktop
+              data={event}
+              desktop={desktop}
+              isServer={isServer}
+              onClickOrgaLink={this.handleClickOrgaLink}
+            />
+          )}
 
         <JSONLD data={getEventStructuredData(event, { description, path })} />
 
