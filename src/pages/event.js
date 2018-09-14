@@ -88,7 +88,7 @@ class EventPage extends React.PureComponent {
     super(props);
     this.state = {
       desktop: false,
-      isServer: this.props.isServer
+      isServer: props.isServer
     };
 
     this.handleClickOrgaLink = this.handleClickOrgaLink.bind(this);
@@ -109,6 +109,12 @@ class EventPage extends React.PureComponent {
       url: window.location.href,
       path: this.props.path
     });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (this.props.media !== nextProps.media) {
+      this.setState({ desktop: nextProps.media === DESKTOP });
+    }
   }
 
   render() {
@@ -132,7 +138,11 @@ class EventPage extends React.PureComponent {
     /** METAs:end **/
 
     return (
-      <div className={`EventPage ${desktop ? 'EventPage--desktop' : ''}`}>
+      <div
+        className={`EventPage ${
+          desktop ? 'EventPage--desktop' : 'EventPage--mobile'
+        }`}
+      >
         <Head>
           <title>{`La Foulée | ${event.title}`}</title>
           <link rel={'canonical'} href={canonical} />
