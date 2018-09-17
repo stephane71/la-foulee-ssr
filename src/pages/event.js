@@ -24,7 +24,7 @@ import getEventDescription from '../utils/getEventDescription';
 import { getEventStructuredData } from '../utils/structuredData';
 import { pageview, event } from '../utils/gtag';
 
-import { DESKTOP, NO_EVENT_SELECTED } from '../enums';
+import { DESKTOP, NO_EVENT_SELECTED, BORDER_RADIUS } from '../enums';
 import { white } from '../colors';
 import { setSelectedEvent } from '../actions';
 import { getSpacing } from '../styles-variables';
@@ -40,6 +40,7 @@ const style = css`
 
   .EventPage--desktop {
     overflow-y: initial;
+    border-radius: ${BORDER_RADIUS}px;
   }
 `;
 
