@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 
 import CustomError from './_error';
 
-const EventDetailsMobile = dynamic(import('../components/EventDetails'), {
+const EventDetailsMobile = dynamic(import('../components/EventDetailsMobile'), {
   loading: () => null
 });
 const EventDetailsDesktop = dynamic(

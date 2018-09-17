@@ -11,6 +11,8 @@ import { getColor } from '../colors';
 
 const ICON_COLOR = getColor('light');
 const MAP_MOBILE_HEIGHT = 100;
+const MOBILE_MIN_WIDTH = 320;
+const MOBILE_MAX_WIDTH = 450;
 
 const style = css`
   .EventDetails {
@@ -21,6 +23,10 @@ const style = css`
     padding-bottom: ${getSpacing('xl')}px;
     display: flex;
     flex-direction: column;
+
+    min-width: ${MOBILE_MIN_WIDTH}px;
+    max-width: ${MOBILE_MAX_WIDTH}px;
+    margin: 0 auto;
   }
 
   .EventDetails > div {
@@ -52,7 +58,7 @@ const style = css`
   }
 `;
 
-const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
+const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
   <article className={'EventDetails'}>
     <header className={`EventDetails-Header`}>
       <h1 className={`EventDetails-Title`}>{data.title}</h1>
@@ -107,4 +113,4 @@ const EventDetails = ({ data, desktop, isServer, onClickOrgaLink }) => (
   </article>
 );
 
-export default EventDetails;
+export default EventDetailsMobile;
