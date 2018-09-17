@@ -56,6 +56,14 @@ const style = css`
   .EventDetails-StaticMap {
     height: ${MAP_MOBILE_HEIGHT}px;
   }
+
+  .EventDetails-Footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: ${getSpacing('s')}px 0;
+  }
 `;
 
 const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
@@ -101,7 +109,7 @@ const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
       )}
     </section>
 
-    <footer>
+    <footer className={'EventDetails-Footer'}>
       <EventDetailsOrgaLink
         data={data}
         desktop={desktop}
