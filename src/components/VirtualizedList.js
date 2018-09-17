@@ -10,8 +10,10 @@ import {
 import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
 import EventListHeader from './EventListHeader';
+import EventListWeek from './EventListWeek';
 
 import { setEventListStartIndex } from '../actions';
+import { getSpacing } from '../styles-variables';
 
 const cache = new CellMeasurerCache({
   fixedWidth: true
@@ -101,7 +103,12 @@ class VirtualizedList extends React.PureComponent {
       >
         <div style={{ ...style }}>
           {!index && <EventListHeader nbItems={data.length} />}
-          {firstItemDay && <EventListDate date={data[index].date} marginTop />}
+          {firstItemDay && (
+            <div style={{ padding: getSpacing('m') }}>
+              <EventListWeek data={data} index={index} />
+              <EventListDate date={data[index].date} />
+            </div>
+          )}
           <EventListItem
             data={data[index]}
             onSelectEvent={data => this.onSelectEvent(data, style.top)}
