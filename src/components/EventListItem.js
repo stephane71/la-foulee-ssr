@@ -76,7 +76,6 @@ const EventListItem = ({
         align-items: center;
         background-color: ${white};
         margin: 0 ${getSpacing('s')}px;
-        box-shadow: 0 10px 20px 0 rgba(38, 74, 67, 0.05);
         position: relative;
         margin-bottom: 1px;
       }
