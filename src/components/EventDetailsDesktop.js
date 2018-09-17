@@ -33,7 +33,6 @@ const EventDetailsStyle = css`
 
 const style = css`
   .EventDetailsDesktop {
-    margin-top: ${getSpacing('l')}px;
     display: flex;
     justify-content: space-between;
     height: 100%;

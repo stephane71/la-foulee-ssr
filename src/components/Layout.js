@@ -36,6 +36,8 @@ const style = css`
     margin: 0 auto;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
   }
 
   .LoaderWrapper {

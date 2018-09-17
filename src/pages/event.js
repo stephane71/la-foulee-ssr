@@ -41,6 +41,7 @@ const style = css`
   .EventPage--desktop {
     overflow-y: initial;
     border-radius: ${BORDER_RADIUS}px;
+    margin: auto 0;
   }
 `;
 
