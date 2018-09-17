@@ -31,39 +31,44 @@ const style = css`
 `;
 
 const EventListMonth = ({ data, index }) => {
+  let diff = 0;
   let newMonth = false;
   let currentDay = moment.unix(data[index].date);
 
+  const previousDay = index && moment.unix(data[index - 1].date);
+  const previousDayMonth = index && previousDay.month();
+  const currentDayMonth = moment.unix(data[index].date).month();
+
   if (index) {
-    const previousDayMonth = moment.unix(data[index - 1].date).month();
-    const currentDayMonth = moment.unix(data[index].date).month();
     newMonth = currentDayMonth !== previousDayMonth;
+    diff = currentDayMonth - previousDayMonth;
+    if (diff < 0) diff += 12;
   }
 
-  if (!newMonth) return null;
+  if (!diff) return null;
 
-  return (
-    <div className={'EventListMonth'}>
+  let monthTab = [];
+  for (let i = 1; i <= diff; i++) {
+    let month = previousDay.clone().add(i, 'month');
+    monthTab.push(
+      `${month.format('MMMM')}${
+        month.year() !== moment().year() ? ` ${month.year()}` : ''
+      }`
+    );
+  }
+
+  return monthTab.map((print, i) => (
+    <div key={i} className={'EventListMonth'}>
       <div className={'EventListMonth-Line'}>
         <hr />
       </div>
-      <span className={'EventListMonth-Month'}>
-        {`${currentDay.format('MMMM')}${
-          currentDay.year() !== moment().year() ? ` ${currentDay.year()}` : ''
-        }`}
-      </span>
+      <span className={'EventListMonth-Month'}>{print}</span>
       <div className={'EventListMonth-Line'}>
         <hr />
       </div>
       <style jsx>{style}</style>
     </div>
-  );
+  ));
 };
 
 export default EventListMonth;
-
-// export default (props) => {
-//
-//   return
-//   <EventListMonth {...props} />
-// }
