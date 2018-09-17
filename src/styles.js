@@ -236,11 +236,7 @@ export default css`
     font-weight: 500;
   }
 
-  .Table-DataCell:first-child {
-    border-radius: ${BaseRadius}px 0 0 ${BaseRadius}px;
-  }
-
-  .Table-DataCell:last-child {
-    border-radius: 0 ${BaseRadius}px ${BaseRadius}px 0;
+  .Table-Body > .Table-Row:last-child > .Table-DataCell {
+    border-bottom: none;
   }
 `;

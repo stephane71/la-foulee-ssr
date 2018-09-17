@@ -1,9 +1,12 @@
+import css from 'styled-jsx/css';
+
+import IconWrapper from './IconWrapper';
+
 // import FacebookIcon from '../svgs/facebook.svg';
 // import TwitterIcon from '../svgs/twitter.svg';
 
 import FacebookIcon from '../svgs/facebook-f-brands.svg';
 import TwitterIcon from '../svgs/twitter-brands.svg';
-import LinkIcon from '../svgs/link-solid.svg';
 import WhatsappIcon from '../svgs/whatsapp-brands.svg';
 import MailtoIcon from '../svgs/envelope-solid.svg';
 
@@ -13,10 +16,12 @@ import { getSpacing } from '../styles-variables';
 import {
   FACEBOOK_SHARE,
   TWITTER_SHARE,
-  LINK_SHARE,
   WHATSAPP,
-  MAILTO
+  MAILTO,
+  ICON_SIZE
 } from '../enums';
+
+const ICON_SIZE_SHARE = ICON_SIZE - 4;
 
 function getSharedLink({ dest, url }) {
   switch (dest) {
@@ -24,8 +29,6 @@ function getSharedLink({ dest, url }) {
       return facebook(url);
     case TWITTER_SHARE:
       return twitter(url);
-    case LINK_SHARE:
-      return url;
     case WHATSAPP:
       return whatsapp(url);
     case MAILTO:
@@ -41,8 +44,6 @@ function getImage(dest) {
       return FacebookIcon;
     case TWITTER_SHARE:
       return TwitterIcon;
-    case LINK_SHARE:
-      return LinkIcon;
     case WHATSAPP:
       return WhatsappIcon;
     case MAILTO:
@@ -56,33 +57,32 @@ function handleShareWindow(dest, url) {
   window.open(getSharedLink({ dest, url }), 'sharer', 'width=626,height=436');
 }
 
-// Based on the height of the button ButtonWithClipboard
-// see EventDetailsShare component
-const ICON_SIZE = 42;
-export const SHARE_ICON_HEIGHT = ICON_SIZE + getSpacing('xs');
+const style = css`
+  .Share {
+    width: ${ICON_SIZE_SHARE}px;
+    height: ${ICON_SIZE_SHARE}px;
+    margin-right: ${getSpacing('m')}px;
+  }
 
-const Share = ({ dest, url, margin = true, lockOnClick }) => {
-  const ShareSVG = getImage(dest);
+  .Share:hover {
+    cursor: pointer;
+  }
+`;
 
-  const onClick = lockOnClick
-    ? {}
-    : { onClick: () => handleShareWindow(dest, url) };
+const Share = ({ dest, url, iconColor }) => {
+  const ShareSVG = IconWrapper(getImage(dest));
 
   return (
-    <div className={'Share'} {...onClick}>
-      <ShareSVG height={'100%'} width={'100%'} />
-      <style jsx>{`
-        .Share {
-          height: ${ICON_SIZE}px;
-          width: ${ICON_SIZE}px;
-          margin-left: ${margin ? getSpacing('xs') : 0}px;
-          padding: ${getSpacing('xs')}px;
-        }
-
-        .Share:hover {
-          cursor: pointer;
-        }
-      `}</style>
+    <div className={'Share'} onClick={() => handleShareWindow(dest, url)}>
+      <ShareSVG
+        fill={iconColor}
+        style={{
+          width: ICON_SIZE_SHARE,
+          height: ICON_SIZE_SHARE,
+          verticalAlign: 'top'
+        }}
+      />
+      <style jsx>{style}</style>
     </div>
   );
 };

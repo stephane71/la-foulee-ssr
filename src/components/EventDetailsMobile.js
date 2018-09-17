@@ -3,10 +3,16 @@ import css from 'styled-jsx/css';
 import EventDetailsGlobalInfo from './EventDetailsGlobalInfo';
 import EventDetailsShare from './EventDetailsShare';
 import EventDetailsActivities from './EventDetailsActivities';
-import EventDetailsFooter from './EventDetailsFooter';
-import { SHARE_ICON_HEIGHT } from './Share';
+import EventDetailsOrgaLink from './EventDetailsOrgaLink';
+import StaticMap from './StaticMap';
 
 import { getSpacing, getFontSize } from '../styles-variables';
+import { getColor } from '../colors';
+
+const ICON_COLOR = getColor('light');
+const MAP_MOBILE_HEIGHT = 100;
+const MOBILE_MIN_WIDTH = 320;
+const MOBILE_MAX_WIDTH = 450;
 
 const style = css`
   .EventDetails {
@@ -17,22 +23,22 @@ const style = css`
     padding-bottom: ${getSpacing('xl')}px;
     display: flex;
     flex-direction: column;
+
+    min-width: ${MOBILE_MIN_WIDTH}px;
+    max-width: ${MOBILE_MAX_WIDTH}px;
+    margin: 0 auto;
   }
 
   .EventDetails > div {
     margin-bottom: ${getSpacing('m')}px;
   }
 
-  .EventDetails-Header {
+  .EventDetails > section {
     margin-bottom: ${getSpacing('m')}px;
   }
 
-  .EventDetails-ShareEvent {
-    height: ${SHARE_ICON_HEIGHT}px;
-  }
-
-  .EventDetails-Description {
-    white-space: pre-line;
+  .EventDetails-Header {
+    margin-bottom: ${getSpacing('m')}px;
   }
 
   .EventDetails-Title {
@@ -43,60 +49,76 @@ const style = css`
   }
 
   .EventDetails-Subtitle {
-    font-weight: 400;
     font-size: ${getFontSize('l')}px;
     margin: 0;
   }
+
+  .EventDetails-StaticMap {
+    height: ${MAP_MOBILE_HEIGHT}px;
+  }
+
+  .EventDetails-Footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: ${getSpacing('s')}px 0;
+  }
 `;
 
-const EventDetails = ({ data, desktop, isServer, onClickOrgaLink, path }) => (
-  <div className={'EventDetails'}>
-    {/* HEADER */}
+const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
+  <article className={'EventDetails'}>
     <header className={`EventDetails-Header`}>
       <h1 className={`EventDetails-Title`}>{data.title}</h1>
     </header>
 
-    {/* GLOBAL INFO */}
-    <div className={'EventDetails-Info'}>
+    <div className={'EventDetails-GlobalInfo'}>
       <EventDetailsGlobalInfo
         data={data}
         desktop={desktop}
         isServer={isServer}
+        iconColor={ICON_COLOR}
       />
     </div>
 
-    {/* SHARE */}
-    <div className={'EventDetails-ShareEvent'}>
-      {/* <h2 className={'EventDetails-Subtitle'}>{'Partager cet événement'}</h2> */}
-      {!isServer && (
-        <EventDetailsShare data={data} path={path} desktop={desktop} />
-      )}
+    <div className={'EventDetails-StaticMap'}>
+      <StaticMap
+        event={data}
+        desktop={desktop}
+        color={ICON_COLOR}
+        isServer={isServer}
+        dimensions={{ height: MAP_MOBILE_HEIGHT }}
+      />
     </div>
 
-    {/* DESCRIPTION */}
-    {data.info && <div className={'EventDetails-Description'}>{data.info}</div>}
+    <section className={'EventDetails-ShareEvent'}>
+      <EventDetailsShare
+        data={data}
+        desktop={desktop}
+        isServer={isServer}
+        iconColor={ICON_COLOR}
+      />
+    </section>
 
-    {/* ACTIVITIES */}
-    <div className={'EventDetails-Activities'}>
+    <section className={'EventDetails-Activities'}>
       <h2 className={'EventDetails-Subtitle'}>{'Épreuves'}</h2>
       {data.activities && data.activities.length ? (
         <EventDetailsActivities data={data} />
       ) : (
         <div>{`Aucune épreuve n'a été transmise par l'organisateur`}</div>
       )}
-    </div>
+    </section>
 
-    {/* FOOTER */}
-    {!isServer && (
-      <EventDetailsFooter
+    <footer className={'EventDetails-Footer'}>
+      <EventDetailsOrgaLink
         data={data}
         desktop={desktop}
         onClickOrgaLink={onClickOrgaLink}
       />
-    )}
+    </footer>
 
     <style jsx>{style}</style>
-  </div>
+  </article>
 );
 
-export default EventDetails;
+export default EventDetailsMobile;

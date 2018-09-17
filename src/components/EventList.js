@@ -1,5 +1,4 @@
 import css from 'styled-jsx/css';
-import dynamic from 'next/dynamic';
 
 import VirtualizedList from './VirtualizedList';
 import Loader from './Loader';
