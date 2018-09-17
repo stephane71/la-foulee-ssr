@@ -58,7 +58,6 @@ class StaticMap extends React.PureComponent {
           .StaticMap {
             height: ${height}px;
             width: 100%;
-            border: 1px solid ${color};
             border-radius: ${BORDER_RADIUS}px;
             background-color: ${color};
           }
