@@ -11,6 +11,7 @@ import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
 import EventListHeader from './EventListHeader';
 import EventListWeek from './EventListWeek';
+import EventListMonth from './EventListMonth';
 
 import { setEventListStartIndex } from '../actions';
 import { getSpacing } from '../styles-variables';
@@ -105,6 +106,7 @@ class VirtualizedList extends React.PureComponent {
           {!index && <EventListHeader nbItems={data.length} />}
           {firstItemDay && (
             <div style={{ padding: getSpacing('m') }}>
+              <EventListMonth data={data} index={index} />
               <EventListWeek data={data} index={index} />
               <EventListDate date={data[index].date} />
             </div>
