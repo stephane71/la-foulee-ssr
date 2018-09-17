@@ -21,6 +21,8 @@ import {
   ICON_SIZE
 } from '../enums';
 
+const ICON_SIZE_SHARE = ICON_SIZE - 4;
+
 function getSharedLink({ dest, url }) {
   switch (dest) {
     case FACEBOOK_SHARE:
@@ -57,8 +59,8 @@ function handleShareWindow(dest, url) {
 
 const style = css`
   .Share {
-    height: ${ICON_SIZE}px;
-    width: ${ICON_SIZE}px;
+    width: ${ICON_SIZE_SHARE}px;
+    height: ${ICON_SIZE_SHARE}px;
     margin-right: ${getSpacing('m')}px;
   }
 
@@ -74,7 +76,11 @@ const Share = ({ dest, url, iconColor }) => {
     <div className={'Share'} onClick={() => handleShareWindow(dest, url)}>
       <ShareSVG
         fill={iconColor}
-        style={{ width: ICON_SIZE, height: ICON_SIZE, verticalAlign: 'top' }}
+        style={{
+          width: ICON_SIZE_SHARE,
+          height: ICON_SIZE_SHARE,
+          verticalAlign: 'top'
+        }}
       />
       <style jsx>{style}</style>
     </div>
