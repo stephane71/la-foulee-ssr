@@ -11,6 +11,7 @@ import EventListItem from './EventListItem';
 import EventListDate from './EventListDate';
 import EventListHeader from './EventListHeader';
 import EventListWeek from './EventListWeek';
+import EventListMonthBottom from './EventListMonthBottom';
 
 import { setEventListStartIndex } from '../actions';
 import { getSpacing } from '../styles-variables';
@@ -115,6 +116,7 @@ class VirtualizedList extends React.PureComponent {
             withBorderRadiusTop={index === 0 || firstItemDay}
             withBorderRadiusBottom={index + 1 === data.length || lastItemDay}
           />
+          {lastItemDay && <EventListMonthBottom data={data} index={index} />}
         </div>
       </CellMeasurer>
     );
