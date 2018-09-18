@@ -1,6 +1,8 @@
 import moment from 'moment';
 import css from 'styled-jsx/css';
 
+import EventListMonth from './EventListMonth';
+
 import { getFontSize, getSpacing } from '../styles-variables';
 import { getColor } from '../colors';
 
@@ -13,32 +15,66 @@ const style = css`
   }
 `;
 
-const EventListWeek = ({ data, index }) => {
-  let newWeek = false;
-  let currentDay = moment.unix(data[index].date);
+const EventListWeek = ({ day, eventDate }) => {
+  const startOfWeek = day.clone().startOf('week');
+  const endOfWeek = day.clone().endOf('week');
 
-  if (index) {
-    const previousDayWeek = moment.unix(data[index - 1].date).week();
-    const currentDayWeek = moment.unix(data[index].date).week();
-    newWeek = previousDayWeek !== currentDayWeek;
-  } else {
-    newWeek = true;
-  }
+  const print = `${startOfWeek.date()} ${
+    startOfWeek.date() > endOfWeek.date() ? startOfWeek.format('MMM') : ''
+  } - ${endOfWeek.date()} ${endOfWeek.format('MMM')}`;
 
-  const startOfWeek = currentDay.startOf('week').date();
-  const endOfWeek = currentDay.endOf('week').date();
+  const eventNotInMonth =
+    startOfWeek.month() !== endOfWeek.month() &&
+    (eventDate.month() > endOfWeek.month() ||
+      eventDate.year() > endOfWeek.year());
 
-  const print = `${startOfWeek} ${
-    startOfWeek > endOfWeek ? currentDay.startOf('week').format('MMM') : ''
-  } - ${endOfWeek} ${currentDay.endOf('week').format('MMM')}`;
-
-  if (!newWeek) return null;
   return (
-    <div className={'EventListWeek'}>
-      {print}
-      <style jsx>{style}</style>
-    </div>
+    <>
+      {(startOfWeek.date() === 1 || eventNotInMonth) && (
+        <EventListMonth month={endOfWeek} />
+      )}
+
+      {startOfWeek.month() !== endOfWeek.month() &&
+        eventDate.month() === endOfWeek.month() && (
+          <EventListMonth month={endOfWeek} />
+        )}
+
+      <div className={'EventListWeek'}>
+        {print}
+        <style jsx>{style}</style>
+      </div>
+
+      {startOfWeek.month() !== endOfWeek.month() &&
+        eventDate.month() === startOfWeek.month() && (
+          <EventListMonth month={startOfWeek} />
+        )}
+    </>
   );
 };
 
-export default EventListWeek;
+export default ({ data, index }) => {
+  let diff = 0;
+  const previousDay = index && moment.unix(data[index - 1].date);
+  const currentDay = moment.unix(data[index].date);
+
+  if (index) {
+    diff = currentDay.week() - previousDay.week();
+    if (diff < 0) diff += 52;
+  }
+
+  if (!index)
+    return (
+      <EventListWeek day={currentDay.clone()} eventDate={currentDay.clone()} />
+    );
+
+  if (!diff) return null;
+
+  const weeks = [];
+  for (let i = 1; i <= diff; i++) {
+    weeks.push(previousDay.clone().add(i, 'weeks'));
+  }
+
+  return weeks.map((day, i) => (
+    <EventListWeek key={i} day={day} eventDate={currentDay.clone()} />
+  ));
+};

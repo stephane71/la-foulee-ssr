@@ -30,35 +30,13 @@ const style = css`
   }
 `;
 
-const EventListMonth = ({ data, index }) => {
-  let diff = 0;
-  let newMonth = false;
-  let currentDay = moment.unix(data[index].date);
+const EventListMonth = ({ month }) => {
+  let print = `${month.format('MMMM')}${
+    month.year() !== moment().year() ? ` ${month.year()}` : ''
+  }`;
 
-  const previousDay = index && moment.unix(data[index - 1].date);
-  const previousDayMonth = index && previousDay.month();
-  const currentDayMonth = moment.unix(data[index].date).month();
-
-  if (index) {
-    newMonth = currentDayMonth !== previousDayMonth;
-    diff = currentDayMonth - previousDayMonth;
-    if (diff < 0) diff += 12;
-  }
-
-  if (!diff) return null;
-
-  let monthTab = [];
-  for (let i = 1; i <= diff; i++) {
-    let month = previousDay.clone().add(i, 'month');
-    monthTab.push(
-      `${month.format('MMMM')}${
-        month.year() !== moment().year() ? ` ${month.year()}` : ''
-      }`
-    );
-  }
-
-  return monthTab.map((print, i) => (
-    <div key={i} className={'EventListMonth'}>
+  return (
+    <div className={'EventListMonth'}>
       <div className={'EventListMonth-Line'}>
         <hr />
       </div>
@@ -68,7 +46,7 @@ const EventListMonth = ({ data, index }) => {
       </div>
       <style jsx>{style}</style>
     </div>
-  ));
+  );
 };
 
 export default EventListMonth;
