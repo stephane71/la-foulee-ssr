@@ -46,7 +46,7 @@ const EventListWeek = ({ day, eventDate }) => {
 
       {startOfWeek.month() !== endOfWeek.month() &&
         eventDate.month() === startOfWeek.month() && (
-          <EventListMonth month={startOfWeek} />
+          <EventListMonth month={endOfWeek} />
         )}
     </>
   );
