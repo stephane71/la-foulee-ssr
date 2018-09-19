@@ -14,6 +14,7 @@ module.exports = function(city) {
       input: city,
       components: { country: 'fr' },
       types: '(cities)',
+      language: 'fr',
       sessiontoken: ''
     })
     .asPromise()
