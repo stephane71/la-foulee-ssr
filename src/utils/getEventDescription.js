@@ -8,7 +8,7 @@ export default function getEventDescription(event) {
 
   return `Retrouvez toutes les informations sur l'évènement '${
     event.title
-  }' le ${date} à ${event.city} (${
-    event.department.code
-  }): épreuves, départs, tarifs, site de l'organisateur`;
+  }' le ${date} à ${event.city}${
+    event.department ? ` (${event.department.code})` : ''
+  }: épreuves, départs, tarifs, site de l'organisateur`;
 }

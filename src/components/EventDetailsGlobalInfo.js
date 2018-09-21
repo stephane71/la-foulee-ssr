@@ -65,8 +65,8 @@ const EventDetailsGlobalInfo = ({ data, iconColor }) => (
     >
       <div className={'GlobalInfo-Location'}>
         <IconLocation fill={iconColor} />
-        <address className={'GlobalInfo-DatumValue'}>{`${data.city}, ${
-          data.department.name
+        <address className={'GlobalInfo-DatumValue'}>{`${data.city}${
+          data.department ? `, ${data.department.name}` : ''
         }`}</address>
       </div>
     </a>

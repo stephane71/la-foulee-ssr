@@ -76,7 +76,7 @@ export const getEventStructuredData = function(event, { description, path }) {
     address: {
       '@type': 'PostalAddress',
       addressLocality: event.city,
-      postalCode: event.department.code,
+      postalCode: event.department && event.department.code,
       addressCountry: 'FR'
     }
   };

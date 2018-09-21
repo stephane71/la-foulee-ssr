@@ -18,7 +18,7 @@ function buildGoogleMapStaticImage(
 
   return `${BASE_URL}&size=${size}&zoom=${zoom}&center=${encodeURIComponent(
     city
-  )},${department.isoCode}`;
+  )}${department ? `,${department.isoCode}` : ''}`;
 }
 
 export default buildGoogleMapStaticImage;
