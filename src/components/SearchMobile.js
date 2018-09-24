@@ -1,3 +1,4 @@
+import React from 'react';
 import debounce from 'lodash.debounce';
 import css from 'styled-jsx/css';
 
