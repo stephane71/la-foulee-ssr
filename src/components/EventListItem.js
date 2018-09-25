@@ -19,12 +19,11 @@ const EVENT_ITEM_TITLE_COLOR = '#516E69';
 
 const EventShort = ({ data }) => (
   <Fragment>
-    <article className={`event-data`}>
+    <div className={`event-data`}>
       <h6 className={`title`}>{data.title}</h6>
-      <address className={'location'}>{`${data.department.code}, ${
-        data.city
-      }`}</address>
-    </article>
+      <address className={'location'}>{`${data.department &&
+        data.department.code}, ${data.city}`}</address>
+    </div>
     <Arrow style={{ fill: '#A0A7BD' }} />
     <style jsx>{`
       .event-data {
@@ -93,4 +92,5 @@ const EventListItem = ({
   </article>
 );
 
-export default EventListItem;
+export default ({ data, ...props }) =>
+  data.department ? <EventListItem data={data} {...props} /> : null;
