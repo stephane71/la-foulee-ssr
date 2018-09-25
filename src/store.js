@@ -46,7 +46,10 @@ const reducer = (state = initialState, action) => {
     case SET_SELECTED_EVENT:
       return { ...state, event: action.event };
     case SET_EVENT_LIST:
-      return { ...state, events: action.events };
+      return {
+        ...state,
+        events: action.events.filter(({ department }) => department)
+      };
     case SET_GOOGLE_MAPS_SERVICE:
       const googleMapsService = {
         ...state.googleMapsService,
