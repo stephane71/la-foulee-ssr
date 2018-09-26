@@ -31,6 +31,10 @@ module.exports = function({ place_id }, { maxWidth, maxHeight }) {
           photo_url: getUrl(photo_reference, { maxWidth, maxHeight })
         }));
 
-      return data;
+      const { geometry, ...rest } = data;
+      return {
+        location: { lat: geometry.location.lat, lng: geometry.location.lng },
+        ...rest
+      };
     });
 };
