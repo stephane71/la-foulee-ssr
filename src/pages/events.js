@@ -168,7 +168,7 @@ class Events extends React.PureComponent {
 
                 {/* OPEN GRAPH */}
                 <meta property={'og:url'} content={`${APP_URL}${path}`} />
-                <meta property={'og:title'} content={`title`} />
+                <meta property={'og:title'} content={title} />
                 <meta property={'og:description'} content={description} />
                 <meta property={'og:image'} content={imageFB} />
               </Head>
