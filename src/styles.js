@@ -28,7 +28,7 @@ import { HEIGHT_APPBAR } from './enums';
 
 const BUTTON_BORDER_RADIUS = 24;
 
-export default css`
+export default css.global`
   html,
   body {
     height: 100%;

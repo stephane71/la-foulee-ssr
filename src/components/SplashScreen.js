@@ -1,3 +1,5 @@
+import React from 'react';
+
 import LogoTonic from '../svgs/lafoulee-glyph-tonic.svg';
 import { dominant } from '../colors';
 
