@@ -1,17 +1,21 @@
-import css from 'styled-jsx/css';
+import css from "styled-jsx/css";
+import dynamic from "next/dynamic";
 
-import VirtualizedList from './VirtualizedList';
-import Loader from './Loader';
+const VirtualizedList = dynamic(import("./VirtualizedList"), {
+  loading: () => null,
+  ssr: false
+});
 
-import { getSpacing, BaseLineHeight } from '../styles-variables';
-import { HEIGHT_APPBAR, MAX_WIDTH } from '../enums';
+import Loader from "./Loader";
+
+import { getSpacing, BaseLineHeight } from "../styles-variables";
+import { HEIGHT_APPBAR, MAX_WIDTH } from "../enums";
 
 // See EventListDate component: line height + 2 * vertical padding
-const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing('m');
+const EVENT_LIST_DATE_HEIGHT = BaseLineHeight + 2 * getSpacing("m");
 
 const style = css`
   .EventList {
-    height: 100%;
   }
 
   .EventList-Loading {
@@ -26,7 +30,7 @@ const style = css`
 
   .EventList-Empty {
     text-align: center;
-    padding: ${getSpacing('xxl')}px ${getSpacing('l')}px;
+    padding: ${getSpacing("xxl")}px ${getSpacing("l")}px;
   }
 `;
 
@@ -55,16 +59,16 @@ class EventList extends React.Component {
     const showLoader = listRendering || loading;
 
     return (
-      <div className={'EventList'}>
+      <div className={"EventList"}>
         {showLoader && (
-          <div className={'EventList-Loading'}>
+          <div className={"EventList-Loading"}>
             <Loader />
           </div>
         )}
 
         {!data.length && !showLoader ? (
           <div
-            className={'EventList-Empty'}
+            className={"EventList-Empty"}
           >{`Aucun événements n'a été trouvé dans cette zone :(`}</div>
         ) : (
           <VirtualizedList
