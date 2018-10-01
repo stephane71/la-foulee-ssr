@@ -1,20 +1,20 @@
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import {
   CellMeasurer,
   CellMeasurerCache,
   AutoSizer,
   List,
   WindowScroller
-} from 'react-virtualized';
+} from "react-virtualized";
 
-import EventListItem from './EventListItem';
-import EventListDate from './EventListDate';
-import EventListHeader from './EventListHeader';
-import EventListWeek from './EventListWeek';
-import EventListMonthBottom from './EventListMonthBottom';
+import EventListItem from "./EventListItem";
+import EventListDate from "./EventListDate";
+import EventListHeader from "./EventListHeader";
+import EventListWeek from "./EventListWeek";
+import EventListMonthBottom from "./EventListMonthBottom";
 
-import { setEventListStartIndex } from '../actions';
-import { getSpacing } from '../styles-variables';
+import { setEventListStartIndex } from "../actions";
+import { getSpacing } from "../styles-variables";
 
 const cache = new CellMeasurerCache({
   fixedWidth: true
@@ -55,28 +55,33 @@ class VirtualizedList extends React.PureComponent {
     if (!data.length) return null;
 
     return (
-      <AutoSizer>
-        {({ width, height }) => {
-          if (!width) return null;
-          return (
-            <List
-              ref={this.refList}
-              width={width}
-              height={height}
-              rowCount={data.length}
-              rowHeight={cache.rowHeight}
-              onRowsRendered={this.onRowsRendered}
-              rowRenderer={this.rowRenderer}
-              overscanRowCount={2}
-              onScroll={this.handleScroll}
-              scrollTop={this.props.initScrollPosition}
-              deferredMeasurementCache={cache}
-              rowHeight={cache.rowHeight}
-              className={'VirtualizedList-List'}
-            />
-          );
-        }}
-      </AutoSizer>
+      <WindowScroller scrollElement={window}>
+        {({ height, isScrolling, registerChild, onChildScroll, scrollTop }) => (
+          <AutoSizer disableHeight>
+            {({ width }) => {
+              return (
+                <List
+                  ref={this.refList}
+                  autoHeight
+                  width={width}
+                  height={height}
+                  rowCount={data.length}
+                  rowHeight={cache.rowHeight}
+                  onRowsRendered={this.onRowsRendered}
+                  rowRenderer={this.rowRenderer}
+                  overscanRowCount={2}
+                  deferredMeasurementCache={cache}
+                  rowHeight={cache.rowHeight}
+                  isScrolling={isScrolling}
+                  onScroll={onChildScroll}
+                  scrollTop={scrollTop}
+                  className={"VirtualizedList-List"}
+                />
+              );
+            }}
+          </AutoSizer>
+        )}
+      </WindowScroller>
     );
   }
 
@@ -105,7 +110,7 @@ class VirtualizedList extends React.PureComponent {
         <div style={{ ...style }}>
           {!index && <EventListHeader nbItems={data.length} />}
           {firstItemDay && (
-            <div style={{ padding: getSpacing('m') }}>
+            <div style={{ padding: getSpacing("m") }}>
               <EventListWeek data={data} index={index} />
               <EventListDate date={data[index].date} />
             </div>
