@@ -1,15 +1,15 @@
-import css from 'styled-jsx/css';
+import css from "styled-jsx/css";
 
-import EventDetailsGlobalInfo from './EventDetailsGlobalInfo';
-import EventDetailsShare from './EventDetailsShare';
-import EventDetailsActivities from './EventDetailsActivities';
-import EventDetailsOrgaLink from './EventDetailsOrgaLink';
-import StaticMap from './StaticMap';
+import EventDetailsGlobalInfo from "./EventDetailsGlobalInfo";
+import EventDetailsShare from "./EventDetailsShare";
+import EventDetailsActivities from "./EventDetailsActivities";
+import EventDetailsOrgaLink from "./EventDetailsOrgaLink";
+import StaticMap from "./StaticMap";
 
-import { getSpacing, getFontSize } from '../styles-variables';
-import { getColor } from '../colors';
+import { getSpacing, getFontSize } from "../styles-variables";
+import { white, getColor } from "../colors";
 
-const ICON_COLOR = getColor('light');
+const ICON_COLOR = getColor("light");
 const MAP_MOBILE_HEIGHT = 100;
 const MOBILE_MIN_WIDTH = 320;
 const MOBILE_MAX_WIDTH = 450;
@@ -19,37 +19,38 @@ const style = css`
     position: relative;
     width: 100%;
     height: 100%;
-    padding: ${getSpacing('m')}px;
-    padding-bottom: ${getSpacing('xl')}px;
+    padding: ${getSpacing("m")}px;
+    padding-bottom: ${getSpacing("xl")}px;
     display: flex;
     flex-direction: column;
 
     min-width: ${MOBILE_MIN_WIDTH}px;
     max-width: ${MOBILE_MAX_WIDTH}px;
     margin: 0 auto;
+    background-color: ${white};
   }
 
   .EventDetails > div {
-    margin-bottom: ${getSpacing('m')}px;
+    margin-bottom: ${getSpacing("m")}px;
   }
 
   .EventDetails > section {
-    margin-bottom: ${getSpacing('m')}px;
+    margin-bottom: ${getSpacing("m")}px;
   }
 
   .EventDetails-Header {
-    margin-bottom: ${getSpacing('m')}px;
+    margin-bottom: ${getSpacing("m")}px;
   }
 
   .EventDetails-Title {
     text-transform: capitalize;
-    font-family: 'Circular-Medium';
+    font-family: "Circular-Medium";
     font-weight: 500;
     margin: 0;
   }
 
   .EventDetails-Subtitle {
-    font-size: ${getFontSize('l')}px;
+    font-size: ${getFontSize("l")}px;
     margin: 0;
   }
 
@@ -62,17 +63,17 @@ const style = css`
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: ${getSpacing('s')}px 0;
+    padding: ${getSpacing("s")}px 0;
   }
 `;
 
 const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
-  <article className={'EventDetails'}>
+  <article className={"EventDetails"}>
     <header className={`EventDetails-Header`}>
       <h1 className={`EventDetails-Title`}>{data.title}</h1>
     </header>
 
-    <div className={'EventDetails-GlobalInfo'}>
+    <div className={"EventDetails-GlobalInfo"}>
       <EventDetailsGlobalInfo
         data={data}
         desktop={desktop}
@@ -81,7 +82,7 @@ const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
       />
     </div>
 
-    <div className={'EventDetails-StaticMap'}>
+    <div className={"EventDetails-StaticMap"}>
       <StaticMap
         event={data}
         desktop={desktop}
@@ -91,7 +92,7 @@ const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
       />
     </div>
 
-    <section className={'EventDetails-ShareEvent'}>
+    <section className={"EventDetails-ShareEvent"}>
       <EventDetailsShare
         data={data}
         desktop={desktop}
@@ -100,8 +101,8 @@ const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
       />
     </section>
 
-    <section className={'EventDetails-Activities'}>
-      <h2 className={'EventDetails-Subtitle'}>{'Épreuves'}</h2>
+    <section className={"EventDetails-Activities"}>
+      <h2 className={"EventDetails-Subtitle"}>{"Épreuves"}</h2>
       {data.activities && data.activities.length ? (
         <EventDetailsActivities data={data} />
       ) : (
@@ -109,7 +110,7 @@ const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
       )}
     </section>
 
-    <footer className={'EventDetails-Footer'}>
+    <footer className={"EventDetails-Footer"}>
       <EventDetailsOrgaLink
         data={data}
         desktop={desktop}
