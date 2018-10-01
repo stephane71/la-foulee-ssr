@@ -1,17 +1,17 @@
-import React from 'react';
-import Router from 'next/router';
-import css from 'styled-jsx/css';
+import React from "react";
+import Router from "next/router";
+import css from "styled-jsx/css";
 
-import IconWrapper from './IconWrapper';
+import IconWrapper from "./IconWrapper";
 
-import LogoTonic from '../svgs/lafoulee-tonic.svg';
-import SearchIcon from '../svgs/ic_search_black_24px.svg';
-import ArrowBackIcon from '../svgs/ic_arrow_back_black_24px.svg';
-import HomeIcon from '../svgs/baseline-home-24px.svg';
+import LogoTonic from "../svgs/lafoulee-tonic.svg";
+import SearchIcon from "../svgs/ic_search_black_24px.svg";
+import ArrowBackIcon from "../svgs/ic_arrow_back_black_24px.svg";
+import HomeIcon from "../svgs/baseline-home-24px.svg";
 
-import { getSpacing } from '../styles-variables';
-import { dominant, white } from '../colors';
-import { ICON_SIZE, HEIGHT_APPBAR, MAX_WIDTH } from '../enums';
+import { getSpacing } from "../styles-variables";
+import { dominant, white } from "../colors";
+import { ICON_SIZE, HEIGHT_APPBAR, MAX_WIDTH } from "../enums";
 
 SearchIcon = IconWrapper(SearchIcon);
 ArrowBackIcon = IconWrapper(ArrowBackIcon);
@@ -29,8 +29,7 @@ const style = css`
   .Header {
     position: fixed;
     top: 0;
-    left: 0;
-    right: 0;
+    width: 100%;
     z-index: 10;
     height: ${HEIGHT_APPBAR}px;
     background-color: ${dominant};
@@ -70,16 +69,16 @@ const Header = ({
   showBackArrow,
   isHomeRoute
 }) => (
-  <div className={'Header'}>
-    <div className={'Header-Content'}>
+  <div className={"Header"}>
+    <div className={"Header-Content"}>
       <div
-        className={`Header-SideIcon ${isHomeRoute ? 'hidden' : ''}`}
+        className={`Header-SideIcon ${isHomeRoute ? "hidden" : ""}`}
         onClick={showBackArrow ? () => Router.back() : onClickHeaderLogo}
       >
         {showBackArrow ? <ArrowBackIcon /> : <HomeIcon />}
       </div>
 
-      <div className={'Header-svgWrapper'} onClick={onClickHeaderLogo}>
+      <div className={"Header-svgWrapper"} onClick={onClickHeaderLogo}>
         <LogoTonic
           height={`${HEIGHT_LOGO_APP_HEADER}px`}
           width={`${WIDTH_LOGO_APP_HEADER}px`}
@@ -87,7 +86,7 @@ const Header = ({
       </div>
 
       {!isHomeRoute && (
-        <div className={'Header-SideIcon'} onClick={onClickSearch}>
+        <div className={"Header-SideIcon"} onClick={onClickSearch}>
           <SearchIcon />
         </div>
       )}
