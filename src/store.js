@@ -1,10 +1,10 @@
-import { createStore } from 'redux';
+import { createStore } from "redux";
 
 import {
   GOOGLE_DETAILS_SERVICE,
   GOOGLE_AUTOCOMPLETE_SERVICE,
   GOOGLE_GEOCODING_SERVICE
-} from './enums';
+} from "./enums";
 import {
   SET_SELECTED_EVENT,
   SET_EVENT_LIST,
@@ -12,13 +12,12 @@ import {
   SET_MEDIA_TYPE,
   SET_USER_POSITION,
   TOGGLE_SEARCH,
-  SET_EVENT_LIST_START_INDEX,
   SET_SEARCHING_GEOHASH,
   ADD_CITY
-} from './actions';
+} from "./actions";
 
 function getNextMonth(month) {
-  let [monthNumber, year] = month.split('-');
+  let [monthNumber, year] = month.split("-");
   monthNumber = parseInt(monthNumber) + 1;
   if (monthNumber > 11) {
     monthNumber = 0;
@@ -41,7 +40,6 @@ const initialState = {
   position: null,
   searching: false,
   searchingGeohash: false,
-  eventListStartIndex: EVENT_LIST_START_INDEX,
   city: null,
   cityMap: {}
 };
@@ -71,8 +69,6 @@ const reducer = (state = initialState, action) => {
         searching:
           action.toggle === undefined ? !state.searching : action.toggle
       };
-    case SET_EVENT_LIST_START_INDEX:
-      return { ...state, eventListStartIndex: action.index };
     case SET_SEARCHING_GEOHASH:
       return { ...state, searchingGeohash: action.searching };
     case ADD_CITY:

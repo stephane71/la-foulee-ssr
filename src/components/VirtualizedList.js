@@ -1,4 +1,3 @@
-import { connect } from "react-redux";
 import {
   CellMeasurer,
   CellMeasurerCache,
@@ -13,12 +12,24 @@ import EventListHeader from "./EventListHeader";
 import EventListWeek from "./EventListWeek";
 import EventListMonthBottom from "./EventListMonthBottom";
 
-import { setEventListStartIndex } from "../actions";
 import { getSpacing } from "../styles-variables";
 
 const cache = new CellMeasurerCache({
   fixedWidth: true
 });
+
+// 1 an et 6 mois = 76 semaines ou 18 mois
+// (EventListWeek || EventListMonth) height = 48px
+// EventListHeader height = 140px
+const MIN_LIST_HEIGHT = 76 * 48 + 18 * 48 + 140;
+// EventListItem height when title is on 2 lines (only the article tag)
+const ITEM_MAX_HEIGHT = 96;
+
+// Max height = every item on one date + min list height
+const getListMaxHeight = nbItems =>
+  nbItems * (ITEM_MAX_HEIGHT + 24 + 48) + MIN_LIST_HEIGHT;
+const getAverageItemHeight = nbItems => getListMaxHeight(nbItems) / nbItems;
+// (nbItems * ITEM_MAX_HEIGHT + MIN_LIST_HEIGHT) / nbItems;
 
 class VirtualizedList extends React.PureComponent {
   constructor(props) {
@@ -27,6 +38,7 @@ class VirtualizedList extends React.PureComponent {
     this.initPositionSet = false;
     this.renderingNewList = true;
     this.list = null;
+    this.averageItemHeight = getAverageItemHeight(props.data.length);
 
     this.refList = this.refList.bind(this);
     this.rowRenderer = this.rowRenderer.bind(this);
@@ -34,14 +46,10 @@ class VirtualizedList extends React.PureComponent {
     this.handleScroll = this.handleScroll.bind(this);
   }
 
-  componentWillUnmount() {
-    this.props.dispatch(setEventListStartIndex(this.scrollTop));
-  }
-
   componentWillReceiveProps(nextProps) {
     if (this.props.data !== nextProps.data) {
-      this.props.dispatch(setEventListStartIndex(0));
-      // Inform parent we are rendering
+      window.scrollTo(0, 0);
+      this.averageItemHeight = getAverageItemHeight(nextProps.data.length);
       this.renderingNewList = true;
       this.props.onListRendering(true);
       // Needed for List component to trigger a render
@@ -61,6 +69,7 @@ class VirtualizedList extends React.PureComponent {
             {({ width }) => {
               return (
                 <List
+                  estimatedRowSize={this.averageItemHeight}
                   ref={this.refList}
                   autoHeight
                   width={width}
@@ -147,10 +156,4 @@ class VirtualizedList extends React.PureComponent {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    initScrollPosition: state.eventListStartIndex
-  };
-}
-
-export default connect(mapStateToProps)(VirtualizedList);
+export default VirtualizedList;
