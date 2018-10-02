@@ -1,21 +1,21 @@
-import Router from 'next/router';
-import Head from 'next/head';
-import getConfig from 'next/config';
-import React from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
+import Router from "next/router";
+import Head from "next/head";
+import getConfig from "next/config";
+import React from "react";
+import { compose } from "redux";
+import { connect } from "react-redux";
 
-import HomePage from '../components/HomePage';
-import JSONLD from '../components/JSONLD';
+import HomePage from "../components/HomePage";
+import JSONLD from "../components/JSONLD";
 
 import {
   getWebApplicationStructuredData,
   getOrganizationStructuredData
-} from '../utils/structuredData';
-import { pageview, event } from '../utils/gtag';
+} from "../utils/structuredData";
+import { pageview, event } from "../utils/gtag";
 
-import { toggleSearch } from '../actions';
-import { DESKTOP } from '../enums';
+import { toggleSearch } from "../actions";
+import { DESKTOP } from "../enums";
 
 const { publicRuntimeConfig } = getConfig();
 const APP_URL = publicRuntimeConfig.APP_URL;
@@ -26,14 +26,15 @@ class Index extends React.PureComponent {
     super(props);
 
     this.handleSearchCityToggle = this.handleSearchCityToggle.bind(this);
+    window.scrollTo(0, 0);
   }
 
   componentDidMount() {
-    Router.prefetch('/event');
-    Router.prefetch('/events');
+    Router.prefetch("/event");
+    Router.prefetch("/events");
 
     pageview({
-      title: 'Home',
+      title: "Home",
       url: window.location.href,
       path: this.props.path
     });
@@ -51,21 +52,21 @@ class Index extends React.PureComponent {
       <>
         <Head>
           <title>{`La Foulée | ${title}`}</title>
-          <link rel={'canonical'} href={APP_URL} />
-          <meta name={'description'} content={description} />
+          <link rel={"canonical"} href={APP_URL} />
+          <meta name={"description"} content={description} />
 
           {/* TWITTER */}
-          <meta name={'twitter:card'} content={'summary'} />
-          <meta name={'twitter:site'} content={'@_LaFoulee'} />
-          <meta name={'twitter:title'} content={title} />
-          <meta name={'twitter:description'} content={description} />
-          <meta name={'twitter:image'} content={imageTwitter} />
+          <meta name={"twitter:card"} content={"summary"} />
+          <meta name={"twitter:site"} content={"@_LaFoulee"} />
+          <meta name={"twitter:title"} content={title} />
+          <meta name={"twitter:description"} content={description} />
+          <meta name={"twitter:image"} content={imageTwitter} />
 
           {/* OPEN GRAPH */}
-          <meta property={'og:url'} content={APP_URL} />
-          <meta property={'og:title'} content={title} />
-          <meta property={'og:description'} content={description} />
-          <meta property={'og:image'} content={imageFB} />
+          <meta property={"og:url"} content={APP_URL} />
+          <meta property={"og:title"} content={title} />
+          <meta property={"og:description"} content={description} />
+          <meta property={"og:image"} content={imageFB} />
         </Head>
 
         <HomePage
@@ -82,9 +83,9 @@ class Index extends React.PureComponent {
 
   handleSearchCityToggle() {
     event({
-      action: 'Trigger Search',
-      category: 'Search',
-      label: 'From index page'
+      action: "Trigger Search",
+      category: "Search",
+      label: "From index page"
     });
 
     this.props.dispatch(toggleSearch());
