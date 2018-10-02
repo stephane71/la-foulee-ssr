@@ -38,6 +38,12 @@ class VirtualizedList extends React.PureComponent {
     this.initPositionSet = false;
     this.renderingNewList = true;
     this.list = null;
+    // Find a maximun possible height for the list
+    // This fix that problem:
+    // - Select the last item in the list
+    // - Route back to the list
+    // => The list doesn't render the same state than previously
+    // => Reason: the list height is < window.scrollY
     this.averageItemHeight = getAverageItemHeight(props.data.length);
 
     this.refList = this.refList.bind(this);
