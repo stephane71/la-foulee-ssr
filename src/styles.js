@@ -1,4 +1,4 @@
-import css from 'styled-jsx/css';
+import css from "styled-jsx/css";
 
 import {
   getSpacing,
@@ -15,7 +15,7 @@ import {
   H6,
   P,
   LISTS
-} from './styles-variables';
+} from "./styles-variables";
 import {
   APP_COLOR,
   TABLE_BORDER_COLOR,
@@ -23,8 +23,8 @@ import {
   dominant,
   white,
   getColor
-} from './colors';
-import { HEIGHT_APPBAR } from './enums';
+} from "./colors";
+import { HEIGHT_APPBAR } from "./enums";
 
 const BUTTON_BORDER_RADIUS = 24;
 
@@ -37,6 +37,11 @@ export default css.global`
     line-height: ${BaseLineHeight}px;
 		-moz-osx-font-smoothing: grayscale;
 		-webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    overflow-y: scroll;
+    background: ${APP_BACKGROUND_COLOR};
   }
 
   body,
@@ -53,14 +58,11 @@ export default css.global`
   }
 
   #__next {
-    background: ${APP_BACKGROUND_COLOR};
-    padding-top: ${HEIGHT_APPBAR}px;
-    overflow: auto;
     height: 100%;
   }
 
   .VirtualizedList-List {
-    padding-bottom: ${getSpacing('m')}px;
+    padding-bottom: ${getSpacing("m")}px;
     outline: none;
   }
 
@@ -144,7 +146,7 @@ export default css.global`
   }
 
   .Button:active {
-    background-color: ${getColor('lightGrey', 'tonic')};
+    background-color: ${getColor("lightGrey", "tonic")};
   }
 
   .Button-Theme--none {
@@ -156,8 +158,8 @@ export default css.global`
 
   .Button-Theme--light {
     background: ${white};
-    color: ${getColor('darkGrey', 'tonic')};
-    border: 1px solid ${getColor('darkGrey', 'tonic')};
+    color: ${getColor("darkGrey", "tonic")};
+    border: 1px solid ${getColor("darkGrey", "tonic")};
   }
 
   .Button-Theme--dominant {
@@ -167,13 +169,13 @@ export default css.global`
   }
 
   .Button-Size--s {
-    font-size: ${getFontSize('xs')}px;
-    padding: ${getSpacing('xs')}px ${getSpacing('s')}px;
+    font-size: ${getFontSize("xs")}px;
+    padding: ${getSpacing("xs")}px ${getSpacing("s")}px;
   }
 
   .Button-Size--m {
-    font-size: ${getFontSize('s')}px;
-    padding: ${getSpacing('s')}px ${getSpacing('m')}px;
+    font-size: ${getFontSize("s")}px;
+    padding: ${getSpacing("s")}px ${getSpacing("m")}px;
   }
 
   .Button--fixed {
@@ -181,7 +183,7 @@ export default css.global`
   }
 
   .Button--square{
-    padding: ${getSpacing('s')}px;
+    padding: ${getSpacing("s")}px;
   }
 
   .Button--flat {
@@ -196,14 +198,14 @@ export default css.global`
 
   .List-Item {
     text-transform: uppercase;
-    padding: ${getSpacing('s')}px;
+    padding: ${getSpacing("s")}px;
     cursor: pointer;
-    font-size: ${getFontSize('s')}px;
+    font-size: ${getFontSize("s")}px;
     line-height: ${BaseLineHeight}px;
   }
 
   .List-Item + .List-Item {
-    margin-top: ${getSpacing('s')}px;
+    margin-top: ${getSpacing("s")}px;
   }
 
   /* Need to be global ? Used only in Event details page */
@@ -216,12 +218,12 @@ export default css.global`
 
   .Table-DataHeader,
   .Table-DataCell {
-    padding: ${getSpacing('s')}px ${getSpacing('xs')}px;
+    padding: ${getSpacing("s")}px ${getSpacing("xs")}px;
   }
 
   .Table-DataHeader {
     font-weight: 300;
-    font-size: ${getFontSize('xs')}px;
+    font-size: ${getFontSize("xs")}px;
     text-transform: uppercase;
     border-bottom: 1px solid ${TABLE_BORDER_COLOR};
   }

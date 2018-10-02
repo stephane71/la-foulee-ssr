@@ -1,43 +1,53 @@
-import React from 'react';
-import moment from 'moment';
-import Router from 'next/router';
-import css from 'styled-jsx/css';
-import slug from 'slug';
-import { connect } from 'react-redux';
+import React from "react";
+import moment from "moment";
+import Router from "next/router";
+import css from "styled-jsx/css";
+import slug from "slug";
+import { connect } from "react-redux";
 
-import Header from './Header';
-import Overlay from './Overlay';
-import SearchMobile from './SearchMobile';
-import withGoogleMaps from './withGoogleMaps';
-import LayoutError from './LayoutError';
-import Loader from './Loader';
+import Header from "./Header";
+import Overlay from "./Overlay";
+import SearchMobile from "./SearchMobile";
+import withGoogleMaps from "./withGoogleMaps";
+import LayoutError from "./LayoutError";
+import Loader from "./Loader";
 
-import getUserLocation from '../utils/getUserLocation';
-import getGeohash from '../utils/geohash';
-import { event } from '../utils/gtag';
+import getUserLocation from "../utils/getUserLocation";
+import getGeohash from "../utils/geohash";
+import { event } from "../utils/gtag";
 
-import GlobalStyles from '../styles';
-import { MAX_WIDTH } from '../enums';
-import { toggleSearch, setSearchingGeohash, addCity } from '../actions';
+import GlobalStyles from "../styles";
+import { MAX_WIDTH, HEIGHT_APPBAR } from "../enums";
+import { toggleSearch, setSearchingGeohash, addCity } from "../actions";
 
-moment.locale('fr');
+moment.locale("fr");
 
 export const SelectedCityContext = React.createContext();
 
 const style = css`
-  .root {
-    height: 100%;
+  .LayoutSection {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .LayoutNav {
+    height: ${HEIGHT_APPBAR}px;
+  }
+
+  .LayoutMain {
+    display: flex;
+    flex: 1 0 auto;
+  }
+
+  .LayoutFooter {
+    height: 50px;
   }
 
   .PagesWrapper {
-    height: 100%;
     width: 100%;
     max-width: ${MAX_WIDTH}px;
     margin: 0 auto;
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-    display: flex;
-    flex-direction: column;
   }
 
   .LoaderWrapper {
@@ -69,7 +79,7 @@ class Layout extends React.PureComponent {
   }
 
   componentDidMount() {
-    Router.prefetch('/');
+    Router.prefetch("/");
 
     Router.beforePopState(({ url, as, options }) => {
       if (this.props.searching) {
@@ -94,7 +104,7 @@ class Layout extends React.PureComponent {
     }
     if (
       nextProps.currentRoute !== this.props.currentRoute ||
-      nextProps.currentRoute === '/'
+      nextProps.currentRoute === "/"
     ) {
       this.setState({ error: null });
     }
@@ -105,19 +115,33 @@ class Layout extends React.PureComponent {
     const { city, error } = this.state;
 
     return (
-      <div className={'root'}>
-        <Header
-          onClickHeaderLogo={this.handleHomeRedirect}
-          onClickSearch={this.handleClickSearch}
-          showBackArrow={query.keyword}
-          isHomeRoute={currentRoute === '/'}
-        />
+      <>
+        <section className={"LayoutSection"}>
+          <nav className={"LayoutNav"} role={"navigation"}>
+            <Header
+              onClickHeaderLogo={this.handleHomeRedirect}
+              onClickSearch={this.handleClickSearch}
+              showBackArrow={query.keyword}
+              isHomeRoute={currentRoute === "/"}
+            />
+          </nav>
 
-        <SelectedCityContext.Provider value={city}>
-          <div className={'PagesWrapper'}>
-            {error ? <LayoutError error={error} /> : children}
-          </div>
-        </SelectedCityContext.Provider>
+          <main className={"LayoutMain"} role={"main"}>
+            <SelectedCityContext.Provider value={city}>
+              <div className={"PagesWrapper"}>
+                {error ? <LayoutError error={error} /> : children}
+              </div>
+            </SelectedCityContext.Provider>
+          </main>
+
+          <footer className={"LayoutFooter"} role={"contentinfo"} />
+
+          <style jsx>{style}</style>
+
+          <style global jsx>
+            {GlobalStyles}
+          </style>
+        </section>
 
         <Overlay
           show={searching}
@@ -131,31 +155,25 @@ class Layout extends React.PureComponent {
             onLeave={this.handleToggleSearch}
           />
         )}
-
-        <style jsx>{style}</style>
-
-        <style global jsx>
-          {GlobalStyles}
-        </style>
-      </div>
+      </>
     );
   }
 
   handleHomeRedirect() {
     event({
-      action: 'Redirect',
-      category: 'Home',
-      label: 'Redirect Home from logo or house icon'
+      action: "Redirect",
+      category: "Home",
+      label: "Redirect Home from logo or house icon"
     });
 
-    Router.push('/');
+    Router.push("/");
   }
 
   handleClickSearch() {
     event({
-      action: 'Trigger Search',
-      category: 'Search',
-      label: 'From header icon'
+      action: "Trigger Search",
+      category: "Search",
+      label: "From header icon"
     });
 
     this.handleToggleSearch();
@@ -181,7 +199,7 @@ class Layout extends React.PureComponent {
 
     Router.push(
       {
-        pathname: '/events',
+        pathname: "/events",
         query: { position: geohash, city: cityDetails.place_id }
       },
       `/events/${slug(cityDetails.name, { lower: true })}`
@@ -192,14 +210,14 @@ class Layout extends React.PureComponent {
      */
     let label;
     if (city) {
-      label = city.placeId ? 'Preselected city' : 'Searched city';
+      label = city.placeId ? "Preselected city" : "Searched city";
     } else {
-      label = 'User position';
+      label = "User position";
     }
 
     event({
-      action: 'Select City',
-      category: 'Search',
+      action: "Select City",
+      category: "Search",
       label,
       value: cityDetails.name
     });

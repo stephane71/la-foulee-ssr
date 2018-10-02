@@ -1,32 +1,33 @@
-import css from 'styled-jsx/css';
+import css from "styled-jsx/css";
 
-import EventDetailsGlobalInfo from './EventDetailsGlobalInfo';
-import EventDetailsShare from './EventDetailsShare';
-import EventDetailsActivities from './EventDetailsActivities';
-import EventDetailsOrgaLink from './EventDetailsOrgaLink';
-import StaticMap from './StaticMap';
+import EventDetailsGlobalInfo from "./EventDetailsGlobalInfo";
+import EventDetailsShare from "./EventDetailsShare";
+import EventDetailsActivities from "./EventDetailsActivities";
+import EventDetailsOrgaLink from "./EventDetailsOrgaLink";
+import StaticMap from "./StaticMap";
 
-import { getSpacing, getFontSize } from '../styles-variables';
-import { getColor, TABLE_BORDER_COLOR } from '../colors';
+import { getSpacing, getFontSize } from "../styles-variables";
+import { white, getColor, TABLE_BORDER_COLOR } from "../colors";
+import { BORDER_RADIUS } from "../enums";
 
-const ICON_COLOR = getColor('light');
+const ICON_COLOR = getColor("light");
 const MAP_DESKTOP_WIDTH = 300;
 const MAP_DESKTOP_HEIGHT = 350;
 
 const EventDetailsStyle = css`
   .EventDetails-Header {
-    margin-bottom: ${getSpacing('m')}px;
+    margin-bottom: ${getSpacing("m")}px;
   }
 
   .EventDetails-Title {
     text-transform: capitalize;
-    font-family: 'Circular-Medium';
+    font-family: "Circular-Medium";
     font-weight: 500;
     margin: 0;
   }
 
   .EventDetails-Subtitle {
-    font-size: ${getFontSize('l')}px;
+    font-size: ${getFontSize("l")}px;
     margin: 0;
   }
 `;
@@ -36,7 +37,9 @@ const style = css`
     display: flex;
     justify-content: space-between;
     height: 100%;
-    padding: ${getSpacing('m')}px;
+    padding: ${getSpacing("m")}px;
+    background-color: ${white};
+    border-radius: ${BORDER_RADIUS}px;
   }
 
   .EventDetailsDesktop-Left {
@@ -44,11 +47,11 @@ const style = css`
   }
 
   .EventDetailsDesktop-Left > div {
-    margin-top: ${getSpacing('m')}px;
+    margin-top: ${getSpacing("m")}px;
   }
 
   .EventDetailsDesktop-Left > section {
-    margin-top: ${getSpacing('m')}px;
+    margin-top: ${getSpacing("m")}px;
   }
 
   .EventDetailsDesktop-Right {
@@ -58,7 +61,7 @@ const style = css`
   }
 
   .EventDetailsDesktop-Right > div {
-    margin-bottom: ${getSpacing('m')}px;
+    margin-bottom: ${getSpacing("m")}px;
   }
 
   .EventDetailsDesktop-Share {
@@ -67,7 +70,7 @@ const style = css`
   }
 
   .EventDetailsDesktop-Activities {
-    padding-top: ${getSpacing('m')}px;
+    padding-top: ${getSpacing("m")}px;
   }
 
   .EventDetailsDesktop-StaticMap {
@@ -77,13 +80,13 @@ const style = css`
 `;
 
 const EventDetailsDesktop = ({ data, desktop, isServer, onClickOrgaLink }) => (
-  <article className={'EventDetailsDesktop'}>
-    <div className={'EventDetailsDesktop-Left'}>
+  <article className={"EventDetailsDesktop"}>
+    <div className={"EventDetailsDesktop-Left"}>
       <header className={`EventDetails-Header`}>
         <h1 className={`EventDetails-Title`}>{data.title}</h1>
       </header>
 
-      <div className={'EventDetailsDesktop-GlobalInfo'}>
+      <div className={"EventDetailsDesktop-GlobalInfo"}>
         <EventDetailsGlobalInfo
           data={data}
           desktop={desktop}
@@ -93,7 +96,7 @@ const EventDetailsDesktop = ({ data, desktop, isServer, onClickOrgaLink }) => (
         />
       </div>
 
-      <section className={'EventDetailsDesktop-Share'}>
+      <section className={"EventDetailsDesktop-Share"}>
         <EventDetailsShare
           data={data}
           desktop={desktop}
@@ -102,8 +105,8 @@ const EventDetailsDesktop = ({ data, desktop, isServer, onClickOrgaLink }) => (
         />
       </section>
 
-      <section className={'EventDetailsDesktop-Activities'}>
-        <h2 className={'EventDetails-Subtitle'}>{'Épreuves'}</h2>
+      <section className={"EventDetailsDesktop-Activities"}>
+        <h2 className={"EventDetails-Subtitle"}>{"Épreuves"}</h2>
         {data.activities && data.activities.length ? (
           <EventDetailsActivities data={data} />
         ) : (
@@ -112,8 +115,8 @@ const EventDetailsDesktop = ({ data, desktop, isServer, onClickOrgaLink }) => (
       </section>
     </div>
 
-    <div className={'EventDetailsDesktop-Right'}>
-      <div className={'EventDetailsDesktop-StaticMap'}>
+    <div className={"EventDetailsDesktop-Right"}>
+      <div className={"EventDetailsDesktop-StaticMap"}>
         <StaticMap
           event={data}
           desktop={desktop}
