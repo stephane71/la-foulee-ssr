@@ -22,11 +22,15 @@ const APP_URL = publicRuntimeConfig.APP_URL;
 const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 
 class Index extends React.PureComponent {
+  static getInitialProps({ isServer, req }) {
+    return { isServer: !!req };
+  }
+
   constructor(props) {
     super(props);
 
     this.handleSearchCityToggle = this.handleSearchCityToggle.bind(this);
-    window.scrollTo(0, 0);
+    if (!props.isServer) window.scrollTo(0, 0);
   }
 
   componentDidMount() {
@@ -91,10 +95,6 @@ class Index extends React.PureComponent {
     this.props.dispatch(toggleSearch());
   }
 }
-
-Index.getInitialProps = function({ store, isServer, ...context }) {
-  return {};
-};
 
 function mapStateToProps(state) {
   return {

@@ -53,7 +53,7 @@ class EventList extends React.Component {
   }
 
   render() {
-    const { data, loading, scrollElement } = this.props;
+    const { data, loading } = this.props;
     const { listRendering } = this.state;
 
     const showLoader = listRendering || loading;
@@ -84,12 +84,6 @@ class EventList extends React.Component {
   }
 
   handleEventSelection(data, elementPosition) {
-    // For transition
-    // let windowPosition =
-    //   elementPosition - this.context.scrollingElement.scrollTop;
-    // windowPosition += HEIGHT_APPBAR + EVENT_LIST_DATE_HEIGHT;
-    // console.log('Position of the item in the window', windowPosition);
-
     this.props.onSelectEvent(data);
   }
 
