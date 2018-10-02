@@ -92,6 +92,7 @@ class EventPage extends React.PureComponent {
     };
 
     this.handleClickOrgaLink = this.handleClickOrgaLink.bind(this);
+    window.scrollTo(0, 0);
   }
 
   componentDidMount() {
