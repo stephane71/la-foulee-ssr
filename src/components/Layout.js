@@ -11,6 +11,7 @@ import SearchMobile from "./SearchMobile";
 import withGoogleMaps from "./withGoogleMaps";
 import LayoutError from "./LayoutError";
 import Loader from "./Loader";
+import AppFooter from "./AppFooter";
 
 import getUserLocation from "../utils/getUserLocation";
 import getGeohash from "../utils/geohash";
@@ -41,7 +42,6 @@ const style = css`
   }
 
   .LayoutFooter {
-    height: 50px;
   }
 
   .PagesWrapper {
@@ -134,7 +134,9 @@ class Layout extends React.PureComponent {
             </SelectedCityContext.Provider>
           </main>
 
-          <footer className={"LayoutFooter"} role={"contentinfo"} />
+          <footer className={"LayoutFooter"} role={"contentinfo"}>
+            <AppFooter />
+          </footer>
 
           <style jsx>{style}</style>
 
