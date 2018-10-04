@@ -20,7 +20,7 @@ const style = css`
     width: 100%;
     height: 100%;
     padding: ${getSpacing("m")}px;
-    padding-bottom: ${getSpacing("xl")}px;
+    padding-bottom: 0;
     display: flex;
     flex-direction: column;
 
@@ -59,11 +59,11 @@ const style = css`
   }
 
   .EventDetails-Footer {
-    position: fixed;
+    position: sticky;
     bottom: 0;
     left: 0;
     width: 100%;
-    padding: ${getSpacing("s")}px 0;
+    padding: ${getSpacing("m")}px 0;
   }
 `;
 
