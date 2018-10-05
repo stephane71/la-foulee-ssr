@@ -1,4 +1,4 @@
-import { getSpacing } from '../styles-variables';
+import { getSpacing } from "../styles-variables";
 
 class Button extends React.PureComponent {
   render() {
@@ -11,17 +11,19 @@ class Button extends React.PureComponent {
       forwardedRef
     } = this.props;
 
-    const buttonSize = size ? `Button-Size--${size}` : '';
+    const buttonSize = size ? `Button-Size--${size}` : "";
+    const buttonTheme = theme ? `Button-Theme--${theme}` : "";
+
     return (
       <button
         ref={forwardedRef}
-        className={`Button Button-Theme--${theme} ${buttonSize}`}
+        className={`Button ${buttonTheme} ${buttonSize}`}
         onClick={onClick}
       >
         {children}
         <style jsx>{`
           .Button {
-            margin-left: ${marginLeft ? getSpacing('xs') : 0}px;
+            margin-left: ${marginLeft ? getSpacing("xs") : 0}px;
           }
         `}</style>
       </button>
