@@ -156,6 +156,12 @@ export default css.global`
     background: ${white};
   }
 
+  .Button-Theme--inline {
+    background: ${white};
+    color: ${dominant};
+    border: 1px solid ${dominant};
+  }
+
   .Button-Theme--light {
     background: ${white};
     color: ${getColor("darkGrey", "tonic")};
