@@ -66,6 +66,10 @@ const style = css`
     width: 100%;
     padding: ${getSpacing("m")}px 0;
   }
+
+  .EventDetails-UserContrib {
+    margin-top: ${getSpacing("l")}px;
+  }
 `;
 
 const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
@@ -119,7 +123,7 @@ const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
       />
     </footer>
 
-    <section>
+    <section className={"EventDetails-UserContrib"}>
       <EventDetailsContribution event={data} iconColor={ICON_COLOR} />
     </section>
 
