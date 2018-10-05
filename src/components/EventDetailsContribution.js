@@ -54,7 +54,7 @@ class EventDetailsContribution extends React.Component {
           onClick={this.handleOpenPost}
         >
           <div className={"EventDetailsContribution-PostHeader"}>
-            <div>{"Envoyer vos modifications !"}</div>
+            <div>{"Envoyez vos modifications !"}</div>
             {/* <span>{event.title}</span> */}
           </div>
           <div>
