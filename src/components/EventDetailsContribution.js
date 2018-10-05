@@ -49,12 +49,12 @@ class EventDetailsContribution extends React.Component {
     return (
       <div className={"EventDetailsContribution"} onClick={this.handleOpenPost}>
         <div className={"EventDetailsContribution-PostHeader"}>
-          {"Envoyez vos modifications !"}
+          {"Proposer des modifications de l'événement"}
         </div>
         <textarea
           ref={this.textarea}
           className={"EventDetailsContribution-Textarea"}
-          placeholder={"Ecrivez ici..."}
+          placeholder={"ex: le 10km commence à 10h pas à 9h ..."}
         />
         <div className={"EventDetailsContribution-Submit"}>
           <Button size={"s"} theme={"inline"}>
