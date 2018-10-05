@@ -149,9 +149,9 @@ const EventDetailsDesktop = ({ data, desktop, isServer, onClickOrgaLink }) => (
       </div>
     </div>
 
-    <div className={"EventDetailsDesktop-UserContrib"}>
+    <section className={"EventDetailsDesktop-UserContrib"}>
       <EventDetailsContribution event={data} iconColor={ICON_COLOR} />
-    </div>
+    </section>
 
     <style jsx>{eventDetailsLayout}</style>
     <style jsx>{style}</style>
