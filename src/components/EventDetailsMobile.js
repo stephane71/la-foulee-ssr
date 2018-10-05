@@ -5,6 +5,7 @@ import EventDetailsShare from "./EventDetailsShare";
 import EventDetailsActivities from "./EventDetailsActivities";
 import EventDetailsOrgaLink from "./EventDetailsOrgaLink";
 import StaticMap from "./StaticMap";
+import EventDetailsContribution from "./EventDetailsContribution";
 
 import { getSpacing, getFontSize } from "../styles-variables";
 import { white, getColor } from "../colors";
@@ -117,6 +118,10 @@ const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
         onClickOrgaLink={onClickOrgaLink}
       />
     </footer>
+
+    <section>
+      <EventDetailsContribution event={data} iconColor={ICON_COLOR} />
+    </section>
 
     <style jsx>{style}</style>
   </article>
