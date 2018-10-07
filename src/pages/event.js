@@ -122,10 +122,8 @@ class EventPage extends React.PureComponent {
   }
 
   render() {
-    const { desktop, isServer } = this.state;
-    const { path, eventServerSide, eventStored, noEdition } = this.props;
-
-    const event = eventServerSide || eventStored;
+    const { desktop, isServer, event } = this.state;
+    const { path, noEdition } = this.props;
 
     if (!event) return <CustomError />;
 
@@ -197,8 +195,6 @@ class EventPage extends React.PureComponent {
 
   async handleSubmitContribution(contribution) {
     const userCreds = await this.props.getCredentials();
-    console.log(userCreds.identityId);
-    console.log("handleSubmitContribution", contribution);
 
     this.props.postEventContribution(
       { contribution, user: userCreds.identityId },
