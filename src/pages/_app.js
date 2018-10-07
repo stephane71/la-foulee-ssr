@@ -23,10 +23,6 @@ class MyApp extends App {
     return { pageProps };
   }
 
-  componentWillMount() {
-    if (typeof window !== "object") return;
-  }
-
   render() {
     const { Component, pageProps, store, router } = this.props;
     const {
