@@ -72,7 +72,13 @@ const style = css`
   }
 `;
 
-const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
+const EventDetailsMobile = ({
+  data,
+  desktop,
+  isServer,
+  onClickOrgaLink,
+  onSubmitContribution
+}) => (
   <article className={"EventDetails"}>
     <header className={`EventDetails-Header`}>
       <h1 className={`EventDetails-Title`}>{data.title}</h1>
@@ -124,7 +130,11 @@ const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
     </footer>
 
     <section className={"EventDetails-UserContrib"}>
-      <EventDetailsContribution event={data} iconColor={ICON_COLOR} />
+      <EventDetailsContribution
+        event={data}
+        iconColor={ICON_COLOR}
+        onSubmitContribution={onSubmitContribution}
+      />
     </section>
 
     <style jsx>{style}</style>

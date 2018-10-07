@@ -1,26 +1,33 @@
-import apigClientFactory from 'aws-api-gateway-client';
-import getConfig from 'next/config';
+import apigClientFactory from "aws-api-gateway-client";
+import getConfig from "next/config";
 
-import { getAroundEventListArgs, postNewsletterEmailArgs } from '../api';
+import {
+  getAroundEventListArgs,
+  postNewsletterEmailArgs,
+  postEventContributionArgs
+} from "../api";
 
 const { publicRuntimeConfig } = getConfig();
 const {
   EVENT_API_URL,
+  EVENT_CONTRIBUTION_API_URL,
   NEWSLETTER_API_URL,
   AWS_API_REGION
 } = publicRuntimeConfig;
 
-const EVENT_API = 'event';
-const NEWSLETTER_API = 'newsletter';
+const EVENT_API = "event";
+const EVENT_CONTRIBUTION_API = "eventContribution";
+const NEWSLETTER_API = "newsletter";
 const API_NAME_TO_URL = {
   [EVENT_API]: EVENT_API_URL,
+  [EVENT_CONTRIBUTION_API]: EVENT_CONTRIBUTION_API_URL,
   [NEWSLETTER_API]: NEWSLETTER_API_URL
 };
 
-function getAPIGatewayClient(name, credentials) {
+function getAPIGatewayClient(name, credentials, region = AWS_API_REGION) {
   return apigClientFactory.newClient({
     invokeUrl: API_NAME_TO_URL[name],
-    region: AWS_API_REGION,
+    region,
     accessKey: credentials.accessKeyId,
     secretKey: credentials.secretAccessKey,
     sessionToken: credentials.sessionToken
@@ -31,7 +38,7 @@ const withEventAPI = WrappedComponent => {
   return class eventAPIWrapper extends React.Component {
     static displayName = `withEventAPI(${WrappedComponent.displayName ||
       WrappedComponent.name ||
-      'Component'})`;
+      "Component"})`;
 
     static getInitialProps(context) {
       return WrappedComponent.getInitialProps(context);
@@ -42,6 +49,7 @@ const withEventAPI = WrappedComponent => {
 
       this.getEventListAround = this.getEventListAround.bind(this);
       this.postNewsletterEmail = this.postNewsletterEmail.bind(this);
+      this.postEventContribution = this.postEventContribution.bind(this);
     }
 
     render() {
@@ -49,6 +57,7 @@ const withEventAPI = WrappedComponent => {
         <WrappedComponent
           getEventListAround={this.getEventListAround}
           postNewsletterEmail={this.postNewsletterEmail}
+          postEventContribution={this.postEventContribution}
           {...this.props}
         />
       );
@@ -56,11 +65,11 @@ const withEventAPI = WrappedComponent => {
 
     api = {};
 
-    async getAPI(name) {
+    async getAPI(name, region) {
       let api = this.api[name];
       if (!api || this.props.credentialsNeedsRefresh()) {
         let credentials = await this.props.getCredentials();
-        this.api[name] = getAPIGatewayClient(name, credentials);
+        this.api[name] = getAPIGatewayClient(name, credentials, region);
       }
 
       return this.api[name];
@@ -75,6 +84,12 @@ const withEventAPI = WrappedComponent => {
     async postNewsletterEmail(email) {
       let api = await this.getAPI(NEWSLETTER_API);
       const args = postNewsletterEmailArgs(email);
+      return await api.invokeApi(...args).then(res => res.data);
+    }
+
+    async postEventContribution({ contribution, user }, event) {
+      let api = await this.getAPI(EVENT_CONTRIBUTION_API, "eu-west-1");
+      const args = postEventContributionArgs({ contribution, user }, event);
       return await api.invokeApi(...args).then(res => res.data);
     }
   };

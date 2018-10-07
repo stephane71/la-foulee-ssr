@@ -88,10 +88,13 @@ class EventPage extends React.PureComponent {
     super(props);
     this.state = {
       desktop: false,
-      isServer: props.isServer
+      isServer: props.isServer,
+      event: props.eventServerSide || props.eventStored
     };
 
     this.handleClickOrgaLink = this.handleClickOrgaLink.bind(this);
+    this.handleSubmitContribution = this.handleSubmitContribution.bind(this);
+
     if (!props.isServer) window.scrollTo(0, 0);
   }
 
@@ -170,6 +173,7 @@ class EventPage extends React.PureComponent {
               desktop={desktop}
               isServer={isServer}
               onClickOrgaLink={this.handleClickOrgaLink}
+              onSubmitContribution={this.handleSubmitContribution}
             />
           )}
 
@@ -180,6 +184,7 @@ class EventPage extends React.PureComponent {
               desktop={desktop}
               isServer={isServer}
               onClickOrgaLink={this.handleClickOrgaLink}
+              onSubmitContribution={this.handleSubmitContribution}
             />
           )}
 
@@ -187,6 +192,17 @@ class EventPage extends React.PureComponent {
 
         <style jsx>{style}</style>
       </div>
+    );
+  }
+
+  async handleSubmitContribution(contribution) {
+    const userCreds = await this.props.getCredentials();
+    console.log(userCreds.identityId);
+    console.log("handleSubmitContribution", contribution);
+
+    this.props.postEventContribution(
+      { contribution, user: userCreds.identityId },
+      this.state.event
     );
   }
 

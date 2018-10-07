@@ -41,6 +41,7 @@ class EventDetailsContribution extends React.Component {
     this.textarea = React.createRef();
 
     this.handleOpenPost = this.handleOpenPost.bind(this);
+    this.handleSubmitContribution = this.handleSubmitContribution.bind(this);
   }
 
   render() {
@@ -54,10 +55,14 @@ class EventDetailsContribution extends React.Component {
         <textarea
           ref={this.textarea}
           className={"EventDetailsContribution-Textarea"}
-          placeholder={"ex: le 10km commence à 10h pas à 9h ..."}
+          placeholder={"ex: Le 10km commence à 10h pas à 9h ..."}
         />
         <div className={"EventDetailsContribution-Submit"}>
-          <Button size={"s"} theme={"inline"}>
+          <Button
+            size={"s"}
+            theme={"inline"}
+            onClick={this.handleSubmitContribution}
+          >
             {"Envoyer"}
           </Button>
         </div>
@@ -69,6 +74,11 @@ class EventDetailsContribution extends React.Component {
 
   handleOpenPost() {
     this.textarea.current.focus();
+  }
+
+  handleSubmitContribution() {
+    const contribution = this.textarea.current.value;
+    this.props.onSubmitContribution(contribution);
   }
 }
 

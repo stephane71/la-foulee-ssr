@@ -88,7 +88,13 @@ const style = css`
   }
 `;
 
-const EventDetailsDesktop = ({ data, desktop, isServer, onClickOrgaLink }) => (
+const EventDetailsDesktop = ({
+  data,
+  desktop,
+  isServer,
+  onClickOrgaLink,
+  onSubmitContribution
+}) => (
   <article className={"EventDetailsDesktop"}>
     <div className={"EventDetailsDesktop-Main"}>
       <div className={"EventDetailsDesktop-Left"}>
@@ -150,7 +156,11 @@ const EventDetailsDesktop = ({ data, desktop, isServer, onClickOrgaLink }) => (
     </div>
 
     <section className={"EventDetailsDesktop-UserContrib"}>
-      <EventDetailsContribution event={data} iconColor={ICON_COLOR} />
+      <EventDetailsContribution
+        event={data}
+        iconColor={ICON_COLOR}
+        onSubmitContribution={onSubmitContribution}
+      />
     </section>
 
     <style jsx>{eventDetailsLayout}</style>
