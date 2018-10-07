@@ -8,7 +8,9 @@ class Button extends React.PureComponent {
       theme,
       size,
       marginLeft = false,
-      forwardedRef
+      forwardedRef,
+      className,
+      ...attributes
     } = this.props;
 
     const buttonSize = size ? `Button-Size--${size}` : "";
@@ -17,8 +19,9 @@ class Button extends React.PureComponent {
     return (
       <button
         ref={forwardedRef}
-        className={`Button ${buttonTheme} ${buttonSize}`}
+        className={`Button ${buttonTheme} ${buttonSize} ${className}`}
         onClick={onClick}
+        {...attributes}
       >
         {children}
         <style jsx>{`
