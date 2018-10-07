@@ -18,7 +18,7 @@ const style = css`
 
   .EventDetailsContribution-Textarea {
     width: 100%;
-    height: 150px;
+    height: 100px;
     font-size: ${getFontSize()}px;
     outline: none;
     border: 0;
@@ -27,6 +27,10 @@ const style = css`
     background-color: ${APP_BACKGROUND_COLOR};
     border-radius: ${BORDER_RADIUS}px;
     padding: ${getSpacing("s")}px;
+  }
+
+  .EventDetailsContribution-ThxsMessage {
+    margin-left: ${getSpacing("m")}px;
   }
 `;
 
@@ -41,7 +45,8 @@ class EventDetailsContribution extends React.Component {
     super(props);
 
     this.state = {
-      contribution: ""
+      contribution: "",
+      cleared: false
     };
 
     this.textarea = React.createRef();
@@ -52,12 +57,13 @@ class EventDetailsContribution extends React.Component {
   }
 
   render() {
-    const { event, iconColor } = this.props;
+    const { cleared } = this.state;
+    const { iconColor } = this.props;
 
     return (
-      <div className={"EventDetailsContribution"} onClick={this.handleOpenPost}>
+      <div className={"EventDetailsContribution"}>
         <form onSubmit={this.handleSubmitContribution}>
-          <label>
+          <label onClick={this.handleOpenPost}>
             <span className={"EventDetailsContribution-Label"}>
               {"Proposer des modifications de l'événement"}
             </span>
@@ -78,6 +84,11 @@ class EventDetailsContribution extends React.Component {
           >
             {"Envoyer"}
           </Button>
+          {cleared && (
+            <span className={"EventDetailsContribution-ThxsMessage"}>
+              {"Merci !"}
+            </span>
+          )}
         </form>
 
         {styleButton}
@@ -99,7 +110,9 @@ class EventDetailsContribution extends React.Component {
     const contribution = this.state.contribution.trim();
     if (!contribution) return;
     this.props.onSubmitContribution(contribution);
-    this.setState({ contribution: "" });
+    this.setState({ contribution: "", cleared: true });
+
+    setTimeout(() => this.setState({ cleared: false }), 2000);
   }
 }
 

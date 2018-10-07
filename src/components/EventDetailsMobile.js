@@ -131,7 +131,6 @@ const EventDetailsMobile = ({
 
     <section className={"EventDetails-UserContrib"}>
       <EventDetailsContribution
-        event={data}
         iconColor={ICON_COLOR}
         onSubmitContribution={onSubmitContribution}
       />

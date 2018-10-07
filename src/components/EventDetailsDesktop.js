@@ -157,7 +157,6 @@ const EventDetailsDesktop = ({
 
     <section className={"EventDetailsDesktop-UserContrib"}>
       <EventDetailsContribution
-        event={data}
         iconColor={ICON_COLOR}
         onSubmitContribution={onSubmitContribution}
       />
