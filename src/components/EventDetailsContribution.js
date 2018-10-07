@@ -12,7 +12,7 @@ const style = css`
     cursor: text;
   }
 
-  .EventDetailsContribution-PostHeader {
+  .EventDetailsContribution-Label {
     font-weight: 600;
   }
 
@@ -28,8 +28,10 @@ const style = css`
     border-radius: ${BORDER_RADIUS}px;
     padding: ${getSpacing("s")}px;
   }
+`;
 
-  .EventDetailsContribution-Submit {
+const { className: classNameButton, styles: styleButton } = css.resolve`
+  button {
     margin-top: ${getSpacing("s")}px;
   }
 `;
@@ -38,8 +40,13 @@ class EventDetailsContribution extends React.Component {
   constructor(props) {
     super(props);
 
+    this.state = {
+      contribution: ""
+    };
+
     this.textarea = React.createRef();
 
+    this.handleChange = this.handleChange.bind(this);
     this.handleOpenPost = this.handleOpenPost.bind(this);
     this.handleSubmitContribution = this.handleSubmitContribution.bind(this);
   }
@@ -49,36 +56,50 @@ class EventDetailsContribution extends React.Component {
 
     return (
       <div className={"EventDetailsContribution"} onClick={this.handleOpenPost}>
-        <div className={"EventDetailsContribution-PostHeader"}>
-          {"Proposer des modifications de l'événement"}
-        </div>
-        <textarea
-          ref={this.textarea}
-          className={"EventDetailsContribution-Textarea"}
-          placeholder={"ex: Le 10km commence à 10h pas à 9h ..."}
-        />
-        <div className={"EventDetailsContribution-Submit"}>
+        <form onSubmit={this.handleSubmitContribution}>
+          <label>
+            <span className={"EventDetailsContribution-Label"}>
+              {"Proposer des modifications de l'événement"}
+            </span>
+            <textarea
+              ref={this.textarea}
+              value={this.state.contribution}
+              onChange={this.handleChange}
+              className={"EventDetailsContribution-Textarea"}
+              placeholder={"ex: Le 10km commence à 10h pas à 9h ..."}
+            />
+          </label>
+
           <Button
+            type={"submit"}
             size={"s"}
             theme={"inline"}
-            onClick={this.handleSubmitContribution}
+            className={classNameButton}
           >
             {"Envoyer"}
           </Button>
-        </div>
+        </form>
 
+        {styleButton}
         <style jsx>{style}</style>
       </div>
     );
+  }
+
+  handleChange(event) {
+    this.setState({ contribution: event.target.value });
   }
 
   handleOpenPost() {
     this.textarea.current.focus();
   }
 
-  handleSubmitContribution() {
-    const contribution = this.textarea.current.value;
+  handleSubmitContribution(e) {
+    e.preventDefault();
+    const contribution = this.state.contribution.trim();
+    if (!contribution) return;
     this.props.onSubmitContribution(contribution);
+    this.setState({ contribution: "" });
   }
 }
 
