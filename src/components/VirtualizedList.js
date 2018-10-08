@@ -49,7 +49,6 @@ class VirtualizedList extends React.PureComponent {
     this.refList = this.refList.bind(this);
     this.rowRenderer = this.rowRenderer.bind(this);
     this.onRowsRendered = this.onRowsRendered.bind(this);
-    this.handleScroll = this.handleScroll.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -155,10 +154,6 @@ class VirtualizedList extends React.PureComponent {
         this.list.forceUpdate();
       }
     }
-  }
-
-  handleScroll({ scrollTop }) {
-    this.scrollTop = scrollTop;
   }
 }
 

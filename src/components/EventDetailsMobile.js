@@ -5,6 +5,7 @@ import EventDetailsShare from "./EventDetailsShare";
 import EventDetailsActivities from "./EventDetailsActivities";
 import EventDetailsOrgaLink from "./EventDetailsOrgaLink";
 import StaticMap from "./StaticMap";
+import EventDetailsContribution from "./EventDetailsContribution";
 
 import { getSpacing, getFontSize } from "../styles-variables";
 import { white, getColor } from "../colors";
@@ -65,9 +66,19 @@ const style = css`
     width: 100%;
     padding: ${getSpacing("m")}px 0;
   }
+
+  .EventDetails-UserContrib {
+    margin-top: ${getSpacing("l")}px;
+  }
 `;
 
-const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
+const EventDetailsMobile = ({
+  data,
+  desktop,
+  isServer,
+  onClickOrgaLink,
+  onSubmitContribution
+}) => (
   <article className={"EventDetails"}>
     <header className={`EventDetails-Header`}>
       <h1 className={`EventDetails-Title`}>{data.title}</h1>
@@ -117,6 +128,13 @@ const EventDetailsMobile = ({ data, desktop, isServer, onClickOrgaLink }) => (
         onClickOrgaLink={onClickOrgaLink}
       />
     </footer>
+
+    <section className={"EventDetails-UserContrib"}>
+      <EventDetailsContribution
+        iconColor={ICON_COLOR}
+        onSubmitContribution={onSubmitContribution}
+      />
+    </section>
 
     <style jsx>{style}</style>
   </article>

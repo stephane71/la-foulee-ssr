@@ -1,16 +1,16 @@
-import React from 'react';
-import App, { Container } from 'next/app';
-import withRedux from 'next-redux-wrapper';
-import { compose } from 'redux';
-import { Provider } from 'react-redux';
+import React from "react";
+import App, { Container } from "next/app";
+import withRedux from "next-redux-wrapper";
+import { compose } from "redux";
+import { Provider } from "react-redux";
 
-import Layout from '../components/Layout';
-import Media from '../components/Media';
+import Layout from "../components/Layout";
+import Media from "../components/Media";
 
-import withEventAPI from '../components/withEventAPI';
-import withCredentials from '../components/withCredentials';
+import withEventAPI from "../components/withEventAPI";
+import withCredentials from "../components/withCredentials";
 
-import { makeStore } from '../store';
+import { makeStore } from "../store";
 
 class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
@@ -23,23 +23,14 @@ class MyApp extends App {
     return { pageProps };
   }
 
-  componentWillMount() {
-    if (typeof window !== 'object') return;
-
-    // WARNING: This is a patch
-    // Prevent NextJS LINK & ROUTER to mute the url by adding a trailing slash
-    this.nextExportBuffer = __NEXT_DATA__.nextExport;
-    __NEXT_DATA__.nextExport = false;
-  }
-
-  componentWillUnmount() {
-    // WARNING: This is a patch
-    // Prevent NextJS LINK & ROUTER to mute the url by adding a trailing slash
-    __NEXT_DATA__.nextExport = this.nextExportBuffer;
-  }
-
   render() {
     const { Component, pageProps, store, router } = this.props;
+    const {
+      getEventListAround,
+      postNewsletterEmail,
+      postEventContribution,
+      getCredentials
+    } = this.props;
 
     return (
       <Container>
@@ -48,8 +39,10 @@ class MyApp extends App {
             <Layout query={router.query || {}} currentRoute={router.asPath}>
               <Component
                 {...pageProps}
-                getEventListAround={this.props.getEventListAround}
-                postNewsletterEmail={this.props.postNewsletterEmail}
+                getEventListAround={getEventListAround}
+                postNewsletterEmail={postNewsletterEmail}
+                postEventContribution={postEventContribution}
+                getCredentials={getCredentials}
                 query={router.query || {}}
                 path={router.asPath}
               />
@@ -59,8 +52,6 @@ class MyApp extends App {
       </Container>
     );
   }
-
-  nextExportBuffer = null;
 }
 
 export default compose(
