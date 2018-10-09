@@ -16,8 +16,6 @@ const {
   EVENT_CONTRIBUTION_API_PATH
 } = publicRuntimeConfig;
 
-console.log(EVENT_API_URL, BASE_API_URL);
-
 function getAPIGatewayClient(name, credentials) {
   return apigClientFactory.newClient({
     invokeUrl:
