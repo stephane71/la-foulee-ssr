@@ -25,7 +25,7 @@ function postNewsletterEmailArgs(email) {
 function postEventContributionArgs({ contribution, user }, { keyword, date }) {
   const params = {};
   // Template syntax follows url-template https://www.npmjs.com/package/url-template
-  const pathTemplate = `/contribution/event`;
+  const pathTemplate = `/event`;
   const method = "POST";
   const additionalParams = {};
   const body = { contribution, user, keyword, date };
