@@ -10,23 +10,18 @@ import {
 const { publicRuntimeConfig } = getConfig();
 const {
   EVENT_API_URL,
-  EVENT_CONTRIBUTION_API_URL,
-  NEWSLETTER_API_URL,
-  AWS_API_REGION
+  AWS_API_REGION,
+  BASE_API_URL,
+  NEWSLETTER_API_PATH,
+  EVENT_CONTRIBUTION_API_PATH
 } = publicRuntimeConfig;
 
-const EVENT_API = "event";
-const EVENT_CONTRIBUTION_API = "eventContribution";
-const NEWSLETTER_API = "newsletter";
-const API_NAME_TO_URL = {
-  [EVENT_API]: EVENT_API_URL,
-  [EVENT_CONTRIBUTION_API]: EVENT_CONTRIBUTION_API_URL,
-  [NEWSLETTER_API]: NEWSLETTER_API_URL
-};
+console.log(EVENT_API_URL, BASE_API_URL);
 
 function getAPIGatewayClient(name, credentials) {
   return apigClientFactory.newClient({
-    invokeUrl: API_NAME_TO_URL[name],
+    invokeUrl:
+      name === EVENT_API_URL ? EVENT_API_URL : `${BASE_API_URL}/${name}`,
     region: AWS_API_REGION,
     accessKey: credentials.accessKeyId,
     secretKey: credentials.secretAccessKey,
@@ -76,19 +71,19 @@ const withEventAPI = WrappedComponent => {
     }
 
     async getEventListAround(geohash) {
-      let api = await this.getAPI(EVENT_API);
+      let api = await this.getAPI(EVENT_API_URL);
       const args = getAroundEventListArgs(geohash);
       return await api.invokeApi(...args).then(res => res.data);
     }
 
     async postNewsletterEmail(email) {
-      let api = await this.getAPI(NEWSLETTER_API);
+      let api = await this.getAPI(NEWSLETTER_API_PATH);
       const args = postNewsletterEmailArgs(email);
       return await api.invokeApi(...args).then(res => res.data);
     }
 
     async postEventContribution({ contribution, user }, event) {
-      let api = await this.getAPI(EVENT_CONTRIBUTION_API);
+      let api = await this.getAPI(EVENT_CONTRIBUTION_API_PATH);
       const args = postEventContributionArgs({ contribution, user }, event);
       return await api.invokeApi(...args).then(res => res.data);
     }
