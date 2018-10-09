@@ -14,7 +14,7 @@ function getAroundEventListArgs(geohash) {
 function postNewsletterEmailArgs(email) {
   const params = {};
   // Template syntax follows url-template https://www.npmjs.com/package/url-template
-  const pathTemplate = `/newsletter/subscribe`;
+  const pathTemplate = `/subscribe`;
   const method = "POST";
   const additionalParams = {};
   const body = { email };
