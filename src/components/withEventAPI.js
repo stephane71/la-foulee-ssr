@@ -9,17 +9,16 @@ import {
 
 const { publicRuntimeConfig } = getConfig();
 const {
-  EVENT_API_URL,
   AWS_API_REGION,
   BASE_API_URL,
+  EVENTS_API_PATH,
   NEWSLETTER_API_PATH,
   EVENT_CONTRIBUTION_API_PATH
 } = publicRuntimeConfig;
 
 function getAPIGatewayClient(name, credentials) {
   return apigClientFactory.newClient({
-    invokeUrl:
-      name === EVENT_API_URL ? EVENT_API_URL : `${BASE_API_URL}/${name}`,
+    invokeUrl: `${BASE_API_URL}/${name}`,
     region: AWS_API_REGION,
     accessKey: credentials.accessKeyId,
     secretKey: credentials.secretAccessKey,
@@ -69,7 +68,7 @@ const withEventAPI = WrappedComponent => {
     }
 
     async getEventListAround(geohash) {
-      let api = await this.getAPI(EVENT_API_URL);
+      let api = await this.getAPI(EVENTS_API_PATH);
       const args = getAroundEventListArgs(geohash);
       return await api.invokeApi(...args).then(res => res.data);
     }

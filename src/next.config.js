@@ -38,7 +38,6 @@ module.exports = (phase, { defaultConfig }) => {
       NEWSLETTER_API_PATH: process.env.NEWSLETTER_API_PATH,
       EVENT_CONTRIBUTION_API_PATH: process.env.EVENT_CONTRIBUTION_API_PATH,
       EVENTS_API_PATH: process.env.EVENTS_API_PATH,
-      EVENT_API_URL: process.env.EVENT_API_URL,
       AWS_API_REGION: process.env.AWS_API_REGION,
       IDENTITY_POOL_ID: process.env.IDENTITY_POOL_ID,
       GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY,
