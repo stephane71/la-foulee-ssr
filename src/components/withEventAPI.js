@@ -24,10 +24,10 @@ const API_NAME_TO_URL = {
   [NEWSLETTER_API]: NEWSLETTER_API_URL
 };
 
-function getAPIGatewayClient(name, credentials, region = AWS_API_REGION) {
+function getAPIGatewayClient(name, credentials) {
   return apigClientFactory.newClient({
     invokeUrl: API_NAME_TO_URL[name],
-    region,
+    region: AWS_API_REGION,
     accessKey: credentials.accessKeyId,
     secretKey: credentials.secretAccessKey,
     sessionToken: credentials.sessionToken
@@ -65,11 +65,11 @@ const withEventAPI = WrappedComponent => {
 
     api = {};
 
-    async getAPI(name, region) {
+    async getAPI(name) {
       let api = this.api[name];
       if (!api || this.props.credentialsNeedsRefresh()) {
         let credentials = await this.props.getCredentials();
-        this.api[name] = getAPIGatewayClient(name, credentials, region);
+        this.api[name] = getAPIGatewayClient(name, credentials);
       }
 
       return this.api[name];
@@ -88,7 +88,7 @@ const withEventAPI = WrappedComponent => {
     }
 
     async postEventContribution({ contribution, user }, event) {
-      let api = await this.getAPI(EVENT_CONTRIBUTION_API, "eu-west-1");
+      let api = await this.getAPI(EVENT_CONTRIBUTION_API);
       const args = postEventContributionArgs({ contribution, user }, event);
       return await api.invokeApi(...args).then(res => res.data);
     }
