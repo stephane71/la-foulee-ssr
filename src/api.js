@@ -3,7 +3,7 @@ function getAroundEventListArgs(geohash) {
     geohash
   };
   // Template syntax follows url-template https://www.npmjs.com/package/url-template
-  const pathTemplate = "/events/around/{geohash}";
+  const pathTemplate = "/around/{geohash}";
   const method = "GET";
   const additionalParams = {};
   const body = {};
