@@ -12,8 +12,8 @@ import { white, getColor } from "../colors";
 
 const ICON_COLOR = getColor("light");
 const MAP_MOBILE_HEIGHT = 100;
-const MOBILE_MIN_WIDTH = 320;
-const MOBILE_MAX_WIDTH = 450;
+export const MOBILE_MIN_WIDTH = 320;
+export const MOBILE_MAX_WIDTH = 450;
 
 const style = css`
   .EventDetails {
@@ -29,6 +29,7 @@ const style = css`
     max-width: ${MOBILE_MAX_WIDTH}px;
     margin: 0 auto;
     background-color: ${white};
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
   }
 
   .EventDetails > div {
