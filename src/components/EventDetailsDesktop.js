@@ -22,6 +22,7 @@ const eventDetailsLayout = css`
     padding: ${getSpacing("m")}px;
     background-color: ${white};
     border-radius: ${BORDER_RADIUS}px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
   }
 
   .EventDetailsDesktop-Main {
