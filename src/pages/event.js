@@ -19,6 +19,7 @@ const EventDetailsDesktop = dynamic(
 );
 
 import JSONLD from "../components/JSONLD";
+import RelatedEvents from "../components/RelatedEvents";
 
 import getEventDescription from "../utils/getEventDescription";
 import { getEventStructuredData } from "../utils/structuredData";
@@ -40,6 +41,10 @@ const style = css`
     overflow-y: initial;
     margin: auto 0;
     padding-top: ${getSpacing("m")}px;
+  }
+
+  .EventPage-RelatedEvents {
+    margin-top: ${getSpacing("m")}px;
   }
 `;
 
@@ -185,6 +190,10 @@ class EventPage extends React.PureComponent {
               onSubmitContribution={this.handleSubmitContribution}
             />
           )}
+
+        <section className={"EventPage-RelatedEvents"}>
+          {!isServer && <RelatedEvents event={event} desktop={desktop} />}
+        </section>
 
         <JSONLD data={getEventStructuredData(event, { description, path })} />
 
