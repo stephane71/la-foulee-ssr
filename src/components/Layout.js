@@ -256,6 +256,6 @@ function mapStateToProps(state) {
   };
 }
 
-const LayoutWithGoogleMaps = withGoogleMaps(Layout);
+const LayoutWithGoogleMaps = withGoogleMaps(Layout, true);
 
 export default connect(mapStateToProps)(LayoutWithGoogleMaps);

@@ -1,18 +1,18 @@
-import dynamic from 'next/dynamic';
-import { connect } from 'react-redux';
+import dynamic from "next/dynamic";
+import { connect } from "react-redux";
 
-import { GOOGLE_DETAILS_SERVICE, GOOGLE_GEOCODING_SERVICE } from '../enums';
+import { GOOGLE_DETAILS_SERVICE, GOOGLE_GEOCODING_SERVICE } from "../enums";
 
-const GoogleMapInitServices = dynamic(import('./GoogleMapInitServices'), {
+const GoogleMapInitServices = dynamic(import("./GoogleMapInitServices"), {
   ssr: false,
   loading: () => null
 });
 
-const withGoogleMaps = WrappedComponent => {
+const withGoogleMaps = (WrappedComponent, initService = false) => {
   class GoogleMaps extends React.Component {
     static displayName = `withGoogleMaps(${WrappedComponent.displayName ||
       WrappedComponent.name ||
-      'Component'})`;
+      "Component"})`;
 
     constructor(props) {
       super(props);
@@ -24,9 +24,13 @@ const withGoogleMaps = WrappedComponent => {
     render() {
       return (
         <>
-          <GoogleMapInitServices />
+          {initService && <GoogleMapInitServices />}
 
           <WrappedComponent
+            googleMapsServiceReady={
+              this.props.googleMapsDetailsService &&
+              this.props.googleMapsGeocodingService
+            }
             getDetails={this.getDetails}
             reverseGeocoding={this.reverseGeocoding}
             {...this.props}
@@ -62,7 +66,7 @@ const withGoogleMaps = WrappedComponent => {
           (results, status) => {
             if (status === google.maps.GeocoderStatus.OK) {
               const city = results.find(({ types }) =>
-                types.includes('locality')
+                types.includes("locality")
               );
               resolve({ ...city, placeId: city.place_id });
             } else reject(status);
