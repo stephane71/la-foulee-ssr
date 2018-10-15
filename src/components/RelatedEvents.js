@@ -7,6 +7,7 @@ import moment from "moment";
 import withGoogleMaps from "./withGoogleMaps";
 import { MOBILE_MIN_WIDTH, MOBILE_MAX_WIDTH } from "./EventDetailsMobile";
 
+import getGeohash from "../utils/geohash";
 import { getSpacing } from "../styles-variables";
 import { white, getColor } from "../colors";
 
@@ -112,6 +113,8 @@ class RelatedEvents extends React.PureComponent {
     const { event, desktop } = this.props;
     const { city } = this.state;
 
+    const geohash = city ? getGeohash(city.location) : null;
+
     return (
       <div
         className={`RelatedEvents RelatedEvents--${
@@ -122,7 +125,11 @@ class RelatedEvents extends React.PureComponent {
           <h2>{`Explorer`}</h2>
         </div>
         <Link
-          href={{ pathname: `/events/${slug(event.city, { lower: true })}` }}
+          href={{
+            pathname: "/events",
+            query: { position: geohash, city: event.place_id }
+          }}
+          as={`/events/${slug(event.city, { lower: true })}`}
         >
           <a className={"RelatedEvents-CardLinkWrapper"}>
             <div className={"RelatedEvents-Card"}>
