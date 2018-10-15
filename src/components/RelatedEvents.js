@@ -1,4 +1,5 @@
 import slug from "slug";
+import Link from "next/link";
 import css from "styled-jsx/css";
 import getConfig from "next/config";
 import moment from "moment";
@@ -8,7 +9,6 @@ import { MOBILE_MIN_WIDTH, MOBILE_MAX_WIDTH } from "./EventDetailsMobile";
 
 import { getSpacing } from "../styles-variables";
 import { white, getColor } from "../colors";
-import { DATE_FORMAT } from "../enums";
 
 const { publicRuntimeConfig } = getConfig();
 const APP_URL = publicRuntimeConfig.APP_URL;
@@ -18,8 +18,11 @@ const IMAGE_CARD_DESKTOP_HEIGHT = 125;
 
 const IMAGE_CARD_MOBILE_WIDTH = 120;
 
-// From RelatedEvents-CardBody: 24 * 2 (h6 + span) + 24 * 2 (card body padding)
-const IMAGE_CARD_HEIGHT = 96;
+// From RelatedEvents-CardBody: 24 * 3 (h6 on 2lines + span) + 24 * 2 (card body padding)
+const IMAGE_CARD_HEIGHT = 120;
+
+const DATE_FORMAT_DESKTOP = "DD MMMM";
+const DATE_FORMAT_MOBILE = "DD MMM";
 
 const style = css`
   .RelatedEvents {
@@ -118,23 +121,26 @@ class RelatedEvents extends React.PureComponent {
         <div className={"RelatedEvents-Header"}>
           <h2>{`Explorer`}</h2>
         </div>
-        <a
-          href={`${APP_URL}/events/${slug(event.city, { lower: true })}`}
-          className={"RelatedEvents-CardLinkWrapper"}
+        <Link
+          href={{ pathname: `/events/${slug(event.city, { lower: true })}` }}
         >
-          <div className={"RelatedEvents-Card"}>
-            <div className={"RelatedEvents-CardImage"}>
-              <img
-                src={city && this.getPhoto(city)}
-                className={"RelatedEvents-Image"}
-              />
+          <a className={"RelatedEvents-CardLinkWrapper"}>
+            <div className={"RelatedEvents-Card"}>
+              <div className={"RelatedEvents-CardImage"}>
+                <img
+                  src={city && this.getPhoto(city)}
+                  className={"RelatedEvents-Image"}
+                />
+              </div>
+              <div className={"RelatedEvents-CardBody"}>
+                <h6>{`Autour de ${this.props.event.city}`}</h6>
+                <span>{`À partir du ${moment().format(
+                  desktop ? DATE_FORMAT_DESKTOP : DATE_FORMAT_MOBILE
+                )}`}</span>
+              </div>
             </div>
-            <div className={"RelatedEvents-CardBody"}>
-              <h6>{`Autour de ${this.props.event.city}`}</h6>
-              <span>{`À partir du ${moment().format(DATE_FORMAT)}`}</span>
-            </div>
-          </div>
-        </a>
+          </a>
+        </Link>
 
         <style jsx>{style}</style>
         <style jsx>{`
