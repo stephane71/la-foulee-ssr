@@ -1,8 +1,8 @@
 import React from "react";
 import moment from "moment";
-import Router from "next/router";
 import css from "styled-jsx/css";
 import slug from "slug";
+import Router, { withRouter } from "next/router";
 import { connect } from "react-redux";
 
 import Header from "./Header";
@@ -65,10 +65,10 @@ class Layout extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const { query, cityMap } = props;
+    const { router, cityMap } = props;
 
     this.state = {
-      city: query.city ? cityMap[query.city] : {},
+      city: router.query.city ? cityMap[router.query.city] : {},
       error: null
     };
 
@@ -94,25 +94,23 @@ class Layout extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.query.city &&
-      nextProps.query.city !== this.props.query.city
-    ) {
-      this.getCityDetails(nextProps.query.city).then(city =>
+    const { router } = this.props;
+    const { router: nextRouter } = nextProps;
+
+    if (nextRouter.query.city && nextRouter.query.city !== router.query.city) {
+      this.getCityDetails(nextRouter.query.city).then(city =>
         this.setState({ city })
       );
     }
-    if (
-      nextProps.currentRoute !== this.props.currentRoute ||
-      nextProps.currentRoute === "/"
-    ) {
+    if (nextRouter.asPath !== router.asPath || nextRouter.asPath === "/") {
       this.setState({ error: null });
     }
   }
 
   render() {
-    const { currentRoute, query, children, searching } = this.props;
+    const { currentRoute, router, children, searching } = this.props;
     const { city, error } = this.state;
+    const { query, asPath } = router;
 
     return (
       <>
@@ -122,7 +120,7 @@ class Layout extends React.PureComponent {
               onClickHeaderLogo={this.handleHomeRedirect}
               onClickSearch={this.handleClickSearch}
               showBackArrow={query.keyword}
-              isHomeRoute={currentRoute === "/"}
+              isHomeRoute={asPath === "/"}
             />
           </nav>
 
@@ -256,6 +254,7 @@ function mapStateToProps(state) {
   };
 }
 
-const LayoutWithGoogleMaps = withGoogleMaps(Layout, true);
+const LayoutWithRouter = withRouter(Layout, true);
+const LayoutWithGoogleMaps = withGoogleMaps(LayoutWithRouter, true);
 
 export default connect(mapStateToProps)(LayoutWithGoogleMaps);

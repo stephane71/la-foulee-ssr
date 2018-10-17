@@ -36,7 +36,7 @@ class MyApp extends App {
       <Container>
         <Provider store={store}>
           <Media>
-            <Layout query={router.query || {}} currentRoute={router.asPath}>
+            <Layout>
               <Component
                 {...pageProps}
                 getEventListAround={getEventListAround}
