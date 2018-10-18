@@ -11,6 +11,7 @@ import {
   SET_GOOGLE_MAPS_SERVICE,
   SET_MEDIA_TYPE,
   SET_USER_POSITION,
+  SET_DEPARTMENT,
   TOGGLE_SEARCH,
   SET_SEARCHING_GEOHASH,
   ADD_CITY
@@ -38,6 +39,7 @@ const initialState = {
   },
   media: null,
   position: null,
+  department: null,
   searching: false,
   searchingGeohash: false,
   city: null,
@@ -63,6 +65,8 @@ const reducer = (state = initialState, action) => {
       return { ...state, media: action.media };
     case SET_USER_POSITION:
       return { ...state, position: action.position };
+    case SET_DEPARTMENT:
+      return { ...state, department: action.department };
     case TOGGLE_SEARCH:
       return {
         ...state,

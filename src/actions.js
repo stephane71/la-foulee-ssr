@@ -3,6 +3,7 @@ export const SET_EVENT_LIST = "SET_EVENT_LIST";
 export const SET_GOOGLE_MAPS_SERVICE = "SET_GOOGLE_MAPS_SERVICE";
 export const SET_MEDIA_TYPE = "SET_MEDIA_TYPE";
 export const SET_USER_POSITION = "SET_USER_POSITION";
+export const SET_DEPARTMENT = "SET_DEPARTMENT";
 export const TOGGLE_SEARCH = "TOGGLE_SEARCH";
 export const SET_SEARCHING_GEOHASH = "SET_SEARCHING_GEOHASH";
 export const ADD_CITY = "ADD_CITY";
@@ -40,6 +41,13 @@ export function setUserPosition(position) {
   return {
     type: SET_USER_POSITION,
     position
+  };
+}
+
+export function setDepartment(department) {
+  return {
+    type: SET_DEPARTMENT,
+    department
   };
 }
 
