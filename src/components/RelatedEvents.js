@@ -25,27 +25,14 @@ const IMAGE_CARD_HEIGHT = 120;
 const DATE_FORMAT_DESKTOP = "DD MMMM";
 const DATE_FORMAT_MOBILE = "DD MMM";
 
-const style = css`
-  .RelatedEvents {
-    padding: ${getSpacing("m")}px 0;
-  }
-
-  .RelatedEvents--mobile {
-    min-width: ${MOBILE_MIN_WIDTH}px;
-    max-width: ${MOBILE_MAX_WIDTH}px;
-    margin: 0 auto;
-  }
-
-  .RelatedEvents-Header {
-    text-align: center;
-  }
-
+const RelatedEventsCardStyle = css`
   .RelatedEvents-CardLinkWrapper {
     text-decoration: none;
     color: inherit;
   }
 
   .RelatedEvents-Card {
+    margin-top: ${getSpacing("m")}px;
     display: flex;
     background-color: ${white};
     box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.1);
@@ -80,6 +67,53 @@ const style = css`
 
   .RelatedEvents-CardBody > span {
     color: ${getColor("darkGrey", "tonic")};
+  }
+`;
+
+const RelatedEventsCard = ({ query, as, image, title, desktop }) => (
+  <Link
+    href={{
+      pathname: "/events",
+      query
+    }}
+    as={as}
+  >
+    <a className={"RelatedEvents-CardLinkWrapper"}>
+      <div className={"RelatedEvents-Card"}>
+        <div className={"RelatedEvents-CardImage"}>
+          <img src={image} className={"RelatedEvents-Image"} />
+        </div>
+        <div className={"RelatedEvents-CardBody"}>
+          <h6>{title}</h6>
+          <span>{`À partir du ${moment().format(
+            desktop ? DATE_FORMAT_DESKTOP : DATE_FORMAT_MOBILE
+          )}`}</span>
+        </div>
+      </div>
+      <style jsx>{RelatedEventsCardStyle}</style>
+      <style jsx>{`
+        .RelatedEvents-CardImage {
+          width: ${desktop
+            ? IMAGE_CARD_DESKTOP_WIDTH
+            : IMAGE_CARD_MOBILE_WIDTH}px;
+        }
+      `}</style>
+    </a>
+  </Link>
+);
+
+const RelatedEventsStyle = css`
+  .RelatedEvents {
+  }
+
+  .RelatedEvents--mobile {
+    min-width: ${MOBILE_MIN_WIDTH}px;
+    max-width: ${MOBILE_MAX_WIDTH}px;
+    margin: 0 auto;
+  }
+
+  .RelatedEvents-Header {
+    text-align: center;
   }
 `;
 
@@ -124,39 +158,21 @@ class RelatedEvents extends React.PureComponent {
         <div className={"RelatedEvents-Header"}>
           <h2>{`Explorer`}</h2>
         </div>
-        <Link
-          href={{
-            pathname: "/events",
-            query: { position: geohash, city: event.place_id }
-          }}
-          as={`/events/${slug(event.city, { lower: true })}`}
-        >
-          <a className={"RelatedEvents-CardLinkWrapper"}>
-            <div className={"RelatedEvents-Card"}>
-              <div className={"RelatedEvents-CardImage"}>
-                <img
-                  src={city && this.getPhoto(city)}
-                  className={"RelatedEvents-Image"}
-                />
-              </div>
-              <div className={"RelatedEvents-CardBody"}>
-                <h6>{`Autour de ${this.props.event.city}`}</h6>
-                <span>{`À partir du ${moment().format(
-                  desktop ? DATE_FORMAT_DESKTOP : DATE_FORMAT_MOBILE
-                )}`}</span>
-              </div>
-            </div>
-          </a>
-        </Link>
 
-        <style jsx>{style}</style>
-        <style jsx>{`
-          .RelatedEvents-CardImage {
-            width: ${desktop
-              ? IMAGE_CARD_DESKTOP_WIDTH
-              : IMAGE_CARD_MOBILE_WIDTH}px;
-          }
-        `}</style>
+        <RelatedEventsCard
+          query={{ position: geohash, city: event.place_id }}
+          as={`/events/${slug(event.city, { lower: true })}`}
+          title={`Autour de ${event.city}`}
+          image={city && this.getPhoto(city)}
+        />
+
+        <RelatedEventsCard
+          query={{ department: event.depCode }}
+          as={`/events/department/${event.depCode}`}
+          title={`Dans le département\n${event.department.name}`}
+        />
+
+        <style jsx>{RelatedEventsStyle}</style>
       </div>
     );
   }
