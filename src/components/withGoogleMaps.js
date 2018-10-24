@@ -1,12 +1,15 @@
-import dynamic from "next/dynamic";
 import { connect } from "react-redux";
 
-import { GOOGLE_DETAILS_SERVICE, GOOGLE_GEOCODING_SERVICE } from "../enums";
+import {
+  GOOGLE_DETAILS_SERVICE,
+  GOOGLE_GEOCODING_SERVICE,
+  GOOGLE_AUTOCOMPLETE_SERVICE
+} from "../enums";
 
-const GoogleMapInitServices = dynamic(import("./GoogleMapInitServices"), {
-  ssr: false,
-  loading: () => null
-});
+const GOOGLE_MAPS_OPTIONS = {
+  types: ["(cities)"],
+  componentRestrictions: { country: "fr" }
+};
 
 const withGoogleMaps = (WrappedComponent, initService = false) => {
   class GoogleMaps extends React.Component {
@@ -17,6 +20,7 @@ const withGoogleMaps = (WrappedComponent, initService = false) => {
     constructor(props) {
       super(props);
 
+      this.getPredictions = this.getPredictions.bind(this);
       this.getDetails = this.getDetails.bind(this);
       this.reverseGeocoding = this.reverseGeocoding.bind(this);
     }
@@ -24,19 +28,38 @@ const withGoogleMaps = (WrappedComponent, initService = false) => {
     render() {
       return (
         <>
-          {initService && <GoogleMapInitServices />}
-
           <WrappedComponent
             googleMapsServiceReady={
               this.props.googleMapsDetailsService &&
-              this.props.googleMapsGeocodingService
+              this.props.googleMapsGeocodingService &&
+              this.props.googleMapsAutocompleteService
             }
+            getPredictions={this.getPredictions}
             getDetails={this.getDetails}
             reverseGeocoding={this.reverseGeocoding}
             {...this.props}
           />
         </>
       );
+    }
+
+    getPredictions(input, type = "cities") {
+      return new Promise((resolve, reject) => {
+        let options = { ...GOOGLE_MAPS_OPTIONS, input };
+        if (type === "regions") options = { ...options, types: ["(regions)"] };
+
+        this.props.googleMapsAutocompleteService.getPlacePredictions(
+          options,
+          (predictions, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+              resolve(predictions);
+            } else {
+              console.warn("No results found", status);
+              reject(status);
+            }
+          }
+        );
+      });
     }
 
     getDetails(placeId) {
@@ -80,7 +103,9 @@ const withGoogleMaps = (WrappedComponent, initService = false) => {
     return {
       googleMapsDetailsService: state.googleMapsService[GOOGLE_DETAILS_SERVICE],
       googleMapsGeocodingService:
-        state.googleMapsService[GOOGLE_GEOCODING_SERVICE]
+        state.googleMapsService[GOOGLE_GEOCODING_SERVICE],
+      googleMapsAutocompleteService:
+        state.googleMapsService[GOOGLE_AUTOCOMPLETE_SERVICE]
     };
   }
 

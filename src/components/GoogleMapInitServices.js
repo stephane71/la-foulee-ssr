@@ -1,18 +1,18 @@
-import Head from 'next/head';
-import getConfig from 'next/config';
-import { connect } from 'react-redux';
+import Head from "next/head";
+import getConfig from "next/config";
+import { connect } from "react-redux";
 
-import { setGoogleMapsService } from '../actions';
+import { setGoogleMapsService } from "../actions";
 import {
   GOOGLE_AUTOCOMPLETE_SERVICE,
   GOOGLE_DETAILS_SERVICE,
   GOOGLE_GEOCODING_SERVICE
-} from '../enums';
+} from "../enums";
 
 const { publicRuntimeConfig } = getConfig();
 
 const GOOGLE_PLACES_API_KEY = publicRuntimeConfig.GOOGLE_PLACES_API_KEY;
-const GOOGLE_MAPS_API_URL = 'https://maps.googleapis.com/maps/api';
+const GOOGLE_MAPS_API_URL = "https://maps.googleapis.com/maps/api";
 
 class GoogleMapInitServices extends React.PureComponent {
   constructor(props) {
@@ -31,7 +31,7 @@ class GoogleMapInitServices extends React.PureComponent {
       dispatch(
         setGoogleMapsService(
           GOOGLE_DETAILS_SERVICE,
-          new google.maps.places.PlacesService(new google.maps.Map(''))
+          new google.maps.places.PlacesService(new google.maps.Map(""))
         )
       );
 

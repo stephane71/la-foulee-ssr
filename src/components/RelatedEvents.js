@@ -3,6 +3,7 @@ import Link from "next/link";
 import css from "styled-jsx/css";
 import getConfig from "next/config";
 import moment from "moment";
+import { connect } from "react-redux";
 
 import withGoogleMaps from "./withGoogleMaps";
 import { MOBILE_MIN_WIDTH, MOBILE_MAX_WIDTH } from "./EventDetailsMobile";
@@ -10,6 +11,7 @@ import { MOBILE_MIN_WIDTH, MOBILE_MAX_WIDTH } from "./EventDetailsMobile";
 import getGeohash from "../utils/geohash";
 import { getSpacing } from "../styles-variables";
 import { white, getColor } from "../colors";
+import { addPlace } from "../actions";
 
 const { publicRuntimeConfig } = getConfig();
 const APP_URL = publicRuntimeConfig.APP_URL;
@@ -122,15 +124,17 @@ class RelatedEvents extends React.PureComponent {
     super(props);
 
     this.state = {
-      city: null
+      city: null,
+      department: null
     };
-
-    this.getCity = this.getCity.bind(this);
   }
 
   componentDidMount() {
     if (this.props.googleMapsServiceReady) {
-      this.getCity(this.props);
+      const { event } = this.props;
+
+      this.getPlace(event);
+      this.getDepartment(event.department.name);
     }
   }
 
@@ -139,15 +143,18 @@ class RelatedEvents extends React.PureComponent {
       nextProps.googleMapsServiceReady &&
       !this.props.googleMapsServiceReady
     ) {
-      this.getCity(nextProps);
+      const { event } = this.props;
+
+      this.getPlace(event);
+      this.getDepartment(event.department.name);
     }
   }
 
   render() {
     const { event, desktop } = this.props;
-    const { city } = this.state;
+    const { city, department } = this.state;
 
-    const geohash = city ? getGeohash(city.location) : null;
+    const position = city ? getGeohash(city.location) : null;
 
     return (
       <div
@@ -160,7 +167,7 @@ class RelatedEvents extends React.PureComponent {
         </div>
 
         <RelatedEventsCard
-          query={{ position: geohash, city: event.place_id }}
+          query={{ position, place: event.place_id }}
           as={`/events/${slug(event.city, { lower: true })}`}
           title={`Autour de ${event.city}`}
           image={city && this.getPhoto(city)}
@@ -170,6 +177,7 @@ class RelatedEvents extends React.PureComponent {
           query={{ department: event.depCode }}
           as={`/events/department/${event.depCode}`}
           title={`Dans le département\n${event.department.name}`}
+          image={department && this.getPhoto(department)}
         />
 
         <style jsx>{RelatedEventsStyle}</style>
@@ -177,16 +185,25 @@ class RelatedEvents extends React.PureComponent {
     );
   }
 
-  async getCity({ event, getDetails }) {
-    const city = await getDetails(event.place_id);
-    this.setState({ city });
+  async getDepartment(department) {
+    const predictions = await this.props.getPredictions(department, "regions");
+    const dep = predictions.find(({ terms }) => terms[0].value === department);
+
+    this.getPlace(dep, "department");
   }
 
-  getPhoto(city) {
-    if (city && city.photos) {
-      return city.photos[0].photo_url
-        ? city.photos[0].photo_url
-        : city.photos[0].getUrl({
+  async getPlace({ place_id }, type = "city") {
+    const place = await this.props.getDetails(place_id);
+
+    this.props.dispatch(addPlace(place));
+    this.setState({ [type]: place });
+  }
+
+  getPhoto(place) {
+    if (place && place.photos) {
+      return place.photos[0].photo_url
+        ? place.photos[0].photo_url
+        : place.photos[0].getUrl({
             maxWidth: IMAGE_CARD_DESKTOP_WIDTH,
             maxHeight: IMAGE_CARD_DESKTOP_HEIGHT
           });
@@ -195,4 +212,5 @@ class RelatedEvents extends React.PureComponent {
   }
 }
 
-export default withGoogleMaps(RelatedEvents);
+const RelatedEventsWithGM = withGoogleMaps(RelatedEvents);
+export default connect()(RelatedEventsWithGM);
