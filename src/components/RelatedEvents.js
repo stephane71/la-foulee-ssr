@@ -174,7 +174,10 @@ class RelatedEvents extends React.PureComponent {
         />
 
         <RelatedEventsCard
-          query={{ department: event.depCode }}
+          query={{
+            depCode: event.depCode,
+            place: department && department.place_id
+          }}
           as={`/events/department/${event.depCode}`}
           title={`Dans le département\n${event.department.name}`}
           image={department && this.getPhoto(department)}
