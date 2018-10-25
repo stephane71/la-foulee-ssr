@@ -29,7 +29,7 @@ import { toggleSearch, setSearchingGeohash, addPlace } from "../actions";
 
 moment.locale("fr");
 
-export const SelectedCityContext = React.createContext();
+export const SelectedPlaceContext = React.createContext();
 
 const style = css`
   .LayoutSection {
@@ -138,11 +138,11 @@ class Layout extends React.PureComponent {
           </nav>
 
           <main className={"LayoutMain"} role={"main"}>
-            <SelectedCityContext.Provider value={place}>
+            <SelectedPlaceContext.Provider value={place}>
               <div className={"PagesWrapper"}>
                 {error ? <LayoutError error={error} /> : children}
               </div>
-            </SelectedCityContext.Provider>
+            </SelectedPlaceContext.Provider>
           </main>
 
           <footer className={"LayoutFooter"} role={"contentinfo"}>

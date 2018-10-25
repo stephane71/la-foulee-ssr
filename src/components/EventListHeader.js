@@ -1,6 +1,6 @@
 import css from 'styled-jsx/css';
 
-import { SelectedCityContext } from './Layout';
+import { SelectedPlaceContext } from './Layout';
 
 import { getSpacing } from '../styles-variables';
 import {
@@ -100,7 +100,7 @@ class EventListHeader extends React.PureComponent {
 }
 
 export default props => (
-  <SelectedCityContext.Consumer>
+  <SelectedPlaceContext.Consumer>
     {city => <EventListHeader {...props} city={city} />}
-  </SelectedCityContext.Consumer>
+  </SelectedPlaceContext.Consumer>
 );

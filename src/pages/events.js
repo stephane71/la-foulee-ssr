@@ -5,9 +5,10 @@ import { connect } from "react-redux";
 
 import CustomError from "./_error";
 
+import EventListMetaHeaders from "../headers/events";
 import EventList from "../components/EventList";
-import JSONLD from "../components/JSONLD";
 import EventListNotFoundError from "../components/EventListNotFoundError";
+import JSONLD from "../components/JSONLD";
 
 import { pageview, event } from "../utils/gtag";
 import { getEventListStructuredData } from "../utils/structuredData";
@@ -24,6 +25,8 @@ import { API_EVENT_LIST_DEPARTMENT, API_EVENT_LIST_AROUND } from "../api";
 
 class Events extends React.PureComponent {
   static async getInitialProps({ isServer, res, store, query, ...context }) {
+    let initialPlace = {};
+
     if (isServer) {
       if (res.statusCode === 404) return { error: { code: 404 } };
       if (res.statusCode !== 200) return { error: { code: 500 } };
@@ -34,12 +37,14 @@ class Events extends React.PureComponent {
       store.dispatch(setEventsQuery(eventsQuery));
       store.dispatch(setEventList(events));
 
+      initialPlace = place;
+
       if (place) {
         query.place = place.place_id;
       }
     }
 
-    return {};
+    return { initialPlace };
   }
 
   constructor(props) {
@@ -98,7 +103,7 @@ class Events extends React.PureComponent {
   }
 
   render() {
-    const { query, path, events, error } = this.props;
+    const { query, path, events, error, initialPlace } = this.props;
 
     if (error) {
       return (
@@ -116,7 +121,11 @@ class Events extends React.PureComponent {
 
     return (
       <>
-        {/* <EventsHeaders events={events} path={path} /> */}
+        <EventListMetaHeaders
+          events={events}
+          path={path}
+          place={initialPlace}
+        />
 
         <EventList
           data={events}
