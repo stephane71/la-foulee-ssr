@@ -196,9 +196,11 @@ class RelatedEvents extends React.PureComponent {
   }
 
   async getPlace({ place_id }, type = "city") {
-    const place = await this.props.getDetails(place_id);
-
-    this.props.dispatch(addPlace(place));
+    let place = this.props.placeMap[place_id];
+    if (!place) {
+      place = await this.props.getDetails(place_id);
+      this.props.dispatch(addPlace(place));
+    }
     this.setState({ [type]: place });
   }
 
@@ -215,5 +217,11 @@ class RelatedEvents extends React.PureComponent {
   }
 }
 
+function mapStateToProps(state) {
+  return {
+    placeMap: state.placeMap
+  };
+}
+
 const RelatedEventsWithGM = withGoogleMaps(RelatedEvents);
-export default connect()(RelatedEventsWithGM);
+export default connect(mapStateToProps)(RelatedEventsWithGM);
