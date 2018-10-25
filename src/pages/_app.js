@@ -26,7 +26,7 @@ class MyApp extends App {
   render() {
     const { Component, pageProps, store, router } = this.props;
     const {
-      getEventListAround,
+      getEventList,
       postNewsletterEmail,
       postEventContribution,
       getCredentials
@@ -39,7 +39,7 @@ class MyApp extends App {
             <Layout>
               <Component
                 {...pageProps}
-                getEventListAround={getEventListAround}
+                getEventList={getEventList}
                 postNewsletterEmail={postNewsletterEmail}
                 postEventContribution={postEventContribution}
                 getCredentials={getCredentials}

@@ -132,8 +132,7 @@ server.get("/events/department/:code", async (req, res) => {
     ...req.query,
     events,
     place,
-    depCode: code,
-    position: null
+    eventsQuery: { depCode: code }
   });
 });
 
@@ -163,7 +162,7 @@ server.get("/events/:city", async (req, res) => {
     ...req.query,
     events,
     place,
-    position
+    eventsQuery: { position }
   });
 });
 
