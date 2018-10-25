@@ -98,6 +98,8 @@ const eventHandler = async function(req, res) {
 server.get("/event/:keyword/:edition", eventHandler);
 server.get("/event/:keyword", eventHandler);
 
+const EVENT_LIST_QUERY = { position: null, depCode: null };
+
 server.get("/events/department/:code", async (req, res) => {
   const code = parseInt(req.params.code);
   let events = [];
@@ -128,11 +130,14 @@ server.get("/events/department/:code", async (req, res) => {
     }
   }
 
+  let eventsQuery = { ...EVENT_LIST_QUERY, depCode: code };
+
   app.render(req, res, "/events", {
     ...req.query,
     events,
     place,
-    eventsQuery: { depCode: code }
+    eventsQuery,
+    ...eventsQuery
   });
 });
 
@@ -158,11 +163,14 @@ server.get("/events/:city", async (req, res) => {
     res.statusCode = 500;
   }
 
+  let eventsQuery = { ...EVENT_LIST_QUERY, position };
+
   app.render(req, res, "/events", {
     ...req.query,
     events,
     place,
-    eventsQuery: { position }
+    eventsQuery,
+    ...eventsQuery
   });
 });
 
