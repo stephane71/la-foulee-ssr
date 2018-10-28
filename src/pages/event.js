@@ -37,7 +37,7 @@ class EventPage extends React.PureComponent {
     super(props);
 
     this.state = {
-      error: null
+      error: props.error || null
     };
 
     this.handleSubmitContribution = this.handleSubmitContribution.bind(this);
@@ -48,8 +48,13 @@ class EventPage extends React.PureComponent {
   componentDidMount() {
     Router.prefetch("/events");
 
-    if (!this.props.event) {
-      this.fetchEvent(this.props.query);
+    const { event, query, path } = this.props;
+    if (!event && !this.state.error) {
+      let { keyword, edition } = query;
+      if (!keyword) {
+        [, , keyword, edition] = path.split("/");
+      }
+      this.fetchEvent({ keyword, edition });
     }
 
     pageview({
