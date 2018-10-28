@@ -54,6 +54,7 @@ class Events extends React.PureComponent {
       loading: false
     };
 
+    this.handleTriggerSearch = this.handleTriggerSearch.bind(this);
     this.handleEventSelection = this.handleEventSelection.bind(this);
   }
 
@@ -110,7 +111,7 @@ class Events extends React.PureComponent {
         <>
           {error.code === 404 ? (
             <EventListNotFoundError
-              onTriggerSearch={() => dispatch(toggleSearch())}
+              onTriggerSearch={this.handleTriggerSearch}
             />
           ) : (
             <CustomError code={error.code} />
@@ -136,6 +137,10 @@ class Events extends React.PureComponent {
         <JSONLD data={getEventListStructuredData(events)} />
       </>
     );
+  }
+
+  handleTriggerSearch() {
+    this.props.dispatch(toggleSearch());
   }
 
   handleEventSelection(selectedEvent) {
