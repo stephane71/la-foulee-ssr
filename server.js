@@ -109,16 +109,17 @@ server.get("/events/department/:code", async (req, res) => {
     const department = DEPARTMENTS.find(dep => parseInt(dep.code) === code);
     if (!code || !department) {
       console.log(
-        `[La Foulée] - Error - Client:'/events/department/${code}' | Unknown department`
+        `[La Foulée] - Error - Client:'/events/department/${code}' | Unknown department (from hard coded list)`
       );
       res.statusCode = 404;
+    } else {
+      place = await getPlace("regions", department.name);
+      events = await getEventListDepartment(code);
     }
-    place = await getPlace("regions", department.name);
-    events = await getEventListDepartment(code);
   } catch (e) {
     if (e.response && e.response.status === 404) {
       console.log(
-        `[La Foulée] - Error - Client:'/events/department/${code}' | Unknown department`
+        `[La Foulée] - Error - Client:'/events/department/${code}' | Unknown department (from Google Maps API)`
       );
       res.statusCode = 404;
     } else {
