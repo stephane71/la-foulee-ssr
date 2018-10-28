@@ -91,8 +91,6 @@ const style = css`
 
 const EventDetailsDesktop = ({
   data,
-  desktop,
-  isServer,
   onClickOrgaLink,
   onSubmitContribution
 }) => (
@@ -106,8 +104,7 @@ const EventDetailsDesktop = ({
         <div className={"EventDetailsDesktop-GlobalInfo"}>
           <EventDetailsGlobalInfo
             data={data}
-            desktop={desktop}
-            isServer={isServer}
+            desktop={true}
             iconColor={ICON_COLOR}
             withMap={false}
           />
@@ -116,8 +113,7 @@ const EventDetailsDesktop = ({
         <section className={"EventDetailsDesktop-Share"}>
           <EventDetailsShare
             data={data}
-            desktop={desktop}
-            isServer={isServer}
+            desktop={true}
             iconColor={ICON_COLOR}
           />
         </section>
@@ -136,9 +132,8 @@ const EventDetailsDesktop = ({
         <div className={"EventDetailsDesktop-StaticMap"}>
           <StaticMap
             event={data}
-            desktop={desktop}
+            desktop={true}
             color={ICON_COLOR}
-            isServer={isServer}
             dimensions={{
               width: MAP_DESKTOP_WIDTH,
               height: MAP_DESKTOP_HEIGHT
@@ -149,7 +144,7 @@ const EventDetailsDesktop = ({
         <footer>
           <EventDetailsOrgaLink
             data={data}
-            desktop={desktop}
+            desktop={true}
             onClickOrgaLink={onClickOrgaLink}
           />
         </footer>
