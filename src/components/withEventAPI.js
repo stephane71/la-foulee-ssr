@@ -2,6 +2,7 @@ import apigClientFactory from "aws-api-gateway-client";
 import getConfig from "next/config";
 
 import {
+  getEventArgs,
   getEventListArgs,
   postNewsletterEmailArgs,
   postEventContributionArgs,
@@ -13,6 +14,7 @@ const { publicRuntimeConfig } = getConfig();
 const {
   AWS_API_REGION,
   BASE_API_URL,
+  EVENT_API_PATH,
   EVENTS_API_PATH,
   NEWSLETTER_API_PATH,
   EVENT_CONTRIBUTION_API_PATH
@@ -41,6 +43,7 @@ const withEventAPI = WrappedComponent => {
     constructor(...args) {
       super(...args);
 
+      this.getEvent = this.getEvent.bind(this);
       this.getEventList = this.getEventList.bind(this);
       this.getEventListDepartment = this.getEventListDepartment.bind(this);
       this.getEventListAround = this.getEventListAround.bind(this);
@@ -51,6 +54,7 @@ const withEventAPI = WrappedComponent => {
     render() {
       return (
         <WrappedComponent
+          getEvent={this.getEvent}
           getEventList={this.getEventList}
           postNewsletterEmail={this.postNewsletterEmail}
           postEventContribution={this.postEventContribution}
@@ -76,6 +80,9 @@ const withEventAPI = WrappedComponent => {
       let args = {};
 
       switch (apiName) {
+        case EVENT_API_PATH:
+          args = getEventArgs(params);
+          break;
         case EVENTS_API_PATH:
           const { type, ...restParams } = params;
           args = getEventListArgs(type, restParams);
@@ -89,6 +96,13 @@ const withEventAPI = WrappedComponent => {
       }
 
       return api.invokeApi(...args).then(res => res.data);
+    }
+
+    getEvent({ keyword, edition }) {
+      return this.invoke(EVENT_API_PATH, {
+        keyword,
+        edition
+      });
     }
 
     getEventList(type, value) {

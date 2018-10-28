@@ -26,6 +26,7 @@ class MyApp extends App {
   render() {
     const { Component, pageProps, store, router } = this.props;
     const {
+      getEvent,
       getEventList,
       postNewsletterEmail,
       postEventContribution,
@@ -39,6 +40,7 @@ class MyApp extends App {
             <Layout>
               <Component
                 {...pageProps}
+                getEvent={getEvent}
                 getEventList={getEventList}
                 postNewsletterEmail={postNewsletterEmail}
                 postEventContribution={postEventContribution}

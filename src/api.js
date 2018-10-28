@@ -1,3 +1,14 @@
+function getEventArgs({ keyword, edition }) {
+  const params = { keyword, edition };
+  // Template syntax follows url-template https://www.npmjs.com/package/url-template
+  const pathTemplate = `/{keyword}/{edition}`;
+  const method = "GET";
+  const additionalParams = {};
+  const body = {};
+
+  return [params, pathTemplate, method, additionalParams, body];
+}
+
 const API_EVENT_LIST_AROUND = "around";
 const API_EVENT_LIST_DEPARTMENT = "department";
 
@@ -37,9 +48,10 @@ function postEventContributionArgs({ contribution, user, event }) {
 }
 
 module.exports = {
+  getEventListArgs,
   API_EVENT_LIST_AROUND,
   API_EVENT_LIST_DEPARTMENT,
-  getEventListArgs,
+  getEventArgs,
   postNewsletterEmailArgs,
   postEventContributionArgs
 };
