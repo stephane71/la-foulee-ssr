@@ -129,6 +129,7 @@ class Events extends React.PureComponent {
           events={events}
           path={path}
           place={initialPlace}
+          query={query}
         />
 
         <EventList

@@ -8,10 +8,13 @@ const { publicRuntimeConfig } = getConfig();
 const APP_URL = publicRuntimeConfig.APP_URL;
 const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 
-function getEventListDescription(events, place) {
+function getEventListDescription(events, place, query = {}) {
+  let location = query.depCode ? "dans le département " : "autour de ";
+  location += place ? place.name : "";
+
   return `Retrouvez les ${
     events.length
-  } evénements de courses à pieds autour de ${place.name} ${
+  } evénements de courses à pieds ${location} ${
     events.length
       ? `à partir du ${moment
           .unix(events[0].date)
@@ -21,19 +24,24 @@ function getEventListDescription(events, place) {
   }`;
 }
 
-function getHeadData(events, place, path) {
+function getHeadData(events, place, query) {
+  let title = "Tous les evénements de courses à pieds ";
+  if (query.depCode) title += `dans le département`;
+  else if (place) title += `autour de`;
+
   return {
     imageTwitter: `${ASSETS_URL}/android-chrome-512x512.png`,
     imageFB: `${ASSETS_URL}/glyph.dominant.144x144%402x.png`,
-    title: `Tous les evénements${place ? ` autour de ${place.name}` : ""}`,
-    description: getEventListDescription(events, place)
+    description: getEventListDescription(events, place, query),
+    title: `${title} ${place ? place.name : ""}`
   };
 }
 
-const EventListMetaHeaders = ({ events, place, path }) => {
+const EventListMetaHeaders = ({ events, place, path, query }) => {
   const { imageTwitter, imageFB, title, description } = getHeadData(
     events,
-    place
+    place,
+    query
   );
 
   // WARNING: next-head needs to be the direct parent to inject the class "next-head"
