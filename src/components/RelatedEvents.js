@@ -82,6 +82,7 @@ const RelatedEventsCard = ({ query, as, image, title, desktop }) => (
           <img src={image} className={"RelatedEvents-Image"} />
         </div>
         <div className={"RelatedEvents-CardBody"}>
+          <div>{query.depCode ? "Département" : "Autour de"}</div>
           <h6>{title}</h6>
           <span>{`À partir du ${moment().format(
             desktop ? DATE_FORMAT_DESKTOP : DATE_FORMAT_MOBILE
@@ -155,7 +156,7 @@ class RelatedEvents extends React.PureComponent {
         <RelatedEventsCard
           query={{ position, place: event.place_id }}
           as={`/events/${slug(event.city, { lower: true })}`}
-          title={`Autour de ${event.city}`}
+          title={event.city}
           image={city && this.getPhoto(city)}
           desktop={desktop}
         />
@@ -166,7 +167,7 @@ class RelatedEvents extends React.PureComponent {
             place: department && department.place_id
           }}
           as={`/events/department/${event.depCode}`}
-          title={`Dans le département\n${event.department.name}`}
+          title={event.department.name}
           image={department && this.getPhoto(department)}
           desktop={desktop}
         />
