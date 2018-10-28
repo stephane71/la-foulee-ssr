@@ -6,7 +6,6 @@ import moment from "moment";
 import { connect } from "react-redux";
 
 import withGoogleMaps from "./withGoogleMaps";
-import { MOBILE_MIN_WIDTH, MOBILE_MAX_WIDTH } from "./EventDetailsMobile";
 
 import getGeohash from "../utils/geohash";
 import { getSpacing } from "../styles-variables";
@@ -18,14 +17,11 @@ const APP_URL = publicRuntimeConfig.APP_URL;
 
 const IMAGE_CARD_DESKTOP_WIDTH = 200;
 const IMAGE_CARD_DESKTOP_HEIGHT = 125;
-
-const IMAGE_CARD_MOBILE_WIDTH = 120;
-
-// From RelatedEvents-CardBody: 24 * 3 (h6 on 2lines + span) + 24 * 2 (card body padding)
-const IMAGE_CARD_HEIGHT = 120;
-
 const DATE_FORMAT_DESKTOP = "DD MMMM";
 const DATE_FORMAT_MOBILE = "DD MMM";
+const IMAGE_CARD_MOBILE_WIDTH = 120;
+// From RelatedEvents-CardBody: 24 * 3 (h6 on 2lines + span) + 24 * 2 (card body padding)
+const IMAGE_CARD_HEIGHT = 120;
 
 const RelatedEventsCardStyle = css`
   .RelatedEvents-CardLinkWrapper {
@@ -108,12 +104,6 @@ const RelatedEventsStyle = css`
   .RelatedEvents {
   }
 
-  .RelatedEvents--mobile {
-    min-width: ${MOBILE_MIN_WIDTH}px;
-    max-width: ${MOBILE_MAX_WIDTH}px;
-    margin: 0 auto;
-  }
-
   .RelatedEvents-Header {
     text-align: center;
   }
@@ -157,11 +147,7 @@ class RelatedEvents extends React.PureComponent {
     const position = city ? getGeohash(city.location) : null;
 
     return (
-      <div
-        className={`RelatedEvents RelatedEvents--${
-          desktop ? "desktop" : "mobile"
-        }`}
-      >
+      <div className={`RelatedEvents`}>
         <div className={"RelatedEvents-Header"}>
           <h2>{`Explorer`}</h2>
         </div>
@@ -171,6 +157,7 @@ class RelatedEvents extends React.PureComponent {
           as={`/events/${slug(event.city, { lower: true })}`}
           title={`Autour de ${event.city}`}
           image={city && this.getPhoto(city)}
+          desktop={desktop}
         />
 
         <RelatedEventsCard
@@ -181,6 +168,7 @@ class RelatedEvents extends React.PureComponent {
           as={`/events/department/${event.depCode}`}
           title={`Dans le département\n${event.department.name}`}
           image={department && this.getPhoto(department)}
+          desktop={desktop}
         />
 
         <style jsx>{RelatedEventsStyle}</style>
