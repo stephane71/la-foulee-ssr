@@ -1,6 +1,6 @@
-const REQ_PREDICTIONS_OK = 'OK';
+const REQ_PREDICTIONS_OK = "OK";
 
-module.exports = function(city) {
+module.exports = function(type, place) {
   // WARNING: see https://arunoda.me/blog/ssr-and-server-only-modules
   const GoogleMaps = eval("require('@google/maps')");
 
@@ -11,11 +11,11 @@ module.exports = function(city) {
 
   return googleMapsClient
     .placesAutoComplete({
-      input: city,
-      components: { country: 'fr' },
-      types: '(cities)',
-      language: 'fr',
-      sessiontoken: ''
+      input: place,
+      components: { country: "fr" },
+      types: `(${type})`,
+      language: "fr",
+      sessiontoken: ""
     })
     .asPromise()
     .then(

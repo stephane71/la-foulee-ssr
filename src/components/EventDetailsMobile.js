@@ -9,11 +9,13 @@ import EventDetailsContribution from "./EventDetailsContribution";
 
 import { getSpacing, getFontSize } from "../styles-variables";
 import { white, getColor } from "../colors";
+import {
+  EVENT_DETAILS_MOBILE_MIN_WIDTH,
+  EVENT_DETAILS_MOBILE_MAX_WIDTH
+} from "../enums";
 
 const ICON_COLOR = getColor("light");
 const MAP_MOBILE_HEIGHT = 100;
-export const MOBILE_MIN_WIDTH = 320;
-export const MOBILE_MAX_WIDTH = 450;
 
 const style = css`
   .EventDetails {
@@ -25,8 +27,8 @@ const style = css`
     display: flex;
     flex-direction: column;
 
-    min-width: ${MOBILE_MIN_WIDTH}px;
-    max-width: ${MOBILE_MAX_WIDTH}px;
+    min-width: ${EVENT_DETAILS_MOBILE_MIN_WIDTH}px;
+    max-width: ${EVENT_DETAILS_MOBILE_MAX_WIDTH}px;
     margin: 0 auto;
     background-color: ${white};
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.15);
@@ -75,8 +77,6 @@ const style = css`
 
 const EventDetailsMobile = ({
   data,
-  desktop,
-  isServer,
   onClickOrgaLink,
   onSubmitContribution
 }) => (
@@ -88,8 +88,7 @@ const EventDetailsMobile = ({
     <div className={"EventDetails-GlobalInfo"}>
       <EventDetailsGlobalInfo
         data={data}
-        desktop={desktop}
-        isServer={isServer}
+        desktop={false}
         iconColor={ICON_COLOR}
       />
     </div>
@@ -97,20 +96,14 @@ const EventDetailsMobile = ({
     <div className={"EventDetails-StaticMap"}>
       <StaticMap
         event={data}
-        desktop={desktop}
+        desktop={false}
         color={ICON_COLOR}
-        isServer={isServer}
         dimensions={{ height: MAP_MOBILE_HEIGHT }}
       />
     </div>
 
     <section className={"EventDetails-ShareEvent"}>
-      <EventDetailsShare
-        data={data}
-        desktop={desktop}
-        isServer={isServer}
-        iconColor={ICON_COLOR}
-      />
+      <EventDetailsShare data={data} desktop={false} iconColor={ICON_COLOR} />
     </section>
 
     <section className={"EventDetails-Activities"}>
@@ -125,7 +118,7 @@ const EventDetailsMobile = ({
     <footer className={"EventDetails-Footer"}>
       <EventDetailsOrgaLink
         data={data}
-        desktop={desktop}
+        desktop={false}
         onClickOrgaLink={onClickOrgaLink}
       />
     </footer>

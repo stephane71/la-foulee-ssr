@@ -2,15 +2,19 @@ import apigClientFactory from "aws-api-gateway-client";
 import getConfig from "next/config";
 
 import {
-  getAroundEventListArgs,
+  getEventArgs,
+  getEventListArgs,
   postNewsletterEmailArgs,
-  postEventContributionArgs
+  postEventContributionArgs,
+  API_EVENT_LIST_AROUND,
+  API_EVENT_LIST_DEPARTMENT
 } from "../api";
 
 const { publicRuntimeConfig } = getConfig();
 const {
   AWS_API_REGION,
   BASE_API_URL,
+  EVENT_API_PATH,
   EVENTS_API_PATH,
   NEWSLETTER_API_PATH,
   EVENT_CONTRIBUTION_API_PATH
@@ -39,6 +43,9 @@ const withEventAPI = WrappedComponent => {
     constructor(...args) {
       super(...args);
 
+      this.getEvent = this.getEvent.bind(this);
+      this.getEventList = this.getEventList.bind(this);
+      this.getEventListDepartment = this.getEventListDepartment.bind(this);
       this.getEventListAround = this.getEventListAround.bind(this);
       this.postNewsletterEmail = this.postNewsletterEmail.bind(this);
       this.postEventContribution = this.postEventContribution.bind(this);
@@ -47,7 +54,8 @@ const withEventAPI = WrappedComponent => {
     render() {
       return (
         <WrappedComponent
-          getEventListAround={this.getEventListAround}
+          getEvent={this.getEvent}
+          getEventList={this.getEventList}
           postNewsletterEmail={this.postNewsletterEmail}
           postEventContribution={this.postEventContribution}
           {...this.props}
@@ -67,22 +75,69 @@ const withEventAPI = WrappedComponent => {
       return this.api[name];
     }
 
-    async getEventListAround(geohash) {
-      let api = await this.getAPI(EVENTS_API_PATH);
-      const args = getAroundEventListArgs(geohash);
-      return await api.invokeApi(...args).then(res => res.data);
+    async invoke(apiName, params) {
+      let api = await this.getAPI(apiName);
+      let args = {};
+
+      switch (apiName) {
+        case EVENT_API_PATH:
+          args = getEventArgs(params);
+          break;
+        case EVENTS_API_PATH:
+          const { type, ...restParams } = params;
+          args = getEventListArgs(type, restParams);
+          break;
+        case NEWSLETTER_API_PATH:
+          args = postNewsletterEmailArgs(params);
+          break;
+        case EVENT_CONTRIBUTION_API_PATH:
+          args = postEventContributionArgs(params);
+          break;
+      }
+
+      return api.invokeApi(...args).then(res => res.data);
     }
 
-    async postNewsletterEmail(email) {
-      let api = await this.getAPI(NEWSLETTER_API_PATH);
-      const args = postNewsletterEmailArgs(email);
-      return await api.invokeApi(...args).then(res => res.data);
+    getEvent({ keyword, edition }) {
+      return this.invoke(EVENT_API_PATH, {
+        keyword,
+        edition
+      });
     }
 
-    async postEventContribution({ contribution, user }, event) {
-      let api = await this.getAPI(EVENT_CONTRIBUTION_API_PATH);
-      const args = postEventContributionArgs({ contribution, user }, event);
-      return await api.invokeApi(...args).then(res => res.data);
+    getEventList(type, value) {
+      if (type === API_EVENT_LIST_DEPARTMENT) {
+        return this.getEventListDepartment(value);
+      }
+      if (type === API_EVENT_LIST_AROUND) {
+        return this.getEventListAround(value);
+      }
+    }
+
+    getEventListDepartment(department) {
+      return this.invoke(EVENTS_API_PATH, {
+        type: API_EVENT_LIST_DEPARTMENT,
+        code: department
+      });
+    }
+
+    getEventListAround(geohash) {
+      return this.invoke(EVENTS_API_PATH, {
+        type: API_EVENT_LIST_AROUND,
+        geohash
+      });
+    }
+
+    postNewsletterEmail(email) {
+      return this.invoke(NEWSLETTER_API_PATH, email);
+    }
+
+    postEventContribution({ contribution, user }, event) {
+      return this.invoke(EVENT_CONTRIBUTION_API_PATH, {
+        contribution,
+        user,
+        event
+      });
     }
   };
 };

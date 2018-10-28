@@ -1,9 +1,9 @@
-import css from 'styled-jsx/css';
-import debounce from 'lodash.debounce';
+import css from "styled-jsx/css";
+import debounce from "lodash.debounce";
 
-import buildGoogleMapStaticImage from '../utils/buildGoogleMapStaticImage';
+import buildGoogleMapStaticImage from "../utils/buildGoogleMapStaticImage";
 
-import { BORDER_RADIUS } from '../enums';
+import { BORDER_RADIUS } from "../enums";
 
 const style = css`
   .StaticMap-Image {
@@ -29,29 +29,28 @@ class StaticMap extends React.PureComponent {
   componentDidMount() {
     this.setState({ mapWidth: this.mapContainerRef.current.clientWidth });
 
-    window.addEventListener('resize', this.handleResize);
+    window.addEventListener("resize", this.handleResize);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('resize', this.handleResize);
+    window.removeEventListener("resize", this.handleResize);
   }
 
   render() {
-    const { event, desktop, color, isServer, dimensions } = this.props;
+    const { event, desktop, color, dimensions } = this.props;
     const { mapWidth } = this.state;
 
     let { width = null, height } = dimensions;
     width = width || mapWidth;
 
     return (
-      <div ref={this.mapContainerRef} className={'StaticMap'}>
-        {!isServer &&
-          mapWidth && (
-            <img
-              className={'StaticMap-Image'}
-              src={buildGoogleMapStaticImage(event, { width, height }, desktop)}
-            />
-          )}
+      <div ref={this.mapContainerRef} className={"StaticMap"}>
+        {mapWidth && (
+          <img
+            className={"StaticMap-Image"}
+            src={buildGoogleMapStaticImage(event, { width, height }, desktop)}
+          />
+        )}
 
         <style jsx>{style}</style>
         <style jsx>{`

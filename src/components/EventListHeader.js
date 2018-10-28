@@ -1,19 +1,20 @@
-import css from 'styled-jsx/css';
+import css from "styled-jsx/css";
+import { withRouter } from "next/router";
 
-import { SelectedCityContext } from './Layout';
+import { SelectedPlaceContext } from "./Layout";
 
-import { getSpacing } from '../styles-variables';
+import { getSpacing } from "../styles-variables";
 import {
   BORDER_RADIUS_LIST_ITEM,
   MAX_WIDTH_CITY_PHOTO,
   MAX_HEIGHT_CITY_PHOTO
-} from '../enums';
-import { dominant, white } from '../colors';
+} from "../enums";
+import { dominant, white } from "../colors";
 
 const style = css`
   .EventListHeader {
-    margin: ${getSpacing('s')}px;
-    padding: ${getSpacing('m')}px ${getSpacing('s')}px;
+    margin: ${getSpacing("s")}px;
+    padding: ${getSpacing("m")}px ${getSpacing("s")}px;
     border-radius: ${BORDER_RADIUS_LIST_ITEM}px;
     color: ${white};
     text-shadow: black 1px 0 10px;
@@ -23,7 +24,7 @@ const style = css`
   }
 
   .EventListHeader:after {
-    content: '';
+    content: "";
     width: 100%;
     height: 100%;
     position: absolute;
@@ -34,7 +35,7 @@ const style = css`
     z-index: -1;
   }
   .EventListHeader-Title {
-    margin: ${getSpacing('s')}px 0;
+    margin: ${getSpacing("s")}px 0;
   }
 `;
 
@@ -58,26 +59,31 @@ class EventListHeader extends React.PureComponent {
 
   render() {
     const { photo, previousPhoto } = this.state;
-    const { city, nbItems } = this.props;
+    const { city, nbItems, router } = this.props;
+    const { query } = router;
 
     if (!city) return null;
 
     const backgroundCurrent = photo
       ? `url(${photo}) center center no-repeat,`
-      : '';
+      : "";
     const backgroundPrevious = previousPhoto
       ? `url(${previousPhoto}) center center no-repeat,`
-      : '';
+      : "";
+
+    const description = query.depCode
+      ? "dans ce département"
+      : `autour de ${city.name}`;
 
     return (
       <div className={`EventListHeader EventListHeader-Image`}>
-        <h1 className={'EventListHeader-Title'}>{city.name}</h1>
-        <div>{`${nbItems} événements autour de ${city.name}`}</div>
+        <h1 className={"EventListHeader-Title"}>{city.name}</h1>
+        <div>{`${nbItems} événements ${description}`}</div>
 
         <style jsx>{style}</style>
         <style jsx>{`
           .EventListHeader-Image {
-            background: ${backgroundCurrent} ${photo ? backgroundPrevious : ''}
+            background: ${backgroundCurrent} ${photo ? backgroundPrevious : ""}
               ${dominant};
             background-size: cover;
           }
@@ -99,8 +105,10 @@ class EventListHeader extends React.PureComponent {
   }
 }
 
+const EventListHeaderWithRouter = withRouter(EventListHeader);
+
 export default props => (
-  <SelectedCityContext.Consumer>
-    {city => <EventListHeader {...props} city={city} />}
-  </SelectedCityContext.Consumer>
+  <SelectedPlaceContext.Consumer>
+    {city => <EventListHeaderWithRouter {...props} city={city} />}
+  </SelectedPlaceContext.Consumer>
 );

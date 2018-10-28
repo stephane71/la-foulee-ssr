@@ -1,31 +1,36 @@
-console.log('----------------------------------');
-console.log('----- Running NextJS server ------');
-console.log('----------------------------------');
+console.log("----------------------------------");
+console.log("----- Running NextJS server ------");
+console.log("----------------------------------");
 
-console.log('NODE_ENV', process.env.NODE_ENV);
+console.log("NODE_ENV", process.env.NODE_ENV);
 
 const env =
-  process.env.LA_FOULEE_ENV === 'local' ? 'dev' : process.env.LA_FOULEE_ENV;
-require('dotenv').config({ path: `.env.server.${env}` });
+  process.env.LA_FOULEE_ENV === "local" ? "dev" : process.env.LA_FOULEE_ENV;
+require("dotenv").config({ path: `.env.server.${env}` });
 
-const express = require('express');
-const next = require('next');
+const express = require("express");
+const next = require("next");
 
-const getSitemap = require('./internals/getSitemap');
-const getCity = require('./src/server/getCity');
-const getEvents = require('./src/server/getEvents');
-const getGeohash = require('./src/server/getGeohash');
+const getSitemap = require("./internals/getSitemap");
+const getPlace = require("./src/server/getPlace");
+const {
+  getEventListDepartment,
+  getEventListAround
+} = require("./src/server/getEvents");
+const getGeohash = require("./src/server/getGeohash");
+const getEvent = require("./src/server/getEvent");
+const DEPARTMENTS = require("./src/server/departments");
 
 const port = process.env.PORT || 3000;
-const dev = process.env.NODE_ENV !== 'production';
-const dir = './src';
+const dev = process.env.NODE_ENV !== "production";
+const dir = "./src";
 
 const app = next({ dev, dir });
 const handle = app.getRequestHandler();
 const server = express();
 
 server.use(function(req, res, next) {
-  if (req.path.substr(-1) == '/' && req.path.length > 1) {
+  if (req.path.substr(-1) == "/" && req.path.length > 1) {
     const query = req.url.slice(req.path.length);
     res.redirect(301, req.path.slice(0, -1) + query);
   } else {
@@ -33,24 +38,24 @@ server.use(function(req, res, next) {
   }
 });
 
-server.get('/sw.js', (req, res) => {
+server.get("/sw.js", (req, res) => {
   var options = {
-    root: __dirname + '/src/static/',
-    dotfiles: 'deny'
+    root: __dirname + "/src/static/",
+    dotfiles: "deny"
   };
-  res.sendFile('sw.js', options);
+  res.sendFile("sw.js", options);
 });
 
-server.get('/robots.txt', (req, res) => {
+server.get("/robots.txt", (req, res) => {
   var options = {
-    root: __dirname + '/src/static/',
-    dotfiles: 'deny'
+    root: __dirname + "/src/static/",
+    dotfiles: "deny"
   };
-  res.sendFile('robots.txt', options);
+  res.sendFile("robots.txt", options);
 });
 
 // TODO: update new sitemap files name
-server.get('/sitemap/:sitemap', async (req, res) => {
+server.get("/sitemap/:sitemap", async (req, res) => {
   // FIXME: S3 access when build on prod env
   // const sitemap = await getSitemap();
   // res.set('Content-Type', 'text/plain; charset=UTF-8');
@@ -60,31 +65,94 @@ server.get('/sitemap/:sitemap', async (req, res) => {
   // Use DynaoDB Stream + Lambda
 
   var options = {
-    root: __dirname + '/src/static/',
-    dotfiles: 'deny'
+    root: __dirname + "/src/static/",
+    dotfiles: "deny"
   };
   res.sendFile(req.params.sitemap, options);
 });
 
-server.get('/event/:keyword/:edition', (req, res) => {
-  app.render(req, res, '/event');
-});
+const eventHandler = async function(req, res) {
+  const NO_EVENT_SELECTED = null;
 
-server.get('/event/:keyword', (req, res) => {
-  app.render(req, res, '/event');
-});
+  let event = NO_EVENT_SELECTED;
+  const { keyword, edition } = req.params;
+  try {
+    if (keyword)
+      event = (await getEvent(keyword, edition)) || NO_EVENT_SELECTED;
+    if (!event) {
+      console.log(
+        `[La Foulee] - Error - Client: '/event/${keyword}' | Unkown event`
+      );
+      res.statusCode = 404;
+    }
+  } catch (e) {
+    console.log(
+      `[La Foulée] - Error - Server:'/event/${keyword}' | Error when try to fetch event`
+    );
+    res.statusCode = 500;
+  }
 
-server.get('/events/:city', async (req, res) => {
-  let position = null;
-  let city = null;
+  app.render(req, res, "/event", { ...req.query, event });
+};
+
+server.get("/event/:keyword/:edition", eventHandler);
+server.get("/event/:keyword", eventHandler);
+
+const EVENT_LIST_QUERY = { position: null, depCode: null };
+
+server.get("/events/department/:code", async (req, res) => {
+  const code = parseInt(req.params.code);
   let events = [];
+  let place = null;
 
   try {
-    city = await getCity(req.params.city);
-    if (!city) res.statusCode = 404;
+    const department = DEPARTMENTS.find(dep => parseInt(dep.code) === code);
+    if (!code || !department) {
+      console.log(
+        `[La Foulée] - Error - Client:'/events/department/${code}' | Unknown department (from hard coded list)`
+      );
+      res.statusCode = 404;
+    } else {
+      place = await getPlace("regions", department.name);
+      events = await getEventListDepartment(code);
+    }
+  } catch (e) {
+    if (e.response && e.response.status === 404) {
+      console.log(
+        `[La Foulée] - Error - Client:'/events/department/${code}' | Unknown department (from Google Maps API)`
+      );
+      res.statusCode = 404;
+    } else {
+      console.log(
+        `[La Foulée] - Error - Server:'/events/department/${code}' | Error when try to fetch events from department`
+      );
+      console.log(e);
+      res.statusCode = 500;
+    }
+  }
+
+  let eventsQuery = { ...EVENT_LIST_QUERY, depCode: code };
+
+  app.render(req, res, "/events", {
+    ...req.query,
+    events,
+    place,
+    eventsQuery,
+    ...eventsQuery
+  });
+});
+
+server.get("/events/:city", async (req, res) => {
+  let position = null;
+  let events = [];
+  let place = null;
+
+  try {
+    place = await getPlace("cities", req.params.city);
+    if (!place) res.statusCode = 404;
     else {
-      position = getGeohash(city);
-      events = await getEvents(position);
+      position = getGeohash(place);
+      events = await getEventListAround(position);
     }
   } catch (e) {
     console.log(
@@ -96,10 +164,18 @@ server.get('/events/:city', async (req, res) => {
     res.statusCode = 500;
   }
 
-  app.render(req, res, '/events', { ...req.query, events, city, position });
+  let eventsQuery = { ...EVENT_LIST_QUERY, position };
+
+  app.render(req, res, "/events", {
+    ...req.query,
+    events,
+    place,
+    eventsQuery,
+    ...eventsQuery
+  });
 });
 
-server.get('*', (req, res) => {
+server.get("*", (req, res) => {
   // FIXME: doesn't serve pre-render pages
   return handle(req, res);
 });

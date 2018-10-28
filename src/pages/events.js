@@ -1,79 +1,50 @@
-import Router from 'next/router';
-import Head from 'next/head';
-import getConfig from 'next/config';
-import React from 'react';
-import moment from 'moment';
-import { connect } from 'react-redux';
+import React from "react";
+import Router from "next/router";
+import moment from "moment";
+import { connect } from "react-redux";
 
-import CustomError from './_error';
+import CustomError from "./_error";
 
-import EventList from '../components/EventList';
-import JSONLD from '../components/JSONLD';
-import EventListNotFoundError from '../components/EventListNotFoundError';
-import { SelectedCityContext } from '../components/Layout';
+import EventListMetaHeaders from "../headers/events";
+import EventList from "../components/EventList";
+import EventListNotFoundError from "../components/EventListNotFoundError";
+import JSONLD from "../components/JSONLD";
 
-import { pageview, event } from '../utils/gtag';
-import { getEventListStructuredData } from '../utils/structuredData';
+import { pageview, event } from "../utils/gtag";
+import { getEventListStructuredData } from "../utils/structuredData";
 
 import {
   setSelectedEvent,
   setEventList,
-  setUserPosition,
+  setEventsQuery,
   toggleSearch,
-  addCity
-} from '../actions';
-import { NO_EVENT_SELECTED } from '../enums';
-
-const { publicRuntimeConfig } = getConfig();
-const APP_URL = publicRuntimeConfig.APP_URL;
-const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
-
-function getEventListDescription(events, city) {
-  return `Retrouvez les ${
-    events.length
-  } evénements de courses à pieds autour de ${city.name} ${
-    events.length
-      ? `à partir du ${moment
-          .unix(events[0].date)
-          .utc()
-          .format('dddd DD/MM/YYYY')}`
-      : ''
-  }`;
-}
-
-function getHeadData(events, city) {
-  return {
-    imageTwitter: `${ASSETS_URL}/android-chrome-512x512.png`,
-    imageFB: `${ASSETS_URL}/glyph.dominant.144x144%402x.png`,
-    title: `Tous les evénements${city ? ` autour de ${city.name}` : ''}`,
-    description: getEventListDescription(events, city)
-  };
-}
+  addPlace
+} from "../actions";
+import { NO_EVENT_SELECTED } from "../enums";
+import { API_EVENT_LIST_DEPARTMENT, API_EVENT_LIST_AROUND } from "../api";
 
 class Events extends React.PureComponent {
   static async getInitialProps({ isServer, res, store, query, ...context }) {
-    let city = null;
-    let initialCity = null;
+    let initialPlace = {};
 
     if (isServer) {
-      if (res.statusCode === 404) {
-        return { error: { code: 404 } };
-      }
-      if (res.statusCode !== 200) {
-        return { error: { code: 500 } };
-      }
+      if (res.statusCode === 404) return { error: { code: 404 } };
+      if (res.statusCode !== 200) return { error: { code: 500 } };
 
-      const { city, position, events } = query;
+      const { events, place, eventsQuery = {} } = query;
 
-      store.dispatch(addCity(city));
-      store.dispatch(setUserPosition(position));
+      if (place) store.dispatch(addPlace(place));
+      store.dispatch(setEventsQuery(eventsQuery));
       store.dispatch(setEventList(events));
 
-      query.city = city.place_id;
-      initialCity = city;
+      initialPlace = place;
+
+      if (place) {
+        query.place = place.place_id;
+      }
     }
 
-    return { initialCity };
+    return { initialPlace };
   }
 
   constructor(props) {
@@ -83,6 +54,7 @@ class Events extends React.PureComponent {
       loading: false
     };
 
+    this.handleTriggerSearch = this.handleTriggerSearch.bind(this);
     this.handleEventSelection = this.handleEventSelection.bind(this);
   }
 
@@ -91,25 +63,39 @@ class Events extends React.PureComponent {
   };
 
   componentDidMount() {
-    Router.prefetch('/event');
+    Router.prefetch("/event");
 
-    const { query, position } = this.props;
-    if (query.position !== position) {
-      this.fetchEvents(query.position);
+    const { query, position, depCode, eventsQuery } = this.props;
+
+    if (query.position && query.position !== eventsQuery.position) {
+      this.fetchEvents(API_EVENT_LIST_AROUND, query.position);
+      this.props.dispatch(setEventsQuery({ position: query.position }));
+    }
+
+    if (query.depCode && query.depCode !== eventsQuery.depCode) {
+      this.fetchEvents(API_EVENT_LIST_DEPARTMENT, query.depCode);
+      this.props.dispatch(setEventsQuery({ depCode: query.depCode }));
     }
 
     pageview({
-      title: 'Event list',
+      title: "Event list",
       url: window.location.href,
       path: this.props.path
     });
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.query.position !== this.props.query.position) {
-      this.fetchEvents(nextProps.query.position);
-    } else {
-      this.setState({ loading: false });
+    if (nextProps.query !== this.props.query) {
+      const { query: nextQuery } = nextProps;
+      const { query } = this.props;
+
+      if (nextQuery.position !== query.position) {
+        this.fetchEvents(API_EVENT_LIST_AROUND, nextQuery.position);
+        this.props.dispatch(setEventsQuery({ position: nextQuery.position }));
+      } else if (nextQuery.depCode !== query.depCode) {
+        this.fetchEvents(API_EVENT_LIST_DEPARTMENT, nextQuery.depCode);
+        this.props.dispatch(setEventsQuery({ depCode: nextQuery.depCode }));
+      }
     }
 
     if (nextProps.searchingGeohash && !this.props.searchingGeohash) {
@@ -118,23 +104,14 @@ class Events extends React.PureComponent {
   }
 
   render() {
-    const {
-      getEventListAround,
-      query,
-      path,
-      events,
-      error,
-      initialCity,
-      dispatch
-    } = this.props;
-    const { position } = query;
+    const { query, path, events, error, initialPlace } = this.props;
 
     if (error) {
       return (
         <>
           {error.code === 404 ? (
             <EventListNotFoundError
-              onTriggerSearch={() => dispatch(toggleSearch())}
+              onTriggerSearch={this.handleTriggerSearch}
             />
           ) : (
             <CustomError code={error.code} />
@@ -145,36 +122,11 @@ class Events extends React.PureComponent {
 
     return (
       <>
-        <SelectedCityContext.Consumer>
-          {city => {
-            city = city || initialCity;
-            const { imageTwitter, imageFB, title, description } = getHeadData(
-              events,
-              city
-            );
-
-            return (
-              <Head>
-                <title>{`La Foulée | ${title}`}</title>
-                <link rel={'canonical'} href={`${APP_URL}${path}`} />
-                <meta name={'description'} content={description} />
-
-                {/* TWITTER */}
-                <meta name={'twitter:card'} content={'summary'} />
-                <meta name={'twitter:site'} content={'@_LaFoulee'} />
-                <meta name={'twitter:title'} content={title} />
-                <meta name={'twitter:description'} content={description} />
-                <meta name={'twitter:image'} content={imageTwitter} />
-
-                {/* OPEN GRAPH */}
-                <meta property={'og:url'} content={`${APP_URL}${path}`} />
-                <meta property={'og:title'} content={title} />
-                <meta property={'og:description'} content={description} />
-                <meta property={'og:image'} content={imageFB} />
-              </Head>
-            );
-          }}
-        </SelectedCityContext.Consumer>
+        <EventListMetaHeaders
+          events={events}
+          path={path}
+          place={initialPlace}
+        />
 
         <EventList
           data={events}
@@ -185,6 +137,10 @@ class Events extends React.PureComponent {
         <JSONLD data={getEventListStructuredData(events)} />
       </>
     );
+  }
+
+  handleTriggerSearch() {
+    this.props.dispatch(toggleSearch());
   }
 
   handleEventSelection(selectedEvent) {
@@ -199,31 +155,28 @@ class Events extends React.PureComponent {
       .unix(selectedEvent.date)
       .utc()
       .year();
-    const path = `/event/${selectedEvent.keyword}/${year}`;
 
     Router.push(
       {
-        pathname: '/event',
+        pathname: "/event",
         query: { keyword: selectedEvent.keyword, edition: year }
       },
-      path
+      `/event/${selectedEvent.keyword}/${year}`
     );
 
     event({
-      action: 'Select Event',
-      category: 'Event',
-      label: 'Select an event in the list',
+      action: "Select Event",
+      category: "Event",
+      label: "Select an event in the list",
       value: selectedEvent.keyword
     });
   }
 
-  async fetchEvents(position) {
+  async fetchEvents(type, value) {
     this.setState({ loading: true });
 
-    const { events } = await this.props.getEventListAround(position);
-
-    this.props.dispatch(setUserPosition(position));
-    this.props.dispatch(setEventList(events));
+    let res = await this.props.getEventList(type, value);
+    this.props.dispatch(setEventList(res.events));
 
     this.setState({ loading: false });
   }
@@ -231,7 +184,7 @@ class Events extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    position: state.position,
+    eventsQuery: state.eventsQuery,
     events: state.events,
     searchingGeohash: state.searchingGeohash
   };

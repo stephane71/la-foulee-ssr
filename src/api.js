@@ -1,9 +1,21 @@
-function getAroundEventListArgs(geohash) {
-  const params = {
-    geohash
-  };
+function getEventArgs({ keyword, edition }) {
+  const params = { keyword, edition };
   // Template syntax follows url-template https://www.npmjs.com/package/url-template
-  const pathTemplate = "/around/{geohash}";
+  const pathTemplate = `/{keyword}/{edition}`;
+  const method = "GET";
+  const additionalParams = {};
+  const body = {};
+
+  return [params, pathTemplate, method, additionalParams, body];
+}
+
+const API_EVENT_LIST_AROUND = "around";
+const API_EVENT_LIST_DEPARTMENT = "department";
+
+function getEventListArgs(type, params) {
+  let pathTemplate;
+  if (type === API_EVENT_LIST_AROUND) pathTemplate = `/around/{geohash}`;
+  if (type === API_EVENT_LIST_DEPARTMENT) pathTemplate = `/department/{code}`;
   const method = "GET";
   const additionalParams = {};
   const body = {};
@@ -22,7 +34,9 @@ function postNewsletterEmailArgs(email) {
   return [params, pathTemplate, method, additionalParams, body];
 }
 
-function postEventContributionArgs({ contribution, user }, { keyword, date }) {
+function postEventContributionArgs({ contribution, user, event }) {
+  const { keyword, date } = event;
+
   const params = {};
   // Template syntax follows url-template https://www.npmjs.com/package/url-template
   const pathTemplate = `/event`;
@@ -34,7 +48,10 @@ function postEventContributionArgs({ contribution, user }, { keyword, date }) {
 }
 
 module.exports = {
-  getAroundEventListArgs,
+  getEventListArgs,
+  API_EVENT_LIST_AROUND,
+  API_EVENT_LIST_DEPARTMENT,
+  getEventArgs,
   postNewsletterEmailArgs,
   postEventContributionArgs
 };

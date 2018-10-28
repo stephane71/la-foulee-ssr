@@ -26,7 +26,8 @@ class MyApp extends App {
   render() {
     const { Component, pageProps, store, router } = this.props;
     const {
-      getEventListAround,
+      getEvent,
+      getEventList,
       postNewsletterEmail,
       postEventContribution,
       getCredentials
@@ -36,10 +37,11 @@ class MyApp extends App {
       <Container>
         <Provider store={store}>
           <Media>
-            <Layout query={router.query || {}} currentRoute={router.asPath}>
+            <Layout>
               <Component
                 {...pageProps}
-                getEventListAround={getEventListAround}
+                getEvent={getEvent}
+                getEventList={getEventList}
                 postNewsletterEmail={postNewsletterEmail}
                 postEventContribution={postEventContribution}
                 getCredentials={getCredentials}
