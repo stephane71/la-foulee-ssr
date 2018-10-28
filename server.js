@@ -131,7 +131,7 @@ server.get("/events/department/:code", async (req, res) => {
     }
   }
 
-  let eventsQuery = { ...EVENT_LIST_QUERY, depCode: code };
+  let eventsQuery = { ...EVENT_LIST_QUERY, depCode: req.params.code };
 
   app.render(req, res, "/events", {
     ...req.query,
