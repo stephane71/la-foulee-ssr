@@ -1,18 +1,18 @@
-require('dotenv').config({ path: './internals/.env' });
-const AWS = require('aws-sdk');
-const fs = require('fs');
-const slug = require('slug');
-const sm = require('sitemap');
-const moment = require('moment');
+require("dotenv").config({ path: "./internals/.env" });
+const AWS = require("aws-sdk");
+const fs = require("fs");
+const slug = require("slug");
+const sm = require("sitemap");
+const moment = require("moment");
 
-const communes = require('./communes');
+const communes = require("./communes");
 
-const BASE_URL = 'https://www.la-foulee.com';
+const BASE_URL = "https://www.la-foulee.com";
 const AWSConfig = {
   secretAccessKey: process.env.secretAccessKey,
   accessKeyId: process.env.accessKeyId,
-  region: 'eu-west-3',
-  endpoint: 'https://dynamodb.eu-west-3.amazonaws.com'
+  region: "eu-west-3",
+  endpoint: "https://dynamodb.eu-west-3.amazonaws.com"
 };
 
 AWS.config.update(AWSConfig);
@@ -21,12 +21,13 @@ let dbDocClient = new AWS.DynamoDB.DocumentClient();
 const pause = () =>
   new Promise((resolve, reject) => setTimeout(() => resolve(), 60000));
 
+const departments = getDepartments();
+
 const createSitemapGlobal = () => {
   const urls = [
     {
       url: `/`,
-      changefreq: 'monthly',
-      lastmodISO: moment().format('YYYY-MM-DD')
+      lastmodISO: moment().format("YYYY-MM-DD")
     }
   ];
 
@@ -36,7 +37,7 @@ const createSitemapGlobal = () => {
     urls
   });
 
-  fs.writeFileSync('./src/static/sitemap.xml', sitemap.toString());
+  fs.writeFileSync("./src/static/sitemap.xml", sitemap.toString());
 };
 
 let sitemapEventsRef = 0;
@@ -48,9 +49,7 @@ const createSitemapEvents = async (lastEvaluatedKey = null) => {
     url: `/event/${keyword}/${moment
       .unix(date)
       .utc()
-      .year()}`,
-    changefreq: moment.unix(date).isBefore(moment()) ? 'yearly' : 'monthly'
-    // lastmodISO: moment().format('YYYY-MM-DD')
+      .year()}`
   }));
 
   const sitemap = sm.createSitemap({
@@ -65,7 +64,7 @@ const createSitemapEvents = async (lastEvaluatedKey = null) => {
   );
 
   if (LastEvaluatedKey) {
-    console.log('1 minute pause', LastEvaluatedKey);
+    console.log("1 minute pause", LastEvaluatedKey);
     await pause();
     debugger;
     sitemapEventsRef++;
@@ -74,35 +73,41 @@ const createSitemapEvents = async (lastEvaluatedKey = null) => {
 };
 
 const createSitmapLists = () => {
-  const urls = communes.map(c => ({
+  const c = communes.map(c => ({
     url: `/events/${slug(c, { lower: true })}`,
-    changefreq: 'weekly',
-    lastmodISO: moment().format('YYYY-MM-DD')
+    changefreq: "weekly",
+    lastmodISO: moment().format("YYYY-MM-DD")
+  }));
+
+  const d = departments.map(dep => ({
+    url: `/events/departments/${dep}`,
+    changefreq: "weekly",
+    lastmodISO: moment().format("YYYY-MM-DD")
   }));
 
   const sitemap = sm.createSitemap({
     hostname: BASE_URL,
     cacheTime: 600000, // 600 sec cache period
-    urls
+    urls: c.concat(d)
   });
 
-  fs.writeFileSync('./src/static/sitemap_lists.xml', sitemap.toString());
+  fs.writeFileSync("./src/static/sitemap_lists.xml", sitemap.toString());
 };
 
 build();
 
 async function build() {
-  console.log('See the code to create sitemaps');
-  // console.log('Building sitemap_lists');
-  // createSitmapLists();
-  // console.log('-- sitemap_lists updated');
+  console.log("See the code to create sitemaps");
+  console.log("Building sitemap_lists");
+  createSitmapLists();
+  console.log("-- sitemap_lists updated");
 
-  console.log('Building sitemap_events');
+  console.log("Building sitemap_events");
   await createSitemapEvents();
-  console.log('-- sitemap_events updated');
+  console.log("-- sitemap_events updated");
   debugger;
 
-  // createSitemapGlobal();
+  createSitemapGlobal();
 }
 
 function getEvents(lastEvaluatedKey = null) {
@@ -119,8 +124,16 @@ function getEvents(lastEvaluatedKey = null) {
         reject(err);
         return;
       }
-      console.log('scan ok');
+      console.log("scan ok");
       resolve(data);
     });
   });
+}
+
+function getDepartments() {
+  let dep = [];
+  for (let i = 1; i <= 95; i++) {
+    dep.push(`${i < 10 ? "0" : ""}${i}`);
+  }
+  return dep;
 }
