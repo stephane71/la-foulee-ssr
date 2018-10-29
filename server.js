@@ -10,6 +10,7 @@ require("dotenv").config({ path: `.env.server.${env}` });
 
 const express = require("express");
 const next = require("next");
+const moment = require("moment");
 
 const getSitemap = require("./internals/getSitemap");
 const getPlace = require("./src/server/getPlace");
@@ -28,6 +29,11 @@ const dir = "./src";
 const app = next({ dev, dir });
 const handle = app.getRequestHandler();
 const server = express();
+
+const now = () =>
+  moment()
+    .utc()
+    .format("YYYY-MM-DD HH:mm:ss");
 
 server.use(function(req, res, next) {
   if (req.path.substr(-1) == "/" && req.path.length > 1) {
@@ -80,14 +86,16 @@ const eventHandler = async function(req, res) {
     if (keyword)
       event = (await getEvent(keyword, edition)) || NO_EVENT_SELECTED;
     if (!event) {
+      console.log(now());
       console.log(
         `[La Foulee] - Error - Client: '/event/${keyword}' | Unkown event`
       );
       res.statusCode = 404;
     }
   } catch (e) {
+    console.log(now());
     console.log(
-      `[La Foulée] - Error - Server:'/event/${keyword}' | Error when try to fetch event`
+      `[La Foulee] - Error - Server:'/event/${keyword}' | Error when try to fetch event`
     );
     res.statusCode = 500;
   }
@@ -108,8 +116,9 @@ server.get("/events/department/:code", async (req, res) => {
   try {
     const department = DEPARTMENTS.find(dep => parseInt(dep.code) === code);
     if (!code || !department) {
+      console.log(now());
       console.log(
-        `[La Foulée] - Error - Client:'/events/department/${code}' | Unknown department (from hard coded list)`
+        `[La Foulee] - Error - Client:'/events/department/${code}' | Unknown department (from hard coded list)`
       );
       res.statusCode = 404;
     } else {
@@ -117,14 +126,15 @@ server.get("/events/department/:code", async (req, res) => {
       events = await getEventListDepartment(code);
     }
   } catch (e) {
+    console.log(now());
     if (e.response && e.response.status === 404) {
       console.log(
-        `[La Foulée] - Error - Client:'/events/department/${code}' | Unknown department (from Google Maps API)`
+        `[La Foulee] - Error - Client:'/events/department/${code}' | Unknown department (from Google Maps API)`
       );
       res.statusCode = 404;
     } else {
       console.log(
-        `[La Foulée] - Error - Server:'/events/department/${code}' | Error when try to fetch events from department`
+        `[La Foulee] - Error - Server:'/events/department/${code}' | Error when try to fetch events from department`
       );
       console.log(e);
       res.statusCode = 500;
@@ -155,10 +165,11 @@ server.get("/events/:city", async (req, res) => {
       events = await getEventListAround(position);
     }
   } catch (e) {
+    console.log(now());
     console.log(
-      `[La Foulée] - Error - Server:'/events/${
+      `[La Foulee] - Error - Server:'/events/${
         req.params.city
-      }' | Error when try to fetch city or events`
+      }' | Error when try to fetch city or events`
     );
     console.log(e);
     res.statusCode = 500;
@@ -185,6 +196,7 @@ app
   .then(() => {
     server.listen(port, err => {
       if (err) {
+        console.log(now());
         console.log(`Error when try to run NextJS server`);
         console.log(JSON.stringify(err));
         throw err;
