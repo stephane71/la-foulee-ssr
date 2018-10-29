@@ -70,6 +70,7 @@ const reducer = (state = initialState, action) => {
       return { ...state, searchingGeohash: action.searching };
     case ADD_PLACE:
       const place = action.place;
+      if (!place) return state;
       return {
         ...state,
         placeMap: { ...state.placeMap, [place.place_id]: place }
