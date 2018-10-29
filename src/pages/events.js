@@ -65,19 +65,20 @@ class Events extends React.PureComponent {
   componentDidMount() {
     Router.prefetch("/event");
 
-    const { query, eventsQuery } = this.props;
+    const { query, eventsQuery, error } = this.props;
 
-    if (query.position && query.position !== eventsQuery.position) {
-      this.fetchEvents(API_EVENT_LIST_AROUND, query.position);
-      this.props.dispatch(setEventsQuery({ position: query.position }));
-    }
-
-    if (
-      query.depCode &&
-      parseInt(query.depCode) !== parseInt(eventsQuery.depCode)
-    ) {
-      this.fetchEvents(API_EVENT_LIST_DEPARTMENT, query.depCode);
-      this.props.dispatch(setEventsQuery({ depCode: query.depCode }));
+    if (!error) {
+      if (query.position && query.position !== eventsQuery.position) {
+        this.fetchEvents(API_EVENT_LIST_AROUND, query.position);
+        this.props.dispatch(setEventsQuery({ position: query.position }));
+      }
+      if (
+        query.depCode &&
+        parseInt(query.depCode) !== parseInt(eventsQuery.depCode)
+      ) {
+        this.fetchEvents(API_EVENT_LIST_DEPARTMENT, query.depCode);
+        this.props.dispatch(setEventsQuery({ depCode: query.depCode }));
+      }
     }
 
     pageview({
