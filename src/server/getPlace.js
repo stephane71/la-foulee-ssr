@@ -12,7 +12,7 @@ module.exports = async function(type, value) {
   let predictions = await getGMapsPredicitons(type, value);
   if (!predictions.length) {
     console.log(
-      `[La Foulée] getPlace: no predicitions for type: ${type} - value: ${value}`
+      `[La Foulee] getPlace: no predicitions for type: ${type} - value: ${value}`
     );
     return NO_PLACE_FOUND;
   }
@@ -24,7 +24,7 @@ module.exports = async function(type, value) {
   );
   if (!predictions.length) {
     console.log(
-      `[La Foulée] getPlace: no predicitons match place arg: ${value}`
+      `[La Foulee] getPlace: no predicitons match place arg: ${value}`
     );
     return NO_PLACE_FOUND;
   }
@@ -35,7 +35,7 @@ module.exports = async function(type, value) {
   });
   if (!place) {
     console.log(
-      `[La Foulée] getPlace: no city details found for ${
+      `[La Foulee] getPlace: no city details found for ${
         predictions[0].place_id
       }`
     );
