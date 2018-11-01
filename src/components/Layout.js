@@ -108,10 +108,14 @@ class Layout extends React.PureComponent {
       (nextRouter.query && nextRouter.query.place) !==
       (router.query && router.query.place)
     ) {
-      if (nextRouter.query.place)
-        this.getPlaceDetails(nextRouter.query.place).then(place =>
-          this.setState({ place })
-        );
+      if (nextRouter.query.place) {
+        const place = this.props.placeMap[nextRouter.query.place];
+        if (place) this.setState({ place });
+        else
+          this.getPlaceDetails(nextRouter.query.place).then(place =>
+            this.setState({ place })
+          );
+      }
     }
     if (nextRouter.asPath !== router.asPath || nextRouter.asPath === "/") {
       this.setState({ error: null });

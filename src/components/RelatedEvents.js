@@ -10,7 +10,7 @@ import withGoogleMaps from "./withGoogleMaps";
 import getGeohash from "../utils/geohash";
 import { getSpacing } from "../styles-variables";
 import { white, getColor } from "../colors";
-import { addPlace } from "../actions";
+import { addPlace, addDep } from "../actions";
 
 const { publicRuntimeConfig } = getConfig();
 const APP_URL = publicRuntimeConfig.APP_URL;
@@ -125,7 +125,7 @@ class RelatedEvents extends React.PureComponent {
       const { event } = this.props;
 
       this.getPlace(event);
-      this.getDepartment(event.department.name);
+      this.getDepartment(event.department);
     }
   }
 
@@ -137,7 +137,7 @@ class RelatedEvents extends React.PureComponent {
       const { event } = this.props;
 
       this.getPlace(event);
-      this.getDepartment(event.department.name);
+      this.getDepartment(event.department);
     }
   }
 
@@ -178,10 +178,20 @@ class RelatedEvents extends React.PureComponent {
   }
 
   async getDepartment(department) {
-    const predictions = await this.props.getPredictions(department, "regions");
-    const dep = predictions.find(({ terms }) => terms[0].value === department);
+    let place_id = this.props.depMap[department.code];
+    if (!place_id) {
+      const predictions = await this.props.getPredictions(
+        department.name,
+        "regions"
+      );
+      const dep =
+        predictions.find(({ terms }) => terms[0].value === department.name) ||
+        {};
+      place_id = dep.place_id;
+      this.props.dispatch(addDep(department.code, place_id));
+    }
 
-    this.getPlace(dep, "department");
+    this.getPlace({ place_id }, "department");
   }
 
   async getPlace({ place_id }, type = "city") {
@@ -208,7 +218,8 @@ class RelatedEvents extends React.PureComponent {
 
 function mapStateToProps(state) {
   return {
-    placeMap: state.placeMap
+    placeMap: state.placeMap,
+    depMap: state.depMap
   };
 }
 

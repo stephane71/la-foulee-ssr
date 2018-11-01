@@ -13,7 +13,8 @@ import {
   TOGGLE_SEARCH,
   SET_SEARCHING_GEOHASH,
   ADD_PLACE,
-  SET_EVENTS_QUERY
+  SET_EVENTS_QUERY,
+  ADD_DEP
 } from "./actions";
 
 function getNextMonth(month) {
@@ -40,6 +41,7 @@ const initialState = {
   searching: false,
   searchingGeohash: false,
   placeMap: {},
+  depMap: {},
   eventsQuery: {}
 };
 
@@ -74,6 +76,11 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         placeMap: { ...state.placeMap, [place.place_id]: place }
+      };
+    case ADD_DEP:
+      return {
+        ...state,
+        depMap: { ...state.depMap, [action.depCode]: action.place_id }
       };
     case SET_EVENTS_QUERY:
       return { ...state, eventsQuery: action.query };

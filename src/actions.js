@@ -6,6 +6,7 @@ export const TOGGLE_SEARCH = "TOGGLE_SEARCH";
 export const SET_SEARCHING_GEOHASH = "SET_SEARCHING_GEOHASH";
 export const ADD_PLACE = "ADD_PLACE";
 export const SET_EVENTS_QUERY = "SET_EVENTS_QUERY";
+export const ADD_DEP = "ADD_DEP";
 
 export function setSelectedEvent(event) {
   return {
@@ -61,5 +62,13 @@ export function setEventsQuery(query) {
   return {
     type: SET_EVENTS_QUERY,
     query
+  };
+}
+
+export function addDep(depCode, place_id) {
+  return {
+    type: ADD_DEP,
+    depCode,
+    place_id
   };
 }
