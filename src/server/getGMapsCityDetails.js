@@ -1,6 +1,8 @@
-const REQ_PLACE_OK = 'OK';
+const { GM_PLACES_DETAILS_FIELDS } = require("../sharedEnums");
+
+const REQ_PLACE_OK = "OK";
 const BASE_URL_GOOGLE_PHOTO =
-  'https://maps.googleapis.com/maps/api/place/photo';
+  "https://maps.googleapis.com/maps/api/place/photo";
 
 function getUrl(ref, { maxWidth, maxHeight }) {
   return `${BASE_URL_GOOGLE_PHOTO}?photoreference=${ref}&key=${
@@ -20,7 +22,8 @@ module.exports = function({ place_id }, { maxWidth, maxHeight }) {
   return googleMapsClient
     .place({
       placeid: place_id,
-      sessiontoken: ''
+      fields: GM_PLACES_DETAILS_FIELDS,
+      sessiontoken: ""
     })
     .asPromise()
     .then(data => (data.json.status === REQ_PLACE_OK ? data.json.result : null))

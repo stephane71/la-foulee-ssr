@@ -5,6 +5,7 @@ import {
   GOOGLE_GEOCODING_SERVICE,
   GOOGLE_AUTOCOMPLETE_SERVICE
 } from "../enums";
+import { GM_PLACES_DETAILS_FIELDS } from "../sharedEnums";
 
 const GOOGLE_MAPS_OPTIONS = {
   types: ["(cities)"],
@@ -65,7 +66,7 @@ const withGoogleMaps = (WrappedComponent, initService = false) => {
     getDetails(placeId) {
       return new Promise((resolve, reject) => {
         this.props.googleMapsDetailsService.getDetails(
-          { placeId },
+          { placeId, fields: GM_PLACES_DETAILS_FIELDS },
           (place, status) => {
             if (status == google.maps.places.PlacesServiceStatus.OK) {
               let { geometry, ...rest } = place;
