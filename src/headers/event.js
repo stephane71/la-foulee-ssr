@@ -11,7 +11,9 @@ const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
 const EventMetaHeader = ({ event, path, query }) => {
   const { edition } = query;
 
-  const canonical = `${APP_URL}${path}${edition ? "" : `/${moment().year()}`}`;
+  const canonical = `${APP_URL}${path}${
+    edition ? "" : `/${moment.unix(event.date).year()}`
+  }`;
   const description = getEventDescription(event);
   const imageTwitter = `${ASSETS_URL}/android-chrome-512x512.png`;
   const imageFB = `${ASSETS_URL}/glyph.dominant.144x144%402x.png`;

@@ -100,7 +100,8 @@ const eventHandler = async function(req, res) {
     res.statusCode = 500;
   }
 
-  app.render(req, res, "/event", { ...req.query, event });
+  const query = { ...req.params, ...req.query };
+  app.render(req, res, "/event", { ...query, event });
 };
 
 server.get("/event/:keyword/:edition", eventHandler);
