@@ -1,20 +1,20 @@
-import React from 'react';
-import debounce from 'lodash.debounce';
-import css from 'styled-jsx/css';
+import React from "react";
+import debounce from "lodash.debounce";
+import css from "styled-jsx/css";
 
-import { dominant, white, SECONDARY_COLOR } from '../colors';
-import { HEIGHT_APPBAR, BORDER_RADIUS, MAX_WIDTH } from '../enums';
-import { getSpacing } from '../styles-variables';
+import { dominant, white, SECONDARY_COLOR } from "../colors";
+import { HEIGHT_APPBAR, BORDER_RADIUS, MAX_WIDTH } from "../enums";
+import { getSpacing } from "../styles-variables";
 
-import Input, { KEYBOARD_NAV_UP, KEYBOARD_NAV_DOWN } from './Input';
-import List from './List';
-import IconWrapper from './IconWrapper';
+import Input, { KEYBOARD_NAV_UP, KEYBOARD_NAV_DOWN } from "./Input";
+import List from "./List";
+import IconWrapper from "./IconWrapper";
 
-import GoogleMapsAutocomplete from './GoogleMapsAutocomplete';
+import GoogleMapsAutocomplete from "./GoogleMapsAutocomplete";
 
-import IconArrowBack from '../svgs/ic_arrow_back_black_24px.svg';
-import IconCross from '../svgs/baseline-clear-24px.svg';
-import IconNearMe from '../svgs/baseline-near_me-24px.svg';
+import IconArrowBack from "../svgs/ic_arrow_back_black_24px.svg";
+import IconCross from "../svgs/baseline-clear-24px.svg";
+import IconNearMe from "../svgs/baseline-near_me-24px.svg";
 
 IconArrowBack = IconWrapper(IconArrowBack);
 IconCross = IconWrapper(IconCross);
@@ -27,7 +27,7 @@ const ListWrapper = ({ children }) => (
       .ListWrapper {
         border-radius: ${BORDER_RADIUS}px;
         box-shadow: 0 5px 20px 0 rgba(38, 74, 67, 0.2);
-        margin-bottom: ${getSpacing('m')}px;
+        margin-bottom: ${getSpacing("m")}px;
       }
     `}</style>
   </div>
@@ -48,51 +48,51 @@ const style = css`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: ${getSpacing('s')}px ${getSpacing('m')}px;
+    padding: ${getSpacing("s")}px ${getSpacing("m")}px;
     background-color: ${dominant};
     height: ${HEIGHT_APPBAR}px;
   }
 
   .SearchMobile-Content {
-    padding: ${getSpacing('s')}px;
+    padding: ${getSpacing("s")}px;
   }
 
   .Search-Icon--paddingRight {
-    padding-right: ${getSpacing('s')}px;
+    padding-right: ${getSpacing("s")}px;
   }
 
   .Search-Icon--paddingLeft {
-    padding-left: ${getSpacing('s')}px;
+    padding-left: ${getSpacing("s")}px;
   }
 `;
 
 const BIG_CITIES = [
   {
-    value: 'Bordeaux',
-    name: 'Bordeaux',
-    placeId: 'ChIJgcpR9-gnVQ0RiXo5ewOGY3k'
+    value: "Bordeaux",
+    name: "Bordeaux",
+    placeId: "ChIJgcpR9-gnVQ0RiXo5ewOGY3k"
   },
 
   {
-    value: 'Lille',
-    name: 'Lille',
-    placeId: 'ChIJEW4ls3nVwkcRYGNkgT7xCgQ'
+    value: "Lille",
+    name: "Lille",
+    placeId: "ChIJEW4ls3nVwkcRYGNkgT7xCgQ"
   },
   {
-    value: 'Lyon',
-    name: 'Lyon',
-    placeId: 'ChIJl4foalHq9EcR8CG75CqrCAQ'
+    value: "Lyon",
+    name: "Lyon",
+    placeId: "ChIJl4foalHq9EcR8CG75CqrCAQ"
   },
 
   {
-    value: 'Marseille',
-    name: 'Marseille',
-    placeId: 'ChIJM1PaREO_yRIRIAKX_aUZCAQ'
+    value: "Marseille",
+    name: "Marseille",
+    placeId: "ChIJM1PaREO_yRIRIAKX_aUZCAQ"
   },
   {
-    value: 'Paris',
-    name: 'Paris',
-    placeId: 'ChIJD7fiBh9u5kcRYJSMaMOCCwQ'
+    value: "Paris",
+    name: "Paris",
+    placeId: "ChIJD7fiBh9u5kcRYJSMaMOCCwQ"
   }
 ];
 
@@ -101,7 +101,7 @@ class SearchMobile extends React.PureComponent {
     super(props);
 
     this.state = {
-      input: '',
+      input: "",
       keyboardItemSelect: 0,
       keyboardValidation: false
     };
@@ -122,16 +122,16 @@ class SearchMobile extends React.PureComponent {
 
   render() {
     return (
-      <div className={'SearchMobile'}>
-        <div className={'SearchMobile-Header'}>
+      <div className={"SearchMobile"}>
+        <div className={"SearchMobile-Header"}>
           <div
-            className={'Search-Icon--paddingRight'}
+            className={"Search-Icon--paddingRight"}
             onClick={() => this.props.onLeave()}
           >
             <IconArrowBack fill={white} />
           </div>
           <Input
-            placeholder={'ex: Saint-Malo'}
+            placeholder={"ex: Saint-Malo"}
             onChange={this.handleLocationInputUpdate}
             reset={!this.state.input}
             focus={true}
@@ -140,7 +140,7 @@ class SearchMobile extends React.PureComponent {
           />
           {this.state.input && (
             <div
-              className={'Search-Icon--paddingLeft'}
+              className={"Search-Icon--paddingLeft"}
               onClick={this.handleInputReset}
             >
               <IconCross fill={white} />
@@ -148,14 +148,14 @@ class SearchMobile extends React.PureComponent {
           )}
         </div>
 
-        <div className={'SearchMobile-Content'}>
+        <div className={"SearchMobile-Content"}>
           <ListWrapper>
             <List
-              list={[{ value: 'Votre position', Icon: IconNearMe }]}
+              list={[{ value: "Votre position", Icon: IconNearMe }]}
               renderItem={({ value, Icon }) => (
                 <div>
                   <Icon fill={SECONDARY_COLOR} />
-                  <span style={{ paddingLeft: getSpacing('xs') }}>{value}</span>
+                  <span style={{ paddingLeft: getSpacing("xs") }}>{value}</span>
                 </div>
               )}
               onClick={this.handleClickUserPosition}
@@ -166,13 +166,15 @@ class SearchMobile extends React.PureComponent {
 
           <ListWrapper>
             <GoogleMapsAutocomplete input={this.state.input}>
-              {predictions => {
+              {({ predictions, sessionToken }) => {
                 const data = this.state.input ? predictions : BIG_CITIES;
                 this.nbItems = data.length + 1;
                 return (
                   <List
                     list={data}
-                    onClick={this.props.onSelectLocation}
+                    onClick={selection =>
+                      this.props.onSelectLocation(selection, sessionToken)
+                    }
                     highlightIndex={this.state.keyboardItemSelect - 2}
                     highlightIndexValidation={this.state.keyboardValidation}
                     poweredByGoogle={this.state.input}
@@ -191,7 +193,7 @@ class SearchMobile extends React.PureComponent {
   nbItems = 0;
 
   handleInputReset() {
-    this.setState({ input: '' });
+    this.setState({ input: "" });
   }
 
   handleLocationInputUpdate(value) {

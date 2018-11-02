@@ -1,7 +1,9 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React from "react";
+import { connect } from "react-redux";
 
-import { GOOGLE_AUTOCOMPLETE_SERVICE } from '../enums';
+import withGoogleMaps from "./withGoogleMaps";
+
+import { GOOGLE_AUTOCOMPLETE_SERVICE } from "../enums";
 
 const formatPredictions = predictions =>
   predictions.map(({ structured_formatting, place_id }) => ({
@@ -9,11 +11,6 @@ const formatPredictions = predictions =>
     matched: structured_formatting.main_text_matched_substrings[0],
     placeId: place_id
   }));
-
-const GOOGLE_MAPS_OPTIONS = {
-  types: ['(cities)'],
-  componentRestrictions: { country: 'fr' }
-};
 
 class GoogleMapsAutocomplete extends React.PureComponent {
   constructor(props) {
@@ -23,7 +20,7 @@ class GoogleMapsAutocomplete extends React.PureComponent {
       predictions: []
     };
 
-    this.predictionsCB = this.predictionsCB.bind(this);
+    this.sessionToken = this.props.getSessionToken();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -32,34 +29,22 @@ class GoogleMapsAutocomplete extends React.PureComponent {
         this.setState({ predictions: [] });
         return;
       }
-      this.props.googleMapsAutocompleteService.getPlacePredictions(
-        { ...GOOGLE_MAPS_OPTIONS, input: nextProps.input },
-        this.predictionsCB
-      );
+
+      this.props
+        .getPredictions(nextProps.input, this.sessionToken)
+        .then(predictions => this.setState({ predictions }));
     }
   }
 
   render() {
     const predictions = formatPredictions(this.state.predictions);
 
-    return this.props.children(predictions);
-  }
-
-  predictionsCB(predictions, status) {
-    if (status != google.maps.places.PlacesServiceStatus.OK) {
-      console.warn('No results found', status);
-      // WARNING Should we return an empty array for predictions instead ?
-      return;
-    }
-    this.setState({ predictions });
+    return this.props.children({
+      predictions,
+      sessionToken: this.sessionToken
+    });
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    googleMapsAutocompleteService:
-      state.googleMapsService[GOOGLE_AUTOCOMPLETE_SERVICE]
-  };
-}
-
-export default connect(mapStateToProps)(GoogleMapsAutocomplete);
+const WithGoogleMaps = withGoogleMaps(GoogleMapsAutocomplete);
+export default connect()(WithGoogleMaps);

@@ -178,10 +178,14 @@ class RelatedEvents extends React.PureComponent {
   }
 
   async getDepartment(department) {
+    let sessionToken = null;
+
     let place_id = this.props.depMap[department.code];
     if (!place_id) {
+      sessionToken = this.props.getSessionToken();
       const predictions = await this.props.getPredictions(
         department.name,
+        sessionToken,
         "regions"
       );
       const dep =
@@ -191,13 +195,13 @@ class RelatedEvents extends React.PureComponent {
       this.props.dispatch(addDep(department.code, place_id));
     }
 
-    this.getPlace({ place_id }, "department");
+    this.getPlace({ place_id }, "department", sessionToken);
   }
 
-  async getPlace({ place_id }, type = "city") {
+  async getPlace({ place_id }, type = "city", sessionToken) {
     let place = this.props.placeMap[place_id];
     if (!place) {
-      place = await this.props.getDetails(place_id);
+      place = await this.props.getDetails(place_id, sessionToken);
       this.props.dispatch(addPlace(place));
     }
     this.setState({ [type]: place });

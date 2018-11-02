@@ -204,12 +204,15 @@ class Layout extends React.PureComponent {
     this.props.dispatch(toggleSearch(toggle));
   }
 
-  async handleSelectLocation(place = null) {
+  async handleSelectLocation(place = null, sessionToken) {
     this.props.dispatch(setSearchingGeohash(true));
     this.setState({ error: null });
     this.handleToggleSearch();
 
-    const placeDetails = await this.getPlaceDetails(place && place.placeId);
+    const placeDetails = await this.getPlaceDetails(
+      place && place.placeId,
+      sessionToken
+    );
     const geohash = getGeohash(placeDetails.location);
 
     this.props.dispatch(setSearchingGeohash(false));
@@ -240,7 +243,7 @@ class Layout extends React.PureComponent {
     });
   }
 
-  async getPlaceDetails(placeId) {
+  async getPlaceDetails(placeId, sessionToken) {
     let placeDetails = this.props.placeMap[placeId];
 
     if (placeDetails) {
@@ -254,7 +257,7 @@ class Layout extends React.PureComponent {
         const place = await this.props.reverseGeocoding(location);
         placeId = place.place_id;
       }
-      placeDetails = await this.props.getDetails(placeId);
+      placeDetails = await this.props.getDetails(placeId, sessionToken);
     } catch (error) {
       console.log(error, placeId);
       this.setState({ error });

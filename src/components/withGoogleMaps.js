@@ -35,6 +35,7 @@ const withGoogleMaps = (WrappedComponent, initService = false) => {
               this.props.googleMapsGeocodingService &&
               this.props.googleMapsAutocompleteService
             }
+            getSessionToken={this.getSessionToken}
             getPredictions={this.getPredictions}
             getDetails={this.getDetails}
             reverseGeocoding={this.reverseGeocoding}
@@ -44,11 +45,18 @@ const withGoogleMaps = (WrappedComponent, initService = false) => {
       );
     }
 
-    getPredictions(input, type = "cities") {
-      return new Promise((resolve, reject) => {
-        let options = { ...GOOGLE_MAPS_OPTIONS, input };
-        if (type === "regions") options = { ...options, types: ["(regions)"] };
+    getSessionToken = () => new google.maps.places.AutocompleteSessionToken();
 
+    getPredictions(input, sessionToken, type = "cities") {
+      let options = {
+        input,
+        types: [`(${type})`],
+        componentRestrictions: { country: "fr" }
+      };
+
+      if (sessionToken) options = { ...options, sessionToken };
+
+      return new Promise((resolve, reject) => {
         this.props.googleMapsAutocompleteService.getPlacePredictions(
           options,
           (predictions, status) => {
@@ -63,10 +71,13 @@ const withGoogleMaps = (WrappedComponent, initService = false) => {
       });
     }
 
-    getDetails(placeId) {
+    getDetails(placeId, sessionToken) {
+      let options = { placeId, fields: GM_PLACES_DETAILS_FIELDS };
+      if (sessionToken) options = { ...options, sessionToken };
+
       return new Promise((resolve, reject) => {
         this.props.googleMapsDetailsService.getDetails(
-          { placeId, fields: GM_PLACES_DETAILS_FIELDS },
+          options,
           (place, status) => {
             if (status == google.maps.places.PlacesServiceStatus.OK) {
               let { geometry, ...rest } = place;
