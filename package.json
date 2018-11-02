@@ -25,7 +25,8 @@
     "redux": "^3.7.2",
     "sitemap": "^2.0.1",
     "slug": "^0.9.1",
-    "store": "^2.0.12"
+    "store": "^2.0.12",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "cross-env": "^5.2.0",

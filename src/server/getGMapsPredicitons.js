@@ -1,6 +1,6 @@
 const REQ_PREDICTIONS_OK = "OK";
 
-module.exports = function(type, place) {
+module.exports = function(type, place, sessionToken = "") {
   // WARNING: see https://arunoda.me/blog/ssr-and-server-only-modules
   const GoogleMaps = eval("require('@google/maps')");
 
@@ -15,7 +15,7 @@ module.exports = function(type, place) {
       components: { country: "fr" },
       types: `(${type})`,
       language: "fr",
-      sessiontoken: ""
+      sessiontoken: sessionToken
     })
     .asPromise()
     .then(

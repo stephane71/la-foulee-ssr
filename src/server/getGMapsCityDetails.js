@@ -10,7 +10,11 @@ function getUrl(ref, { maxWidth, maxHeight }) {
   }&maxheight=${maxHeight}&maxwidth=${maxWidth}`;
 }
 
-module.exports = function({ place_id }, { maxWidth, maxHeight }) {
+module.exports = function(
+  { place_id },
+  { maxWidth, maxHeight },
+  sessionToken = ""
+) {
   // WARNING: see https://arunoda.me/blog/ssr-and-server-only-modules
   const GoogleMaps = eval("require('@google/maps')");
 
@@ -23,7 +27,7 @@ module.exports = function({ place_id }, { maxWidth, maxHeight }) {
     .place({
       placeid: place_id,
       fields: GM_PLACES_DETAILS_FIELDS,
-      sessiontoken: ""
+      sessiontoken: sessionToken
     })
     .asPromise()
     .then(data => (data.json.status === REQ_PLACE_OK ? data.json.result : null))

@@ -1,4 +1,5 @@
 const slug = require("slug");
+const uuidv4 = require("uuid/v4");
 
 const getGMapsPredicitons = require("./getGMapsPredicitons");
 const getGMapsCityDetails = require("./getGMapsCityDetails");
@@ -9,7 +10,9 @@ const MAX_HEIGHT_CITY_PHOTO = 400;
 const NO_PLACE_FOUND = null;
 
 module.exports = async function(type, value) {
-  let predictions = await getGMapsPredicitons(type, value);
+  const sessionToken = uuidv4();
+
+  let predictions = await getGMapsPredicitons(type, value, sessionToken);
   if (!predictions.length) {
     console.log(
       `[La Foulee] getPlace: no predicitions for type: ${type} - value: ${value}`
@@ -29,10 +32,14 @@ module.exports = async function(type, value) {
     return NO_PLACE_FOUND;
   }
 
-  const place = await getGMapsCityDetails(predictions[0], {
-    maxWidth: MAX_WIDTH_CITY_PHOTO,
-    maxHeight: MAX_HEIGHT_CITY_PHOTO
-  });
+  const place = await getGMapsCityDetails(
+    predictions[0],
+    {
+      maxWidth: MAX_WIDTH_CITY_PHOTO,
+      maxHeight: MAX_HEIGHT_CITY_PHOTO
+    },
+    sessionToken
+  );
   if (!place) {
     console.log(
       `[La Foulee] getPlace: no city details found for ${
