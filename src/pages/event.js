@@ -10,11 +10,12 @@ import Loader from "../components/Loader";
 import JSONLD from "../components/JSONLD";
 
 import getEventDescription from "../utils/getEventDescription";
+import getPlaceSlug from "../utils/getPlaceSlug";
 import { pageview, event } from "../utils/gtag";
 import { getEventStructuredData } from "../utils/structuredData";
 
 import { DESKTOP } from "../enums";
-import { setSelectedEvent } from "../actions";
+import { setSelectedEvent, addPlace } from "../actions";
 
 class EventPage extends React.PureComponent {
   static async getInitialProps({ isServer, res, query, store, ...context }) {
@@ -37,6 +38,7 @@ class EventPage extends React.PureComponent {
     super(props);
 
     this.state = {
+      place: null,
       error: props.error || null
     };
 
@@ -57,6 +59,10 @@ class EventPage extends React.PureComponent {
       this.fetchEvent({ keyword, edition });
     }
 
+    if (event) {
+      this.getEventPlace(event);
+    }
+
     pageview({
       title: "Event details",
       url: window.location.href,
@@ -65,7 +71,7 @@ class EventPage extends React.PureComponent {
   }
 
   render() {
-    const { error } = this.state;
+    const { error, place } = this.state;
     const { query, path, event, media } = this.props;
 
     if (error) return <CustomError code={error.code} />;
@@ -78,6 +84,7 @@ class EventPage extends React.PureComponent {
 
         <EventDetails
           event={event}
+          place={place}
           desktop={media === DESKTOP}
           media={media}
           onSubmitContribution={this.handleSubmitContribution}
@@ -113,12 +120,25 @@ class EventPage extends React.PureComponent {
       this.setState({ error: { code: 404 } });
     }
   }
+
+  async getEventPlace(event) {
+    if (!event.department || !event.department.name) return;
+
+    let place = this.props.placeMap[getPlaceSlug(event)];
+    if (!place) {
+      place = await this.props.getPlace(event);
+      this.props.dispatch(addPlace(place));
+    }
+
+    this.setState({ place });
+  }
 }
 
 function mapStateToProps(state) {
   return {
     event: state.event,
-    media: state.media
+    media: state.media,
+    placeMap: state.placeMap
   };
 }
 

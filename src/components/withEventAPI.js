@@ -1,5 +1,6 @@
 import apigClientFactory from "aws-api-gateway-client";
 import getConfig from "next/config";
+import slug from "slug";
 
 import {
   getEventArgs,
@@ -7,7 +8,8 @@ import {
   postNewsletterEmailArgs,
   postEventContributionArgs,
   API_EVENT_LIST_AROUND,
-  API_EVENT_LIST_DEPARTMENT
+  API_EVENT_LIST_DEPARTMENT,
+  API_EVENT_LIST_PLACE
 } from "../api";
 
 const { publicRuntimeConfig } = getConfig();
@@ -43,6 +45,7 @@ const withEventAPI = WrappedComponent => {
     constructor(...args) {
       super(...args);
 
+      this.getPlace = this.getPlace.bind(this);
       this.getEvent = this.getEvent.bind(this);
       this.getEventList = this.getEventList.bind(this);
       this.getEventListDepartment = this.getEventListDepartment.bind(this);
@@ -54,6 +57,7 @@ const withEventAPI = WrappedComponent => {
     render() {
       return (
         <WrappedComponent
+          getPlace={this.getPlace}
           getEvent={this.getEvent}
           getEventList={this.getEventList}
           postNewsletterEmail={this.postNewsletterEmail}
@@ -102,6 +106,14 @@ const withEventAPI = WrappedComponent => {
       return this.invoke(EVENT_API_PATH, {
         keyword,
         edition
+      });
+    }
+
+    getPlace({ city, department }) {
+      return this.invoke(EVENTS_API_PATH, {
+        type: API_EVENT_LIST_PLACE,
+        department: slug(department.name, { lower: true }),
+        city: slug(city, { lower: true })
       });
     }
 

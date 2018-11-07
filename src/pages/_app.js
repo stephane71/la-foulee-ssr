@@ -30,7 +30,8 @@ class MyApp extends App {
       getEventList,
       postNewsletterEmail,
       postEventContribution,
-      getCredentials
+      getCredentials,
+      getPlace
     } = this.props;
 
     return (
@@ -45,6 +46,7 @@ class MyApp extends App {
                 postNewsletterEmail={postNewsletterEmail}
                 postEventContribution={postEventContribution}
                 getCredentials={getCredentials}
+                getPlace={getPlace}
                 query={router.query || {}}
                 path={router.asPath}
               />
