@@ -56,6 +56,12 @@ const style = css`
   }
 `;
 
+// {media && (
+//   <section className={`EventPage-RelatedEvents`}>
+//     <RelatedEvents event={event} desktop={desktop} />
+//   </section>
+// )}
+
 const EventDetails = ({ event, desktop, media, onSubmitContribution }) => (
   <div className={`EventPage`}>
     {media === DESKTOP && (
@@ -72,12 +78,6 @@ const EventDetails = ({ event, desktop, media, onSubmitContribution }) => (
         onClickOrgaLink={handleClickOrgaLink}
         onSubmitContribution={onSubmitContribution}
       />
-    )}
-
-    {media && (
-      <section className={`EventPage-RelatedEvents`}>
-        <RelatedEvents event={event} desktop={desktop} />
-      </section>
     )}
 
     <style jsx>{style}</style>
