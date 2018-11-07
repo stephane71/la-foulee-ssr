@@ -1,13 +1,12 @@
 import slug from "slug";
 import css from "styled-jsx/css";
-import { connect } from "react-redux";
 
 import RelatedEventsCard from "./RelatedEventsCard";
 
 import getGeohash from "../utils/geohash";
 import getGMPhotoURL from "../utils/getGMPhotoURL";
 
-import { addPlace, addDep } from "../actions";
+import { addDep } from "../actions";
 
 const style = css`
   .RelatedEvents {
@@ -56,11 +55,4 @@ class RelatedEvents extends React.PureComponent {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    placeMap: state.placeMap,
-    depMap: state.depMap
-  };
-}
-
-export default connect(mapStateToProps)(RelatedEvents);
+export default RelatedEvents;
