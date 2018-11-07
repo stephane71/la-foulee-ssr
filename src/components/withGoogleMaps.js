@@ -27,19 +27,26 @@ const withGoogleMaps = (WrappedComponent, initService = false) => {
     }
 
     render() {
+      const {
+        googleMapsDetailsService,
+        googleMapsGeocodingService,
+        googleMapsAutocompleteService,
+        ...props
+      } = this.props;
+
       return (
         <>
           <WrappedComponent
             googleMapsServiceReady={
-              this.props.googleMapsDetailsService &&
-              this.props.googleMapsGeocodingService &&
-              this.props.googleMapsAutocompleteService
+              googleMapsDetailsService &&
+              googleMapsGeocodingService &&
+              googleMapsAutocompleteService
             }
             getSessionToken={this.getSessionToken}
             getPredictions={this.getPredictions}
             getDetails={this.getDetails}
             reverseGeocoding={this.reverseGeocoding}
-            {...this.props}
+            {...props}
           />
         </>
       );
