@@ -80,7 +80,7 @@ const createSitmapLists = () => {
   }));
 
   const d = departments.map(dep => ({
-    url: `/events/departments/${dep}`,
+    url: `/events/department/${dep}`,
     changefreq: "weekly",
     lastmodISO: moment().format("YYYY-MM-DD")
   }));
