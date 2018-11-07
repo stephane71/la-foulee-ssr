@@ -14,7 +14,7 @@ import { pageview, event } from "../utils/gtag";
 import { getEventStructuredData } from "../utils/structuredData";
 
 import { DESKTOP } from "../enums";
-import { setSelectedEvent } from "../actions";
+import { setSelectedEvent, addPlace } from "../actions";
 
 class EventPage extends React.PureComponent {
   static async getInitialProps({ isServer, res, query, store, ...context }) {
@@ -37,6 +37,7 @@ class EventPage extends React.PureComponent {
     super(props);
 
     this.state = {
+      place: null,
       error: props.error || null
     };
 
@@ -57,6 +58,13 @@ class EventPage extends React.PureComponent {
       this.fetchEvent({ keyword, edition });
     }
 
+    if (event) {
+      this.props.getPlace(event).then(place => {
+        this.setState({ place });
+        this.props.dispatch(addPlace(place));
+      });
+    }
+
     pageview({
       title: "Event details",
       url: window.location.href,
@@ -65,7 +73,7 @@ class EventPage extends React.PureComponent {
   }
 
   render() {
-    const { error } = this.state;
+    const { error, place } = this.state;
     const { query, path, event, media } = this.props;
 
     if (error) return <CustomError code={error.code} />;
@@ -78,6 +86,7 @@ class EventPage extends React.PureComponent {
 
         <EventDetails
           event={event}
+          place={place}
           desktop={media === DESKTOP}
           media={media}
           onSubmitContribution={this.handleSubmitContribution}
