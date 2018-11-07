@@ -11,11 +11,14 @@ function getEventArgs({ keyword, edition }) {
 
 const API_EVENT_LIST_AROUND = "around";
 const API_EVENT_LIST_DEPARTMENT = "department";
+const API_EVENT_LIST_PLACE = "place";
 
 function getEventListArgs(type, params) {
   let pathTemplate;
   if (type === API_EVENT_LIST_AROUND) pathTemplate = `/around/{geohash}`;
   if (type === API_EVENT_LIST_DEPARTMENT) pathTemplate = `/department/{code}`;
+  if (type === API_EVENT_LIST_PLACE)
+    pathTemplate = `/place/{department}/{city}`;
   const method = "GET";
   const additionalParams = {};
   const body = {};
@@ -51,6 +54,7 @@ module.exports = {
   getEventListArgs,
   API_EVENT_LIST_AROUND,
   API_EVENT_LIST_DEPARTMENT,
+  API_EVENT_LIST_PLACE,
   getEventArgs,
   postNewsletterEmailArgs,
   postEventContributionArgs
