@@ -10,6 +10,7 @@ import Loader from "../components/Loader";
 import JSONLD from "../components/JSONLD";
 
 import getEventDescription from "../utils/getEventDescription";
+import getPlaceSlug from "../utils/getPlaceSlug";
 import { pageview, event } from "../utils/gtag";
 import { getEventStructuredData } from "../utils/structuredData";
 
@@ -59,10 +60,7 @@ class EventPage extends React.PureComponent {
     }
 
     if (event) {
-      this.props.getPlace(event).then(place => {
-        this.setState({ place });
-        this.props.dispatch(addPlace(place));
-      });
+      this.getEventPlace(event);
     }
 
     pageview({
@@ -122,12 +120,25 @@ class EventPage extends React.PureComponent {
       this.setState({ error: { code: 404 } });
     }
   }
+
+  async getEventPlace(event) {
+    if (!event.department || !event.department.name) return;
+
+    let place = this.props.placeMap[getPlaceSlug(event)];
+    if (!place) {
+      place = await this.props.getPlace(event);
+      this.props.dispatch(addPlace(place));
+    }
+
+    this.setState({ place });
+  }
 }
 
 function mapStateToProps(state) {
   return {
     event: state.event,
-    media: state.media
+    media: state.media,
+    placeMap: state.placeMap
   };
 }
 
