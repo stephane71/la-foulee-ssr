@@ -4,9 +4,6 @@ import css from "styled-jsx/css";
 import RelatedEventsCard from "./RelatedEventsCard";
 
 import getGeohash from "../utils/geohash";
-import getGMPhotoURL from "../utils/getGMPhotoURL";
-
-import { addDep } from "../actions";
 
 const style = css`
   .RelatedEvents {
@@ -21,8 +18,15 @@ class RelatedEvents extends React.PureComponent {
   render() {
     const { event, place, desktop } = this.props;
 
-    const position = place ? getGeohash(place.location) : null;
-    const slugPlace = place ? place.slug : null;
+    let position = null;
+    let slugPlace = null;
+    let [department, city] = [];
+
+    if (place) {
+      position = getGeohash(place.location);
+      slugPlace = place.slug;
+      [department, city] = slugPlace.split("_");
+    }
 
     // <RelatedEventsCard
     //   query={{
@@ -31,7 +35,6 @@ class RelatedEvents extends React.PureComponent {
     //   }}
     //   as={`/events/department/${event.depCode}`}
     //   title={event.department.name}
-    //   image={department && getGMPhotoURL(department)}
     //   desktop={desktop}
     // />
 
@@ -43,9 +46,8 @@ class RelatedEvents extends React.PureComponent {
 
         <RelatedEventsCard
           query={{ position, place: slugPlace }}
-          as={`/events/${slug(event.city, { lower: true })}`}
+          as={`/events/${department}/${city}`}
           title={event.city}
-          image={place && getGMPhotoURL(place)}
           desktop={desktop}
         />
 
