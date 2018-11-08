@@ -31,9 +31,11 @@ const handle = app.getRequestHandler();
 const server = express();
 
 const now = () =>
-  moment()
-    .utc()
-    .format("YYYY-MM-DD HH:mm:ss");
+  console.log(
+    moment()
+      .utc()
+      .format("YYYY-MM-DD HH:mm:ss")
+  );
 
 server.use(function(req, res, next) {
   if (req.path.substr(-1) == "/" && req.path.length > 1) {
@@ -86,14 +88,14 @@ const eventHandler = async function(req, res) {
     if (keyword)
       event = (await getEvent(keyword, edition)) || NO_EVENT_SELECTED;
     if (!event) {
-      console.log(now());
+      now();
       console.log(
         `[La Foulee] - Error - Client: '/event/${keyword}' | Unkown event`
       );
       res.statusCode = 404;
     }
   } catch (e) {
-    console.log(now());
+    now();
     console.log(
       `[La Foulee] - Error - Server:'/event/${keyword}' | Error when try to fetch event`
     );
@@ -109,83 +111,45 @@ server.get("/event/:keyword", eventHandler);
 
 const EVENT_LIST_QUERY = { position: null, depCode: null };
 
-server.get("/events/department/:code", async (req, res) => {
-  const code = parseInt(req.params.code);
+const eventListHandler = async function(req, res) {
+  const { department, city } = req.params;
   let events = [];
   let place = null;
-
-  try {
-    const department = DEPARTMENTS.find(dep => parseInt(dep.code) === code);
-    if (!code || !department) {
-      console.log(now());
-      console.log(
-        `[La Foulee] - Error - Client:'/events/department/${code}' | Unknown department (from hard coded list)`
-      );
-      res.statusCode = 404;
-    } else {
-      place = await getPlace("regions", department.name);
-      events = await getEventListDepartment(code);
-    }
-  } catch (e) {
-    console.log(now());
-    if (e.response && e.response.status === 404) {
-      console.log(
-        `[La Foulee] - Error - Client:'/events/department/${code}' | Unknown department (from Google Maps API)`
-      );
-      res.statusCode = 404;
-    } else {
-      console.log(
-        `[La Foulee] - Error - Server:'/events/department/${code}' | Error when try to fetch events from department`
-      );
-      console.log(e);
-      res.statusCode = 500;
-    }
-  }
-
-  let eventsQuery = { ...EVENT_LIST_QUERY, depCode: req.params.code };
-
-  app.render(req, res, "/events", {
-    ...req.query,
-    events,
-    place,
-    eventsQuery,
-    ...eventsQuery
-  });
-});
-
-server.get("/events/:city", async (req, res) => {
   let position = null;
-  let events = [];
-  let place = null;
 
-  try {
-    place = await getPlace("cities", req.params.city);
-    if (!place) res.statusCode = 404;
-    else {
+  now();
+  console.log("[La Foulee] - req for event list", department, city);
+
+  if (!department) {
+    res.statusCode = 404;
+  } else {
+    try {
+      place = await getPlace({ department, city });
       position = getGeohash(place);
-      events = await getEventListAround(position);
+      events = city
+        ? await getEventListAround(position)
+        : await getEventListDepartment(code);
+    } catch (e) {
+      if (e.response && e.response.status === 404) {
+        console.log(
+          `[La Foulee] - Error - Client: Unknown department (from La Foulee Places API)`
+        );
+        res.statusCode = 404;
+      } else {
+        console.log(
+          `[La Foulee] - Error - Server | Error when try to fetch events`
+        );
+        res.statusCode = 500;
+      }
+      console.log(e);
     }
-  } catch (e) {
-    console.log(now());
-    console.log(
-      `[La Foulee] - Error - Server:'/events/${
-        req.params.city
-      }' | Error when try to fetch city or events`
-    );
-    console.log(e);
-    res.statusCode = 500;
   }
 
-  let eventsQuery = { ...EVENT_LIST_QUERY, position };
+  app.render(req, res, "/events", { ...req.query, position, place, events });
+};
 
-  app.render(req, res, "/events", {
-    ...req.query,
-    events,
-    place,
-    eventsQuery,
-    ...eventsQuery
-  });
-});
+server.get("/events/:department", eventListHandler);
+server.get("/events/:department/:city", eventListHandler);
 
 server.get("*", (req, res) => {
   // FIXME: doesn't serve pre-render pages
@@ -197,7 +161,7 @@ app
   .then(() => {
     server.listen(port, err => {
       if (err) {
-        console.log(now());
+        now();
         console.log(`Error when try to run NextJS server`);
         console.log(JSON.stringify(err));
         throw err;
