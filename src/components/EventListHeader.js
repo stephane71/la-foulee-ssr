@@ -1,8 +1,6 @@
 import css from "styled-jsx/css";
 import { withRouter } from "next/router";
 
-import { SelectedPlaceContext } from "./Layout";
-
 import { getSpacing } from "../styles-variables";
 import { BORDER_RADIUS_LIST_ITEM } from "../enums";
 import { dominant, white } from "../colors";
@@ -59,9 +57,4 @@ class EventListHeader extends React.PureComponent {
 }
 
 const EventListHeaderWithRouter = withRouter(EventListHeader);
-
-export default props => (
-  <SelectedPlaceContext.Consumer>
-    {city => <EventListHeaderWithRouter {...props} city={city} />}
-  </SelectedPlaceContext.Consumer>
-);
+export default EventListHeaderWithRouter;
