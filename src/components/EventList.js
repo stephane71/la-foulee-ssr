@@ -7,6 +7,7 @@ const VirtualizedList = dynamic(import("./VirtualizedList"), {
 });
 
 import Loader from "./Loader";
+import EventListHeader from "./EventListHeader";
 
 import { getSpacing, BaseLineHeight } from "../styles-variables";
 import { HEIGHT_APPBAR, MAX_WIDTH } from "../enums";
@@ -53,7 +54,7 @@ class EventList extends React.Component {
   }
 
   render() {
-    const { data, loading } = this.props;
+    const { data, loading, place } = this.props;
     const { listRendering } = this.state;
 
     const showLoader = listRendering || loading;
@@ -65,6 +66,8 @@ class EventList extends React.Component {
             <Loader />
           </div>
         )}
+
+        <EventListHeader nbItems={data.length} city={place} />
 
         {!data.length && !showLoader ? (
           <div

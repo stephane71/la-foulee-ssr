@@ -8,7 +8,6 @@ import {
 
 import EventListItem from "./EventListItem";
 import EventListDate from "./EventListDate";
-import EventListHeader from "./EventListHeader";
 import EventListWeek from "./EventListWeek";
 import EventListMonthBottom from "./EventListMonthBottom";
 
@@ -122,7 +121,6 @@ class VirtualizedList extends React.PureComponent {
         rowIndex={index}
       >
         <div style={{ ...style }}>
-          {!index && <EventListHeader nbItems={data.length} />}
           {firstItemDay && (
             <div style={{ padding: getSpacing("m") }}>
               <EventListWeek data={data} index={index} />
