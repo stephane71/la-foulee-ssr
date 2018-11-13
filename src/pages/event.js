@@ -56,7 +56,7 @@ class EventPage extends React.PureComponent {
       if (!keyword) {
         [, , keyword, edition] = path.split("/");
       }
-      this.fetchEvent({ keyword, edition });
+      this.getEvent({ keyword, edition });
     }
 
     if (event) {
@@ -109,7 +109,7 @@ class EventPage extends React.PureComponent {
     );
   }
 
-  async fetchEvent({ keyword, edition }) {
+  async getEvent({ keyword, edition }) {
     try {
       let res = await this.props.getEvent({
         keyword,
@@ -124,9 +124,11 @@ class EventPage extends React.PureComponent {
   async getEventPlace(event) {
     if (!event.department || !event.department.name) return;
 
-    let place = this.props.placeMap[getPlaceSlug(event)];
+    const placeSlug = getPlaceSlug(event);
+    let place = this.props.placeMap[placeSlug];
+
     if (!place) {
-      place = await this.props.getPlace(event);
+      place = await this.props.getPlace({ placeSlug });
       this.props.dispatch(addPlace(place));
     }
 

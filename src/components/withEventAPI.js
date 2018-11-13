@@ -109,11 +109,14 @@ const withEventAPI = WrappedComponent => {
       });
     }
 
-    getPlace({ city, department }) {
+    // TODO: use slug in event instead of city & department
+    getPlace({ placeSlug } = {}) {
+      const placeSlugSplit = placeSlug.split("_");
+
       return this.invoke(EVENTS_API_PATH, {
         type: API_EVENT_LIST_PLACE,
-        department: slug(department.name, { lower: true }),
-        city: slug(city, { lower: true })
+        department: placeSlugSplit[0],
+        city: placeSlugSplit[1]
       });
     }
 
