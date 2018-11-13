@@ -6,22 +6,23 @@ import { connect } from "react-redux";
 import CustomError from "./_error";
 
 import EventListMetaHeaders from "../headers/events";
+
 import EventList from "../components/EventList";
 import EventListNotFoundError from "../components/EventListNotFoundError";
 import JSONLD from "../components/JSONLD";
 
+import getGeohash from "../utils/geohash";
 import { pageview, event } from "../utils/gtag";
 import { getEventListStructuredData } from "../utils/structuredData";
 
 import {
   setSelectedEvent,
   setEventList,
-  setEventsQuery,
   toggleSearch,
   addPlace
 } from "../actions";
 import { NO_EVENT_SELECTED } from "../enums";
-import { API_EVENT_LIST_DEPARTMENT, API_EVENT_LIST_AROUND } from "../api";
+import { API_EVENT_LIST_AROUND } from "../api";
 
 class Events extends React.PureComponent {
   static async getInitialProps({ isServer, res, store, query, ...context }) {
@@ -31,26 +32,29 @@ class Events extends React.PureComponent {
       if (res.statusCode === 404) return { error: { code: 404 } };
       if (res.statusCode !== 200) return { error: { code: 500 } };
 
-      const { events, place, eventsQuery = {} } = query;
+      const { events, place } = query;
 
       if (place) store.dispatch(addPlace(place));
-      store.dispatch(setEventsQuery(eventsQuery));
       store.dispatch(setEventList(events));
 
-      initialPlace = place;
-
       if (place) {
-        query.place = place.place_id;
+        query.placeSlug = place.slug;
       }
     }
 
-    return { initialPlace };
+    return {};
   }
 
   constructor(props) {
     super(props);
 
+    const { placeMap, query } = props;
+
+    const place = placeMap[query.placeSlug];
+    const position = getGeohash(place.location);
+
     this.state = {
+      place: { ...place, position },
       loading: false
     };
 
@@ -65,20 +69,24 @@ class Events extends React.PureComponent {
   componentDidMount() {
     Router.prefetch("/event");
 
-    const { query, eventsQuery, error } = this.props;
+    const { query, error, events } = this.props;
+    const { place } = this.state;
 
-    if (!error) {
-      if (query.position && query.position !== eventsQuery.position) {
-        this.fetchEvents(API_EVENT_LIST_AROUND, query.position);
-        this.props.dispatch(setEventsQuery({ position: query.position }));
-      }
-      if (
-        query.depCode &&
-        parseInt(query.depCode) !== parseInt(eventsQuery.depCode)
-      ) {
-        this.fetchEvents(API_EVENT_LIST_DEPARTMENT, query.depCode);
-        this.props.dispatch(setEventsQuery({ depCode: query.depCode }));
-      }
+    if (error) return;
+
+    if (!place) {
+      this.setState({ loading: true });
+
+      this.getEventListPlace(query).then(place => {
+        this.setState({ place });
+        this.fetchEvents(API_EVENT_LIST_AROUND, place.position).then(() =>
+          this.setState({ loading: false })
+        );
+      });
+    } else if (!events.length) {
+      this.fetchEvents(API_EVENT_LIST_AROUND, place.position).then(() =>
+        this.setState({ loading: false })
+      );
     }
 
     pageview({
@@ -93,22 +101,22 @@ class Events extends React.PureComponent {
       const { query: nextQuery } = nextProps;
       const { query } = this.props;
 
-      if (nextQuery.position !== query.position) {
-        this.fetchEvents(API_EVENT_LIST_AROUND, nextQuery.position);
-        this.props.dispatch(setEventsQuery({ position: nextQuery.position }));
-      } else if (parseInt(nextQuery.depCode) !== parseInt(query.depCode)) {
-        this.fetchEvents(API_EVENT_LIST_DEPARTMENT, nextQuery.depCode);
-        this.props.dispatch(setEventsQuery({ depCode: nextQuery.depCode }));
-      }
-    }
+      if (query.placeSlug !== nextQuery.placeSlug) {
+        this.setState({ loading: true });
 
-    if (nextProps.searchingGeohash && !this.props.searchingGeohash) {
-      this.setState({ loading: true });
+        this.getEventListPlace(nextQuery).then(place => {
+          this.setState({ place });
+          this.fetchEvents(API_EVENT_LIST_AROUND, place.position).then(() =>
+            this.setState({ loading: false })
+          );
+        });
+      }
     }
   }
 
   render() {
-    const { query, path, events, error, initialPlace } = this.props;
+    const { query, path, events, error } = this.props;
+    const { place, loading } = this.state;
 
     if (error) {
       return (
@@ -129,11 +137,12 @@ class Events extends React.PureComponent {
         <EventListMetaHeaders
           events={events}
           path={path}
-          place={initialPlace}
+          place={place}
           query={query}
         />
 
         <EventList
+          place={place}
           data={events}
           loading={this.state.loading}
           onSelectEvent={this.handleEventSelection}
@@ -178,20 +187,28 @@ class Events extends React.PureComponent {
   }
 
   async fetchEvents(type, value) {
-    this.setState({ loading: true });
-
     let res = await this.props.getEventList(type, value);
     this.props.dispatch(setEventList(res.events));
 
-    this.setState({ loading: false });
+    return;
+  }
+
+  async getEventListPlace({ placeSlug } = {}) {
+    let place = this.props.placeMap[placeSlug];
+
+    if (!place) {
+      place = await this.props.getPlace({ placeSlug });
+      this.props.dispatch(addPlace(place));
+    }
+
+    return { ...place, position: getGeohash(place.location) };
   }
 }
 
 function mapStateToProps(state) {
   return {
-    eventsQuery: state.eventsQuery,
     events: state.events,
-    searchingGeohash: state.searchingGeohash
+    placeMap: state.placeMap
   };
 }
 
