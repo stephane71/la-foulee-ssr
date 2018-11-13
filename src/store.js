@@ -11,9 +11,7 @@ import {
   SET_GOOGLE_MAPS_SERVICE,
   SET_MEDIA_TYPE,
   TOGGLE_SEARCH,
-  SET_SEARCHING_GEOHASH,
-  ADD_PLACE,
-  SET_EVENTS_QUERY
+  ADD_PLACE
 } from "./actions";
 
 function getNextMonth(month) {
@@ -38,9 +36,7 @@ const initialState = {
   },
   media: null,
   searching: false,
-  searchingGeohash: false,
-  placeMap: {},
-  eventsQuery: {}
+  placeMap: {}
 };
 
 const reducer = (state = initialState, action) => {
@@ -66,8 +62,6 @@ const reducer = (state = initialState, action) => {
         searching:
           action.toggle === undefined ? !state.searching : action.toggle
       };
-    case SET_SEARCHING_GEOHASH:
-      return { ...state, searchingGeohash: action.searching };
     case ADD_PLACE:
       const place = action.place;
       if (!place || !place.slug) return state;
@@ -75,8 +69,6 @@ const reducer = (state = initialState, action) => {
         ...state,
         placeMap: { ...state.placeMap, [place.slug]: place }
       };
-    case SET_EVENTS_QUERY:
-      return { ...state, eventsQuery: action.query };
 
     default:
       return state;
