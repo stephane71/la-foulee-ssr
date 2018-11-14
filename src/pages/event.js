@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import CustomError from "./_error";
 
 import EventMetaHeaders from "../headers/event";
+
+import PlaceProvider from "../components/PlaceProvider";
 import EventDetails from "../components/EventDetails";
 import Loader from "../components/Loader";
 import JSONLD from "../components/JSONLD";
@@ -38,7 +40,6 @@ class EventPage extends React.PureComponent {
     super(props);
 
     this.state = {
-      place: null,
       error: props.error || null
     };
 
@@ -59,9 +60,6 @@ class EventPage extends React.PureComponent {
       this.getEvent({ keyword, edition });
     }
 
-    if (event)
-      this.getEventPlace(event).then(place => this.setState({ place }));
-
     pageview({
       title: "Event details",
       url: window.location.href,
@@ -70,7 +68,7 @@ class EventPage extends React.PureComponent {
   }
 
   render() {
-    const { error, place } = this.state;
+    const { error } = this.state;
     const { query, path, event, media } = this.props;
 
     if (error) return <CustomError code={error.code} />;
@@ -78,24 +76,31 @@ class EventPage extends React.PureComponent {
     if (!event) return <Loader />;
 
     return (
-      <>
-        <EventMetaHeaders event={event} path={path} query={query} />
+      <PlaceProvider
+        placeSlug={getPlaceSlug(event)}
+        getPlace={this.props.getPlace}
+      >
+        {place => (
+          <>
+            <EventMetaHeaders event={event} path={path} query={query} />
 
-        <EventDetails
-          event={event}
-          place={place}
-          desktop={media === DESKTOP}
-          media={media}
-          onSubmitContribution={this.handleSubmitContribution}
-        />
+            <EventDetails
+              event={event}
+              place={place}
+              desktop={media === DESKTOP}
+              media={media}
+              onSubmitContribution={this.handleSubmitContribution}
+            />
 
-        <JSONLD
-          data={getEventStructuredData(event, {
-            description: getEventDescription(event),
-            path
-          })}
-        />
-      </>
+            <JSONLD
+              data={getEventStructuredData(event, {
+                description: getEventDescription(event),
+                path
+              })}
+            />
+          </>
+        )}
+      </PlaceProvider>
     );
   }
 
@@ -119,27 +124,12 @@ class EventPage extends React.PureComponent {
       this.setState({ error: { code: 404 } });
     }
   }
-
-  async getEventPlace(event) {
-    if (!event.department || !event.department.name) return;
-
-    const placeSlug = getPlaceSlug(event);
-    let place = this.props.placeMap[placeSlug];
-
-    if (!place) {
-      place = await this.props.getPlace({ placeSlug });
-      this.props.dispatch(addPlace(place));
-    }
-
-    return place;
-  }
 }
 
 function mapStateToProps(state) {
   return {
     event: state.event,
-    media: state.media,
-    placeMap: state.placeMap
+    media: state.media
   };
 }
 
