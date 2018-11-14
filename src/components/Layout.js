@@ -15,11 +15,6 @@ import AppFooter from "./AppFooter";
 
 import withReverseGeocoding from "./withReverseGeocoding";
 
-const GoogleMapInitServices = dynamic(import("./GoogleMapInitServices"), {
-  ssr: false,
-  loading: () => null
-});
-
 import getGeohash from "../utils/geohash";
 import getUserLocation from "../utils/getUserLocation";
 import { event } from "../utils/gtag";
@@ -111,8 +106,6 @@ class Layout extends React.PureComponent {
 
     return (
       <>
-        <GoogleMapInitServices />
-
         <section className={"LayoutSection"}>
           <nav className={"LayoutNav"} role={"navigation"}>
             <Header
