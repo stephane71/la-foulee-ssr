@@ -13,11 +13,15 @@ import LayoutError from "./LayoutError";
 import Loader from "./Loader";
 import AppFooter from "./AppFooter";
 
+import withReverseGeocoding from "./withReverseGeocoding";
+
 const GoogleMapInitServices = dynamic(import("./GoogleMapInitServices"), {
   ssr: false,
   loading: () => null
 });
 
+import getGeohash from "../utils/geohash";
+import getUserLocation from "../utils/getUserLocation";
 import { event } from "../utils/gtag";
 
 import GlobalStyles from "../styles";
@@ -184,11 +188,20 @@ class Layout extends React.PureComponent {
     this.setState({ error: null });
     this.handleToggleSearch();
 
+    if (!place) {
+      const location = await getUserLocation();
+      place = await this.props.reverseGeocoding(location);
+    }
+
     const department = slug(place.county, { lower: true });
     const city = slug(place.name, { lower: true });
+    const position = getGeohash(place.location);
 
     Router.push(
-      { pathname: "/events", query: { placeSlug: `${department}_${city}` } },
+      {
+        pathname: "/events",
+        query: { placeSlug: `${department}_${city}`, position }
+      },
       `/events/${department}/${city}`
     );
   }
@@ -200,5 +213,7 @@ function mapStateToProps(state) {
   };
 }
 
-const LayoutWithRouter = withRouter(Layout);
-export default connect(mapStateToProps)(LayoutWithRouter);
+const WithRouter = withRouter(Layout);
+const WithReverseGeocoding = withReverseGeocoding(WithRouter);
+
+export default connect(mapStateToProps)(WithReverseGeocoding);

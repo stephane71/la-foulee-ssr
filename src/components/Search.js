@@ -24,28 +24,33 @@ const BIG_CITIES = [
   {
     name: "Bordeaux",
     match: "Bordeaux",
-    county: "Gironde"
+    county: "Gironde",
+    location: { lat: 44.8378, lng: -0.579512 }
   },
 
   {
     name: "Lille",
     match: "Lille",
-    county: "Nord"
+    county: "Nord",
+    location: { lat: 50.632, lng: 3.05749 }
   },
   {
     name: "Lyon",
     match: "Lyon",
-    county: "Rhône"
+    county: "Rhône",
+    location: { lat: 45.7539, lng: 4.84699 }
   },
   {
     name: "Marseille",
     match: "Marseille",
-    county: "Bouches-du-Rhône"
+    county: "Bouches-du-Rhône",
+    location: { lat: 43.2954, lng: 5.3631 }
   },
   {
     name: "Paris",
     match: "Paris",
-    county: "Paris"
+    county: "Paris",
+    location: { lat: 48.8546, lng: 2.3477 }
   }
 ];
 
@@ -97,7 +102,6 @@ class Search extends React.PureComponent {
       this.handleLocationInputUpdate,
       250
     );
-    this.handleClickUserPosition = this.handleClickUserPosition.bind(this);
   }
 
   render() {
@@ -130,7 +134,7 @@ class Search extends React.PureComponent {
         </div>
 
         <div className={"Search-Content"}>
-          <SearchList data={[{}]} onClick={this.handleClickUserPosition}>
+          <SearchList data={[0]} onClick={onSelectPlace}>
             {() => <SearchPlaceItemPosition />}
           </SearchList>
 
@@ -160,10 +164,6 @@ class Search extends React.PureComponent {
 
   handleLocationInputUpdate(value) {
     this.setState({ input: value });
-  }
-
-  handleClickUserPosition() {
-    this.props.onSelectLocation();
   }
 }
 
