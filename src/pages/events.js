@@ -1,18 +1,17 @@
 import React from "react";
 import Router from "next/router";
 import moment from "moment";
-import { connect } from "react-redux";
 
 import CustomError from "./_error";
 
 import EventListMetaHeaders from "../headers/events";
 
 import EventsProvider from "../components/EventsProvider";
+import PlaceProvider from "../components/PlaceProvider";
 import EventList from "../components/EventList";
 import EventListNotFoundError from "../components/EventListNotFoundError";
 import JSONLD from "../components/JSONLD";
 
-import getGeohash from "../utils/geohash";
 import { pageview, event } from "../utils/gtag";
 import { getEventListStructuredData } from "../utils/structuredData";
 
@@ -50,14 +49,6 @@ class Events extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    const { placeMap, query } = props;
-    const place = placeMap[query.placeSlug];
-
-    this.state = {
-      place: place || null,
-      loading: false
-    };
-
     this.handleTriggerSearch = this.handleTriggerSearch.bind(this);
     this.handleEventSelection = this.handleEventSelection.bind(this);
   }
@@ -69,13 +60,7 @@ class Events extends React.PureComponent {
   componentDidMount() {
     Router.prefetch("/event");
 
-    const { query, error } = this.props;
-    const { place } = this.state;
-
-    if (error) return;
-
-    if (!place)
-      this.getEventListPlace(query).then(place => this.setState({ place }));
+    if (this.props.error) return;
 
     pageview({
       title: "Event list",
@@ -84,24 +69,8 @@ class Events extends React.PureComponent {
     });
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.query !== this.props.query) {
-      const { query: nextQuery } = nextProps;
-      const { query } = this.props;
-
-      if (query.placeSlug !== nextQuery.placeSlug) {
-        this.setState({ loading: true });
-
-        this.getEventListPlace(nextQuery).then(place =>
-          this.setState({ place })
-        );
-      }
-    }
-  }
-
   render() {
     const { query, path, error } = this.props;
-    const { place, loading } = this.state;
 
     if (error) {
       return (
@@ -118,30 +87,34 @@ class Events extends React.PureComponent {
     }
 
     return (
-      <EventsProvider
-        position={query.position}
-        getEventList={this.props.getEventList}
-      >
-        {({ events, loading }) => (
-          <>
-            <EventListMetaHeaders
-              events={events}
-              path={path}
-              place={place}
-              query={query}
-            />
+      <PlaceProvider placeSlug={query.placeSlug} getPlace={this.props.getPlace}>
+        {place => (
+          <EventsProvider
+            position={query.position}
+            getEventList={this.props.getEventList}
+          >
+            {({ events, loading }) => (
+              <>
+                <EventListMetaHeaders
+                  events={events}
+                  path={path}
+                  place={place}
+                  query={query}
+                />
 
-            <EventList
-              place={place}
-              data={events}
-              loading={loading}
-              onSelectEvent={this.handleEventSelection}
-            />
+                <EventList
+                  place={place}
+                  data={events}
+                  loading={loading}
+                  onSelectEvent={this.handleEventSelection}
+                />
 
-            <JSONLD data={getEventListStructuredData(events)} />
-          </>
+                <JSONLD data={getEventListStructuredData(events)} />
+              </>
+            )}
+          </EventsProvider>
         )}
-      </EventsProvider>
+      </PlaceProvider>
     );
   }
 
@@ -177,23 +150,6 @@ class Events extends React.PureComponent {
       value: selectedEvent.keyword
     });
   }
-
-  async getEventListPlace({ placeSlug } = {}) {
-    let place = this.props.placeMap[placeSlug];
-
-    if (!place) {
-      place = await this.props.getPlace({ placeSlug });
-      this.props.dispatch(addPlace(place));
-    }
-
-    return place;
-  }
 }
 
-function mapStateToProps(state) {
-  return {
-    placeMap: state.placeMap
-  };
-}
-
-export default connect(mapStateToProps)(Events);
+export default Events;
