@@ -59,9 +59,8 @@ class EventPage extends React.PureComponent {
       this.getEvent({ keyword, edition });
     }
 
-    if (event) {
-      this.getEventPlace(event);
-    }
+    if (event)
+      this.getEventPlace(event).then(place => this.setState({ place }));
 
     pageview({
       title: "Event details",
@@ -132,7 +131,7 @@ class EventPage extends React.PureComponent {
       this.props.dispatch(addPlace(place));
     }
 
-    this.setState({ place });
+    return place;
   }
 }
 
