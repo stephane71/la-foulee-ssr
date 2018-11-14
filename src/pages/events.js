@@ -1,6 +1,7 @@
 import React from "react";
 import Router from "next/router";
 import moment from "moment";
+import { connect } from "react-redux";
 
 import CustomError from "./_error";
 
@@ -152,4 +153,4 @@ class Events extends React.PureComponent {
   }
 }
 
-export default Events;
+export default connect()(Events);
