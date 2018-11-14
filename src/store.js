@@ -11,20 +11,9 @@ import {
   SET_GOOGLE_MAPS_SERVICE,
   SET_MEDIA_TYPE,
   TOGGLE_SEARCH,
-  ADD_PLACE
+  ADD_PLACE,
+  SET_POSITION
 } from "./actions";
-
-function getNextMonth(month) {
-  let [monthNumber, year] = month.split("-");
-  monthNumber = parseInt(monthNumber) + 1;
-  if (monthNumber > 11) {
-    monthNumber = 0;
-    year = parseInt(year) + 1;
-  }
-  return `${monthNumber}-${year}`;
-}
-
-const EVENT_LIST_START_INDEX = 0;
 
 const initialState = {
   event: null,
@@ -36,7 +25,8 @@ const initialState = {
   },
   media: null,
   searching: false,
-  placeMap: {}
+  placeMap: {},
+  position: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -69,6 +59,8 @@ const reducer = (state = initialState, action) => {
         ...state,
         placeMap: { ...state.placeMap, [place.slug]: place }
       };
+    case SET_POSITION:
+      return { ...state, position: action.position };
 
     default:
       return state;
