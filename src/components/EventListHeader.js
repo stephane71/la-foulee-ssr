@@ -41,15 +41,12 @@ class EventListHeader extends React.PureComponent {
 
     if (!city) return null;
 
-    const description = query.depCode
-      ? "dans ce département"
-      : `autour de ${city.name}`;
+    const description = query.depCode ? "dans le département" : `autour de`;
 
     return (
       <div className={`EventListHeader`}>
-        <h1 className={"EventListHeader-Title"}>{city.name}</h1>
         <div>{`${nbItems} événements ${description}`}</div>
-
+        <h1 className={"EventListHeader-Title"}>{city.name}</h1>
         <style jsx>{style}</style>
       </div>
     );
