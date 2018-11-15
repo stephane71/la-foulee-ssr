@@ -13,12 +13,14 @@ class EventsProvider extends React.PureComponent {
   componentDidMount() {
     const { depCode, position, storedPosition, storedDepCode } = this.props;
 
+    console.log({ depCode, position, storedPosition, storedDepCode });
+
     if (position && position !== storedPosition) {
-      this.updateFromPosition(position);
+      this.fetchEvents(API_EVENT_LIST_AROUND, position);
     }
 
     if (depCode && depCode !== storedDepCode) {
-      this.updateFromDepCode(depCode);
+      this.fetchEvents(API_EVENT_LIST_DEPARTMENT, depCode);
     }
   }
 
@@ -26,7 +28,7 @@ class EventsProvider extends React.PureComponent {
     const { position } = nextProps;
 
     if (position !== this.props.position) {
-      this.updateFromPosition(position);
+      this.fetchEvents(API_EVENT_LIST_AROUND, position);
     }
   }
 
@@ -35,26 +37,19 @@ class EventsProvider extends React.PureComponent {
     return this.props.children({ events, loading });
   }
 
-  updateFromPosition(position) {
-    this.setState({ loading: true });
-    this.fetchEvents(API_EVENT_LIST_AROUND, position).then(events => {
-      this.setState({ events, loading: false });
-      this.props.dispatch(setPosition(position));
-    });
-  }
-
-  updateFromDepCode(depCode) {
-    this.setState({ loading: true });
-    this.fetchEvents(API_EVENT_LIST_DEPARTMENT, depCode).then(events => {
-      this.setState({ events, loading: false });
-      this.props.dispatch(setDepCode(depCode));
-    });
-  }
-
   async fetchEvents(type, value) {
+    this.setState({ loading: true });
+
     let res = await this.props.getEventList(type, value);
     this.props.dispatch(setEventList(res.events));
-    return res.events;
+    this.setState({ events: res.events, loading: false });
+
+    this.props.dispatch(
+      setDepCode(type === API_EVENT_LIST_DEPARTMENT ? value : null)
+    );
+    this.props.dispatch(
+      setPosition(type === API_EVENT_LIST_AROUND ? value : null)
+    );
   }
 }
 
