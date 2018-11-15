@@ -13,8 +13,6 @@ class EventsProvider extends React.Component {
   componentDidMount() {
     const { depCode, position, storedPosition, storedDepCode } = this.props;
 
-    console.log({ depCode, position, storedPosition, storedDepCode });
-
     if (position && position !== storedPosition) {
       this.fetchEvents(API_EVENT_LIST_AROUND, position);
     }
@@ -33,10 +31,9 @@ class EventsProvider extends React.Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.position === nextProps.storedPosition) return false;
-    if (nextProps.depCode === nextProps.storedDepCode) return false;
+    if (this.state.loading !== nextState.loading) return true;
 
-    return true;
+    return false;
   }
 
   render() {
