@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { setEventList, setPosition, setDepCode } from "../actions";
 import { API_EVENT_LIST_AROUND, API_EVENT_LIST_DEPARTMENT } from "../api";
 
-class EventsProvider extends React.PureComponent {
+class EventsProvider extends React.Component {
   state = {
     events: this.props.events || [],
     loading: false
@@ -30,6 +30,13 @@ class EventsProvider extends React.PureComponent {
     if (position !== this.props.position) {
       this.fetchEvents(API_EVENT_LIST_AROUND, position);
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.position === nextProps.storedPosition) return false;
+    if (nextProps.depCode === nextProps.storedDepCode) return false;
+
+    return true;
   }
 
   render() {
