@@ -1,7 +1,7 @@
 const slug = require("slug");
 const apigClientFactory = require("aws-api-gateway-client").default;
 
-const { API_EVENT_LIST_PLACE, getEventListArgs } = require("../api");
+const { getPlaceArgs } = require("../api");
 
 const apiClient = apigClientFactory.newClient({
   invokeUrl: `${process.env.API_URL}/events`,
@@ -11,6 +11,6 @@ const apiClient = apigClientFactory.newClient({
 });
 
 module.exports = async function({ department, city }) {
-  const args = getEventListArgs(API_EVENT_LIST_PLACE, { department, city });
+  const args = getPlaceArgs({ department, city });
   return apiClient.invokeApi(...args).then(res => res.data);
 };

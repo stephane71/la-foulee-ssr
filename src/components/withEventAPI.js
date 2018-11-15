@@ -5,11 +5,11 @@ import slug from "slug";
 import {
   getEventArgs,
   getEventListArgs,
+  getPlaceArgs,
   postNewsletterEmailArgs,
   postEventContributionArgs,
   API_EVENT_LIST_AROUND,
-  API_EVENT_LIST_DEPARTMENT,
-  API_EVENT_LIST_PLACE
+  API_EVENT_LIST_DEPARTMENT
 } from "../api";
 
 const { publicRuntimeConfig } = getConfig();
@@ -89,7 +89,10 @@ const withEventAPI = WrappedComponent => {
           break;
         case EVENTS_API_PATH:
           const { type, ...restParams } = params;
-          args = getEventListArgs(type, restParams);
+          args =
+            type === "PLACE"
+              ? getPlaceArgs(restParams)
+              : getEventListArgs(type, restParams);
           break;
         case NEWSLETTER_API_PATH:
           args = postNewsletterEmailArgs(params);
@@ -114,7 +117,7 @@ const withEventAPI = WrappedComponent => {
       const placeSlugSplit = placeSlug.split("_");
 
       return this.invoke(EVENTS_API_PATH, {
-        type: API_EVENT_LIST_PLACE,
+        type: "PLACE",
         department: placeSlugSplit[0],
         city: placeSlugSplit[1]
       });
