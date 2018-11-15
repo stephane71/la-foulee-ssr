@@ -12,7 +12,8 @@ import {
   SET_MEDIA_TYPE,
   TOGGLE_SEARCH,
   ADD_PLACE,
-  SET_POSITION
+  SET_POSITION,
+  SET_DEPCODE
 } from "./actions";
 
 const initialState = {
@@ -26,7 +27,8 @@ const initialState = {
   media: null,
   searching: false,
   placeMap: {},
-  position: null
+  position: null,
+  depCode: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -61,6 +63,8 @@ const reducer = (state = initialState, action) => {
       };
     case SET_POSITION:
       return { ...state, position: action.position };
+    case SET_DEPCODE:
+      return { ...state, depCode: action.depCode };
 
     default:
       return state;

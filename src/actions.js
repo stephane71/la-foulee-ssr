@@ -5,6 +5,7 @@ export const SET_MEDIA_TYPE = "SET_MEDIA_TYPE";
 export const TOGGLE_SEARCH = "TOGGLE_SEARCH";
 export const ADD_PLACE = "ADD_PLACE";
 export const SET_POSITION = "SET_POSITION";
+export const SET_DEPCODE = "SET_DEPCODE";
 
 export function setSelectedEvent(event) {
   return {
@@ -53,5 +54,12 @@ export function setPosition(position) {
   return {
     type: SET_POSITION,
     position
+  };
+}
+
+export function setDepCode(depCode) {
+  return {
+    type: SET_DEPCODE,
+    depCode
   };
 }
