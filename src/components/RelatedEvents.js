@@ -3,7 +3,7 @@ import css from "styled-jsx/css";
 
 import RelatedEventsCard from "./RelatedEventsCard";
 
-import getGeohash from "../utils/geohash";
+import getPlaceSlug from "../utils/getPlaceSlug";
 
 const style = css`
   .RelatedEvents {
@@ -16,17 +16,11 @@ const style = css`
 
 class RelatedEvents extends React.PureComponent {
   render() {
-    const { event, place, desktop } = this.props;
+    const { event, desktop } = this.props;
 
-    let position = null;
-    let placeSlug = null;
-    let [depSlug, citySlug] = [];
-
-    if (place) {
-      position = getGeohash(place.location);
-      placeSlug = place.slug;
-      [depSlug, citySlug] = placeSlug.split("_");
-    }
+    let position = event.geohash || null;
+    let placeSlug = getPlaceSlug(event);
+    let [depSlug, citySlug] = placeSlug.split("_");
 
     return (
       <div className={`RelatedEvents`}>
