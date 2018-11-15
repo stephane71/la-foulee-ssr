@@ -19,24 +19,14 @@ class RelatedEvents extends React.PureComponent {
     const { event, place, desktop } = this.props;
 
     let position = null;
-    let slugPlace = null;
-    let [department, city] = [];
+    let placeSlug = null;
+    let [depSlug, citySlug] = [];
 
     if (place) {
       position = getGeohash(place.location);
-      slugPlace = place.slug;
-      [department, city] = slugPlace.split("_");
+      placeSlug = place.slug;
+      [depSlug, citySlug] = placeSlug.split("_");
     }
-
-    // <RelatedEventsCard
-    //   query={{
-    //     depCode: event.depCode,
-    //     place: department && department.place_id
-    //   }}
-    //   as={`/events/department/${event.depCode}`}
-    //   title={event.department.name}
-    //   desktop={desktop}
-    // />
 
     return (
       <div className={`RelatedEvents`}>
@@ -45,9 +35,16 @@ class RelatedEvents extends React.PureComponent {
         </div>
 
         <RelatedEventsCard
-          query={{ position, place: slugPlace }}
-          as={`/events/${department}/${city}`}
+          query={{ position, placeSlug }}
+          as={`/events/${depSlug}/${citySlug}`}
           title={event.city}
+          desktop={desktop}
+        />
+
+        <RelatedEventsCard
+          query={{ depCode: event.depCode, placeSlug: depSlug }}
+          as={`/events/${depSlug}`}
+          title={event.department.name}
           desktop={desktop}
         />
 
