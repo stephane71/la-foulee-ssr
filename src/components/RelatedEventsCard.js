@@ -56,12 +56,8 @@ const RelatedEventsCard = ({ query, as, image, title, desktop }) => (
     <a className={"RelatedEvents-CardLinkWrapper"}>
       <div className={"RelatedEvents-Card"}>
         <div className={"RelatedEvents-CardBody"}>
-          <h6>
-            <span className={""}>
-              {query.depCode ? "Département " : "Autour de "}
-            </span>
-            {title}
-          </h6>
+          <div>{query.depCode ? "Dans le département " : "Autour de"}</div>
+          <h6>{title}</h6>
           <span>{`À partir du ${moment().format(
             desktop ? DATE_FORMAT_DESKTOP : DATE_FORMAT_MOBILE
           )}`}</span>
