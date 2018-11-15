@@ -91,6 +91,7 @@ class Events extends React.PureComponent {
       <PlaceProvider placeSlug={query.placeSlug} getPlace={this.props.getPlace}>
         {place => (
           <EventsProvider
+            depCode={query.depCode}
             position={query.position}
             getEventList={this.props.getEventList}
           >

@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { setEventList, setPosition } from "../actions";
-import { API_EVENT_LIST_AROUND } from "../api";
+import { setEventList, setPosition, setDepCode } from "../actions";
+import { API_EVENT_LIST_AROUND, API_EVENT_LIST_DEPARTMENT } from "../api";
 
 class EventsProvider extends React.PureComponent {
   state = {
@@ -11,10 +11,14 @@ class EventsProvider extends React.PureComponent {
   };
 
   componentDidMount() {
-    const { position, storedPosition } = this.props;
+    const { depCode, position, storedPosition, storedDepCode } = this.props;
 
-    if (position !== storedPosition) {
+    if (position && position !== storedPosition) {
       this.updateFromPosition(position);
+    }
+
+    if (depCode && depCode !== storedDepCode) {
+      this.updateFromDepCode(depCode);
     }
   }
 
@@ -39,6 +43,14 @@ class EventsProvider extends React.PureComponent {
     });
   }
 
+  updateFromDepCode(depCode) {
+    this.setState({ loading: true });
+    this.fetchEvents(API_EVENT_LIST_DEPARTMENT, depCode).then(events => {
+      this.setState({ events, loading: false });
+      this.props.dispatch(setDepCode(depCode));
+    });
+  }
+
   async fetchEvents(type, value) {
     let res = await this.props.getEventList(type, value);
     this.props.dispatch(setEventList(res.events));
@@ -49,7 +61,8 @@ class EventsProvider extends React.PureComponent {
 function mapStateToProps(state) {
   return {
     events: state.events,
-    storedPosition: state.position
+    storedPosition: state.position,
+    storedDepCode: state.depCode
   };
 }
 
