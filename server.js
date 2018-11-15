@@ -109,8 +109,6 @@ const eventHandler = async function(req, res) {
 server.get("/event/:keyword/:edition", eventHandler);
 server.get("/event/:keyword", eventHandler);
 
-const EVENT_LIST_QUERY = { position: null, depCode: null };
-
 const eventListHandler = async function(req, res) {
   const { department, city } = req.params;
   let events = [];
@@ -118,17 +116,23 @@ const eventListHandler = async function(req, res) {
   let position = null;
 
   now();
-  console.log("[La Foulee] - req for event list", department, city);
+  console.log(
+    "[La Foulee] - req for event list: department = ",
+    department,
+    " city = ",
+    city
+  );
 
   if (!department) {
     res.statusCode = 404;
   } else {
     try {
       place = await getPlace({ department, city });
-      position = getGeohash(place);
+      if (city) position = getGeohash(place);
+
       events = city
         ? await getEventListAround(position)
-        : await getEventListDepartment(code);
+        : await getEventListDepartment(department);
     } catch (e) {
       if (e.response && e.response.status === 404) {
         console.log(
