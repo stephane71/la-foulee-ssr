@@ -69,38 +69,31 @@ class EventPage extends React.PureComponent {
 
   render() {
     const { error } = this.state;
-    const { query, path, event, media } = this.props;
+    const { query, path, event, media, getPlace } = this.props;
 
     if (error) return <CustomError code={error.code} />;
 
     if (!event) return <Loader />;
 
     return (
-      <PlaceProvider
-        placeSlug={getPlaceSlug(event)}
-        getPlace={this.props.getPlace}
-      >
-        {place => (
-          <>
-            <EventMetaHeaders event={event} path={path} query={query} />
+      <>
+        <EventMetaHeaders event={event} path={path} query={query} />
 
-            <EventDetails
-              event={event}
-              place={place}
-              desktop={media === DESKTOP}
-              media={media}
-              onSubmitContribution={this.handleSubmitContribution}
-            />
+        <PlaceProvider placeSlug={getPlaceSlug(event)} getPlace={getPlace} />
 
-            <JSONLD
-              data={getEventStructuredData(event, {
-                description: getEventDescription(event),
-                path
-              })}
-            />
-          </>
-        )}
-      </PlaceProvider>
+        <EventDetails
+          event={event}
+          media={media}
+          onSubmitContribution={this.handleSubmitContribution}
+        />
+
+        <JSONLD
+          data={getEventStructuredData(event, {
+            description: getEventDescription(event),
+            path
+          })}
+        />
+      </>
     );
   }
 

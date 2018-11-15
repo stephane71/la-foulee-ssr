@@ -23,8 +23,13 @@ class PlaceProvider extends React.PureComponent {
   }
 
   render() {
+    const { children } = this.props;
     const { place } = this.state;
-    return this.props.children(place);
+
+    return typeof children !== "function" ||
+      React.Children.count(children) === 0
+      ? null
+      : children(place);
   }
 
   async fetchPlace(placeSlug = null) {
