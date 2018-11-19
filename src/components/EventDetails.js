@@ -12,6 +12,8 @@ import {
   EVENT_DETAILS_MOBILE_MAX_WIDTH
 } from "../enums";
 
+import RelatedEvents from "./RelatedEvents";
+
 const EventDetailsMobile = dynamic(import("../components/EventDetailsMobile"), {
   loading: () => null
 });
@@ -21,9 +23,6 @@ const EventDetailsDesktop = dynamic(
     loading: () => null
   }
 );
-const RelatedEvents = dynamic(import("../components/RelatedEvents"), {
-  loading: () => null
-});
 
 function handleClickOrgaLink(href = "") {
   event({
@@ -56,13 +55,7 @@ const style = css`
   }
 `;
 
-const EventDetails = ({
-  event,
-  place,
-  desktop,
-  media,
-  onSubmitContribution
-}) => (
+const EventDetails = ({ event, media, onSubmitContribution }) => (
   <div className={`EventPage`}>
     {media === DESKTOP && (
       <EventDetailsDesktop
@@ -80,11 +73,9 @@ const EventDetails = ({
       />
     )}
 
-    {media && (
-      <section className={`EventPage-RelatedEvents`}>
-        <RelatedEvents event={event} place={place} desktop={desktop} />
-      </section>
-    )}
+    <section className={`EventPage-RelatedEvents ${media ? "" : "hidden"}`}>
+      <RelatedEvents event={event} desktop={media === DESKTOP} />
+    </section>
 
     <style jsx>{style}</style>
   </div>

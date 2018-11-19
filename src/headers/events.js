@@ -2,8 +2,6 @@ import getConfig from "next/config";
 import Head from "next/head";
 import moment from "moment";
 
-import { SelectedPlaceContext } from "../components/Layout";
-
 const { publicRuntimeConfig } = getConfig();
 const APP_URL = publicRuntimeConfig.APP_URL;
 const ASSETS_URL = publicRuntimeConfig.ASSETS_URL;
@@ -68,10 +66,4 @@ const EventListMetaHeaders = ({ events, place, path, query }) => {
   );
 };
 
-export default props => (
-  <SelectedPlaceContext.Consumer>
-    {placeContext => (
-      <EventListMetaHeaders {...props} place={placeContext || props.place} />
-    )}
-  </SelectedPlaceContext.Consumer>
-);
+export default EventListMetaHeaders;

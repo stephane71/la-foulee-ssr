@@ -3,10 +3,7 @@ import css from "styled-jsx/css";
 
 import RelatedEventsCard from "./RelatedEventsCard";
 
-import getGeohash from "../utils/geohash";
-import getGMPhotoURL from "../utils/getGMPhotoURL";
-
-import { addDep } from "../actions";
+import getPlaceSlug from "../utils/getPlaceSlug";
 
 const style = css`
   .RelatedEvents {
@@ -19,21 +16,11 @@ const style = css`
 
 class RelatedEvents extends React.PureComponent {
   render() {
-    const { event, place, desktop } = this.props;
+    const { event, desktop } = this.props;
 
-    const position = place ? getGeohash(place.location) : null;
-    const slugPlace = place ? place.slug : null;
-
-    // <RelatedEventsCard
-    //   query={{
-    //     depCode: event.depCode,
-    //     place: department && department.place_id
-    //   }}
-    //   as={`/events/department/${event.depCode}`}
-    //   title={event.department.name}
-    //   image={department && getGMPhotoURL(department)}
-    //   desktop={desktop}
-    // />
+    let position = event.geohash || null;
+    let placeSlug = getPlaceSlug(event);
+    let [depSlug, citySlug] = placeSlug.split("_");
 
     return (
       <div className={`RelatedEvents`}>
@@ -42,10 +29,16 @@ class RelatedEvents extends React.PureComponent {
         </div>
 
         <RelatedEventsCard
-          query={{ position, place: slugPlace }}
-          as={`/events/${slug(event.city, { lower: true })}`}
+          query={{ position, placeSlug }}
+          as={`/events/${depSlug}/${citySlug}`}
           title={event.city}
-          image={place && getGMPhotoURL(place)}
+          desktop={desktop}
+        />
+
+        <RelatedEventsCard
+          query={{ depCode: event.depCode, placeSlug: depSlug }}
+          as={`/events/${depSlug}`}
+          title={event.department.name}
           desktop={desktop}
         />
 

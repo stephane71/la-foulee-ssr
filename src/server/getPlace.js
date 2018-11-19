@@ -1,53 +1,16 @@
 const slug = require("slug");
-const uuidv4 = require("uuid/v4");
+const apigClientFactory = require("aws-api-gateway-client").default;
 
-const getGMapsPredicitons = require("./getGMapsPredicitons");
-const getGMapsCityDetails = require("./getGMapsCityDetails");
+const { getPlaceArgs } = require("../api");
 
-const MAX_WIDTH_CITY_PHOTO = 800;
-const MAX_HEIGHT_CITY_PHOTO = 400;
+const apiClient = apigClientFactory.newClient({
+  invokeUrl: `${process.env.API_URL}/events`,
+  region: process.env.API_REGION,
+  accessKey: process.env.DB_AK,
+  secretKey: process.env.DB_SAK
+});
 
-const NO_PLACE_FOUND = null;
-
-module.exports = async function(type, value) {
-  const sessionToken = uuidv4();
-
-  let predictions = await getGMapsPredicitons(type, value, sessionToken);
-  if (!predictions.length) {
-    console.log(
-      `[La Foulee] getPlace: no predicitions for type: ${type} - value: ${value}`
-    );
-    return NO_PLACE_FOUND;
-  }
-
-  const slugValue = slug(value, { lower: true });
-
-  predictions = predictions.filter(
-    ({ terms }) => slug(terms[0].value, { lower: true }) === slugValue
-  );
-  if (!predictions.length) {
-    console.log(
-      `[La Foulee] getPlace: no predicitons match place arg: ${value}`
-    );
-    return NO_PLACE_FOUND;
-  }
-
-  const place = await getGMapsCityDetails(
-    predictions[0],
-    {
-      maxWidth: MAX_WIDTH_CITY_PHOTO,
-      maxHeight: MAX_HEIGHT_CITY_PHOTO
-    },
-    sessionToken
-  );
-  if (!place) {
-    console.log(
-      `[La Foulee] getPlace: no city details found for ${
-        predictions[0].place_id
-      }`
-    );
-    return NO_PLACE_FOUND;
-  }
-
-  return place;
+module.exports = async function({ department, city }) {
+  const args = getPlaceArgs({ department, city });
+  return apiClient.invokeApi(...args).then(res => res.data);
 };

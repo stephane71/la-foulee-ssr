@@ -28,8 +28,5 @@ export const TWITTER_SHARE = "TWITTER_SHARE";
 export const WHATSAPP = "WHATSAPP";
 export const MAILTO = "MAILTO";
 
-export const MAX_WIDTH_CITY_PHOTO = 800;
-export const MAX_HEIGHT_CITY_PHOTO = 400;
-
 export const EVENT_DETAILS_MOBILE_MIN_WIDTH = 320;
 export const EVENT_DETAILS_MOBILE_MAX_WIDTH = 450;

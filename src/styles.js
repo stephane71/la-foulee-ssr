@@ -39,6 +39,16 @@ export default css.global`
 		-webkit-font-smoothing: antialiased;
   }
 
+  .SearchPlaceItem > em {
+    font-weight: bold;
+    font-style: normal;
+  }
+
+  .SearchPlaceItem > span {
+    font-size: ${getFontSize("s")}px;
+    color: ${getColor("darkGrey", "tonic")};
+  }
+
   body {
     overflow-y: scroll;
     background: ${APP_BACKGROUND_COLOR};

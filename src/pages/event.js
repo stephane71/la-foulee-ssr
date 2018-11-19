@@ -5,6 +5,8 @@ import { connect } from "react-redux";
 import CustomError from "./_error";
 
 import EventMetaHeaders from "../headers/event";
+
+import PlaceProvider from "../components/PlaceProvider";
 import EventDetails from "../components/EventDetails";
 import Loader from "../components/Loader";
 import JSONLD from "../components/JSONLD";
@@ -38,7 +40,6 @@ class EventPage extends React.PureComponent {
     super(props);
 
     this.state = {
-      place: null,
       error: props.error || null
     };
 
@@ -56,11 +57,7 @@ class EventPage extends React.PureComponent {
       if (!keyword) {
         [, , keyword, edition] = path.split("/");
       }
-      this.fetchEvent({ keyword, edition });
-    }
-
-    if (event) {
-      this.getEventPlace(event);
+      this.getEvent({ keyword, edition });
     }
 
     pageview({
@@ -71,8 +68,8 @@ class EventPage extends React.PureComponent {
   }
 
   render() {
-    const { error, place } = this.state;
-    const { query, path, event, media } = this.props;
+    const { error } = this.state;
+    const { query, path, event, media, getPlace } = this.props;
 
     if (error) return <CustomError code={error.code} />;
 
@@ -82,10 +79,10 @@ class EventPage extends React.PureComponent {
       <>
         <EventMetaHeaders event={event} path={path} query={query} />
 
+        <PlaceProvider placeSlug={getPlaceSlug(event)} getPlace={getPlace} />
+
         <EventDetails
           event={event}
-          place={place}
-          desktop={media === DESKTOP}
           media={media}
           onSubmitContribution={this.handleSubmitContribution}
         />
@@ -109,7 +106,7 @@ class EventPage extends React.PureComponent {
     );
   }
 
-  async fetchEvent({ keyword, edition }) {
+  async getEvent({ keyword, edition }) {
     try {
       let res = await this.props.getEvent({
         keyword,
@@ -120,25 +117,12 @@ class EventPage extends React.PureComponent {
       this.setState({ error: { code: 404 } });
     }
   }
-
-  async getEventPlace(event) {
-    if (!event.department || !event.department.name) return;
-
-    let place = this.props.placeMap[getPlaceSlug(event)];
-    if (!place) {
-      place = await this.props.getPlace(event);
-      this.props.dispatch(addPlace(place));
-    }
-
-    this.setState({ place });
-  }
 }
 
 function mapStateToProps(state) {
   return {
     event: state.event,
-    media: state.media,
-    placeMap: state.placeMap
+    media: state.media
   };
 }
 

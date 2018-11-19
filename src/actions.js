@@ -3,10 +3,9 @@ export const SET_EVENT_LIST = "SET_EVENT_LIST";
 export const SET_GOOGLE_MAPS_SERVICE = "SET_GOOGLE_MAPS_SERVICE";
 export const SET_MEDIA_TYPE = "SET_MEDIA_TYPE";
 export const TOGGLE_SEARCH = "TOGGLE_SEARCH";
-export const SET_SEARCHING_GEOHASH = "SET_SEARCHING_GEOHASH";
 export const ADD_PLACE = "ADD_PLACE";
-export const SET_EVENTS_QUERY = "SET_EVENTS_QUERY";
-export const ADD_DEP = "ADD_DEP";
+export const SET_POSITION = "SET_POSITION";
+export const SET_DEPCODE = "SET_DEPCODE";
 
 export function setSelectedEvent(event) {
   return {
@@ -44,13 +43,6 @@ export function toggleSearch(toggle) {
   };
 }
 
-export function setSearchingGeohash(searching) {
-  return {
-    type: SET_SEARCHING_GEOHASH,
-    searching
-  };
-}
-
 export function addPlace(place) {
   return {
     type: ADD_PLACE,
@@ -58,17 +50,16 @@ export function addPlace(place) {
   };
 }
 
-export function setEventsQuery(query) {
+export function setPosition(position) {
   return {
-    type: SET_EVENTS_QUERY,
-    query
+    type: SET_POSITION,
+    position
   };
 }
 
-export function addDep(depCode, place_id) {
+export function setDepCode(depCode) {
   return {
-    type: ADD_DEP,
-    depCode,
-    place_id
+    type: SET_DEPCODE,
+    depCode
   };
 }

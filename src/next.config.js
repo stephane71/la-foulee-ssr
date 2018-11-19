@@ -44,7 +44,9 @@ module.exports = (phase, { defaultConfig }) => {
       GOOGLE_PLACES_API_KEY: process.env.GOOGLE_PLACES_API_KEY,
       GA_TRACKING_ID: process.env.GA_TRACKING_ID,
       GIPHY_KEY: process.env.GIPHY_KEY,
-      FB_APP_ID: process.env.FB_APP_ID
+      FB_APP_ID: process.env.FB_APP_ID,
+      ALGOLIA_APPLICATION_ID: process.env.ALGOLIA_APPLICATION_ID,
+      ALGOLIA_API_KEY: process.env.ALGOLIA_API_KEY
     },
 
     generateBuildId: async () => {

@@ -11,23 +11,10 @@ import {
   SET_GOOGLE_MAPS_SERVICE,
   SET_MEDIA_TYPE,
   TOGGLE_SEARCH,
-  SET_SEARCHING_GEOHASH,
   ADD_PLACE,
-  SET_EVENTS_QUERY,
-  ADD_DEP
+  SET_POSITION,
+  SET_DEPCODE
 } from "./actions";
-
-function getNextMonth(month) {
-  let [monthNumber, year] = month.split("-");
-  monthNumber = parseInt(monthNumber) + 1;
-  if (monthNumber > 11) {
-    monthNumber = 0;
-    year = parseInt(year) + 1;
-  }
-  return `${monthNumber}-${year}`;
-}
-
-const EVENT_LIST_START_INDEX = 0;
 
 const initialState = {
   event: null,
@@ -39,10 +26,9 @@ const initialState = {
   },
   media: null,
   searching: false,
-  searchingGeohash: false,
   placeMap: {},
-  depMap: {},
-  eventsQuery: {}
+  position: null,
+  depCode: null
 };
 
 const reducer = (state = initialState, action) => {
@@ -68,8 +54,6 @@ const reducer = (state = initialState, action) => {
         searching:
           action.toggle === undefined ? !state.searching : action.toggle
       };
-    case SET_SEARCHING_GEOHASH:
-      return { ...state, searchingGeohash: action.searching };
     case ADD_PLACE:
       const place = action.place;
       if (!place || !place.slug) return state;
@@ -77,13 +61,10 @@ const reducer = (state = initialState, action) => {
         ...state,
         placeMap: { ...state.placeMap, [place.slug]: place }
       };
-    case ADD_DEP:
-      return {
-        ...state,
-        depMap: { ...state.depMap, [action.depCode]: action.place_id }
-      };
-    case SET_EVENTS_QUERY:
-      return { ...state, eventsQuery: action.query };
+    case SET_POSITION:
+      return { ...state, position: action.position };
+    case SET_DEPCODE:
+      return { ...state, depCode: action.depCode };
 
     default:
       return state;

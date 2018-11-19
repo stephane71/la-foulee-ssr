@@ -5,6 +5,7 @@
   "main": "handler.js",
   "dependencies": {
     "@google/maps": "^0.5.5",
+    "algoliasearch": "^3.30.0",
     "aws-api-gateway-client": "^0.2.16",
     "aws-sdk": "^2.319.0",
     "babel-plugin-inline-react-svg": "^0.5.4",
