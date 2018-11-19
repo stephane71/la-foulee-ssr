@@ -11,7 +11,6 @@ const style = css`
     padding: ${getSpacing("m")}px ${getSpacing("s")}px;
     border-radius: ${BORDER_RADIUS_LIST_ITEM}px;
     color: ${white};
-    text-shadow: black 1px 0 10px;
     background-color: ${dominant};
     position: relative;
     z-index: 1;
@@ -24,13 +23,13 @@ const style = css`
     position: absolute;
     bottom: 0;
     left: 0;
-    background-image: linear-gradient(0deg, #000000 0%, rgba(0, 0, 0, 0) 69%);
     border-radius: ${BORDER_RADIUS_LIST_ITEM}px;
     z-index: -1;
   }
 
   .EventListHeader-Title {
-    margin: ${getSpacing("s")}px 0;
+    margin: 0;
+    margin-bottom: ${getSpacing("s")}px;
   }
 `;
 
@@ -41,12 +40,10 @@ class EventListHeader extends React.PureComponent {
 
     if (!city) return null;
 
-    const description = query.depCode ? "dans le département" : `autour de`;
-
     return (
       <div className={`EventListHeader`}>
-        <div>{`${nbItems} événements ${description}`}</div>
         <h1 className={"EventListHeader-Title"}>{city.name}</h1>
+        <div>{`${nbItems} événements`}</div>
         <style jsx>{style}</style>
       </div>
     );
