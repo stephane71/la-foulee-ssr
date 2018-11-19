@@ -20,7 +20,7 @@ const {
 } = require("./src/server/getEvents");
 const getGeohash = require("./src/server/getGeohash");
 const getEvent = require("./src/server/getEvent");
-const DEPARTMENTS = require("./src/server/departments");
+const getDepartmentCode = require("./src/server/getDepartmentCode");
 
 const port = process.env.PORT || 3000;
 const dev = process.env.NODE_ENV !== "production";
@@ -114,6 +114,7 @@ const eventListHandler = async function(req, res) {
   let events = [];
   let place = null;
   let position = null;
+  let depCode = null;
 
   now();
   console.log(
@@ -123,7 +124,9 @@ const eventListHandler = async function(req, res) {
     city
   );
 
-  if (!department) {
+  depCode = getDepartmentCode(department);
+
+  if (!department || !depCode) {
     res.statusCode = 404;
   } else {
     try {
@@ -132,7 +135,7 @@ const eventListHandler = async function(req, res) {
 
       events = city
         ? await getEventListAround(position)
-        : await getEventListDepartment(department);
+        : await getEventListDepartment(depCode);
     } catch (e) {
       if (e.response && e.response.status === 404) {
         console.log(
@@ -149,7 +152,13 @@ const eventListHandler = async function(req, res) {
     }
   }
 
-  app.render(req, res, "/events", { ...req.query, position, place, events });
+  app.render(req, res, "/events", {
+    ...req.query,
+    depCode,
+    position,
+    place,
+    events
+  });
 };
 
 server.get("/events/:department", eventListHandler);

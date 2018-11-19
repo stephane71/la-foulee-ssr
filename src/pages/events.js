@@ -21,7 +21,8 @@ import {
   setEventList,
   toggleSearch,
   addPlace,
-  setPosition
+  setPosition,
+  setDepCode
 } from "../actions";
 import { NO_EVENT_SELECTED } from "../enums";
 
@@ -33,9 +34,10 @@ class Events extends React.PureComponent {
       if (res.statusCode === 404) return { error: { code: 404 } };
       if (res.statusCode !== 200) return { error: { code: 500 } };
 
-      const { events, place, position = null } = query;
+      const { events, place, position = null, depCode = null } = query;
 
       if (place) store.dispatch(addPlace(place));
+      store.dispatch(setDepCode(depCode));
       store.dispatch(setPosition(position));
       store.dispatch(setEventList(events));
 
