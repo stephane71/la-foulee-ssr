@@ -128,6 +128,9 @@ const eventListHandler = async function(req, res) {
 
   if (!department || !depCode) {
     res.statusCode = 404;
+    console.log(
+      `[La Foulee] - Error - Client: Unknown department (from department list)`
+    );
   } else {
     try {
       place = await getPlace({ department, city });

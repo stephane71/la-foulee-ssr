@@ -42,7 +42,7 @@
  {"id":42, "regions_id":4, "code":"41", "name":"Loir-et-Cher", "slug":"loir-et-cher", "iso_code":"FR-41"},
  {"id":43, "regions_id":1, "code":"42", "name":"Loire", "slug":"loire", "iso_code":"FR-42"},
  {"id":44, "regions_id":1, "code":"43", "name":"Haute-Loire", "slug":"haute-loire", "iso_code":"FR-43"},
- {"id":45, "regions_id":12, "code":"44", "name":"Loire-Atlantique", "slug":"Loire-Atlantique", "iso_code":"FR-44"},
+ {"id":45, "regions_id":12, "code":"44", "name":"Loire-Atlantique", "slug":"loire-atlantique", "iso_code":"FR-44"},
  {"id":46, "regions_id":4, "code":"45", "name":"Loiret", "slug":"loiret", "iso_code":"FR-45"},
  {"id":47, "regions_id":11, "code":"46", "name":"Lot", "slug":"lot", "iso_code":"FR-46"},
  {"id":48, "regions_id":10, "code":"47", "name":"Lot-et-Garonne", "slug":"lot-et-garonne", "iso_code":"FR-47"},
