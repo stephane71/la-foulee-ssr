@@ -1,15 +1,15 @@
 // should not be added !
 // when using babel-plugin-inline-react-svg (added for project) && babel-plugin-react-require (added from next.js)
 // read here https://github.com/kesne/babel-plugin-inline-react-svg/issues/31#issuecomment-342264348
-import React, { Fragment } from 'react';
+import React, { Fragment } from "react";
 
-import Arrow from '../svgs/arrow_right_black_24px.svg';
+import Arrow from "../svgs/arrow_right_black_24px.svg";
 
-import { getSpacing, getFontSize } from '../styles-variables';
-import { white, SECONDARY_COLOR } from '../colors';
-import { BORDER_RADIUS_LIST_ITEM } from '../enums';
+import { getSpacing, getFontSize } from "../styles-variables";
+import { white, SECONDARY_COLOR, getColor } from "../colors";
+import { BORDER_RADIUS_LIST_ITEM } from "../enums";
 
-const EVENT_ITEM_TITLE_COLOR = '#516E69';
+const EVENT_ITEM_TITLE_COLOR = "#516E69";
 
 /*
   WARNING !!
@@ -21,10 +21,10 @@ const EventShort = ({ data }) => (
   <Fragment>
     <div className={`event-data`}>
       <h6 className={`title`}>{data.title}</h6>
-      <address className={'location'}>{`${data.department &&
+      <address className={"location"}>{`${data.department &&
         data.department.code}, ${data.city}`}</address>
     </div>
-    <Arrow style={{ fill: '#A0A7BD' }} />
+    <Arrow style={{ fill: "#A0A7BD" }} />
     <style jsx>{`
       .event-data {
         max-width: calc(100% - 24px);
@@ -36,7 +36,7 @@ const EventShort = ({ data }) => (
 
       .title {
         text-transform: capitalize;
-        font-family: 'Circular-Medium';
+        font-family: "Circular-Medium";
         color: ${EVENT_ITEM_TITLE_COLOR};
         font-weight: 500;
         margin: 0;
@@ -45,7 +45,7 @@ const EventShort = ({ data }) => (
       .location {
         color: ${SECONDARY_COLOR};
         font-weight: 400;
-        font-size: ${getFontSize('s')}px;
+        font-size: ${getFontSize("s")}px;
         font-style: normal;
       }
     `}</style>
@@ -59,9 +59,9 @@ const EventListItem = ({
   withBorderRadiusBottom
 }) => (
   <article
-    rel={'bookmark'}
-    className={`EventListItem ${withBorderRadiusTop ? 'border-top' : ''} ${
-      withBorderRadiusBottom ? 'border-bottom' : ''
+    rel={"bookmark"}
+    className={`EventListItem ${withBorderRadiusTop ? "border-top" : ""} ${
+      withBorderRadiusBottom ? "border-bottom" : ""
     }`}
     onClick={() => onSelectEvent(data)}
   >
@@ -71,12 +71,17 @@ const EventListItem = ({
       .EventListItem {
         display: flex;
         justify-content: space-between;
-        padding: ${getSpacing('s')}px;
+        padding: ${getSpacing("s")}px;
         align-items: center;
         background-color: ${white};
-        margin: 0 ${getSpacing('s')}px;
+        margin: 0 ${getSpacing("s")}px;
         position: relative;
         margin-bottom: 1px;
+      }
+
+      .EventListItem:hover {
+        background-color: ${getColor("lightGrey", "tonic")};
+        cursor: pointer;
       }
 
       .border-top {
