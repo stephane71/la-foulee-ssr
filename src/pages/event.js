@@ -31,6 +31,8 @@ class EventPage extends React.PureComponent {
 
       const { event } = query;
       store.dispatch(setSelectedEvent(event));
+
+      query.event = undefined;
     }
 
     return { ...initialProps };

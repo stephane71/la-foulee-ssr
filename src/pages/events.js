@@ -34,16 +34,19 @@ class Events extends React.PureComponent {
       if (res.statusCode === 404) return { error: { code: 404 } };
       if (res.statusCode !== 200) return { error: { code: 500 } };
 
-      const { events, place, position = null, depCode = null } = query;
+      let { events, place, position = null, depCode = null } = query;
 
       if (place) store.dispatch(addPlace(place));
-      store.dispatch(setDepCode(depCode));
+      if (!position) store.dispatch(setDepCode(depCode));
       store.dispatch(setPosition(position));
       store.dispatch(setEventList(events));
 
       if (place) {
         query.placeSlug = place.slug;
       }
+      query.events = undefined;
+      query.place = undefined;
+      query.depCode = position ? undefined : depCode;
     }
 
     return {};
