@@ -1,14 +1,11 @@
 import React from "react";
 import App, { Container } from "next/app";
 import withRedux from "next-redux-wrapper";
-import { compose } from "redux";
 import { Provider } from "react-redux";
 
 import Layout from "../components/Layout";
 import Media from "../components/Media";
-
-import withEventAPI from "../components/withEventAPI";
-import withCredentials from "../components/withCredentials";
+import ApiProvider from "../components/ApiProvider";
 
 import { makeStore } from "../store";
 
@@ -25,31 +22,19 @@ class MyApp extends App {
 
   render() {
     const { Component, pageProps, store, router } = this.props;
-    const {
-      getEvent,
-      getEventList,
-      postNewsletterEmail,
-      postEventContribution,
-      getCredentials,
-      getPlace
-    } = this.props;
 
     return (
       <Container>
         <Provider store={store}>
           <Media>
             <Layout>
-              <Component
-                {...pageProps}
-                getEvent={getEvent}
-                getEventList={getEventList}
-                postNewsletterEmail={postNewsletterEmail}
-                postEventContribution={postEventContribution}
-                getCredentials={getCredentials}
-                getPlace={getPlace}
-                query={router.query || {}}
-                path={router.asPath}
-              />
+              <ApiProvider>
+                <Component
+                  {...pageProps}
+                  query={router.query || {}}
+                  path={router.asPath}
+                />
+              </ApiProvider>
             </Layout>
           </Media>
         </Provider>
@@ -58,8 +43,4 @@ class MyApp extends App {
   }
 }
 
-export default compose(
-  withRedux(makeStore),
-  withCredentials,
-  withEventAPI
-)(MyApp);
+export default withRedux(makeStore)(MyApp);

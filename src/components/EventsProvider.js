@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import { ApiConsumer } from "./ApiProvider";
+
 import { setEventList, setPosition, setDepCode } from "../actions";
 import { API_EVENT_LIST_AROUND, API_EVENT_LIST_DEPARTMENT } from "../api";
 
@@ -65,4 +67,12 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(EventsProvider);
+const withApi = WrappedComponent => props => (
+  <ApiConsumer>
+    {({ api }) => (
+      <WrappedComponent {...props} getEventList={api.getEventList} />
+    )}
+  </ApiConsumer>
+);
+
+export default connect(mapStateToProps)(withApi(EventsProvider));

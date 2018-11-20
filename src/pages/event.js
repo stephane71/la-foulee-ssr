@@ -10,6 +10,7 @@ import PlaceProvider from "../components/PlaceProvider";
 import EventDetails from "../components/EventDetails";
 import Loader from "../components/Loader";
 import JSONLD from "../components/JSONLD";
+import { ApiConsumer } from "../components/ApiProvider";
 
 import getEventDescription from "../utils/getEventDescription";
 import getPlaceSlug from "../utils/getPlaceSlug";
@@ -71,7 +72,7 @@ class EventPage extends React.PureComponent {
 
   render() {
     const { error } = this.state;
-    const { query, path, event, media, getPlace } = this.props;
+    const { query, path, event, media } = this.props;
 
     if (error) return <CustomError code={error.code} />;
 
@@ -81,7 +82,7 @@ class EventPage extends React.PureComponent {
       <>
         <EventMetaHeaders event={event} path={path} query={query} />
 
-        <PlaceProvider placeSlug={getPlaceSlug(event)} getPlace={getPlace} />
+        <PlaceProvider placeSlug={getPlaceSlug(event)} />
 
         <EventDetails
           event={event}
@@ -128,4 +129,24 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(EventPage);
+const withApi = WrappedComponent => {
+  const WithApiComponent = props => (
+    <ApiConsumer>
+      {({ api }) => (
+        <WrappedComponent
+          {...props}
+          getEvent={api.getEvent}
+          getCredentials={api.getCredentials}
+        />
+      )}
+    </ApiConsumer>
+  );
+
+  WithApiComponent.getInitialProps = async function(ctx) {
+    return WrappedComponent.getInitialProps(ctx);
+  };
+
+  return WithApiComponent;
+};
+
+export default connect(mapStateToProps)(withApi(EventPage));

@@ -55,16 +55,15 @@ const withEventAPI = WrappedComponent => {
     }
 
     render() {
-      return (
-        <WrappedComponent
-          getPlace={this.getPlace}
-          getEvent={this.getEvent}
-          getEventList={this.getEventList}
-          postNewsletterEmail={this.postNewsletterEmail}
-          postEventContribution={this.postEventContribution}
-          {...this.props}
-        />
-      );
+      const api = {
+        getPlace: this.getPlace,
+        getEvent: this.getEvent,
+        getEventList: this.getEventList,
+        postNewsletterEmail: this.postNewsletterEmail,
+        postEventContribution: this.postEventContribution
+      };
+
+      return <WrappedComponent {...this.props} api={api} />;
     }
 
     api = {};

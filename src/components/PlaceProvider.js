@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
+import { ApiConsumer } from "./ApiProvider";
+
 import { addPlace } from "../actions";
 
 class PlaceProvider extends React.PureComponent {
@@ -47,4 +49,10 @@ function mapStateToProps(state) {
   };
 }
 
-export default connect(mapStateToProps)(PlaceProvider);
+const withApi = WrappedComponent => props => (
+  <ApiConsumer>
+    {({ api }) => <WrappedComponent {...props} getPlace={api.getPlace} />}
+  </ApiConsumer>
+);
+
+export default connect(mapStateToProps)(withApi(PlaceProvider));
