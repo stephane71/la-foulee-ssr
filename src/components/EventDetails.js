@@ -55,6 +55,10 @@ const style = css`
   }
 `;
 
+// <section className={`EventPage-RelatedEvents ${media ? "" : "hidden"}`}>
+//   <RelatedEvents event={event} desktop={media === DESKTOP} />
+// </section>
+
 const EventDetails = ({ event, media, onSubmitContribution }) => (
   <div className={`EventPage`}>
     {media === DESKTOP && (
@@ -72,10 +76,6 @@ const EventDetails = ({ event, media, onSubmitContribution }) => (
         onSubmitContribution={onSubmitContribution}
       />
     )}
-
-    <section className={`EventPage-RelatedEvents ${media ? "" : "hidden"}`}>
-      <RelatedEvents event={event} desktop={media === DESKTOP} />
-    </section>
 
     <style jsx>{style}</style>
   </div>
